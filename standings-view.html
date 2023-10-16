@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pan euros 2023 - Den Haag</title>
+    <style>
+      #container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .group-wrapper {
+        flex-basis: calc(50% - 10px);
+        margin: 5px;
+        box-sizing: border-box;
+      }
+    </style>
+    <script>
+      function fetchMessage() {
+        google.script.run.withSuccessHandler(updateMessage).getMessage();
+      }
+
+      function updateMessage(message) {
+        document.getElementById("message").innerText = message;
+      }
+
+      // Function to generate table from JSON data
+      function generateTable(data, colWidths) {
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        const tbody = document.createElement("tbody");
+        
+        // Add table border style
+        table.style.borderCollapse = "collapse";
+        
+        // Create table headers
+        const headers = [
+          'team', 'MP', 'W', 'D', 'L', 'PF', 'PA', 'PD', 'Pts'
+        ]
+        const headerRow = document.createElement("tr");
+        
+        headers.forEach((header, index) => {
+          const th = document.createElement("th");
+          th.innerText = header;
+          th.style.border = "1px solid black";  // Add border to header
+          if (colWidths && colWidths[index]) {
+            th.style.width = `${colWidths[index]}px`;  // Set column width
+          }
+          headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        
+        // Create table body
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          
+          headers.forEach((header, index) => {
+            const td = document.createElement("td");
+            td.innerText = row[header];
+            td.style.border = "1px solid black";  // Add border to cell
+            if (colWidths && colWidths[index]) {
+              td.style.width = `${colWidths[index]}px`;  // Set column width
+            }
+            tr.appendChild(td);
+          });
+          
+          tbody.appendChild(tr);
+        });
+        
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        return table
+      }
+
+      
+       const displayDataAsTables = teamStatuses => {
+        let groups = {};
+        teamStatuses.forEach(x => (groups[x.group] = true));
+        groups = Object.keys(groups);
+
+        const container = document.createElement("div");
+        container.id = "container";
+        
+        groups.forEach(g => {
+          const groupWrapper = document.createElement("div");
+          groupWrapper.className = "group-wrapper";
+          
+          const rows = teamStatuses.filter(x => x.group === g);
+          const h3 = document.createElement("h3");
+          const group = g.split('').map(x => {
+            switch(x) {
+              case 'L': return 'Ladies';
+              case 'M': return 'Mens';
+              case 'I': return 'Intermediate group';
+              case 'J': return 'Junior group';
+              case 'S': return 'Senior group';
+              default: return x;
+            }
+          }).join(' ');
+          h3.innerText = group;
+          
+          groupWrapper.appendChild(h3);
+          
+          const table = generateTable(rows, [230, 25, 25, 25, 25, 25, 25, 25, 25, 25]);
+          groupWrapper.appendChild(table);
+
+          container.appendChild(groupWrapper);
+        });
+        
+        document.body.appendChild(container);
+      };
+
+      // Generate table on page load
+      window.onload = () => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        `;
+        document.head.appendChild(style);
+        const jsonData = google.script.run.withSuccessHandler(displayDataAsTables).collectDataIntoArray()
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Pan euros 2023 - Den Haag: Group Standings</h1>
+    
+  </body>
+</html>
