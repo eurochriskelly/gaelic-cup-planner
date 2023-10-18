@@ -1,3 +1,4 @@
+// one two ... where are you?
 function collectDataIntoArray() {
     const fieldSorter = (fields) => (a, b) => fields.map(o => {
       let dir = 1
@@ -32,6 +33,7 @@ function collectDataIntoArray() {
       dataArray.push(rowObj);
     }
 
+    let teamStatuses = []
     const teamList = {}
     const groupList = {}
     dataArray
@@ -41,7 +43,7 @@ function collectDataIntoArray() {
         teamList[d.Name2] = true
       })
     const teams = Object.keys(teamList)
-    return teams.forEach(team => {
+    teams.forEach(team => {
       const group = team.substring(0, 3)
       groupList[group] = true
       const data = dataArray
@@ -73,11 +75,7 @@ function collectDataIntoArray() {
             scoreFrom, scoreAgainst,
             goalDifference: scoreFrom - scoreAgainst,
             opponent: nameAgainst,
-            outcome: scoreFrom > scoreAgainst 
-                ? 'win' 
-                : scoreFrom < scoreAgainst 
-                    ? 'loss' 
-                    : 'draw',
+            outcome: scoreFrom > scoreAgainst ? 'win' : scoreFrom < scoreAgainst ? 'loss' : 'draw',
             pointsEarned: scoreFrom > scoreAgainst ? 3 : scoreFrom < scoreAgainst ? 0 : 1,
           }
         })
@@ -95,9 +93,19 @@ function collectDataIntoArray() {
             team: team.substring(4), group, MP: 0, W: 0, D:0, L:0, PF:0, PA: 0, PD:0, Pts: 0
         })
      
+        //if (data.length) {
         teamList[team] = data
-        return Object.values(teamList)
+        teamStatuses = Object.values(teamList)
+          //.filter(x => x.group === 'LJ2')
           .sort(fieldSorter(['group', '-Pts', '-PD', '-PF']))
+        //} else {
+      // delete teamList[team]
+        //}      
     })
+    
+    // updateStandings(teamStatuses)
+    // Log the data array or do something with it
+    //Logger.log(JSON.stringify(teamStatuses, null, 2));
+    return teamStatuses
   }
   

@@ -1,0 +1,6 @@
+# editor files
+*~
+\#*
+
+# hidden config files
+.clasp.json
