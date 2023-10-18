@@ -1,3 +1,4 @@
+
 function updateStandings(data) {
   if (!data) {
     Logger.log('This is a library. Do not run directly!')
