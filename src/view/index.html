@@ -23,11 +23,12 @@
         text-align: left;
         background-color: #fff;
       }
-      button h2 {
-        margin-top: 0;
+      button h2, button p, button img {
+        margin: 10px 0;
       }
-      button p {
-        margin-bottom: 0;
+      button img {
+        width: 50px;
+        height: 50px;
       }
       button:hover {
         background-color: rgba(0, 0, 0, 0.05);
@@ -37,8 +38,11 @@
   <body>
     <h1>Euro Tourno</h1>
     <div id="cards">
+
+
       <!-- Field coordination -->
-      <button onclick="jumpToPage('pitch/select')">
+      <button onclick="jumpToPage('pitch-coordination')">
+        <img src="path/to/icon1.png" alt="Field Coordination Icon">
         <h2>Field coordination</h2>
         <p>
           Track teams and matches at a given field. Update the match 
@@ -48,11 +52,22 @@
       </button>
       
       <!-- Standings -->
-      <button onclick="jumpToPage('group/standings')">
+      <button onclick="jumpToPage('group/select')">
+        <img src="path/to/icon2.png" alt="Standings Icon">
         <h2>Group standings</h2>
         <p>
           Find out the current standings of each group. See which teams 
           are in the lead and which teams are in danger of being eliminated.
+        </p>
+      </button>
+
+      <!-- Players -->
+      <button onclick="jumpToPage('team/select')">
+        <img src="path/to/icon3.png" alt="Team Icon">
+        <h2>Team view</h2>
+        <p>
+          Find out when your team are playing next, who you are playing against, and
+          how you are doing.
         </p>
       </button>
     </div>
