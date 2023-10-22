@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add this line -->
+    <title>Euro Tourno</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 28px;
+        margin: 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 24px;
+        text-align: left;
+        line-height: 60px;
+      }
+      td.score {
+        color: blue;
+        white-space: nowrap;
+      }
+      td.team {
+        font-weight: bold;
+        text-align: left;
+      }
+      tr.next {
+        background-color: #ffffcc;
+      }
+      tr.scoreless td{ 
+        font-weight: normal;
+      }
+      th {
+        background-color: #eee;
+      }
+      h1 {
+        background: #344b32;
+        color: white;
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 1.2em;
+        padding: 0.2em;
+        letter-spacing: 0.1em;
+      }
+      button {
+        margin: 8px;
+        padding: 25px;
+        font-size: 22px;
+      }
+      #match-info {
+        display: none;
+      }
+      #match-info input {
+        width: 100px;
+        padding: 10px;
+        font-size: 40px;
+        border: 3px solid #ccc;
+      }
+      #score-form {
+        display: table;
+        margin-top: 10px;
+        margin: auto;
+        font-size: 1.2em;
+        width: 768px;
+        margin-top: 40px;
+      }
+
+      #score-form table td .input-td {
+        background-color: bisque;
+      }
+      
+      .score-header,
+      .score-row {
+        display: table-row;
+      }
+
+      .score-header > div,
+      .score-row > div {
+        display: table-cell;
+        padding: 10px;
+      }
+
+      input[type="number"] {
+        width: 100%;
+      }
+      .hidden {
+        display: none;
+      }
+
+      .submit-container,
+      #confirmation {
+        margin-top: 20px;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .submit-container,
+      #confirmation {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #score-form table td,
+      #score-form table th {
+        background-color: white;
+        border: none;
+      }
+      
+
+    </style>
+    
+    <script>
+      var CURRENT_GROUP = '';
+      
+      const showStandings = group => {
+        console.log('todo')
+      }
+
+      const displayAvailableGroups = (pitches) => {
+        const ps = document.getElementById('group-select')
+        groups.forEach(g => {
+          const b = document.createElement('button')
+          b.addEventListener('click', showStandings.bind(null, group, undefined))
+          b.innerText = group
+          ps.appendChild(b)
+        })
+      }
+
+      // Generate table on page load
+      window.onload = () => {
+        const jsonData = google.script.run
+          .withSuccessHandler(displayAvailableGroups)
+          .gatherGroups()
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Field coordination dashboard</h1>
+    <section id="group-select">
+      <h2>Please select group</h2>     
+    </section>
+
+    <section id="group-standings">
+    </section>
+
+    <section id="group-playoffs">
+    </section>
+    
+  </body>
+</html>
