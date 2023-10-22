@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add this line -->
+    <title>Euro Tourno</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 28px;
+        margin: 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 24px;
+        text-align: left;
+        line-height: 60px;
+      }
+      td.score {
+        color: blue;
+        white-space: nowrap;
+      }
+      td.team {
+        font-weight: bold;
+        text-align: left;
+      }
+      tr.next {
+        background-color: #ffffcc;
+      }
+      tr.scoreless td{ 
+        font-weight: normal;
+      }
+      th {
+        background-color: #eee;
+      }
+      h1 {
+        background: #344b32;
+        color: white;
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 1.2em;
+        padding: 0.2em;
+        letter-spacing: 0.1em;
+      }
+      button {
+        margin: 8px;
+        padding: 25px;
+        font-size: 22px;
+      }
+      #match-info {
+        display: none;
+      }
+      #match-info input {
+        width: 50px;
+        padding: 10px;
+        font-size: 40px;
+        border: 3px solid #ccc;
+      }
+      #score-form {
+        display: table;
+        margin-top: 10px;
+        margin: auto;
+        font-size: 1.2em;
+        width: 768px;
+        margin-top: 40px;
+      }
+
+      #score-form table td .input-td {
+        background-color: bisque;
+      }
+      
+      .score-header,
+      .score-row {
+        display: table-row;
+      }
+
+      .score-header > div,
+      .score-row > div {
+        display: table-cell;
+        padding: 10px;
+      }
+
+      input[type="number"] {
+        width: 100%;
+      }
+      .hidden {
+        display: none;
+      }
+
+      .submit-container,
+      #confirmation {
+        margin-top: 20px;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .submit-container,
+      #confirmation {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #score-form table td,
+      #score-form table th {
+        background-color: white;
+        border: none;
+      }
+      #pitch-fixtures h2 button {
+        min-width: 200px;
+      }
+      #confirmBtn {
+        color: red;
+        min-width: 200px;
+        font-weight: bold;
+      }
+
+      #pitch-fixtures > table > tbody> tr > td.winner {
+        color: #0a490a;
+        text-decoration: underline;
+      }
+      #pitch-fixtures > table > tbody> tr > td.loser {
+        color: #ad4343;
+      }
+      #pitch-fixtures > table > tbody> tr > td.neutral {
+        color: #c5891b;
+      }
+
+    </style>
+    
+    <script>
+      var CURRENT_PITCH = '';
+      var CURRENT_FIXTURE = null
+
+      const displayAvailablePitches = (pitches) => {
+        console.log('displayAvailablePitches', pitches)
+        const ps = document.getElementById('pitch-select')
+        pitches.forEach(p => {
+          const { pitch, location } = p
+          const b = document.createElement('button')
+          b.addEventListener('click', showFixtures.bind(null, pitch, undefined))
+          b.innerText = `${pitch} - ${location}`
+          ps.appendChild(b)
+        })
+      }
+
+      const displayFixtures = (fixtures = []) => {
+        const fs = document.getElementById('pitch-fixtures');
+        let child = fs.firstChild;
+        while (child) {
+          let nextChild = child.nextSibling;
+          if (child.tagName !== 'H2') {
+            fs.removeChild(child);
+          }
+          child = nextChild;
+        }
+        
+        fs.style.display = 'block'
+        if (fixtures.length === 1) {
+          CURRENT_FIXTURE = fixtures[0]
+          document.getElementById('match-info').style.display = 'block'
+          document.getElementById('team1Score').innerText = fixtures[0].Name1
+          document.getElementById('team2Score').innerText = fixtures[0].Name2
+          document.getElementById('Score1a').value = fixtures[0].Goals1
+          document.getElementById('Score2a').value = fixtures[0].Points1
+          document.getElementById('Score1b').value = fixtures[0].Goals2
+          document.getElementById('Score2b').value = fixtures[0].Points2
+          const submitBtn = document.getElementById("submitBtn");
+          submitBtn.classList.remove("hidden");
+        } else {
+          document.getElementById('match-info').style.display = 'none'
+          CURRENT_FIXTURE = null
+        }
+
+        // Create table and header row
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        ['Time', 'Team 1', 'Score', 'Team 2', 'Score'].forEach(header => {
+          const th = document.createElement('th');
+          th.innerText = header;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        const fixturesNeat = fixtures.map(fx => {
+          const { Scheduled,Name1, Name2, Goals1, Goals2, Points1, Points2} = fx
+          const hasScore1 = (Goals1 !== '' || Points1 !== '') 
+          const hasScore2 = (Goals2 !== '' || Points2 !== '')
+          const total1 = (Goals1||0)*3 + (Points1||0)
+          const total2 = (Goals2||0)*3 + (Points2||0)
+          return {
+            id: fx.id,
+            scoreless: !hasScore1 || !hasScore2,
+            Pitch: fx.Pitch,
+            Scheduled,
+            Team1: Name1,
+            Score1: hasScore1
+              ? `${Goals1||0}-${Points1||0} (${total1})`
+              : '',
+            Team2: Name2,
+            Score2: hasScore2
+              ? `${Goals2||0}-${Points2||0} (${total2})`
+              : '',
+            Winner: total1 > total2 
+              ? Name1 
+              : total1 < total2 
+                ? Name2 
+                : null,
+            Loser: total1 < total2 
+              ? Name1 
+              : total1 > total2 
+                ? Name2 
+                : null,
+          }
+        })
+        let markScoreless = true
+        fixturesNeat.forEach(fx => {
+          const row = document.createElement('tr');
+          ['Scheduled', 'Team1', 'Score1', 'Team2', 'Score2'].forEach(prop => {
+            const td = document.createElement('td');
+            td.innerText = fx[prop];
+            if (prop.startsWith('Score')) {
+              td.classList.add('score')
+            }
+            if (prop.startsWith('Team')) {
+              td.innerText = fx[prop].split('-').slice(1).join('-')
+              td.classList.add('team')
+              if (fx.Winner === fx[prop]) {
+                td.classList.add('winner')
+              } else {
+                if (fx.Loser === fx[prop]) {
+                  td.classList.add('loser')
+                } else {
+                  if (!fx.scoreless) {
+                    td.classList.add('neutral')
+                  }
+                }
+              }
+            }
+            row.appendChild(td);
+          });
+          if (fx.scoreless) {
+            row.classList.add('scoreless')
+          }
+          if (fx.scoreless && markScoreless) {
+            row.classList.add('next')
+            markScoreless = false
+          }
+          row.addEventListener('click', () => {
+            showFixtures(fx.Pitch, fx.id)
+            // Show a form with 4 inputs for the scores
+            // When the form is submitted, call a function that updates the scores
+            // Then call showFixtures again to refresh the table
+          })
+          tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
+        // Append table to fs
+        fs.appendChild(table);
+      }
+
+      const showFixtures = (p, id) => {
+        // Clear contents of id="pitch-fixtures"
+        const fs = document.getElementById('pitch-fixtures')
+        while (fs.firstChild) {
+          fs.removeChild(fs.firstChild);
+        }
+        // Get fixtures for selected pitch
+        const h2 = document.createElement('h2')
+        const sectionPitchSelect = document.getElementById("pitch-select");
+        sectionPitchSelect.style.display = "none";
+        const locationButton = document.createElement('button')
+        locationButton.innerText = p
+        locationButton.addEventListener('click', () => {
+          sectionPitchSelect.style.display = "block";
+          fs.style.display = "none";
+        })
+        h2.innerText = `Fixtures for pitch `
+        h2.appendChild(locationButton)
+        fs.appendChild(h2)
+        const fixtures = google.script.run
+          .withSuccessHandler(displayFixtures)
+          .gatherFixtures(p, id)
+      }
+
+      // Generate table on page load
+      window.onload = () => {
+        const jsonData = google.script.run
+          .withSuccessHandler(displayAvailablePitches)
+          .gatherPitches()
+
+          // Set up score buttons
+          const submitBtn = document.getElementById("submitBtn");
+          const confirmBtn = document.getElementById("confirmBtn");
+          const cancelBtn = document.getElementById("cancelBtn");
+          const confirmation = document.getElementById("confirmation");
+          
+          // Show confirmation when submit is clicked
+          submitBtn.addEventListener("click", () => {
+            confirmation.classList.remove("hidden");
+            submitBtn.classList.add("hidden");
+          });
+
+          // Confirm action
+          confirmBtn.addEventListener("click", () => {
+            confirmation.classList.add("hidden");
+            // get the value of inputs #Score1a, #Score2a, #Score1b, #Score2b
+            const Score1a = document.getElementById("Score1a").value;
+            const Score2a = document.getElementById("Score2a").value;
+            const Score1b = document.getElementById("Score1b").value;
+            const Score2b = document.getElementById("Score2b").value;
+            const score = {
+              Goals1: Score1a,
+              Points1: Score2a,
+              Goals2: Score1b,
+              Points2: Score2b,
+            }
+
+            const fixtures = google.script.run
+              .withSuccessHandler(displayFixtures)
+              .updateScore(CURRENT_FIXTURE, score)
+          });
+
+          // Cancel action
+          cancelBtn.addEventListener("click", () => {
+            confirmation.classList.add("hidden");
+          });
+
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Field coordination dashboard</h1>
+    <section id="pitch-select">
+      <h2>Please select pitch</h2>
+      
+    </section>
+    <section id="pitch-fixtures">
+    </section>
+
+    <section id="match-info">
+      
+      <form id="score-form">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Goals</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="team1Score">Team 1</td>
+              <td class="input-td"><input type="number" name="Score1a" id="Score1a" min="0" max="99" value="0"></td>
+              <td class="input-td"><input type="number" name="Score2a" id="Score2a" min="0" max="199" value="0"></td>
+            </tr>
+            <tr>
+              <td id="team2Score">Team 2</td>
+              <td class="input-td"><input type="number" name="Score1b" id="Score1b" min="0" max="99" value="0"></td>
+              <td class="input-td"><input type="number" name="Score2b" id="Score2b" min="0" max="199" value="0"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="submit-container">
+          <button type="button" id="submitBtn">Submit</button>
+        </div>
+        <div id="confirmation" class="hidden">
+          <p id="score-message"></p>
+          <button type="button" id="confirmBtn">Confirm</button>
+          <button type="button" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+      
+    </section>
+    
+  </body>
+</html>
