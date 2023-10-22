@@ -55,7 +55,7 @@
         display: none;
       }
       #match-info input {
-        width: 50px;
+        width: 100px;
         padding: 10px;
         font-size: 40px;
         border: 3px solid #ccc;
@@ -147,7 +147,6 @@
       var CURRENT_FIXTURE = null
 
       const displayAvailablePitches = (pitches) => {
-        console.log('displayAvailablePitches', pitches)
         const ps = document.getElementById('pitch-select')
         pitches.forEach(p => {
           const { pitch, location } = p
@@ -185,7 +184,6 @@
           document.getElementById('match-info').style.display = 'none'
           CURRENT_FIXTURE = null
         }
-
         // Create table and header row
         const table = document.createElement('table');
         const thead = document.createElement('thead');

@@ -20,9 +20,8 @@ const gatherPitches = () => {
 }
 
 const gatherFixtures = (pitch, id) => {
-    if (!pitch) {
-        return [];
-    }
+    if (!pitch) return [];
+    
     var spreadsheet = SpreadsheetApp.openById(SS_ID);
     var sheet = spreadsheet.getSheetByName("results");
     var rawData = sheet.getDataRange().getValues();
@@ -45,12 +44,13 @@ const gatherFixtures = (pitch, id) => {
             return {
                 ...d,
                 Scheduled: formattedTime,
+                Started: null,
                 id: d.Name1 + d.Name2 + d.Scheduled + d.Pitch,
             };
         })
         .filter(d => !id || d.id === id);
-    
-    return result;
+
+    return result
 }
 
 const updateScore = (fixture, score) => {
@@ -83,7 +83,12 @@ const updateScore = (fixture, score) => {
 };
 
 
-const testUpdateScore = () => {
+const test_gatherFixtures = () => {
+    const result = gatherFixtures('S1');
+    Logger.log(JSON.stringify(result[0], null, 2))
+}
+
+const test_updateScore = () => {
     const fixture = {
         "Goals1": 1,
         "Points1": 6,
