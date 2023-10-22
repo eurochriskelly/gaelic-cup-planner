@@ -82,7 +82,6 @@ const updateScore = (fixture, score) => {
     return gatherFixtures(fixture.Pitch);
 };
 
-
 const test_gatherFixtures = () => {
     const result = gatherFixtures('S1');
     Logger.log(JSON.stringify(result[0], null, 2))
