@@ -1,0 +1,191 @@
+
+  <!DOCTYPE html>
+    <html>
+    <head>
+        <base target="_top">
+        <title>Team Huddle</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="./lib/google-mock.js"></script>
+        <script>
+            // When the document is ready
+$(function () {
+    google.script.run
+        .withSuccessHandler(initializeSelectors)
+        .getListOfTeams();
+});
+
+function initializeSelectors(teamsData) {
+    const genderSelector = $('#gender-selector');
+    const uniqueGenders = [...new Set(teamsData.map(team => team.gender))];
+    uniqueGenders.forEach(gender => {
+        genderSelector.append(`<option value="${gender}">${gender}</option>`);
+    });
+
+    genderSelector.on('change', function () {
+        const selectedGender = $(this).val();
+        const levelSelector = $('#level-selector');
+        levelSelector.empty();
+        levelSelector.append(`<option value="" disabled selected>Select Level</option>`);
+        const uniqueLevels = [...new Set(teamsData.filter(team => team.gender === selectedGender).map(team => team.level))];
+        uniqueLevels.forEach(level => {
+            levelSelector.append(`<option value="${level}">${level}</option>`);
+        });
+    });
+
+    $('#level-selector').on('change', function () {
+        const selectedLevel = $(this).val();
+        const selectedGender = $('#gender-selector').val();
+        const teamSelector = $('#team-selector');
+        teamSelector.empty();
+        teamSelector.append(`<option value="" disabled selected>Select Team</option>`);
+        const filteredTeams = teamsData.filter(team => team.level === selectedLevel && team.gender === selectedGender);
+        filteredTeams.forEach(team => {
+            teamSelector.append(`<option value="${team.name}">${team.name}</option>`);
+        });
+    });
+
+    $('#team-selector').on('change', function () {
+        const selectedTeam = $(this).val();
+    
+        // Remove any existing confirm button or team header
+        $('#confirm-button, #team-header').remove();
+    
+        // Add a 'Let's Go' button
+        const confirmButton = $('<button id="confirm-button">Let\'s Go</button>');
+        $('#selectors').after(confirmButton);
+    
+        confirmButton.on('click', function () {
+            // Replace the button with the team header and welcome message
+            const teamHeader = `<h2 id="team-header">${selectedTeam} status page <button>...</button></h2>`;
+            const welcomeMessage = '<p>Welcome to your team page</p>';
+            $('#sec-select').hide();
+            $(this).replaceWith(teamHeader + welcomeMessage);
+        });
+    });
+    
+}
+
+        </script>
+        <style>
+            body {  
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    margin: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 24px;
+    text-align: left;
+    line-height: 80px;
+    font-size: 38px;
+  }
+
+  th {
+    background-color: #eee;
+  }
+
+  h1 {
+    background: #344b32;
+    color: white;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.2em;
+    padding: 0.2em;
+    letter-spacing: 0.1em;
+  }
+  h2 {
+    font-size: 1.2em;
+  }
+
+  h3 {
+    padding: 0.4em;
+    color: #7ea97a;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+    background: #d9f2d9;
+    margin: 0;
+  }
+
+  button {
+    margin: 8px;
+    padding: 25px;
+    font-size: 32px;
+  }
+  input[type="number"] {
+    width: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .submit-container,
+  #confirmation {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+  .hidden {
+    display: none;
+  }
+
+  /* General styling for the select elements */
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Mobile specific styling */
+@media screen and (max-width: 768px) {
+    select {
+        font-size: 16px;
+    }
+}
+
+        </style>
+        <style>
+            
+        </style>
+    </head>
+    <body>
+      <h1>Team Huddle</h1>
+      <article id="content">
+        <section id="sec-select">
+          <h2>Select your team ...</h2>
+          <div id="selectors">
+            <select id="gender-selector">
+                <option value="" disabled selected>Select Gender</option>
+            </select>
+            <select id="level-selector">
+                <option value="" disabled selected>Select Level</option>
+            </select>
+            <select id="team-selector">
+                <option value="" disabled selected>Select Team</option>
+            </select>
+          </div>
+        </section>
+        <section id="sec-main"></section>
+      </article>
+    </body>
+    </html>
+  

@@ -45,11 +45,12 @@
     }
 
     h3 {
-      padding-top: 0.2em;
+      padding: 0.4em;
       color: #7ea97a;
       margin-left: 0.3em;
-      border-top: 10px dotted #add5ad;
       margin-right: 0.3em;
+      background: #d9f2d9;
+      margin: 0;
     }
 
     button {
@@ -117,7 +118,7 @@
       display: none;
       border: 7px inset #9c9c9c;
       margin: 23px;
-      padding: 32px;
+      padding: 9px 12px;
       background: #f8fff7;
       border-radius: 30px;
     }
@@ -131,11 +132,11 @@
 
     #score-form {
       display: table;
-      margin-top: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
       margin: auto;
       font-size: 1.2em;
-      width: 1000px;
-      margin-top: 40px;
+      width: 100%;
     }
 
     #score-form table td .input-td {
@@ -209,12 +210,17 @@
     var CURRENT_PITCH = '';
     var CURRENT_FIXTURE = null
 
+    const teamName = n => n.split('-').slice(1).join('-')
+
     const displayAvailablePitches = (pitches) => {
       const ps = document.getElementById('pitch-select')
       pitches.forEach(p => {
         const { pitch, location } = p
         const b = document.createElement('button')
-        b.addEventListener('click', showFixtures.bind(null, pitch, undefined))
+        b.addEventListener('click', ev => {
+          CURRENT_PITCH = pitch
+          showFixtures(pitch)
+        })
         b.innerText = `${pitch} - ${location}`
         ps.appendChild(b)
       })
@@ -236,8 +242,8 @@
         CURRENT_FIXTURE = fixtures[0]
         document.getElementById('match-info').style.display = 'block'
         document.getElementById('match-info-return').style.display = 'block'
-        document.getElementById('team1Score').innerText = fixtures[0].Name1
-        document.getElementById('team2Score').innerText = fixtures[0].Name2
+        document.getElementById('team1Score').innerText = teamName(fixtures[0].Name1)
+        document.getElementById('team2Score').innerText = teamName(fixtures[0].Name2)
         document.getElementById('Score1a').value = fixtures[0].Goals1
         document.getElementById('Score2a').value = fixtures[0].Points1
         document.getElementById('Score1b').value = fixtures[0].Goals2
@@ -305,7 +311,7 @@
             td.classList.add('score')
           }
           if (prop.startsWith('Team')) {
-            td.innerText = fx[prop].split('-').slice(1).join('-')
+            td.innerText = teamName(fx[prop])
             td.classList.add('team')
             if (fx.Winner === fx[prop]) {
               td.classList.add('winner')
@@ -343,6 +349,9 @@
     }
 
     const showFixtures = (p, id) => {
+      if (!p) p = CURRENT_PITCH
+
+      console.log('Showing fixtures for pitch ', p)
       // Clear contents of id="pitch-fixtures"
       const fs = document.getElementById('pitch-fixtures')
       while (fs.firstChild) {
@@ -473,7 +482,7 @@
       </div>
     </div>
   </section>
-  <button class="full-wid" id="match-info-return">Back to fixtures</button>
+  <button class="full-wid" id="match-info-return" onclick="showFixtures()">Back to fixtures</button>
 </body>
 
 </html>

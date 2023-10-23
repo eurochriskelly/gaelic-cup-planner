@@ -1,0 +1,94 @@
+body {  
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    margin: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 24px;
+    text-align: left;
+    line-height: 80px;
+    font-size: 38px;
+  }
+
+  th {
+    background-color: #eee;
+  }
+
+  h1 {
+    background: #344b32;
+    color: white;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.2em;
+    padding: 0.2em;
+    letter-spacing: 0.1em;
+  }
+  h2 {
+    font-size: 1.2em;
+  }
+
+  h3 {
+    padding: 0.4em;
+    color: #7ea97a;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+    background: #d9f2d9;
+    margin: 0;
+  }
+
+  button {
+    margin: 8px;
+    padding: 25px;
+    font-size: 32px;
+  }
+  input[type="number"] {
+    width: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .submit-container,
+  #confirmation {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+  .hidden {
+    display: none;
+  }
+
+  /* General styling for the select elements */
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Mobile specific styling */
+@media screen and (max-width: 768px) {
+    select {
+        font-size: 16px;
+    }
+}
