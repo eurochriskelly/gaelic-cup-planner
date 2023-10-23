@@ -92,14 +92,14 @@ function getGroupResults(gname) {
             : scoreFrom < scoreAgainst
               ? 'loss'
               : 'draw',
-          pointsEarned: scoreFrom > scoreAgainst ? 3 : scoreFrom < scoreAgainst ? 0 : 1,
+          pointsEarned: scoreFrom > scoreAgainst ? 2 : scoreFrom < scoreAgainst ? 0 : 1,
         }
       })
       .reduce((status, result) => {
         status.MP += 1
-        status.W += status.outcome == 'win' ? 1 : 0
-        status.D += status.outcome == 'draw' ? 1 : 0
-        status.L += status.outcome == 'loss' ? 1 : 0
+        status.W += result.outcome === 'win' ? 1 : 0
+        status.D += result.outcome === 'draw' ? 1 : 0
+        status.L += result.outcome === 'loss' ? 1 : 0
         status.PF += result.scoreFrom
         status.PA += result.scoreAgainst
         status.PD += result.goalDifference

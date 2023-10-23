@@ -22,7 +22,8 @@
       border: 1px solid #ddd;
       padding: 24px;
       text-align: left;
-      line-height: 60px;
+      line-height: 80px;
+      font-size: 38px;
     }
 
     td.score {
@@ -52,17 +53,58 @@
       color: white;
       margin: 0;
       text-transform: uppercase;
-      font-size: 1.2em;
+      font-size: 2.2em;
       padding: 0.2em;
       letter-spacing: 0.1em;
+    }
+
+    h2 {
+      font-size: 1.2em;
+    }
+
+    h3 {
+      padding-top: 0.2em;
+      color: #7ea97a;
+      margin-left: 0.3em;
+      border-top: 10px dotted #add5ad;
+      margin-right: 0.3em;
     }
 
     button {
       margin: 8px;
       padding: 25px;
-      font-size: 22px;
+      font-size: 32px;
     }
 
+    input[type="number"] {
+      width: 100%;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .submit-container,
+    #confirmation {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+  <style>
     #match-info {
       display: none;
     }
@@ -98,27 +140,9 @@
       padding: 10px;
     }
 
-    input[type="number"] {
-      width: 100%;
-    }
-
-    .hidden {
-      display: none;
-    }
-
     .submit-container,
     #confirmation {
       margin-top: 20px;
-      text-align: center;
-    }
-
-    table {
-      width: 100%;
-    }
-
-    th,
-    td {
-      padding: 10px;
       text-align: center;
     }
 
@@ -126,10 +150,6 @@
     #confirmation {
       text-align: center;
       margin-top: 20px;
-    }
-
-    .hidden {
-      display: none;
     }
 
     #score-form table td,
@@ -151,15 +171,31 @@
     const showStandings = group => {
       console.log('Showing standings for group ', group)
       const fs = document.getElementById('group-standings');
-        let child = fs.firstChild;
-        while (child) {
-          let nextChild = child.nextSibling;
-          if (child.tagName !== 'H2') {
-            fs.removeChild(child);
-          }
-          child = nextChild;
-        }
-      document.getElementById('group-standings').style.display = 'block'
+      fs.style.display = 'none'
+      let child = fs.firstChild;
+      while (child) {
+        let nextChild = child.nextSibling;
+        //if (child.tagName !== 'H2') {
+          fs.removeChild(child);
+        //}
+        child = nextChild;
+      }
+      fs.style.display = 'block'
+
+      // Add h2 and change button
+      const h2 = document.createElement('h2')
+      const sectionGroupSelect = document.getElementById("group-select");
+      sectionGroupSelect.style.display = "none";
+      const locationButton = document.createElement('button')
+      locationButton.innerText = '...'
+      locationButton.addEventListener('click', () => {
+        sectionGroupSelect.style.display = "block";
+        fs.style.display = "none";
+      })
+      h2.innerText = `Standings for group "${group}" `
+      h2.appendChild(locationButton)
+      fs.appendChild(h2)
+
       // FIXME: This is a hack to get the code for the group
       //        Group code should be done differently.
       //        e.g. short unique hash of full name
@@ -167,7 +203,6 @@
         .split(' ')
         .map(x => x.substring(0, 1))
         .join('')
-      console.log('Abbrev is ', abbrev)
       const jsonData = google.script.run
         .withSuccessHandler(displayDataAsTables)
         .getGroupResults(abbrev.toUpperCase())
@@ -229,8 +264,7 @@
       teamStatuses.forEach(x => (groups[x.group] = true));
       groups = Object.keys(groups);
 
-      const container = document.createElement("div");
-      container.id = "container";
+      const container = document.getElementById("group-standings");
 
       groups.forEach(g => {
         const groupWrapper = document.createElement("div");
@@ -257,8 +291,6 @@
 
         container.appendChild(groupWrapper);
       });
-
-      document.body.appendChild(container);
     };
 
 
@@ -288,7 +320,6 @@
   </section>
 
   <section id="group-standings">
-    <h2>Group Standings</h2>
   </section>
 
   <section id="group-playoffs">
