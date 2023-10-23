@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add this line -->
   <title>Euro Tourno</title>
   <style>
-    body {
+    body {  
       font-family: Arial, sans-serif;
       font-size: 28px;
       margin: 0;
@@ -26,24 +26,6 @@
       font-size: 38px;
     }
 
-    td.score {
-      color: blue;
-      white-space: nowrap;
-    }
-
-    td.team {
-      font-weight: bold;
-      text-align: left;
-    }
-
-    tr.next {
-      background-color: #ffffcc;
-    }
-
-    tr.scoreless td {
-      font-weight: normal;
-    }
-
     th {
       background-color: #eee;
     }
@@ -57,17 +39,17 @@
       padding: 0.2em;
       letter-spacing: 0.1em;
     }
-
     h2 {
       font-size: 1.2em;
     }
 
     h3 {
-      padding-top: 0.2em;
+      padding: 0.4em;
       color: #7ea97a;
       margin-left: 0.3em;
-      border-top: 10px dotted #add5ad;
       margin-right: 0.3em;
+      background: #d9f2d9;
+      margin: 0;
     }
 
     button {
@@ -75,7 +57,6 @@
       padding: 25px;
       font-size: 32px;
     }
-
     input[type="number"] {
       width: 100%;
     }
@@ -99,7 +80,6 @@
       padding: 10px;
       text-align: center;
     }
-
     .hidden {
       display: none;
     }
@@ -286,7 +266,7 @@
 
         groupWrapper.appendChild(h3);
 
-        const table = generateTable(rows, [230, 25, 25, 25, 25, 25, 25, 25, 25, 25]);
+        const table = generateTable(rows, ['auto', 35, 35, 35, 35, 35, 35, 35, 35]);
         groupWrapper.appendChild(table);
 
         container.appendChild(groupWrapper);
