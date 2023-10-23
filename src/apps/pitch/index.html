@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add this line -->
   <title>Euro Tourno</title>
+  <!-- common style -->
   <style>
-    body {
+    body {  
       font-family: Arial, sans-serif;
       font-size: 28px;
       margin: 0;
@@ -22,25 +23,8 @@
       border: 1px solid #ddd;
       padding: 24px;
       text-align: left;
-      line-height: 60px;
-    }
-
-    td.score {
-      color: blue;
-      white-space: nowrap;
-    }
-
-    td.team {
-      font-weight: bold;
-      text-align: left;
-    }
-
-    tr.next {
-      background-color: #ffffcc;
-    }
-
-    tr.scoreless td {
-      font-weight: normal;
+      line-height: 80px;
+      font-size: 38px;
     }
 
     th {
@@ -52,56 +36,27 @@
       color: white;
       margin: 0;
       text-transform: uppercase;
-      font-size: 1.2em;
+      font-size: 2.2em;
       padding: 0.2em;
       letter-spacing: 0.1em;
     }
+    h2 {
+      font-size: 1.2em;
+    }
 
     h3 {
-      color: #b7b7b7;
+      padding-top: 0.2em;
+      color: #7ea97a;
+      margin-left: 0.3em;
+      border-top: 10px dotted #add5ad;
+      margin-right: 0.3em;
     }
 
     button {
       margin: 8px;
       padding: 25px;
-      font-size: 22px;
+      font-size: 32px;
     }
-
-    #match-info {
-      display: none;
-    }
-
-    #match-info input {
-      width: 100px;
-      padding: 10px;
-      font-size: 40px;
-      border: 3px solid #ccc;
-    }
-
-    #score-form {
-      display: table;
-      margin-top: 10px;
-      margin: auto;
-      font-size: 1.2em;
-      width: 768px;
-      margin-top: 40px;
-    }
-
-    #score-form table td .input-td {
-      background-color: bisque;
-    }
-
-    .score-header,
-    .score-row {
-      display: table-row;
-    }
-
-    .score-header>div,
-    .score-row>div {
-      display: table-cell;
-      padding: 10px;
-    }
-
     input[type="number"] {
       width: 100%;
     }
@@ -125,6 +80,79 @@
       padding: 10px;
       text-align: center;
     }
+    .hidden {
+      display: none;
+    }
+  </style>
+  <!-- local style -->
+  <style>
+    td.score {
+      color: blue;
+      white-space: nowrap;
+    }
+
+    td.team {
+      font-weight: bold;
+      text-align: left;
+    }
+    td.team-name {
+      text-align: right;
+      word-wrap: none;
+    }
+
+    tr.next {
+      background-color: #ffffcc;
+    }
+
+    tr.scoreless td {
+      font-weight: normal;
+    }
+
+    #match-info-return {
+      display: none;
+      width: 95%;     
+      margin: auto;
+    }
+    #match-info {
+      display: none;
+      border: 7px inset #9c9c9c;
+      margin: 23px;
+      padding: 32px;
+      background: #f8fff7;
+      border-radius: 30px;
+    }
+
+    #match-info input {
+      width: 100px;
+      padding: 10px;
+      font-size: 40px;
+      border: 3px solid #ccc;
+    }
+
+    #score-form {
+      display: table;
+      margin-top: 10px;
+      margin: auto;
+      font-size: 1.2em;
+      width: 1000px;
+      margin-top: 40px;
+    }
+
+    #score-form table td .input-td {
+      background: none;
+    }
+
+    .score-header,
+    .score-row {
+      display: table-row;
+    }
+
+    .score-header>div,
+    .score-row>div {
+      display: table-cell;
+      padding: 10px;
+    }
+
 
     .submit-container,
     #confirmation {
@@ -132,18 +160,15 @@
       margin-top: 20px;
     }
 
-    .hidden {
-      display: none;
-    }
-
     #score-form table td,
     #score-form table th {
-      background-color: white;
+      background: none;
       border: none;
     }
 
     #pitch-fixtures h2 button {
-      padding: 10px;
+      padding: 7px 80px;
+      font-size: 42px;
     }
 
     #confirmBtn {
@@ -163,6 +188,20 @@
 
     #pitch-fixtures>table>tbody>tr>td.neutral {
       color: #c5891b;
+    }
+    #match-team-sheets {
+      display: flex;
+      align-items: center; /* Vertically center the content */
+      font-size: 1.5em;
+      width: 1000px;
+      margin: auto;
+    }
+    #match-team-sheets .warn-sheet {
+      font-size: 1.8em;
+      color: orange;
+    }
+    #match-team-sheets p {
+      margin-right: 10px; /* Add some spacing between the elements */
     }
   </style>
 
@@ -196,6 +235,7 @@
       if (fixtures.length === 1) {
         CURRENT_FIXTURE = fixtures[0]
         document.getElementById('match-info').style.display = 'block'
+        document.getElementById('match-info-return').style.display = 'block'
         document.getElementById('team1Score').innerText = fixtures[0].Name1
         document.getElementById('team2Score').innerText = fixtures[0].Name2
         document.getElementById('Score1a').value = fixtures[0].Goals1
@@ -206,6 +246,7 @@
         submitBtn.classList.remove("hidden");
       } else {
         document.getElementById('match-info').style.display = 'none'
+        document.getElementById('match-info-return').style.display = 'none'
         CURRENT_FIXTURE = null
       }
       // Create table and header row
@@ -383,8 +424,9 @@
   <section id="match-info">
     <div>
       <h3>Team sheets</h3>
-      <div>
-        <p><i>TODO:</i> Mark team sheets ready or not here..</p>
+      <div id="match-team-sheets">
+        <p><span class="warn-sheet">⚠</span>&nbsp;Team sheet missing for <i>Team 1</i></p> 
+        <button type="button">Upload ...</button>
       </div>
     </div>
     <div>
@@ -396,23 +438,26 @@
               <th></th>
               <th>Goals</th>
               <th>Points</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td id="team1Score">Team 1</td>
+              <td class="team-name" id="team1Score">Team 1</td>
               <td class="input-td"><input type="number" name="Score1a" id="Score1a" min="0" max="99" value="0"></td>
               <td class="input-td"><input type="number" name="Score2a" id="Score2a" min="0" max="199" value="0"></td>
+              <td><button type="button">Forfeit</button></td>
             </tr>
             <tr>
-              <td id="team2Score">Team 2</td>
+              <td class="team-name" id="team2Score">Team 2</td>
               <td class="input-td"><input type="number" name="Score1b" id="Score1b" min="0" max="99" value="0"></td>
               <td class="input-td"><input type="number" name="Score2b" id="Score2b" min="0" max="199" value="0"></td>
+              <td><button type="button">Forfeit</button></td>
             </tr>
           </tbody>
         </table>
         <div class="submit-container">
-          <button type="button" id="submitBtn">Submit</button>
+          <button type="button" id="submitBtn">Update scores</button>
         </div>
         <div id="confirmation" class="hidden">
           <p id="score-message"></p>
@@ -428,7 +473,7 @@
       </div>
     </div>
   </section>
-
+  <button class="full-wid" id="match-info-return">Back to fixtures</button>
 </body>
 
 </html>
