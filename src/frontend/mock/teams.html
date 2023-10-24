@@ -1,13 +1,12 @@
 
-  <!DOCTYPE html>
-    <html>
-    <head>
-        <base target="_top">
-        <title>Team Huddle</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="./lib/google-mock.js"></script>
-        <script>
-            // When the document is ready
+      <!DOCTYPE html>
+        <html>
+        <head>
+            <base target="_top">
+            <title>Team Huddle</title>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="./lib/google-mock.js"></script>
+            <script>// When the document is ready
 $(function () {
     google.script.run
         .withSuccessHandler(initializeSelectors)
@@ -64,10 +63,9 @@ function initializeSelectors(teamsData) {
     });
     
 }
-
-        </script>
-        <style>
-            body {  
+</script>
+            <style>
+                body {  
     font-family: Arial, sans-serif;
     font-size: 28px;
     margin: 0;
@@ -162,30 +160,29 @@ select {
     }
 }
 
-        </style>
-        <style>
-            
-        </style>
-    </head>
-    <body>
-      <h1>Team Huddle</h1>
-      <article id="content">
-        <section id="sec-select">
-          <h2>Select your team ...</h2>
-          <div id="selectors">
-            <select id="gender-selector">
-                <option value="" disabled selected>Select Gender</option>
-            </select>
-            <select id="level-selector">
-                <option value="" disabled selected>Select Level</option>
-            </select>
-            <select id="team-selector">
-                <option value="" disabled selected>Select Team</option>
-            </select>
-          </div>
-        </section>
-        <section id="sec-main"></section>
-      </article>
-    </body>
-    </html>
-  
+
+
+
+            </style>
+        </head>
+        <body>
+          <h1>Team Huddle</h1>
+          <article id="content">
+            <section id="sec-select">
+    <h2>Select your team ...</h2>
+    <div id="selectors">
+        <select id="gender-selector">
+            <option value="" disabled selected>Select Gender</option>
+        </select>
+        <select id="level-selector">
+            <option value="" disabled selected>Select Level</option>
+        </select>
+        <select id="team-selector">
+            <option value="" disabled selected>Select Team</option>
+        </select>
+    </div>
+</section><section id="sec-main"></section>
+          </article>
+        </body>
+        </html>
+      
