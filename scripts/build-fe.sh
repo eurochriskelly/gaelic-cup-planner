@@ -9,6 +9,6 @@ ls
 test -d dist && rm -rf dist
 mkdir dist
 echo "Building front end"
-node esbuild.config.js
+node build.config.js
 ls -alh $TOP_DIR/src/frontend/mock
 head -n 10 $TOP_DIR/src/frontend/mock/teams.html
