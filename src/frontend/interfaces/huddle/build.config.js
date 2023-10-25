@@ -1,4 +1,4 @@
-const { renderWebPage } = require('../../shared/renderer')
+const { renderWebPage, watchFiles } = require('../../shared/renderer')
 
 const UI_INFO = {
   title: 'Team Huddle',
@@ -9,18 +9,20 @@ const UI_INFO = {
     ],
     js: [
       '../../shared/js/widgets.js',
-      './main.js'
-
+      './main.js',
+      './sections/select/control.js',
+      './sections/main/control.js',
     ],
     html: [
-      './sections/select.html',
-      './sections/main.html',
+      './sections/select/view.html',
+      './sections/main/view.html',
       // './sections/testing.html',
     ]
   }
 }
 
 renderWebPage(UI_INFO);
+watchFiles(UI_INFO.title, UI_INFO.files);
 
 
 

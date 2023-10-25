@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const renderWebPage = ({
     title,
     files
@@ -33,9 +34,21 @@ const renderWebPage = ({
       `;
     
       fs.writeFileSync('../../mock/teams.html', htmlData);
+};
+
+const watchFiles = (title, files) => {
+    const allFiles = [...files.css, ...files.js, ...files.html];
+    allFiles.forEach(file => {
+        fs.watch(file, (eventType, filename) => {
+            if (eventType === 'change') {
+                console.log(`${file} has been changed. Re-rendering...`);
+                renderWebPage({ title, files });
+            }
+        });
+    });
 }
 
 module.exports = {
     renderWebPage,
-}
-
+    watchFiles
+};
