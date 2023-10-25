@@ -1,0 +1,27 @@
+
+#selectors select {
+    font-size: 1.4em;
+    padding: 1.2em;
+    margin-bottom: 2em;
+}
+
+#sec-main{ 
+    display: none;
+}
+#sec-select {
+    width: 80%;
+    margin:auto;
+    margin-top: 10em;
+}
+#selectors option {
+    font-size: 2em;
+}
+
+select.sel-disabled {
+    color: #999;
+}
+
+#confirm-team-button {
+    width:100%;
+    margin:0;
+}

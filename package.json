@@ -13,8 +13,5 @@
     "test:fe": "bash scripts/test-fe.sh"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "esbuild": "^0.19.5"
-  }
+  "license": "ISC"
 }
