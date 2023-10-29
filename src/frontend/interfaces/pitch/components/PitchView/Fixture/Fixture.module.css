@@ -1,14 +1,4 @@
-.container > div.header {
-    text-transform: uppercase;
-    color: #aaa;
-    border-bottom: 5px solid #ccc;
-}
-.container > div.header > div {
-    font-size: 1.4em;
-    line-height: 3rem;
-    
-}
-
+/* MAIN CONTAINER */
 .container > div {
     width: 100%;
     border-bottom: 1px solid #ccc;
@@ -38,3 +28,21 @@
     
 }
 
+/* HEADER */
+.container > div.header {
+    text-transform: uppercase;
+    color: #aaa;
+    border-bottom: 2px solid #ccc;
+}
+.container > div.header > div {
+    font-size: 1.4em;
+    line-height: 3rem;   
+}
+
+
+/* DRAWERS */
+.container > div.header {
+    text-transform: uppercase;
+    color: #aaa;
+    border-bottom: 2px solid #ccc;
+}
