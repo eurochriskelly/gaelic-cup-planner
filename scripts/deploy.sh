@@ -2,12 +2,10 @@
 
 TOP=$(pwd)
 
-cd src/app
-clasp push
-
-cd $TOP
-cd src/lib/eurotourno
-clasp push
+cd src/apps2
+echo "Listing ..."
+ls -alh
+clasp push --watch
 
 cd $TOP
 echo ""

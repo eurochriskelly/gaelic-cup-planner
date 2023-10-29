@@ -1,0 +1,32 @@
+.container h2 {
+    margin:0;
+    padding:0;
+    grid-template-columns: 220px auto;
+    display: grid;
+    padding-left:0 !important;
+    padding-right: 0 !important;
+}
+.container h2 > span {
+  /** draw a left pointing arrow in the background using svg */
+}
+
+.container h2 > span:first-child {
+    user-select: none;
+    margin: 0;
+    padding-right: 0 !important;
+    /* draw a left pointing arrow in the background using svg */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='-10 -15 120 120'%3E%3Cpolygon points='10,50 90,10 90,85' style='fill:rgb(104,124,104);stroke-width:0;stroke:rgb(0,0,0)' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+.container h2 > span:nth-child(2) {
+    margin: 0;
+    padding: 0;
+    margin-right: 3rem;
+    text-align: left;
+}
+
+.container h2 > span:hover {
+  color: #777;
+  cursor: pointer;
+}
+
