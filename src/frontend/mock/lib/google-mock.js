@@ -3,24 +3,157 @@ const google = {
         run: {
             withSuccessHandler: callback => {
                 return {
+                    getListOfPitches: () => {
+                        callback([
+                            {
+                                id: 'Z1',
+                                location: 'Zagreb',
+                                type: 'Grass',
+                            },
+                            {
+                                id: 'Z2',
+                                location: 'Zuiderpark',
+                                type: 'Grass',
+                            },
+                            {
+                                id: 'Z3',
+                                location: 'Zuiderpark',
+                                type: 'Astro',
+                            },
+                            {
+                                id: 'S1',
+                                location: 'De Ster',
+                                type: 'Astro',
+                            },
+                            {
+                                id: 'S2',
+                                location: 'De Ster',
+                                type: 'Grass',
+                            },
+                            {
+                                id: 'X1',
+                                location: 'In a galaxy far far away, lives an alien lifeform to be reckoned with',
+                                type: 'Grass',
+                            },
+                            {
+                                id: 'Z7',
+                                location: 'Zagreb',
+                                type: 'Grass',
+                            },
+                            {
+                                id: 'Z8',
+                                location: 'Zagreb',
+                                type: 'Grass',
+                            },
+
+                        ])
+                    },
                     getListOfTeams: () => {
                         callback([
                             {
-                                name: 'Team 1',
+                                name: 'Berlin Badgers',
                                 gender: 'Men',
                                 level: 'Junior',
                             },
                             {
-                                name: 'Team 2',
+                                name: 'Kiev Kangaroos',
                                 gender: 'Men',
+                                amagamation: [
+                                    'Melbourne FC',
+                                    'Kiev FC',
+                                ],
                                 level: 'Junior',
                             },
                             {
-                                name: 'Team 3',
+                                name: 'Moscow Meerkats',
+                                gender: 'Ladies',
+                                level: 'Senior',
+                            },
+                            {
+                                name: 'Phantom Friends',
+                                amagamation: [
+                                    'Berlin',
+                                    'Kiev',
+                                    'Moscow',
+                                ],
                                 gender: 'Ladies',
                                 level: 'Senior',
                             },
                         ])
+                    },
+                    getFixtures(pitch) {
+                        callback([
+                            {
+                                id: '1',
+                                Scheduled: '08:25',
+                                Stage: 'Group',
+                                Category: 'MJ1',
+                                Group: '1',
+                                Pitch: 'Z1',
+                                Team1: 'Berlin A',
+                                Goals1: 3,
+                                Points1: 1,
+                                Team2: 'Hamburg',
+                                Goals2: 1,
+                                Points2: 7,
+                            },
+                            {
+                                id: '2',
+                                Scheduled: '09:00',
+                                Stage: 'Group',
+                                Category: 'MJ1',
+                                Group: '1',
+                                Pitch: 'Z1',
+                                Team1: 'Copenhagen Hagen Das',
+                                Goals1: 2,
+                                Points1: 0,
+                                Team2: 'Amsterdam',
+                                Goals2: 0,
+                                Points2: 2,
+                            },
+                            {
+                                id: '3',
+                                Scheduled: '09:25',
+                                Stage: 'Group',
+                                Category: 'MJ1',
+                                Group: '1',
+                                Pitch: 'Z1',
+                                Team1: 'Brussels B',
+                                Goals1: '',
+                                Points1: '',
+                                Team2: 'Berlin',
+                                Goals2: '',
+                                Points2: '',
+                            },
+                            {
+                                id: '4',
+                                Scheduled: '09:25',
+                                Stage: 'Group',
+                                Category: 'MS1',
+                                Group: '1',
+                                Pitch: 'Z3',
+                                Team1: 'Maastricht',
+                                Goals1: '',
+                                Points1: '',
+                                Team2: 'Amsterdam',
+                                Goals2: '',
+                                Points2: '',
+                            },
+                            {
+                                id: '3',
+                                Scheduled: '12:25',
+                                Stage: 'Group',
+                                Category: 'MJ1',
+                                Group: '1',
+                                Pitch: 'Z1',
+                                Team1: 'Amsterdam',
+                                Goals1: '',
+                                Points1: '',
+                                Team2: 'Eindhoven',
+                                Goals2: '',
+                                Points2: '',
+                            },
+                        ].filter(f => f.Pitch === pitch))
                     },
                     getTeamStatus: (team) => {
                         callback({
@@ -41,3 +174,5 @@ const google = {
         }
     }
 }
+
+export default google

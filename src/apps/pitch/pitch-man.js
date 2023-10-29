@@ -15,13 +15,13 @@ const gatherPitches = () => {
         result.push({pitch, location});
       }
     }
-    
     return result;
 }
 
 const gatherFixtures = (pitch, id) => {
-    if (!pitch) return [];
-    
+    if (!pitch) {
+        return [];
+    }
     var spreadsheet = SpreadsheetApp.openById(SS_ID);
     var sheet = spreadsheet.getSheetByName("results");
     var rawData = sheet.getDataRange().getValues();
@@ -44,77 +44,11 @@ const gatherFixtures = (pitch, id) => {
             return {
                 ...d,
                 Scheduled: formattedTime,
-                Started: null,
                 id: d.Name1 + d.Name2 + d.Scheduled + d.Pitch,
             };
         })
         .filter(d => !id || d.id === id);
-
-    return result
+    
+    return result;
 }
 
-const updateScore = (fixture, score) => {
-    var spreadsheet = SpreadsheetApp.openById(SS_ID);
-    var sheet = spreadsheet.getSheetByName("results");
-    var rawData = sheet.getDataRange().getValues();
-    var keys = rawData[0];
-    var rowIndexToUpdate = -1;
-    // Find the index of 'MID' column
-    var midColumnIndex = keys.indexOf('MID');
-    // Find the row index to update
-    for (var i = 1; i < rawData.length; i++) {
-        if (rawData[i][midColumnIndex] === fixture.MID) {
-            rowIndexToUpdate = i;
-            break;
-        }
-    }
-    // If row found, update the score
-    if (rowIndexToUpdate !== -1) {
-        for (const [key, value] of Object.entries(score)) {
-            var colIndex = keys.indexOf(key);
-            if (colIndex !== -1) {
-                sheet.getRange(rowIndexToUpdate + 1, colIndex + 1).setValue(value);
-            }
-        }
-    }
-  
-    // Return updated fixtures (assuming gatherFixtures is defined elsewhere)
-    return gatherFixtures(fixture.Pitch);
-};
-
-const test_gatherFixtures = () => {
-    const result = gatherFixtures('S1');
-    Logger.log(JSON.stringify(result[0], null, 2))
-}
-
-const test_updateScore = () => {
-    const fixture = {
-        "Goals1": 1,
-        "Points1": 6,
-        "Goals2": 2,
-        "Points2": 1,
-        "Group": 2,
-        "Started": "",
-        "Total1": 9,
-        "Pts1": 3,
-        "Pts2": 0,
-        "Total2": 7,
-        "MID": 56,
-        "Winner": "MJ2-Den Haag B",
-        "Scheduled": "09:35",
-        "Reported": "x",
-        "Pitch": "W2",
-        "Stage": "Group",
-        "id": "MJ2-Den Haag BMJ2-MondevilleSat Dec 30 1899 09:35:39 GMT+0000 (Central European Standard Time)W2",
-        "Name1": "MJ2-Den Haag B",
-        "Catgory": "MJ2",
-        "Name2": "MJ2-Mondeville"
-    }
-    const score = { 
-        "Goals1": 9,
-        "Points1": 9,
-        "Goals2": 9,
-        "Points2": 9,
-    }
-    updateScore(fixture, score);
-}

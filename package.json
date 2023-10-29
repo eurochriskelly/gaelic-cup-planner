@@ -1,17 +1,54 @@
 {
-  "name": "gaelic-cup-planner",
-  "version": "1.0.0",
-  "description": "Simplify planning of gaelic games tournaments",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "bash scripts/deploy.sh",
-    "build": "bash scripts/build-fe.sh",
-    "test:fe": "bash scripts/test-fe.sh"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "gaelic-cup-planner",
+    "version": "1.0.0",
+    "description": "Simplify planning of gaelic games tournaments",
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "deploy": "bash scripts/deploy.sh",
+        "build": "bash scripts/build-fe.sh --build",
+        "start": "bash scripts/build-fe.sh --watch",
+        "test:fe": "bash scripts/test-fe.sh",
+        "glogin": "clasp login",
+        "glogout": "clasp logout",
+        "gcreate": "bash scripts/create.sh",
+        "gpush": "bash scripts/deploy.sh",
+        "gpull": "bash scripts/retrieve.sh",
+        "gstart": "bash scripts/deploy.sh --watch",
+        "gopen": "clasp open",
+        "glogs": "clasp logs",
+        "gversions": "clasp versions",
+        "gundeploy": "clasp undeploy 1",
+        "gdelete": "clasp delete",
+        "gstatus": "clasp status",
+        "glist": "clasp list",
+        "gclone": "clasp clone",
+        "pstart": "parcel src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player",
+        "pbuild": "parcel build src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "^7.23.0",
+        "@babel/core": "^7.23.2",
+        "@babel/preset-env": "^7.23.2",
+        "@babel/preset-react": "^7.22.15",
+        "@parcel/transformer-sass": "^2.10.1",
+        "babel-cli": "^6.26.0",
+        "babel-loader": "^9.1.3",
+        "css-loader": "^6.8.1",
+        "html-webpack-plugin": "^5.5.3",
+        "parcel": "^2.10.1",
+        "process": "^0.11.10",
+        "react-dev-utils": "^12.0.1",
+        "style-loader": "^3.3.3"
+    },
+    "dependencies": {
+        "@types/google-apps-script": "^1.0.76",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.17.0"
+    }
 }

@@ -1,0 +1,29 @@
+.container {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    line-height: 5rem;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 80px 45px minmax(0, 1fr) 100px minmax(0, 1fr) 100px;
+    /* 1fr and 1fr will distribute the available space equally */
+    width: 100%;
+ }
+
+.container div {
+    font-size: 30px;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container > div.teamName {
+    padding: 0;
+    margin: 0;
+    background-color: red;
+    
+}
+

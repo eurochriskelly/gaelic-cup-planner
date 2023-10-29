@@ -1,0 +1,48 @@
+/* SelectPitch.module.css */
+.container > :nth-child(1) {
+    grid-column: 1 / 2;
+    text-align: left;
+    padding-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+.container > :nth-child(2) {
+    grid-column: 2 / 3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container > :nth-child(3) {
+    grid-column: 3 / 4;
+    text-align: right;
+    padding-right: 0.3rem;
+    text-transform: uppercase;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 120px auto 130px;
+    width: 100%;
+}
+
+.container span {
+    line-height: 8rem;
+    border-bottom: 1px solid #ccc;
+    font-size: 2.4rem;
+    margin:0;
+    /* This item should not be selectable! */
+    
+}
+h3.container span {
+    line-height: 4rem;
+    color: #777;
+    font-size: 0.9em;
+    margin:0;
+    padding:0;
+}
+/* Resetting line-height for h3 within .container */
+
+h3.container {
+    line-height: 4rem !important;
+}
