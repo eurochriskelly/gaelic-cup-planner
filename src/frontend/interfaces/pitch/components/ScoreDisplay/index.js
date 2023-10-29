@@ -9,8 +9,14 @@ const ScoreDisplay = ({ header, goals, points }) => {
     if (points === '' || points === null || points === undefined) {
         havePoints = false    
     }
+    const style = {
+        backgroundColor: '#eee',
+        padding: '5px',
+        fontSize: '0.8em',
+        minWidth: '100px',
+    }
     if (!havePoints && !haveGoals) {
-        return <span></span>
+        return <span style={style}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     }
     return <span>{goals||'0'}-{points||'0'} ({
         (goals||0)*3 + (points||0)

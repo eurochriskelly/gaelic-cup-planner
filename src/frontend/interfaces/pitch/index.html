@@ -15,8 +15,10 @@
     <script type="module">
         import './index.js'
         /** BEGIN: REMOVE THIS LINE IN PRODUCTION */
-        import google from '../../mock/lib/google-mock.js'
-        window.google = google
+        import googleMock from '../../mock/lib/google-mock.js'
+        if (!window.google) {
+            window.google = googleMock
+        }
         /** END: REMOVE THIS LINE IN PRODUCTION */
     </script>
 </body>
