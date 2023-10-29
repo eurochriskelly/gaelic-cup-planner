@@ -1,0 +1,13 @@
+.container {
+    background-color: #e6ece6;
+    padding: 1rem;
+ }
+
+.container button {
+    
+
+}
+.container > div {
+    width: 748px;
+    margin: auto;
+}
