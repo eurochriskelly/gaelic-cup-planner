@@ -30,3 +30,6 @@
   cursor: pointer;
 }
 
+.container > .focusFixture {
+    border: 3px solid red;
+}

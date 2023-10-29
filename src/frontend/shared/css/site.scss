@@ -1,5 +1,6 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
 }
 
 table {
@@ -10,23 +11,27 @@ table {
 
 #app {
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     width: 100%;
     text-transform: uppercase;
     margin: 0;
-    padding-left: 1rem;
     user-select: none;
   }
+
   h1 {
     background: #344b32;
     color: white;
-    font-size: 1.7em;
-    line-height: 8rem;
-    letter-spacing: 0.1em;
+    font-size: 2.4em;
+    line-height: 7rem;
+    padding: 0 0;
+    padding-left: 2rem;
+    letter-spacing: 0.12em;
   }
 
   h2 {
-    font-size: 1.2em;
+    font-size: 1.8em;
     background: #b2cbb2;
     line-height: 6rem;
     text-align: center;
@@ -44,6 +49,23 @@ table {
     border-bottom: 1px solid #ddd;
     width: 100%;
   }
+
+  button {
+    padding: 0.6rem;
+    min-width: 160px;
+    border-radius: 0.8rem;
+    &.enabled {
+      cursor: pointer;
+      background-color: #4c226a;
+      color: white;
+    }
+    &.disabled {
+      cursor: not-allowed;
+      background-color: #ddd;
+      color: #444;
+    }
+  }
+
 }
 
 

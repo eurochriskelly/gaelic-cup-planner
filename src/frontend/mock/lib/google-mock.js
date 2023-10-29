@@ -82,9 +82,10 @@ const google = {
                         ])
                     },
                     getFixtures(pitch) {
+                        console.log('getting fixtures')
                         callback([
                             {
-                                id: '1',
+                                id: 'fixture1',
                                 Scheduled: '08:25',
                                 Stage: 'Group',
                                 Category: 'MJ1',
@@ -98,7 +99,7 @@ const google = {
                                 Points2: 7,
                             },
                             {
-                                id: '2',
+                                id: 'fixture2',
                                 Scheduled: '09:00',
                                 Stage: 'Group',
                                 Category: 'MJ1',
@@ -112,7 +113,7 @@ const google = {
                                 Points2: 2,
                             },
                             {
-                                id: '3',
+                                id: 'fixture3',
                                 Scheduled: '09:25',
                                 Stage: 'Group',
                                 Category: 'MJ1',
@@ -126,7 +127,7 @@ const google = {
                                 Points2: '',
                             },
                             {
-                                id: '4',
+                                id: 'fixture4',
                                 Scheduled: '09:25',
                                 Stage: 'Group',
                                 Category: 'MS1',
@@ -140,8 +141,8 @@ const google = {
                                 Points2: '',
                             },
                             {
-                                id: '3',
-                                Scheduled: '12:25',
+                                id: 'fixture5',
+                                 Scheduled: '12:25',
                                 Stage: 'Group',
                                 Category: 'MJ1',
                                 Group: '1',
