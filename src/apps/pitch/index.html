@@ -8,6 +8,7 @@
 
 <body>
     <style>body {
+  margin: 0;
   font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -22,21 +23,21 @@ table {
   user-select: none;
   width: 100%;
   margin: 0;
-  padding-left: 1rem;
 }
 
 #app h1 {
   color: #fff;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
   background: #344b32;
-  font-size: 1.7em;
-  line-height: 8rem;
+  padding: 0;
+  font-size: 2.4em;
+  line-height: 7rem;
 }
 
 #app h2 {
   text-align: center;
   background: #b2cbb2;
-  font-size: 1.2em;
+  font-size: 1.8em;
   line-height: 6rem;
 }
 
@@ -51,6 +52,24 @@ table {
   border-bottom: 1px solid #ddd;
   width: 100%;
   height: 4rem;
+}
+
+#app button {
+  border-radius: .8rem;
+  min-width: 160px;
+  padding: .6rem;
+}
+
+#app button.enabled {
+  cursor: pointer;
+  color: #fff;
+  background-color: #4c226a;
+}
+
+#app button.disabled {
+  cursor: not-allowed;
+  color: #444;
+  background-color: #ddd;
 }
 
 button {
@@ -3035,7 +3054,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _indexJs = require("./index.js");
 /** BEGIN: REMOVE THIS LINE IN PRODUCTION */ var _googleMockJs = require("../../mock/lib/google-mock.js");
 var _googleMockJsDefault = parcelHelpers.interopDefault(_googleMockJs);
-window.google = (0, _googleMockJsDefault.default /** END: REMOVE THIS LINE IN PRODUCTION */ );
+if (!window.google) window.google = (0, _googleMockJsDefault.default);
+ /** END: REMOVE THIS LINE IN PRODUCTION */ 
 
 },{"./index.js":"9rg9V","../../mock/lib/google-mock.js":"evBP6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9rg9V":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$aabb = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
@@ -33823,6 +33843,8 @@ var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _reactRouterDom = require("react-router-dom");
 var _fixture = require("./Fixture");
 var _fixtureDefault = parcelHelpers.interopDefault(_fixture);
+var _updateFixture = require("./UpdateFixture");
+var _updateFixtureDefault = parcelHelpers.interopDefault(_updateFixture);
 var _pitchViewModuleCss = require("./PitchView.module.css");
 var _pitchViewModuleCssDefault = parcelHelpers.interopDefault(_pitchViewModuleCss);
 var _s = $RefreshSig$();
@@ -33832,7 +33854,14 @@ const PitchView = ()=>{
     const navigate = (0, _reactRouterDom.useNavigate)();
     const backToSelection = ()=>navigate("/");
     let fixtures = [];
-    google.script.run.withSuccessHandler((data)=>fixtures = data).getFixtures(pitchId);
+    let nextFixture = null;
+    google.script.run.withSuccessHandler((data)=>{
+        console.log("fixtures", data);
+        fixtures = data;
+        nextFixture = fixtures.filter((f)=>{
+            return f.Goals1 === "" && f.Goals2 === "";
+        }).shift();
+    }).getFixtures(pitchId);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         className: (0, _pitchViewModuleCssDefault.default).container,
         children: [
@@ -33842,7 +33871,7 @@ const PitchView = ()=>{
                         onClick: backToSelection
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                        lineNumber: 16,
+                        lineNumber: 27,
                         columnNumber: 13
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -33852,13 +33881,13 @@ const PitchView = ()=>{
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                        lineNumber: 17,
+                        lineNumber: 28,
                         columnNumber: 13
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                lineNumber: 15,
+                lineNumber: 26,
                 columnNumber: 9
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
@@ -33875,22 +33904,41 @@ const PitchView = ()=>{
                 }
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                lineNumber: 19,
+                lineNumber: 30,
                 columnNumber: 9
             }, undefined),
             fixtures.map((fixture)=>{
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
-                    fixture: fixture
-                }, void 0, false, {
+                const focusFixture = nextFixture && nextFixture.id === fixture.id;
+                const focusStyle = {
+                    border: "4px solid #4c226a"
+                };
+                return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    className: focusFixture ? "focusFixture" : "",
+                    style: focusFixture ? focusStyle : {},
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
+                            fixture: fixture
+                        }, void 0, false, {
+                            fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                            lineNumber: 49,
+                            columnNumber: 21
+                        }, undefined),
+                        nextFixture && nextFixture.id === fixture.id && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _updateFixtureDefault.default), {}, void 0, false, {
+                            fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                            lineNumber: 52,
+                            columnNumber: 25
+                        }, undefined)
+                    ]
+                }, fixture.id, true, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                    lineNumber: 31,
-                    columnNumber: 17
+                    lineNumber: 48,
+                    columnNumber: 24
                 }, undefined);
             })
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-        lineNumber: 14,
+        lineNumber: 25,
         columnNumber: 12
     }, undefined);
 };
@@ -33910,8 +33958,9 @@ $RefreshReg$(_c, "PitchView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./PitchView.module.css":"jWlTZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture":"e4BoP"}],"jWlTZ":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./PitchView.module.css":"jWlTZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture":"e4BoP","./UpdateFixture":"h1XXZ"}],"jWlTZ":[function(require,module,exports) {
 module.exports["container"] = `FnPMDW_container`;
+module.exports["focusFixture"] = `FnPMDW_focusFixture`;
 
 },{}],"e4BoP":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$44f6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
@@ -33935,75 +33984,82 @@ const Fixture = ({ header, fixture, key })=>{
     const tlen = 14;
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         className: (0, _fixtureModuleCssDefault.default).container,
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(80),
-                children: Scheduled
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 15,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(45),
-                children: Category.replace(/[0-9]/g, "")
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 16,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(400),
-                className: "teamName",
-                children: Team1.length > tlen ? Team1.substring(0, tlen) + "..." : Team1
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 17,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(100),
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
-                    header: header,
-                    goal: Goals1,
-                    points: Points1
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            className: header ? (0, _fixtureModuleCssDefault.default).header : "",
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(80),
+                    children: Scheduled
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 16,
+                    columnNumber: 17
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(45),
+                    children: Category.replace(/[0-9]/g, "")
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 17,
+                    columnNumber: 17
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(400),
+                    className: "teamName",
+                    children: Team1.length > tlen ? Team1.substring(0, tlen) + "..." : Team1
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 18,
+                    columnNumber: 17
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(100),
+                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
+                        header: header,
+                        goal: Goals1,
+                        points: Points1
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                        lineNumber: 22,
+                        columnNumber: 21
+                    }, undefined)
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
                     lineNumber: 21,
                     columnNumber: 17
-                }, undefined)
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 20,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(400),
-                className: "teamName",
-                children: Team2.length > tlen ? Team2.substring(0, tlen) + "..." : Team2
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 23,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                style: s(100),
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
-                    header: header,
-                    goal: Goals2,
-                    points: Points2
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(400),
+                    className: "teamName",
+                    children: Team2.length > tlen ? Team2.substring(0, tlen) + "..." : Team2
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 24,
+                    columnNumber: 17
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(100),
+                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
+                        header: header,
+                        goal: Goals2,
+                        points: Points2
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                        lineNumber: 28,
+                        columnNumber: 21
+                    }, undefined)
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
                     lineNumber: 27,
                     columnNumber: 17
                 }, undefined)
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                lineNumber: 26,
-                columnNumber: 13
-            }, undefined)
-        ]
-    }, id, true, {
+            ]
+        }, void 0, true, {
+            fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+            lineNumber: 15,
+            columnNumber: 13
+        }, undefined)
+    }, id, false, {
         fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
         lineNumber: 14,
         columnNumber: 9
@@ -34021,6 +34077,7 @@ $RefreshReg$(_c, "Fixture");
 }
 },{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture.module.css":"4rTCq","./../../ScoreDisplay":"bzPoD"}],"4rTCq":[function(require,module,exports) {
 module.exports["container"] = `_4UxuVq_container`;
+module.exports["header"] = `_4UxuVq_header`;
 module.exports["teamName"] = `_4UxuVq_teamName`;
 
 },{}],"bzPoD":[function(require,module,exports) {
@@ -34045,9 +34102,18 @@ const ScoreDisplay = ({ header, goals, points })=>{
     let havePoints = true;
     if (goals === "" || goals === null || goals === undefined) haveGoals = false;
     if (points === "" || points === null || points === undefined) havePoints = false;
-    if (!havePoints && !haveGoals) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {}, void 0, false, {
+    const style = {
+        backgroundColor: "#eee",
+        padding: "5px",
+        fontSize: "0.8em",
+        minWidth: "100px"
+    };
+    if (!havePoints && !haveGoals) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+        style: style,
+        children: "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
+    }, void 0, false, {
         fileName: "src/frontend/interfaces/pitch/components/ScoreDisplay/index.js",
-        lineNumber: 13,
+        lineNumber: 19,
         columnNumber: 16
     }, undefined);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -34061,7 +34127,7 @@ const ScoreDisplay = ({ header, goals, points })=>{
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/components/ScoreDisplay/index.js",
-        lineNumber: 15,
+        lineNumber: 21,
         columnNumber: 12
     }, undefined);
 };
@@ -34075,7 +34141,418 @@ $RefreshReg$(_c, "ScoreDisplay");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"evBP6":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"h1XXZ":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$6b3f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$6b3f.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _updateFixtureModuleCss = require("./UpdateFixture.module.css");
+var _updateFixtureModuleCssDefault = parcelHelpers.interopDefault(_updateFixtureModuleCss);
+var _s = $RefreshSig$();
+const UpdateFixture = ({ fixture, updateFixture })=>{
+    _s();
+    const [enableStates, setEnableStates] = (0, _react.useState)({
+        start: "enabled",
+        postpone: "enabled",
+        cancel: "enabled",
+        finish: "disabled"
+    });
+    const [visibleDrawers, setVisibleDrawers] = (0, _react.useState)({
+        finsih: false,
+        cancel: false,
+        postpone: false,
+        start: false
+    });
+    const handleClick = {
+        start: ()=>{
+            setEnableStates({
+                start: "disabled",
+                postpone: "disabled",
+                cancel: "enabled",
+                finish: "enabled"
+            });
+        },
+        finish: ()=>{
+            setEnableStates({
+                start: "disabled",
+                postpone: "disabled",
+                cancel: "enabled",
+                finish: "disabled"
+            });
+        }
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _updateFixtureModuleCssDefault.default).container,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        className: enableStates.start,
+                        onClick: handleClick.start,
+                        children: [
+                            "Start\xa0",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("svg", {
+                                width: "29",
+                                height: "29",
+                                viewBox: "0 0 20 20",
+                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("polygon", {
+                                    points: "8,5 16,12 8,19",
+                                    fill: "white"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 43,
+                                    columnNumber: 25
+                                }, undefined)
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 42,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 40,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        className: enableStates.postpone,
+                        children: [
+                            "Postpone\xa0",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("svg", {
+                                width: "22",
+                                height: "22",
+                                viewBox: "0 0 20 20",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("circle", {
+                                        cx: "12",
+                                        cy: "12",
+                                        r: "9",
+                                        stroke: "white",
+                                        strokeWidth: 2,
+                                        fill: "none"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 49,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
+                                        d: "M 12,12 L 12,6",
+                                        stroke: "white"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 50,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
+                                        d: "M 12,12 L 16,16",
+                                        stroke: "white"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 51,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 48,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 46,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        className: enableStates.cancel,
+                        children: [
+                            "Cancel\xa0",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("svg", {
+                                width: "22",
+                                height: "22",
+                                viewBox: "0 0 22 22",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("circle", {
+                                        cx: "12",
+                                        cy: "12",
+                                        r: "9",
+                                        stroke: "white",
+                                        strokeWidth: "3px",
+                                        fill: "none"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 57,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("line", {
+                                        x1: "6",
+                                        y1: "6",
+                                        x2: "18",
+                                        y2: "18",
+                                        stroke: "white",
+                                        strokeWidth: 2
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 58,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 56,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 54,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        className: enableStates.finish,
+                        onClick: handleClick.finish,
+                        children: [
+                            "Finish\xa0",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("svg", {
+                                width: "26",
+                                height: "26",
+                                viewBox: "0 0 20 20",
+                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("rect", {
+                                    x: "5",
+                                    y: "5",
+                                    width: "14",
+                                    height: "14",
+                                    fill: "white"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 64,
+                                    columnNumber: 25
+                                }, undefined)
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 63,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 61,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                lineNumber: 39,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _updateFixtureModuleCssDefault.default).drawers,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "start",
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "start-time",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "Start time"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 71,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "12:00"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 72,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 70,
+                                columnNumber: 21
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "start-time",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "Duration"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 75,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "60 mins"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 76,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 74,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 69,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "postpone",
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "postpone-time",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "Postpone time"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 81,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "12:00"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 82,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 80,
+                                columnNumber: 21
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "postpone-time",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "Duration"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 85,
+                                        columnNumber: 25
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        children: "60 mins"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                        lineNumber: 86,
+                                        columnNumber: 25
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                lineNumber: 84,
+                                columnNumber: 21
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 79,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "cancel",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "cancel-time",
+                            children: [
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                    children: "Cancel time"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 91,
+                                    columnNumber: 25
+                                }, undefined),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                    children: "12:00"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 92,
+                                    columnNumber: 25
+                                }, undefined)
+                            ]
+                        }, void 0, true, {
+                            fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                            lineNumber: 90,
+                            columnNumber: 21
+                        }, undefined)
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 89,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "finish",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "finish-time",
+                            children: [
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                    children: "Finish time"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 97,
+                                    columnNumber: 25
+                                }, undefined),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                    children: "12:00"
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                                    lineNumber: 98,
+                                    columnNumber: 25
+                                }, undefined)
+                            ]
+                        }, void 0, true, {
+                            fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                            lineNumber: 96,
+                            columnNumber: 21
+                        }, undefined)
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                        lineNumber: 95,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+                lineNumber: 68,
+                columnNumber: 13
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
+        lineNumber: 38,
+        columnNumber: 9
+    }, undefined);
+};
+_s(UpdateFixture, "6Vkyl/uR9FJVQra03XvvKZdabXc=");
+_c = UpdateFixture;
+exports.default = UpdateFixture;
+var _c;
+$RefreshReg$(_c, "UpdateFixture");
+
+  $parcel$ReactRefreshHelpers$6b3f.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./UpdateFixture.module.css":"bxOAr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","react":"21dqq"}],"bxOAr":[function(require,module,exports) {
+module.exports["container"] = `A-Orha_container`;
+
+},{}],"evBP6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 const google = {
@@ -34161,9 +34638,10 @@ const google = {
                         ]);
                     },
                     getFixtures (pitch) {
+                        console.log("getting fixtures");
                         callback([
                             {
-                                id: "1",
+                                id: "fixture1",
                                 Scheduled: "08:25",
                                 Stage: "Group",
                                 Category: "MJ1",
@@ -34177,7 +34655,7 @@ const google = {
                                 Points2: 7
                             },
                             {
-                                id: "2",
+                                id: "fixture2",
                                 Scheduled: "09:00",
                                 Stage: "Group",
                                 Category: "MJ1",
@@ -34191,7 +34669,7 @@ const google = {
                                 Points2: 2
                             },
                             {
-                                id: "3",
+                                id: "fixture3",
                                 Scheduled: "09:25",
                                 Stage: "Group",
                                 Category: "MJ1",
@@ -34205,7 +34683,7 @@ const google = {
                                 Points2: ""
                             },
                             {
-                                id: "4",
+                                id: "fixture4",
                                 Scheduled: "09:25",
                                 Stage: "Group",
                                 Category: "MS1",
@@ -34219,7 +34697,7 @@ const google = {
                                 Points2: ""
                             },
                             {
-                                id: "3",
+                                id: "fixture5",
                                 Scheduled: "12:25",
                                 Stage: "Group",
                                 Category: "MJ1",
