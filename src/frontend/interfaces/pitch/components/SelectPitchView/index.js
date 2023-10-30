@@ -1,4 +1,4 @@
-import SelectPitch from "../SelectPitch"
+import SelectPitch from "./SelectPitch"
 
 const SelectPitchView = () => {
     let pitches = []

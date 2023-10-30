@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><link rel="stylesheet" href="/index.17557d85.css">
+<head><link rel="stylesheet" href="/index.3b373d12.css">
     <meta charset="UTF-8">
     <title>Document</title>
 </head>
 
 <body>
     <style>body {
+  background-color: #a2a2a2;
   margin: 0;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -26,12 +27,15 @@ table {
 }
 
 #app h1 {
-  color: #fff;
+  color: #84aa80;
   letter-spacing: .12em;
+  text-align: center;
   background: #344b32;
   padding: 0;
-  font-size: 2.4em;
+  font-size: 3.2em;
   line-height: 7rem;
+  position: fixed;
+  top: 0;
 }
 
 #app h2 {
@@ -57,7 +61,7 @@ table {
 #app button {
   border-radius: .8rem;
   min-width: 160px;
-  padding: .6rem;
+  padding: 1.6rem .6rem;
 }
 
 #app button.enabled {
@@ -33701,7 +33705,7 @@ try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _selectPitch = require("../SelectPitch");
+var _selectPitch = require("./SelectPitch");
 var _selectPitchDefault = parcelHelpers.interopDefault(_selectPitch);
 const SelectPitchView = ()=>{
     let pitches = [];
@@ -33750,11 +33754,11 @@ $RefreshReg$(_c, "SelectPitchView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","../SelectPitch":"dVaVD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"dVaVD":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$ff80 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./SelectPitch":"elNOS"}],"elNOS":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$e687 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$ff80.prelude(module);
+$parcel$ReactRefreshHelpers$e687.prelude(module);
 
 try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -33774,7 +33778,7 @@ function SelectPitch(props) {
     const Container = header ? "h3" : "div";
     const h3Styles = {
         lineHeight: "10px",
-        backround: "red"
+        borderRadius: "0"
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Container, {
         onClick: ()=>{
@@ -33787,27 +33791,27 @@ function SelectPitch(props) {
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                 children: id
             }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitch/index.js",
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
                 lineNumber: 24,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                 children: location.length > MAX_LOCATION_LENGTH ? location.substring(0, MAX_LOCATION_LENGTH) + "..." : location
             }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitch/index.js",
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
                 lineNumber: 25,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                 children: type
             }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitch/index.js",
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
                 lineNumber: 30,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
-        fileName: "src/frontend/interfaces/pitch/components/SelectPitch/index.js",
+        fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
         lineNumber: 20,
         columnNumber: 9
     }, this);
@@ -33822,13 +33826,13 @@ exports.default = SelectPitch;
 var _c;
 $RefreshReg$(_c, "SelectPitch");
 
-  $parcel$ReactRefreshHelpers$ff80.postlude(module);
+  $parcel$ReactRefreshHelpers$e687.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./SelectPitch.module.css":"eUnL2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react-router-dom":"9xmpe"}],"eUnL2":[function(require,module,exports) {
-module.exports["container"] = `_OmEYa_container`;
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./SelectPitch.module.css":"279Ns","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"279Ns":[function(require,module,exports) {
+module.exports["container"] = `hmtECa_container`;
 
 },{}],"iZ3CV":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$ce2a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
@@ -33863,25 +33867,51 @@ const PitchView = ()=>{
         }).shift();
     }).getFixtures(pitchId);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _pitchViewModuleCssDefault.default).container,
+        className: (0, _pitchViewModuleCssDefault.default).pitchView,
         children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _pitchViewModuleCssDefault.default).fixturesHead,
                 children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                        onClick: backToSelection
-                    }, void 0, false, {
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                onClick: backToSelection
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                                lineNumber: 28,
+                                columnNumber: 17
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                children: [
+                                    "Fixtures for pitch: ",
+                                    pitchId
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                                lineNumber: 29,
+                                columnNumber: 17
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
                         lineNumber: 27,
                         columnNumber: 13
                     }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                        children: [
-                            "Fixtures for pitch: ",
-                            pitchId
-                        ]
-                    }, void 0, true, {
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
+                        header: true,
+                        fixture: {
+                            Scheduled: "Time",
+                            Category: "G_",
+                            Team1: "Team 1",
+                            Goals1: "",
+                            Points1: "",
+                            Team2: "Team 2",
+                            Goals2: "",
+                            Points2: ""
+                        }
+                    }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                        lineNumber: 28,
+                        lineNumber: 31,
                         columnNumber: 13
                     }, undefined)
                 ]
@@ -33890,51 +33920,46 @@ const PitchView = ()=>{
                 lineNumber: 26,
                 columnNumber: 9
             }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
-                header: true,
-                fixture: {
-                    Scheduled: "Time",
-                    Category: "G",
-                    Team1: "Team 1",
-                    Goals1: "",
-                    Points1: "",
-                    Team2: "Team 2",
-                    Goals2: "",
-                    Points2: ""
-                }
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _pitchViewModuleCssDefault.default).fixturesArea,
+                children: fixtures.map((fixture)=>{
+                    const focusFixture = nextFixture && nextFixture.id === fixture.id;
+                    const focusStyle = {
+                        border: "10px solid #4c226a",
+                        borderRadius: "18px",
+                        marginBottom: "8px",
+                        backgroundColor: "#c6b3d3"
+                    };
+                    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: focusFixture ? "focusFixture" : "",
+                        style: focusFixture ? focusStyle : {},
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
+                                fixture: fixture
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                                lineNumber: 54,
+                                columnNumber: 21
+                            }, undefined),
+                            nextFixture && nextFixture.id === fixture.id && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _updateFixtureDefault.default), {
+                                fixture: fixture
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                                lineNumber: 57,
+                                columnNumber: 25
+                            }, undefined)
+                        ]
+                    }, fixture.id, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
+                        lineNumber: 53,
+                        columnNumber: 24
+                    }, undefined);
+                })
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                lineNumber: 30,
+                lineNumber: 44,
                 columnNumber: 9
-            }, undefined),
-            fixtures.map((fixture)=>{
-                const focusFixture = nextFixture && nextFixture.id === fixture.id;
-                const focusStyle = {
-                    border: "4px solid #4c226a"
-                };
-                return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    className: focusFixture ? "focusFixture" : "",
-                    style: focusFixture ? focusStyle : {},
-                    children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixtureDefault.default), {
-                            fixture: fixture
-                        }, void 0, false, {
-                            fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                            lineNumber: 49,
-                            columnNumber: 21
-                        }, undefined),
-                        nextFixture && nextFixture.id === fixture.id && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _updateFixtureDefault.default), {}, void 0, false, {
-                            fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                            lineNumber: 52,
-                            columnNumber: 25
-                        }, undefined)
-                    ]
-                }, fixture.id, true, {
-                    fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
-                    lineNumber: 48,
-                    columnNumber: 24
-                }, undefined);
-            })
+            }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/components/PitchView/index.js",
@@ -33959,8 +33984,9 @@ $RefreshReg$(_c, "PitchView");
   window.$RefreshSig$ = prevRefreshSig;
 }
 },{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./PitchView.module.css":"jWlTZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture":"e4BoP","./UpdateFixture":"h1XXZ"}],"jWlTZ":[function(require,module,exports) {
-module.exports["container"] = `FnPMDW_container`;
-module.exports["focusFixture"] = `FnPMDW_focusFixture`;
+module.exports["fixturesArea"] = `FnPMDW_fixturesArea`;
+module.exports["fixturesHead"] = `FnPMDW_fixturesHead`;
+module.exports["pitchView"] = `FnPMDW_pitchView`;
 
 },{}],"e4BoP":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$44f6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
@@ -33982,26 +34008,50 @@ const Fixture = ({ header, fixture, key })=>{
             width: `${n}px`
         });
     const tlen = 14;
+    const scoreUpToDate = (Goals1 || Goals1 === 0) && (Goals2 || Goals2 === 0) && (Points1 || Points1 === 0) && (Points2 || Points2 === 0);
+    const rowClasses = ()=>{
+        const classes = [];
+        if (scoreUpToDate) classes.push((0, _fixtureModuleCssDefault.default).scoreUpToDate);
+        if (header) classes.push((0, _fixtureModuleCssDefault.default).header);
+        classes.push(`II__${Category}`);
+        classes.push(`II__${scoreUpToDate}`);
+        return classes.join(" ");
+    };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _fixtureModuleCssDefault.default).container,
+        className: (0, _fixtureModuleCssDefault.default).fixture,
         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-            className: header ? (0, _fixtureModuleCssDefault.default).header : "",
+            className: rowClasses(),
             children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(5),
+                    children: " "
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 30,
+                    columnNumber: 13
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: s(45),
+                    className: (0, _fixtureModuleCssDefault.default).group,
+                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                        children: Category.replace(/[0-9]/g, "")
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                        lineNumber: 32,
+                        columnNumber: 17
+                    }, undefined)
+                }, void 0, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
+                    lineNumber: 31,
+                    columnNumber: 13
+                }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     style: s(80),
                     children: Scheduled
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 16,
-                    columnNumber: 17
-                }, undefined),
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    style: s(45),
-                    children: Category.replace(/[0-9]/g, "")
-                }, void 0, false, {
-                    fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 17,
-                    columnNumber: 17
+                    lineNumber: 34,
+                    columnNumber: 13
                 }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     style: s(400),
@@ -34009,8 +34059,8 @@ const Fixture = ({ header, fixture, key })=>{
                     children: Team1.length > tlen ? Team1.substring(0, tlen) + "..." : Team1
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 18,
-                    columnNumber: 17
+                    lineNumber: 35,
+                    columnNumber: 13
                 }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     style: s(100),
@@ -34020,13 +34070,13 @@ const Fixture = ({ header, fixture, key })=>{
                         points: Points1
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                        lineNumber: 22,
-                        columnNumber: 21
+                        lineNumber: 39,
+                        columnNumber: 17
                     }, undefined)
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 21,
-                    columnNumber: 17
+                    lineNumber: 38,
+                    columnNumber: 13
                 }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     style: s(400),
@@ -34034,8 +34084,8 @@ const Fixture = ({ header, fixture, key })=>{
                     children: Team2.length > tlen ? Team2.substring(0, tlen) + "..." : Team2
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 24,
-                    columnNumber: 17
+                    lineNumber: 41,
+                    columnNumber: 13
                 }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     style: s(100),
@@ -34045,24 +34095,24 @@ const Fixture = ({ header, fixture, key })=>{
                         points: Points2
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                        lineNumber: 28,
-                        columnNumber: 21
+                        lineNumber: 45,
+                        columnNumber: 17
                     }, undefined)
                 }, void 0, false, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 27,
-                    columnNumber: 17
+                    lineNumber: 44,
+                    columnNumber: 13
                 }, undefined)
             ]
         }, void 0, true, {
             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-            lineNumber: 15,
-            columnNumber: 13
+            lineNumber: 29,
+            columnNumber: 9
         }, undefined)
     }, id, false, {
         fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-        lineNumber: 14,
-        columnNumber: 9
+        lineNumber: 28,
+        columnNumber: 12
     }, undefined);
 };
 _c = Fixture;
@@ -34076,7 +34126,8 @@ $RefreshReg$(_c, "Fixture");
   window.$RefreshSig$ = prevRefreshSig;
 }
 },{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture.module.css":"4rTCq","./../../ScoreDisplay":"bzPoD"}],"4rTCq":[function(require,module,exports) {
-module.exports["container"] = `_4UxuVq_container`;
+module.exports["fixture"] = `_4UxuVq_fixture`;
+module.exports["group"] = `_4UxuVq_group`;
 module.exports["header"] = `_4UxuVq_header`;
 module.exports["teamName"] = `_4UxuVq_teamName`;
 
@@ -34153,6 +34204,8 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
+var _drawerFinish = require("./DrawerFinish");
+var _drawerFinishDefault = parcelHelpers.interopDefault(_drawerFinish);
 var _updateFixtureModuleCss = require("./UpdateFixture.module.css");
 var _updateFixtureModuleCssDefault = parcelHelpers.interopDefault(_updateFixtureModuleCss);
 var _s = $RefreshSig$();
@@ -34165,10 +34218,10 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
         finish: "disabled"
     });
     const [visibleDrawers, setVisibleDrawers] = (0, _react.useState)({
-        finsih: false,
+        start: false,
         cancel: false,
         postpone: false,
-        start: false
+        finish: false
     });
     const handleClick = {
         start: ()=>{
@@ -34183,10 +34236,20 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
             setEnableStates({
                 start: "disabled",
                 postpone: "disabled",
-                cancel: "enabled",
+                cancel: "disabled",
                 finish: "disabled"
             });
+            setVisibleDrawers({
+                start: false,
+                postpone: false,
+                cancel: false,
+                finish: true
+            });
         }
+    };
+    const drawerOpen = Object.values(visibleDrawers).some((f)=>f);
+    const drawerStyle = {
+        display: drawerOpen ? "flex" : "none"
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         className: (0, _updateFixtureModuleCssDefault.default).container,
@@ -34207,18 +34270,18 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                     fill: "white"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 43,
+                                    lineNumber: 55,
                                     columnNumber: 25
                                 }, undefined)
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 42,
+                                lineNumber: 54,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 40,
+                        lineNumber: 52,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34239,7 +34302,7 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         fill: "none"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 49,
+                                        lineNumber: 61,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34247,7 +34310,7 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         stroke: "white"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 50,
+                                        lineNumber: 62,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34255,19 +34318,19 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         stroke: "white"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 51,
+                                        lineNumber: 63,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 48,
+                                lineNumber: 60,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 46,
+                        lineNumber: 58,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34288,7 +34351,7 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         fill: "none"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 57,
+                                        lineNumber: 69,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("line", {
@@ -34300,19 +34363,19 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         strokeWidth: 2
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 58,
+                                        lineNumber: 70,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 56,
+                                lineNumber: 68,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 54,
+                        lineNumber: 66,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34332,31 +34395,35 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                     fill: "white"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 64,
+                                    lineNumber: 76,
                                     columnNumber: 25
                                 }, undefined)
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 63,
+                                lineNumber: 75,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 61,
+                        lineNumber: 73,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                lineNumber: 39,
+                lineNumber: 51,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 className: (0, _updateFixtureModuleCssDefault.default).drawers,
+                style: drawerStyle,
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                         className: "start",
+                        style: {
+                            display: visibleDrawers.start ? "block" : "none"
+                        },
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 className: "start-time",
@@ -34365,20 +34432,20 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         children: "Start time"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 71,
+                                        lineNumber: 87,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                         children: "12:00"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 72,
+                                        lineNumber: 88,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 70,
+                                lineNumber: 86,
                                 columnNumber: 21
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34388,30 +34455,33 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         children: "Duration"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 75,
+                                        lineNumber: 91,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                         children: "60 mins"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 76,
+                                        lineNumber: 92,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 74,
+                                lineNumber: 90,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 69,
+                        lineNumber: 85,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                         className: "postpone",
+                        style: {
+                            display: visibleDrawers.postpone ? "block" : "none"
+                        },
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 className: "postpone-time",
@@ -34420,20 +34490,20 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         children: "Postpone time"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 81,
+                                        lineNumber: 97,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                         children: "12:00"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 82,
+                                        lineNumber: 98,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 80,
+                                lineNumber: 96,
                                 columnNumber: 21
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34443,30 +34513,33 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                         children: "Duration"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 85,
+                                        lineNumber: 101,
                                         columnNumber: 25
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                         children: "60 mins"
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                        lineNumber: 86,
+                                        lineNumber: 102,
                                         columnNumber: 25
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                lineNumber: 84,
+                                lineNumber: 100,
                                 columnNumber: 21
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 79,
+                        lineNumber: 95,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                         className: "cancel",
+                        style: {
+                            display: visibleDrawers.cancel ? "block" : "none"
+                        },
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                             className: "cancel-time",
                             children: [
@@ -34474,71 +34547,49 @@ const UpdateFixture = ({ fixture, updateFixture })=>{
                                     children: "Cancel time"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 91,
+                                    lineNumber: 107,
                                     columnNumber: 25
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                     children: "12:00"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 92,
+                                    lineNumber: 108,
                                     columnNumber: 25
                                 }, undefined)
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                            lineNumber: 90,
+                            lineNumber: 106,
                             columnNumber: 21
                         }, undefined)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 89,
+                        lineNumber: 105,
                         columnNumber: 17
                     }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "finish",
-                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: "finish-time",
-                            children: [
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                    children: "Finish time"
-                                }, void 0, false, {
-                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 97,
-                                    columnNumber: 25
-                                }, undefined),
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                    children: "12:00"
-                                }, void 0, false, {
-                                    fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                                    lineNumber: 98,
-                                    columnNumber: 25
-                                }, undefined)
-                            ]
-                        }, void 0, true, {
-                            fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                            lineNumber: 96,
-                            columnNumber: 21
-                        }, undefined)
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _drawerFinishDefault.default), {
+                        fixture: fixture,
+                        visible: visibleDrawers.finish
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                        lineNumber: 95,
+                        lineNumber: 111,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-                lineNumber: 68,
+                lineNumber: 84,
                 columnNumber: 13
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/index.js",
-        lineNumber: 38,
+        lineNumber: 50,
         columnNumber: 9
     }, undefined);
 };
-_s(UpdateFixture, "6Vkyl/uR9FJVQra03XvvKZdabXc=");
+_s(UpdateFixture, "injdNILOZ3kXubuzp67akPJd6YE=");
 _c = UpdateFixture;
 exports.default = UpdateFixture;
 var _c;
@@ -34549,8 +34600,187 @@ $RefreshReg$(_c, "UpdateFixture");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./UpdateFixture.module.css":"bxOAr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","react":"21dqq"}],"bxOAr":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./UpdateFixture.module.css":"bxOAr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./DrawerFinish":"7STWg"}],"bxOAr":[function(require,module,exports) {
 module.exports["container"] = `A-Orha_container`;
+module.exports["drawers"] = `A-Orha_drawers`;
+module.exports["scoresUpToDate"] = `A-Orha_scoresUpToDate`;
+
+},{}],"7STWg":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$8a08 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$8a08.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _drawerFinishModuleCss = require("./DrawerFinish.module.css");
+var _drawerFinishModuleCssDefault = parcelHelpers.interopDefault(_drawerFinishModuleCss);
+const DrawerFinish = ({ fixture, onClose, onConfirm })=>{
+    const { Team1, Team2 } = fixture;
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _drawerFinishModuleCssDefault.default).container,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                children: "Update match score"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 6,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _drawerFinishModuleCssDefault.default).teamScore,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                        children: Team1
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 8,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "number",
+                                placeholder: "Goals"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 10,
+                                columnNumber: 17
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "number",
+                                placeholder: "Points"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 11,
+                                columnNumber: 17
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 9,
+                        columnNumber: 13
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 7,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _drawerFinishModuleCssDefault.default).teamScore,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                        children: Team2
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 15,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "number",
+                                placeholder: "Goals"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 17,
+                                columnNumber: 17
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "number",
+                                placeholder: "Points"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 18,
+                                columnNumber: 17
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 16,
+                        columnNumber: 13
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 14,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        onClick: onClose,
+                        children: "Cancel"
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 22,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        onClick: onConfirm,
+                        children: "Confirm"
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 23,
+                        columnNumber: 13
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 21,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                children: "Carded players?"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 25,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        children: "Yes"
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 27,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        children: "No"
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 28,
+                        columnNumber: 13
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                lineNumber: 26,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+        lineNumber: 5,
+        columnNumber: 12
+    }, undefined);
+};
+_c = DrawerFinish;
+exports.default = DrawerFinish;
+var _c;
+$RefreshReg$(_c, "DrawerFinish");
+
+  $parcel$ReactRefreshHelpers$8a08.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./DrawerFinish.module.css":"cXPhF"}],"cXPhF":[function(require,module,exports) {
+module.exports["teamScore"] = `EiwCHG_teamScore`;
 
 },{}],"evBP6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -34698,6 +34928,118 @@ const google = {
                             },
                             {
                                 id: "fixture5",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture6",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture7",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture8",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture9",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture10",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture11",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture12",
+                                Scheduled: "12:25",
+                                Stage: "Group",
+                                Category: "MJ1",
+                                Group: "1",
+                                Pitch: "Z1",
+                                Team1: "Amsterdam",
+                                Goals1: "",
+                                Points1: "",
+                                Team2: "Eindhoven",
+                                Goals2: "",
+                                Points2: ""
+                            },
+                            {
+                                id: "fixture13",
                                 Scheduled: "12:25",
                                 Stage: "Group",
                                 Category: "MJ1",

@@ -1,6 +1,7 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
+  background-color: #a2a2a2;
 }
 
 table {
@@ -10,6 +11,7 @@ table {
 
 
 #app {
+  
 
   h1,
   h2,
@@ -22,13 +24,15 @@ table {
 
   h1 {
     background: #344b32;
-    color: white;
-    font-size: 2.4em;
+    color: #84aa80;
+    font-size: 3.2em;
     line-height: 7rem;
     padding: 0 0;
     letter-spacing: 0.12em;
+    text-align: center;
+    position: fixed;
+    top: 0;
   }
-
   h2 {
     font-size: 1.8em;
     background: #b2cbb2;
@@ -50,7 +54,7 @@ table {
   }
 
   button {
-    padding: 0.6rem;
+    padding: 1.6rem 0.6rem;
     min-width: 160px;
     border-radius: 0.8rem;
     &.enabled {
