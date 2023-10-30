@@ -1,0 +1,18 @@
+.container {
+
+}
+
+.teamScore > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8rem;
+    margin: 0.5rem 0;
+    
+}
+.teamScore > div input {
+    font-size: 3.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    text-align: center;
+}

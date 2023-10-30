@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import styles from './UpdateFixture.module.css';
+import React, { useState } from 'react'
+import DrawerFinish from './DrawerFinish'
+import styles from './UpdateFixture.module.css'
 
 const UpdateFixture = ({ fixture, updateFixture }) => {
     const [enableStates, setEnableStates] = useState({
@@ -9,10 +10,10 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
         finish: 'disabled',
     });
     const [visibleDrawers, setVisibleDrawers] = useState({
-        finsih: false,
+        start: false,
         cancel: false,
         postpone: false,
-        start: false,
+        finish: false,
     });
 
     const handleClick = {
@@ -28,10 +29,21 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
             setEnableStates({
                 start: 'disabled',
                 postpone: 'disabled',
-                cancel: 'enabled',
+                cancel: 'disabled',
                 finish: 'disabled'
             })
+            setVisibleDrawers({
+                start: false,
+                postpone: false,
+                cancel: false,
+                finish: true,
+            })
         }
+    }
+
+    const drawerOpen = Object.values(visibleDrawers).some(f => f)
+    const drawerStyle = {
+        display: drawerOpen ? 'flex' : 'none',
     }
 
     return (
@@ -65,8 +77,12 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                     </svg>
                 </button>
             </div>
-            <div className={styles.drawers}>
-                <div className="start">
+
+
+
+            {/* DRAWERS */}
+            <div className={styles.drawers} style={drawerStyle}>
+                <div className="start" style={{ display: visibleDrawers.start ? 'block' : 'none' }}>
                     <div className="start-time">
                         <span>Start time</span>
                         <span>12:00</span>
@@ -76,7 +92,7 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                         <span>60 mins</span>
                     </div>
                 </div>
-                <div className="postpone">
+                <div className="postpone" style={{ display: visibleDrawers.postpone ? 'block' : 'none' }}>
                     <div className="postpone-time">
                         <span>Postpone time</span>
                         <span>12:00</span>
@@ -86,18 +102,13 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                         <span>60 mins</span>
                     </div>
                 </div>
-                <div className="cancel">
+                <div className="cancel" style={{ display: visibleDrawers.cancel ? 'block' : 'none' }}>
                     <div className="cancel-time">
                         <span>Cancel time</span>
                         <span>12:00</span>
                     </div>
                 </div>
-                <div className="finish">
-                    <div className="finish-time">
-                        <span>Finish time</span>
-                        <span>12:00</span>
-                    </div>
-                </div>
+                <DrawerFinish fixture={fixture} visible={visibleDrawers.finish} />
             </div>
         </div>
     );

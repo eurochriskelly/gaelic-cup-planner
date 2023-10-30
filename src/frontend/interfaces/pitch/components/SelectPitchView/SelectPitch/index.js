@@ -14,7 +14,7 @@ function SelectPitch(props) {
     const Container = header  ? 'h3' : 'div';
     const h3Styles = { 
         lineHeight: '10px',
-        backround: 'red',
+        borderRadius: '0',
     }
     return (
         <Container onClick={() => {

@@ -1,13 +1,28 @@
 .container {
     background-color: #e6ece6;
     padding: 1rem;
- }
-
-.container button {
-    
-
 }
-.container > div {
+
+.container button {}
+
+.container>div:first-child {
     width: 748px;
     margin: auto;
+}
+
+
+/* DRAWERS */
+.container>div.drawers {
+    background-color: white;
+    margin-top: 1rem;
+    font-size: 1.7rem;
+    padding: 2.5rem;
+}
+
+.scoresUpToDate {
+    color: #777;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
