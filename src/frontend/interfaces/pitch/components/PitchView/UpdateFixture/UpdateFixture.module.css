@@ -1,6 +1,5 @@
 .container {
     background-color: #e6ece6;
-    padding: 1rem;
 }
 
 .container button {}
@@ -16,7 +15,7 @@
     background-color: white;
     margin-top: 1rem;
     font-size: 1.7rem;
-    padding: 2.5rem;
+    
 }
 
 .scoresUpToDate {
