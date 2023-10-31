@@ -21,7 +21,6 @@ const PitchView = () => {
                 .shift()
         })
         .getFixtures(pitchId)
-
     return <div className={styles.pitchView}>
         <div className={styles.fixturesHead}>
             <h2>

@@ -48,7 +48,7 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
 
     return (
         <div className={styles.container}>
-            <div>
+            <div style={{ display: drawerOpen ? 'none' : 'block'}}>
                 <button className={enableStates.start} onClick={handleClick.start}>
                     Start&nbsp;
                     <svg width="29" height="29" viewBox="0 0 20 20">

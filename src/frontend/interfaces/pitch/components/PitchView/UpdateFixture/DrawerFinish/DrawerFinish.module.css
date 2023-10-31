@@ -1,5 +1,7 @@
 .container {
-
+    position: relative;
+    margin: 0;
+    background-color: blue;
 }
 
 .teamScore > div {
@@ -16,3 +18,4 @@
     border: 1px solid #ccc;
     text-align: center;
 }
+
