@@ -58,6 +58,17 @@ table {
   height: 4rem;
 }
 
+#app .drawer-header {
+  color: #fff;
+  text-transform: uppercase;
+  background-color: #7a6d83;
+  border-top-left-radius: 1.6rem;
+  border-top-right-radius: 1.6rem;
+  padding-left: 1rem;
+  font-size: 2.4rem;
+  line-height: 6rem;
+}
+
 #app button {
   border-radius: .8rem;
   min-width: 160px;
@@ -74,6 +85,15 @@ table {
   cursor: not-allowed;
   color: #444;
   background-color: #ddd;
+}
+
+#app .drawer-container {
+  margin: 2rem;
+}
+
+#app .drawer-container button {
+  background-color: red;
+  max-width: 100px;
 }
 
 button {
@@ -33557,7 +33577,146 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./components/SelectPitchView":"cUKBs","./components/PitchView":"iZ3CV"}],"km3Ru":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./components/SelectPitchView":"cUKBs","./components/PitchView":"iZ3CV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"cUKBs":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$56bd = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$56bd.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _selectPitch = require("./SelectPitch");
+var _selectPitchDefault = parcelHelpers.interopDefault(_selectPitch);
+const SelectPitchView = ()=>{
+    let pitches = [];
+    google.script.run.withSuccessHandler((data)=>{
+        pitches = data;
+    }).getListOfPitches();
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Please select pitch"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
+                lineNumber: 13,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _selectPitchDefault.default), {
+                header: true,
+                id: "Id",
+                location: "Location",
+                type: "Type"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
+                lineNumber: 14,
+                columnNumber: 9
+            }, undefined),
+            pitches.map((pitch)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _selectPitchDefault.default), {
+                    ...pitch,
+                    onChoosePitch: ()=>{
+                        console.log("clicked");
+                    }
+                }, pitch.id, false, {
+                    fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
+                    lineNumber: 23,
+                    columnNumber: 17
+                }, undefined))
+        ]
+    }, void 0, true);
+};
+_c = SelectPitchView;
+exports.default = SelectPitchView;
+var _c;
+$RefreshReg$(_c, "SelectPitchView");
+
+  $parcel$ReactRefreshHelpers$56bd.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","./SelectPitch":"elNOS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"elNOS":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$e687 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$e687.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _reactRouterDom = require("react-router-dom");
+var _selectPitchModuleCss = require("./SelectPitch.module.css");
+var _selectPitchModuleCssDefault = parcelHelpers.interopDefault(_selectPitchModuleCss);
+var _s = $RefreshSig$();
+const MAX_LOCATION_LENGTH = 35;
+function SelectPitch(props) {
+    _s();
+    const navigate = (0, _reactRouterDom.useNavigate)();
+    const { header, id = "??", location = "?????", type = "astro", onChoosePitch = ()=>{} } = props;
+    const Container = header ? "h3" : "div";
+    const h3Styles = {
+        lineHeight: "10px",
+        borderRadius: "0"
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Container, {
+        onClick: ()=>{
+            onChoosePitch();
+            navigate(`/pitch/${id}`);
+        },
+        style: header ? h3Styles : {},
+        className: (0, _selectPitchModuleCssDefault.default).container,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                children: id
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
+                lineNumber: 24,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                children: location.length > MAX_LOCATION_LENGTH ? location.substring(0, MAX_LOCATION_LENGTH) + "..." : location
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
+                lineNumber: 25,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                children: type
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
+                lineNumber: 30,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
+        lineNumber: 20,
+        columnNumber: 9
+    }, this);
+}
+_s(SelectPitch, "CzcTeTziyjMsSrAVmHuCCb6+Bfg=", false, function() {
+    return [
+        (0, _reactRouterDom.useNavigate)
+    ];
+});
+_c = SelectPitch;
+exports.default = SelectPitch;
+var _c;
+$RefreshReg$(_c, "SelectPitch");
+
+  $parcel$ReactRefreshHelpers$e687.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./SelectPitch.module.css":"279Ns","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"279Ns":[function(require,module,exports) {
+module.exports["container"] = `hmtECa_container`;
+
+},{}],"km3Ru":[function(require,module,exports) {
 "use strict";
 var Refresh = require("7422ead32dcc1e6b");
 function debounce(func, delay) {
@@ -33695,146 +33854,7 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"7422ead32dcc1e6b":"786KC"}],"cUKBs":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$56bd = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$56bd.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _selectPitch = require("./SelectPitch");
-var _selectPitchDefault = parcelHelpers.interopDefault(_selectPitch);
-const SelectPitchView = ()=>{
-    let pitches = [];
-    google.script.run.withSuccessHandler((data)=>{
-        pitches = data;
-    }).getListOfPitches();
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                children: "Please select pitch"
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
-                lineNumber: 13,
-                columnNumber: 9
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _selectPitchDefault.default), {
-                header: true,
-                id: "Id",
-                location: "Location",
-                type: "Type"
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
-                lineNumber: 14,
-                columnNumber: 9
-            }, undefined),
-            pitches.map((pitch)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _selectPitchDefault.default), {
-                    ...pitch,
-                    onChoosePitch: ()=>{
-                        console.log("clicked");
-                    }
-                }, pitch.id, false, {
-                    fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/index.js",
-                    lineNumber: 23,
-                    columnNumber: 17
-                }, undefined))
-        ]
-    }, void 0, true);
-};
-_c = SelectPitchView;
-exports.default = SelectPitchView;
-var _c;
-$RefreshReg$(_c, "SelectPitchView");
-
-  $parcel$ReactRefreshHelpers$56bd.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./SelectPitch":"elNOS"}],"elNOS":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$e687 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$e687.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _reactRouterDom = require("react-router-dom");
-var _selectPitchModuleCss = require("./SelectPitch.module.css");
-var _selectPitchModuleCssDefault = parcelHelpers.interopDefault(_selectPitchModuleCss);
-var _s = $RefreshSig$();
-const MAX_LOCATION_LENGTH = 35;
-function SelectPitch(props) {
-    _s();
-    const navigate = (0, _reactRouterDom.useNavigate)();
-    const { header, id = "??", location = "?????", type = "astro", onChoosePitch = ()=>{} } = props;
-    const Container = header ? "h3" : "div";
-    const h3Styles = {
-        lineHeight: "10px",
-        borderRadius: "0"
-    };
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(Container, {
-        onClick: ()=>{
-            onChoosePitch();
-            navigate(`/pitch/${id}`);
-        },
-        style: header ? h3Styles : {},
-        className: (0, _selectPitchModuleCssDefault.default).container,
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                children: id
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
-                lineNumber: 24,
-                columnNumber: 13
-            }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                children: location.length > MAX_LOCATION_LENGTH ? location.substring(0, MAX_LOCATION_LENGTH) + "..." : location
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
-                lineNumber: 25,
-                columnNumber: 13
-            }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                children: type
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
-                lineNumber: 30,
-                columnNumber: 13
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "src/frontend/interfaces/pitch/components/SelectPitchView/SelectPitch/index.js",
-        lineNumber: 20,
-        columnNumber: 9
-    }, this);
-}
-_s(SelectPitch, "CzcTeTziyjMsSrAVmHuCCb6+Bfg=", false, function() {
-    return [
-        (0, _reactRouterDom.useNavigate)
-    ];
-});
-_c = SelectPitch;
-exports.default = SelectPitch;
-var _c;
-$RefreshReg$(_c, "SelectPitch");
-
-  $parcel$ReactRefreshHelpers$e687.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./SelectPitch.module.css":"279Ns","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"279Ns":[function(require,module,exports) {
-module.exports["container"] = `hmtECa_container`;
-
-},{}],"iZ3CV":[function(require,module,exports) {
+},{"7422ead32dcc1e6b":"786KC"}],"iZ3CV":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$ce2a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -33983,12 +34003,7 @@ $RefreshReg$(_c, "PitchView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./PitchView.module.css":"jWlTZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture":"e4BoP","./UpdateFixture":"h1XXZ"}],"jWlTZ":[function(require,module,exports) {
-module.exports["fixturesArea"] = `FnPMDW_fixturesArea`;
-module.exports["fixturesHead"] = `FnPMDW_fixturesHead`;
-module.exports["pitchView"] = `FnPMDW_pitchView`;
-
-},{}],"e4BoP":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./Fixture":"e4BoP","./UpdateFixture":"h1XXZ","./PitchView.module.css":"jWlTZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"e4BoP":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$44f6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34125,13 +34140,7 @@ $RefreshReg$(_c, "Fixture");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture.module.css":"4rTCq","./../../ScoreDisplay":"bzPoD"}],"4rTCq":[function(require,module,exports) {
-module.exports["fixture"] = `_4UxuVq_fixture`;
-module.exports["group"] = `_4UxuVq_group`;
-module.exports["header"] = `_4UxuVq_header`;
-module.exports["teamName"] = `_4UxuVq_teamName`;
-
-},{}],"bzPoD":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","./../../ScoreDisplay":"bzPoD","./Fixture.module.css":"4rTCq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"bzPoD":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$a2c3 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34192,7 +34201,13 @@ $RefreshReg$(_c, "ScoreDisplay");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"h1XXZ":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"4rTCq":[function(require,module,exports) {
+module.exports["fixture"] = `_4UxuVq_fixture`;
+module.exports["group"] = `_4UxuVq_group`;
+module.exports["header"] = `_4UxuVq_header`;
+module.exports["teamName"] = `_4UxuVq_teamName`;
+
+},{}],"h1XXZ":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$6b3f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34603,12 +34618,7 @@ $RefreshReg$(_c, "UpdateFixture");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./UpdateFixture.module.css":"bxOAr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./DrawerFinish":"7STWg"}],"bxOAr":[function(require,module,exports) {
-module.exports["container"] = `A-Orha_container`;
-module.exports["drawers"] = `A-Orha_drawers`;
-module.exports["scoresUpToDate"] = `A-Orha_scoresUpToDate`;
-
-},{}],"7STWg":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./DrawerFinish":"7STWg","./UpdateFixture.module.css":"bxOAr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"7STWg":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$8a08 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34626,7 +34636,7 @@ const DrawerFinish = ({ fixture, onClose, onConfirm })=>{
         className: (0, _drawerFinishModuleCssDefault.default).container,
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: (0, _drawerFinishModuleCssDefault.default).drawerHead,
+                className: "drawer-header",
                 children: "Update match score"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
@@ -34634,37 +34644,111 @@ const DrawerFinish = ({ fixture, onClose, onConfirm })=>{
                 columnNumber: 9
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: (0, _drawerFinishModuleCssDefault.default).teamScore,
+                className: "drawer-container",
                 children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
-                        children: Team1
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 8,
-                        columnNumber: 9
-                    }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: (0, _drawerFinishModuleCssDefault.default).teamScore,
                         children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                type: "number",
-                                placeholder: "Goals"
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                                children: Team1
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                                lineNumber: 10,
+                                lineNumber: 9,
                                 columnNumber: 17
                             }, undefined),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                type: "number",
-                                placeholder: "Points"
-                            }, void 0, false, {
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Goals"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                        lineNumber: 11,
+                                        columnNumber: 21
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Points"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                        lineNumber: 12,
+                                        columnNumber: 21
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                                lineNumber: 11,
+                                lineNumber: 10,
                                 columnNumber: 17
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 9,
+                        lineNumber: 8,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: (0, _drawerFinishModuleCssDefault.default).teamScore,
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                                children: Team2
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 16,
+                                columnNumber: 17
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Goals"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                        lineNumber: 18,
+                                        columnNumber: 21
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Points"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                        lineNumber: 19,
+                                        columnNumber: 21
+                                    }, undefined)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 17,
+                                columnNumber: 17
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 15,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                className: "enabled",
+                                onClick: onConfirm,
+                                children: "Proceed"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 23,
+                                columnNumber: 17
+                            }, undefined),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: onClose,
+                                children: "Cancel"
+                            }, void 0, false, {
+                                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                                lineNumber: 24,
+                                columnNumber: 17
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
+                        lineNumber: 22,
                         columnNumber: 13
                     }, undefined)
                 ]
@@ -34674,97 +34758,42 @@ const DrawerFinish = ({ fixture, onClose, onConfirm })=>{
                 columnNumber: 9
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: (0, _drawerFinishModuleCssDefault.default).teamScore,
                 children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
-                        children: Team2
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "drawer-header",
+                        children: "Carded players?"
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 15,
+                        lineNumber: 29,
                         columnNumber: 13
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "drawer-container",
                         children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                type: "number",
-                                placeholder: "Goals"
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                children: "Yes"
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                                lineNumber: 17,
+                                lineNumber: 31,
                                 columnNumber: 17
                             }, undefined),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                type: "number",
-                                placeholder: "Points"
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                children: "No"
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                                lineNumber: 18,
+                                lineNumber: 32,
                                 columnNumber: 17
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 16,
+                        lineNumber: 30,
                         columnNumber: 13
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                lineNumber: 14,
-                columnNumber: 9
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        onClick: onClose,
-                        children: "Cancel"
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 22,
-                        columnNumber: 13
-                    }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        onClick: onConfirm,
-                        children: "Confirm"
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 23,
-                        columnNumber: 13
-                    }, undefined)
-                ]
-            }, void 0, true, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                lineNumber: 21,
-                columnNumber: 9
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "drawerHead",
-                children: "Carded players?"
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                lineNumber: 25,
-                columnNumber: 9
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        children: "Yes"
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 27,
-                        columnNumber: 13
-                    }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        children: "No"
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                        lineNumber: 28,
-                        columnNumber: 13
-                    }, undefined)
-                ]
-            }, void 0, true, {
-                fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerFinish/index.js",
-                lineNumber: 26,
+                lineNumber: 28,
                 columnNumber: 9
             }, undefined)
         ]
@@ -34784,9 +34813,20 @@ $RefreshReg$(_c, "DrawerFinish");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./DrawerFinish.module.css":"cXPhF"}],"cXPhF":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","./DrawerFinish.module.css":"cXPhF","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"cXPhF":[function(require,module,exports) {
 module.exports["container"] = `EiwCHG_container`;
 module.exports["teamScore"] = `EiwCHG_teamScore`;
+
+},{}],"bxOAr":[function(require,module,exports) {
+module.exports["container"] = `A-Orha_container`;
+module.exports["drawers"] = `A-Orha_drawers`;
+module.exports["header"] = `A-Orha_header`;
+module.exports["scoresUpToDate"] = `A-Orha_scoresUpToDate`;
+
+},{}],"jWlTZ":[function(require,module,exports) {
+module.exports["fixturesArea"] = `FnPMDW_fixturesArea`;
+module.exports["fixturesHead"] = `FnPMDW_fixturesHead`;
+module.exports["pitchView"] = `FnPMDW_pitchView`;
 
 },{}],"evBP6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

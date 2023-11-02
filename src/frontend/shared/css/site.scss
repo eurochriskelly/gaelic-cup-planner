@@ -12,7 +12,6 @@ table {
 
 #app {
   
-
   h1,
   h2,
   h3 {
@@ -53,6 +52,17 @@ table {
     width: 100%;
   }
 
+  .drawer-header {
+    background-color: #7a6d83;
+    line-height: 6rem;
+    color: white;
+    padding-left: 1rem;
+    text-transform: uppercase;
+    border-top-left-radius: 1.6rem;
+    border-top-right-radius: 1.6rem;
+    font-size: 2.4rem;
+  }
+
   button {
     padding: 1.6rem 0.6rem;
     min-width: 160px;
@@ -66,6 +76,14 @@ table {
       cursor: not-allowed;
       background-color: #ddd;
       color: #444;
+    }
+  }
+
+  .drawer-container {
+    margin: 2rem;
+    button {
+      max-width: 100px;
+      background-color: red;
     }
   }
 
