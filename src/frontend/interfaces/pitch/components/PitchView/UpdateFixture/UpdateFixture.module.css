@@ -9,7 +9,6 @@
     margin: auto;
 }
 
-
 /* DRAWERS */
 .container>div.drawers {
     background-color: white;
@@ -24,4 +23,8 @@
     margin: 0;
     padding: 0;
     text-align: center;
+}
+
+.container .header {
+    color: red !important;
 }
