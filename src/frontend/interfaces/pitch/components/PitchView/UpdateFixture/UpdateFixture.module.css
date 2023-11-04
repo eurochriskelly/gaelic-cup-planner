@@ -1,20 +1,19 @@
-.container {
-    background-color: #e6ece6;
-}
+.updateFixture button {}
 
-.container button {}
-
-.container>div:first-child {
-    width: 748px;
+.updateFixture>div:first-child {
+    width: 100%;
     margin: auto;
+    
+}
+.updateFixture>div:first-child>div {
+    display: grid;
+    grid-template-columns: 0.25fr 0.25fr 0.25fr 0.25fr;
 }
 
 /* DRAWERS */
-.container>div.drawers {
-    background-color: white;
+.updateFixture>div.drawers {
     margin-top: 1rem;
     font-size: 1.7rem;
-    
 }
 
 .scoresUpToDate {
@@ -25,6 +24,6 @@
     text-align: center;
 }
 
-.container .header {
+.updateFixture .header {
     color: red !important;
 }
