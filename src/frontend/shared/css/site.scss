@@ -80,10 +80,9 @@ table {
   }
 
   .drawer-container {
-    margin: 2rem;
-    button {
-      max-width: 100px;
-      background-color: red;
+    margin:0;
+    &>div {
+      margin: 2rem;
     }
   }
 

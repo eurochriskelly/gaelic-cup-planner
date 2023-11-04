@@ -34,10 +34,16 @@
 .fixture > div.header {
     text-transform: uppercase;
     color: #aaa;
-    border-bottom: none;
+    border-bottom: 2px ridge #344b32;
     background-color: #e6f1e6;
     border-radius: 0;
+    padding: 0.4rem 1.3rem;
+    width: 95%;
 }
+.fixture > div.header > div {
+    
+}
+
 .fixture > div.header > div {
     font-size: 1.4em;
     line-height: 3rem;

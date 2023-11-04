@@ -38,6 +38,23 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                 cancel: false,
                 finish: true,
             })
+        },
+        
+    }
+    const actions = {
+        closeDrawer: () => {
+            setEnableStates({
+                start: 'start',
+                postpone: 'disabled',
+                cancel: 'start',
+                finish: 'disabled'
+            })
+            setVisibleDrawers({
+                start: false,
+                postpone: false,
+                cancel: false,
+                finish: false,
+            })   
         }
     }
 
@@ -47,7 +64,7 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.updateFixture}>
             <div style={{ display: drawerOpen ? 'none' : 'block'}}>
                 <button className={enableStates.start} onClick={handleClick.start}>
                     Start&nbsp;
@@ -108,7 +125,11 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                         <span>12:00</span>
                     </div>
                 </div>
-                <DrawerFinish fixture={fixture} visible={visibleDrawers.finish} />
+                <DrawerFinish 
+                    fixture={fixture}
+                    visible={visibleDrawers.finish}
+                    onClose={actions.closeDrawer}
+                />
             </div>
         </div>
     );
