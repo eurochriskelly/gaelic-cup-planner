@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Fixture from "./Fixture"
 import UpdateFixture from "./UpdateFixture"
@@ -7,20 +8,38 @@ const PitchView = () => {
     const { pitchId } = useParams()
     const navigate = useNavigate()
     const backToSelection = () => navigate('/')
-    let fixtures = []
-    let nextFixture = null
 
-    google.script.run
-        .withSuccessHandler(data => {
-            console.log('fixtures', data)
-            fixtures = data
-            nextFixture = fixtures
-                .filter(f => {
-                    return f.Goals1 === '' && f.Goals2 === ''
-                })
-                .shift()
-        })
-        .getFixtures(pitchId)
+    const [fixtures, setFixtures] = useState([])
+    const [nextFixture, setNextFixture] = useState(null)
+
+    const actions = {
+        fetchFixtures: async () => {
+            try {
+                google.script.run
+                    .withSuccessHandler(data => {
+                        setFixtures(data)
+                        setNextFixture(data
+                            .filter(f => f.Goals1 === '' && f.Goals2 === '')
+                            .shift())
+                    })
+                    .getFixtures(pitchId)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        },
+        delayByOne: async (fixtureId) => {
+            console.log('delayByOne')
+        },
+        delayUntilEnd: async (fixtureId) => {
+            console.log('delayUntilEnd')
+        },
+    }
+    
+    useEffect(() => {
+        actions.fetchFixtures()
+    }, [])
+
+
     return <div className={styles.pitchView}>
         <div className={styles.fixturesHead}>
             <h2>
@@ -53,7 +72,12 @@ const PitchView = () => {
                     <Fixture fixture={fixture} />
                     {
                         nextFixture && nextFixture.id === fixture.id &&
-                        <UpdateFixture fixture={fixture} />
+                        <UpdateFixture
+                            fixture={fixture}
+                            updateFixtures={actions.fetchFixtures}
+                            delayByOne={actions.delayByOne}
+                            delayUntilEnd={actions.delayUntilEnd}
+                        />
                     }
                 </div>
             })

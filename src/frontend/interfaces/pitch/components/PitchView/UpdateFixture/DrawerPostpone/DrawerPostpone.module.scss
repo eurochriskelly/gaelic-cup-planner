@@ -1,0 +1,27 @@
+.drawerPostpone {
+    margin: 3rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 2rem;
+    
+
+    .postponeForm {
+        font-size: 3rem;
+        display: grid;
+        width: 100%;
+        box-sizing: border-box;
+
+        input {
+            width: 90%;
+            box-sizing: border-box;
+            padding: 2rem;
+            font-size: 2rem;
+            border-radius: 1rem;
+        }
+    }
+    .footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+}

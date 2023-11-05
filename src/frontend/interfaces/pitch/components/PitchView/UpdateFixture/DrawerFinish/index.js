@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import ScorePicker from './ScorePicker'
 import styles from './DrawerFinish.module.scss'
 
 const DrawerFinish = ({
     fixture,
-    onClose = () => { },
+    updateFixtures,
+    visible,
     onConfirm = () => { }
 }) => {
+    if (!visible) return null
     const steps = ['score', 'cardedPlayers']
     // create a state object to store the current step and the current task
     const [currentTeam, setCurrentTeam] = useState('')
     const [currentType, setCurrentType] = useState('')
+
     const [state, setState] = useState({
         step: 0,
     })
@@ -44,16 +46,16 @@ const DrawerFinish = ({
         },
         saveScore: async () => {
             await onConfirm()
-            // move step on
-            setState({ step: 1 })
+            google.script.run
+                .withSuccessHandler(fixtures => setState({ step: 1 }))
+                .updateMatchScore(fixture.id, scores)
         },
         notReadyToSaveScore: () => {
-            onClose()
             setState({ step: 1 })
         },
         cardPlayersUpdated: () => {
-            onClose()
             setState({ step: 0 })
+            updateFixtures()
         },
         updateScore: (team, type, amount) => {
             setCurrentTeam(team)
@@ -74,7 +76,6 @@ const DrawerFinish = ({
                             [currentType]: i
                         }
                     }
-                    console.log('newScore', newScore)
                     setScores(newScore)
                     setScorePicker({ visible: false })
                 }}>
@@ -85,13 +86,19 @@ const DrawerFinish = ({
         return <div>{squares}</div>
     }
 
+    const scoresNotReady = () => {
+        return !(scores.Team1.goals !== '' &&
+            scores.Team1.points !== '' &&
+            scores.Team2.goals !== '' &&
+            scores.Team2.points !== '')
+    }
+
     const { Team1, Team2 } = fixture
     const displayScore = (team, type) => {
         const score = scores[team][type]
         return score || score === 0 ? score : '?'
     }
     return <div className={styles.drawerFinish}>
-
         <div className={styles.drawerStep} style={rules.score}>
             <div className="drawer-header">Update match score</div>
             <div className="drawer-container" style={{ position: 'relative' }}>
@@ -110,8 +117,8 @@ const DrawerFinish = ({
                             <div onClick={actions.updateScore.bind(null, 'Team2', 'points')}>{displayScore('Team2', 'points')}</div>
                         </div>
                     </div>
-                    <div className={styles.proceedButtons}>
-                        <button className="enabled" onClick={actions.saveScore}>Proceed</button>
+                    <div className={styles.proceedButtons} >
+                        <button disabled={scoresNotReady()} className={ scoresNotReady() ? 'disabled' : 'enabled'} onClick={actions.saveScore}>Proceed</button>
                         <button onClick={actions.notReadyToSaveScore}>Cancel</button>
                     </div>
                 </div>

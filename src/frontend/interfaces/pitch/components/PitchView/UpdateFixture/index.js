@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
 import DrawerFinish from './DrawerFinish'
+import DrawerPostpone from './DrawerPostpone';
 import styles from './UpdateFixture.module.css'
 
-const UpdateFixture = ({ fixture, updateFixture }) => {
+const UpdateFixture = ({ 
+    fixture, 
+    updateFixtures,
+    delayByOne,
+    delayUntilEnd
+ }) => {
     const [enableStates, setEnableStates] = useState({
         start: 'enabled',
         postpone: 'enabled',
@@ -16,13 +22,42 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
         finish: false,
     });
 
-    const handleClick = {
+
+    const actions = {
+        closeDrawer: () => {
+            setEnableStates({
+                start: 'start',
+                postpone: 'disabled',
+                cancel: 'start',
+                finish: 'disabled'
+            })
+            setVisibleDrawers({
+                start: false,
+                postpone: false,
+                cancel: false,
+                finish: false,
+            })
+        },
         start: () => {
             setEnableStates({
                 start: 'disabled',
                 postpone: 'disabled',
                 cancel: 'enabled',
                 finish: 'enabled'
+            })
+        },
+        postpone: () => {
+            setEnableStates({
+                start: 'disabled',
+                postpone: 'disabled',
+                cancel: 'enabled',
+                finish: 'disabled'
+            })
+            setVisibleDrawers({
+                start: false,
+                postpone: true,
+                cancel: false,
+                finish: false,
             })
         },
         finish: () => {
@@ -39,22 +74,11 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                 finish: true,
             })
         },
-        
-    }
-    const actions = {
-        closeDrawer: () => {
-            setEnableStates({
-                start: 'start',
-                postpone: 'disabled',
-                cancel: 'start',
-                finish: 'disabled'
-            })
-            setVisibleDrawers({
-                start: false,
-                postpone: false,
-                cancel: false,
-                finish: false,
-            })   
+        delayByOne: () => {
+            console.log('delayByOne')
+        },
+        delayUntilEnd: () => {
+            console.log('delayUntilEnd')
         }
     }
 
@@ -63,16 +87,20 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
         display: drawerOpen ? 'flex' : 'none',
     }
 
+    const layoutButtons = {
+        display: drawerOpen ? 'none' : 'grid',
+        gridTemplateColumns: '0.25fr 0.25fr 0.25fr 0.25fr'
+    }
     return (
         <div className={styles.updateFixture}>
-            <div style={{ display: drawerOpen ? 'none' : 'block'}}>
-                <button className={enableStates.start} onClick={handleClick.start}>
+            <div style={layoutButtons}>
+                <button className={enableStates.start} onClick={actions.start}>
                     Start&nbsp;
                     <svg width="29" height="29" viewBox="0 0 20 20">
                         <polygon points="8,5 16,12 8,19" fill="white"></polygon>
                     </svg>
                 </button>
-                <button className={enableStates.postpone}>
+                <button className={enableStates.postpone} onClick={actions.postpone}>
                     Postpone&nbsp;
                     <svg width="22" height="22" viewBox="0 0 20 20">
                         <circle cx="12" cy="12" r="9" stroke="white" strokeWidth={2} fill="none"></circle>
@@ -81,13 +109,13 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                     </svg>
                 </button>
                 <button className={enableStates.cancel}>
-                    Cancel&nbsp;
+                    Cancel match&nbsp;
                     <svg width="22" height="22" viewBox="0 0 22 22">
                         <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="3px" fill="none"></circle>
                         <line x1="6" y1="6" x2="18" y2="18" stroke="white" strokeWidth={2}></line>
                     </svg>
                 </button>
-                <button className={enableStates.finish} onClick={handleClick.finish}>
+                <button className={enableStates.finish} onClick={actions.finish}>
                     Finish&nbsp;
                     <svg width="26" height="26" viewBox="0 0 20 20">
                         <rect x="5" y="5" width="14" height="14" fill="white"></rect>
@@ -109,24 +137,22 @@ const UpdateFixture = ({ fixture, updateFixture }) => {
                         <span>60 mins</span>
                     </div>
                 </div>
-                <div className="postpone" style={{ display: visibleDrawers.postpone ? 'block' : 'none' }}>
-                    <div className="postpone-time">
-                        <span>Postpone time</span>
-                        <span>12:00</span>
-                    </div>
-                    <div className="postpone-time">
-                        <span>Duration</span>
-                        <span>60 mins</span>
-                    </div>
-                </div>
+                <DrawerPostpone
+                    fixture={fixture}
+                    delayByOne={delayByOne}
+                    delayUntilEnd={delayUntilEnd}
+                    visible={visibleDrawers.postpone}
+                    onClose={actions.closeDrawer}
+                />
                 <div className="cancel" style={{ display: visibleDrawers.cancel ? 'block' : 'none' }}>
                     <div className="cancel-time">
                         <span>Cancel time</span>
                         <span>12:00</span>
                     </div>
                 </div>
-                <DrawerFinish 
+                <DrawerFinish
                     fixture={fixture}
+                    updateFixtures={updateFixtures}
                     visible={visibleDrawers.finish}
                     onClose={actions.closeDrawer}
                 />
