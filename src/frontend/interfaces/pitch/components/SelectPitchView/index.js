@@ -1,26 +1,27 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import SelectPitch from "./SelectPitch"
 
 const SelectPitchView = () => {
-    let pitches = []
     const [pitchData, setPitchData] = useState([]); // useState hook to store data
+
+    async function fetchData() {
+        try {
+            console.log('Fetching data...')
+            google.script.run
+                .withSuccessHandler(data => {
+                    setPitchData(data)
+                })
+                .getListOfPitches()
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     useEffect(() => {
         // Define the API call here
-        async function fetchData() {
-          try {
-            google.script.run
-            .withSuccessHandler(setPitchData)
-            .getListOfPitches()
-            
-            setData(jsonData);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-        }
-    
         // Call the API when the component is mounted
         fetchData();
-      }, []);
+    }, []);
 
     return <>
         <h2>Please select pitch</h2>
@@ -29,10 +30,9 @@ const SelectPitchView = () => {
             id="Id"
             location="Location"
             type="Type"
-        /* Add an on-click event */
         />
         {
-            pitches.map(pitch =>
+            pitchData.map(pitch =>
                 <SelectPitch
                     key={pitch.id} {...pitch}
                     onChoosePitch={() => {
