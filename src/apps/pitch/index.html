@@ -18,6 +18,11 @@ table {
   width: 100%;
 }
 
+#app * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 #app h1, #app h2, #app h3 {
   text-transform: uppercase;
   -webkit-user-select: none;
@@ -41,7 +46,7 @@ table {
 #app h2 {
   color: #fff;
   text-align: center;
-  background: #0d7f0d;
+  background: #4e7a4e;
   font-size: 1.8em;
   line-height: 6rem;
 }
@@ -34040,10 +34045,7 @@ var _fixtureModuleCss = require("./Fixture.module.css");
 var _fixtureModuleCssDefault = parcelHelpers.interopDefault(_fixtureModuleCss);
 const Fixture = ({ header, fixture })=>{
     const { id, Scheduled, Category, Team1, Goals1, Points1, Team2, Goals2, Points2 } = fixture;
-    const s = (n)=>({
-            width: `${n}px`
-        });
-    const tlen = 28;
+    const tlen = 24;
     const totalTeam1 = (Goals1 || 0) * 3 + (Points1 || 0);
     const totalTeam2 = (Goals2 || 0) * 3 + (Points2 || 0);
     const winner = totalTeam1 > totalTeam2 ? Team1 : totalTeam1 < totalTeam2 ? Team2 : "";
@@ -34080,7 +34082,7 @@ const Fixture = ({ header, fixture })=>{
                                             fill: "#88b288"
                                         }, void 0, false, {
                                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                            lineNumber: 47,
+                                            lineNumber: 37,
                                             columnNumber: 25
                                         }, undefined),
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34088,7 +34090,7 @@ const Fixture = ({ header, fixture })=>{
                                             stroke: "white"
                                         }, void 0, false, {
                                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                            lineNumber: 48,
+                                            lineNumber: 38,
                                             columnNumber: 25
                                         }, undefined),
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34096,20 +34098,20 @@ const Fixture = ({ header, fixture })=>{
                                             stroke: "white"
                                         }, void 0, false, {
                                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                            lineNumber: 49,
+                                            lineNumber: 39,
                                             columnNumber: 25
                                         }, undefined)
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 46,
+                                    lineNumber: 36,
                                     columnNumber: 21
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                     children: Scheduled
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 51,
+                                    lineNumber: 41,
                                     columnNumber: 21
                                 }, undefined)
                             ]
@@ -34124,20 +34126,20 @@ const Fixture = ({ header, fixture })=>{
                                     children: "GROUP:"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 54,
+                                    lineNumber: 44,
                                     columnNumber: 21
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                     children: Category.replace(/[0-9]/g, "")
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 55,
+                                    lineNumber: 45,
                                     columnNumber: 21
                                 }, undefined)
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 53,
+                            lineNumber: 43,
                             columnNumber: 17
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -34146,20 +34148,20 @@ const Fixture = ({ header, fixture })=>{
                                     children: "STAGE:"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 58,
+                                    lineNumber: 48,
                                     columnNumber: 21
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                     children: "Group"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                                    lineNumber: 59,
+                                    lineNumber: 49,
                                     columnNumber: 21
                                 }, undefined)
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 57,
+                            lineNumber: 47,
                             columnNumber: 17
                         }, undefined)
                     ]
@@ -34171,12 +34173,11 @@ const Fixture = ({ header, fixture })=>{
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     children: [
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            style: s(400),
                             className: (winner === Team1 ? (0, _fixtureModuleCssDefault.default).winner : "") + " teamName",
                             children: Team1.length > tlen ? Team1.substring(0, tlen) + "..." : Team1
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 63,
+                            lineNumber: 53,
                             columnNumber: 17
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
@@ -34185,23 +34186,23 @@ const Fixture = ({ header, fixture })=>{
                             points: Points1
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 68,
+                            lineNumber: 58,
                             columnNumber: 17
                         }, undefined)
                     ]
                 }, void 0, true, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 62,
+                    lineNumber: 52,
                     columnNumber: 13
                 }, undefined),
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     children: [
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: (winner === Team2 ? (0, _fixtureModuleCssDefault.default).winner : "") + "teamName",
+                            className: (winner === Team2 ? (0, _fixtureModuleCssDefault.default).winner : "") + " teamName",
                             children: Team2.length > tlen ? Team2.substring(0, tlen) + "..." : Team2
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 71,
+                            lineNumber: 61,
                             columnNumber: 17
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _scoreDisplayDefault.default), {
@@ -34210,13 +34211,13 @@ const Fixture = ({ header, fixture })=>{
                             points: Points2
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                            lineNumber: 76,
+                            lineNumber: 66,
                             columnNumber: 17
                         }, undefined)
                     ]
                 }, void 0, true, {
                     fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
-                    lineNumber: 70,
+                    lineNumber: 60,
                     columnNumber: 13
                 }, undefined)
             ]
@@ -34277,21 +34278,23 @@ const ScoreDisplay = ({ header, goals, points })=>{
         padding: "0.8rem 0.5rem",
         fontSize: "0.7em",
         minWidth: "100px",
-        margin: "0.8rem"
+        margin: "0.8rem 2rem",
+        userSelect: "none"
     };
     if (!havePoints && !haveGoals) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
         style: style,
         children: "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
     }, void 0, false, {
         fileName: "src/frontend/interfaces/pitch/generic/ScoreDisplay/index.js",
-        lineNumber: 22,
+        lineNumber: 23,
         columnNumber: 16
     }, undefined);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
         style: {
-            fontSize: "2.4rem",
+            fontSize: "2.6rem",
             textAlign: "center",
             padding: "9px 0",
+            userSelect: "none",
             backgroundColor: "rgba(179,198,179,0.5)"
         },
         children: [
@@ -34313,20 +34316,20 @@ const ScoreDisplay = ({ header, goals, points })=>{
                         children: (goals || 0) * 3 + (points || 0)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/generic/ScoreDisplay/index.js",
-                        lineNumber: 29,
+                        lineNumber: 31,
                         columnNumber: 67
                     }, undefined),
                     ")"
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/generic/ScoreDisplay/index.js",
-                lineNumber: 29,
+                lineNumber: 31,
                 columnNumber: 35
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/generic/ScoreDisplay/index.js",
-        lineNumber: 24,
+        lineNumber: 25,
         columnNumber: 12
     }, undefined);
 };
