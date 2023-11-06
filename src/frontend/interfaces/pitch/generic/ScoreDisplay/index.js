@@ -11,7 +11,7 @@ const ScoreDisplay = ({ header, goals, points }) => {
     }
     const style = {
         backgroundColor: '#efefef',
-        border: '1px dotted #bbb',
+        border: '0.3rem dotted #aaa',
         padding: '0.8rem 0.5rem',
         fontSize: '0.7em',
         minWidth: '100px',
