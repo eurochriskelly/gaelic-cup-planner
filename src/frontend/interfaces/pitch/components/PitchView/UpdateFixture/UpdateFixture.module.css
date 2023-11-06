@@ -3,11 +3,29 @@
 .updateFixture>div:first-child {
     width: 100%;
     margin: auto;
-    
-}
-.updateFixture>div:first-child>div {
     display: grid;
-    grid-template-columns: 0.25fr 0.25fr 0.25fr 0.25fr;
+    grid-template-columns: 0.6fr 0.6fr 0.1fr;
+}
+.more {
+    margin-left: 0.4rem;
+}
+.updateFixture>div:nth-child(2) {
+    width: 100%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 0.1fr 0.6fr 0.6fr;
+}
+.updateFixture>div button {
+    line-height: 4rem;
+    font-size: 2.6rem;
+}
+.updateFixture>div:first-child button:last-child,
+.updateFixture>div:nth-child(2) button:first-child  {
+    font-size: 4rem;
+    padding:0;
+    line-height: 2rem;
+    background-color: #c6b3d3;
+    border: none;
 }
 
 /* DRAWERS */

@@ -27,7 +27,7 @@ const Fixture = ({ fixture, isFocus }) => {
     }
 
     return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
-        <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#b3c6b3' : '' }}>
+        <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
                 <span>
                     <svg width="10" height="10" viewBox="0 0 30 30">
