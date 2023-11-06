@@ -53,11 +53,13 @@ const PitchView = () => {
                 const focusStyle = {
                     border: '10px solid #4c226a',
                     borderRadius: '18px',
-                    marginBottom: '8px',
+                    marginBottom: '8px',                    
                     backgroundColor: '#c6b3d3',
                 }
-                return <div key={fixture.id} className={focusFixture ? 'focusFixture' : ''} style={focusFixture ? focusStyle : {}}>
-                    <Fixture fixture={fixture} />
+                return <div key={fixture.id}
+                    className={focusFixture ? 'focusFixture' : ''} 
+                    style={focusFixture ? focusStyle : {}}>
+                    <Fixture fixture={fixture} isFocus={focusFixture} />
                     {
                         nextFixture && nextFixture.id === fixture.id &&
                         <UpdateFixture

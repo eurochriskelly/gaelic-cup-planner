@@ -10,9 +10,8 @@ const ScoreDisplay = ({ header, goals, points }) => {
         havePoints = false    
     }
     const style = {
-        backgroundColor: '#eee',
-        border: '1px solid #bbb',
-        borderRadius: '0.6rem',
+        backgroundColor: '#efefef',
+        border: '1px dotted #bbb',
         padding: '0.8rem 0.5rem',
         fontSize: '0.7em',
         minWidth: '100px',
