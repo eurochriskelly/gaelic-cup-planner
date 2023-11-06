@@ -1,7 +1,7 @@
 import ScoreDisplay from './../../../generic/ScoreDisplay'
 import styles from './Fixture.module.css'
 
-const Fixture = ({ header, fixture }) => {
+const Fixture = ({ fixture, isFocus }) => {
     const {
         id, Scheduled,
         Category,
@@ -23,13 +23,10 @@ const Fixture = ({ header, fixture }) => {
         if (scoreUpToDate) {
             classes.push(styles.scoreUpToDate)
         }
-        if (header) {
-            classes.push(styles.header)
-        }
         return classes.join(' ')
     }
 
-    return <div className={styles.fixture} key={id}>
+    return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#b3c6b3' : '' }}>
             <div>
                 <span>
@@ -55,7 +52,7 @@ const Fixture = ({ header, fixture }) => {
                         ? Team1.substring(0, tlen) + '...'
                         : Team1
                 }</div>
-                <ScoreDisplay header={header} goals={Goals1} points={Points1} />
+                <ScoreDisplay goals={Goals1} points={Points1} />
             </div>
             <div>
                 <div className={(winner === Team2 ? styles.winner : '') + ' teamName'}>{
@@ -63,7 +60,7 @@ const Fixture = ({ header, fixture }) => {
                         ? Team2.substring(0, tlen) + '...'
                         : Team2
                 }</div>
-                <ScoreDisplay header={header} goals={Goals2} points={Points2} />
+                <ScoreDisplay goals={Goals2} points={Points2} />
             </div>
         </div>
     </div>
