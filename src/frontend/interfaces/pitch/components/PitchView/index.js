@@ -46,18 +46,6 @@ const PitchView = () => {
                 <span onClick={backToSelection}></span>
                 <span>Fixtures for pitch: {pitchId}</span>
             </h2>
-            <Fixture
-                header={true}
-                fixture={{
-                    Scheduled: 'Time',
-                    Category: 'G_',
-                    Team1: 'Team 1',
-                    Goals1: '',
-                    Points1: '',
-                    Team2: 'Team 2',
-                    Goals2: '',
-                    Points2: '',
-                }} />
         </div>
         <div className={styles.fixturesArea}>{
             fixtures.map(fixture => {

@@ -12,16 +12,17 @@ const ScoreDisplay = ({ header, goals, points }) => {
     const style = {
         backgroundColor: '#eee',
         border: '1px solid #bbb',
-        borderRadius: '4px',
-        padding: '1rem 0.2rem',
-        fontSize: '1.0em',
+        borderRadius: '0.6rem',
+        padding: '0.8rem 0.5rem',
+        fontSize: '0.7em',
         minWidth: '100px',
+        margin: '0.8rem'
     }
     if (!havePoints && !haveGoals) {
         return <span style={style}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     }
     return <span style={{
-        fontSize: '1.0em',
+        fontSize: '2.4rem',
         textAlign: 'center',
         padding: '9px 0',
         backgroundColor: 'rgba(179,198,179,0.5)',

@@ -22,7 +22,7 @@ const state = {
             Category: 'MJ1',
             Group: '1',
             Pitch: 'Z1',
-            Team1: 'Copenhagen Hagen Das',
+            Team1: 'Copenhagen Hagen Das Ice Cream Yum Yum',
             Goals1: 2,
             Points1: 0,
             Team2: 'Amsterdam',
