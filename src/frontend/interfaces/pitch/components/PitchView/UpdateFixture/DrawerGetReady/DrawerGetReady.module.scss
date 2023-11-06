@@ -1,0 +1,37 @@
+$c-pri: #344b32;
+$c-sec: #4c226a;
+
+.drawerGetReady {
+    background-color: white;
+    border-radius: 2rem;
+    width: 100%;
+    margin: 1rem;
+    button {
+        width: 100%;
+        margin: auto;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+    }
+    ul {
+        list-style: none;
+    }
+    
+    li::before {
+        content: "✓"; /* Unicode character for a checkmark */
+        margin-right: 5px; /* Add some spacing between the checkmark and the text */
+        color: lighten($c-pri, 20%); /* Change the color of the checkmark */
+        font-size: 3rem;
+    }
+    li span {
+        background-color: desaturate(lighten($c-sec, 33%), 30%);
+        color: white;
+        border-radius: 1rem;
+        padding: 0.3rem 1.1rem;
+        font-weight: bold;
+    }
+    div > div:last-child p {
+        margin: 4rem;
+        text-align: center;
+    }
+}
