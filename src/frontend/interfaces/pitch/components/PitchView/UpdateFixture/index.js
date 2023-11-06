@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DrawerFinish from './DrawerFinish'
 import DrawerPostpone from './DrawerPostpone';
+import DrawerGetReady from './DrawerGetReady';
 import styles from './UpdateFixture.module.css'
 
 const UpdateFixture = ({
@@ -17,12 +18,13 @@ const UpdateFixture = ({
     });
     const [moreOpen, setMoreOpen] = useState(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
-    const [visibleDrawers, setVisibleDrawers] = useState({
+    const closedDrawers = {
         start: false,
         cancel: false,
         postpone: false,
         finish: false,
-    });
+    }
+    const [visibleDrawers, setVisibleDrawers] = useState(closedDrawers);
 
     useEffect(() => {
         setDrawerOpen(Object.values(visibleDrawers).some(f => f))
@@ -50,6 +52,10 @@ const UpdateFixture = ({
                 postpone: 'disabled',
                 cancel: 'enabled',
                 finish: 'enabled'
+            })
+            setVisibleDrawers({
+                ...closedDrawers,
+                start: true,
             })
         },
         postpone: () => {
@@ -87,6 +93,10 @@ const UpdateFixture = ({
             console.log('delayUntilEnd')
         },
         moreOptions: () => setMoreOpen(!moreOpen),
+        startMatch: () => {
+        },
+        teamSheetProvided: () => {
+        }
     }
 
     const drawerStyle = {
@@ -108,13 +118,13 @@ const UpdateFixture = ({
         <div className={styles.updateFixture}>
             <div style={{ display: (drawerOpen || moreOpen) ? 'none' : 'grid' }}>
                 <button className={enableStates.start} onClick={actions.start}>
-                    Get ready&nbsp;
+                    Prepare match &nbsp;
                     <svg width="29" height="29" viewBox="0 0 20 20">
                         <polygon points="8,5 16,12 8,19" fill="white"></polygon>
                     </svg>
                 </button>
                 <button className={enableStates.finish} onClick={actions.finish}>
-                    Game over&nbsp;
+                    Finalize result&nbsp;
                     <svg width="26" height="26" viewBox="0 0 20 20">
                         <rect x="5" y="5" width="14" height="14" fill="white"></rect>
                     </svg>
@@ -144,24 +154,19 @@ const UpdateFixture = ({
                 </button>
             </div>
 
-
-
             {/* DRAWERS */}
             <div className={styles.drawers} style={drawerStyle}>
-                <div className="start" style={{ display: visibleDrawers.start ? 'block' : 'none' }}>
-                    <div className="start-time">
-                        <span>Start time</span>
-                        <span>12:00</span>
-                    </div>
-                    <div className="start-time">
-                        <span>Duration</span>
-                        <span>60 mins</span>
-                    </div>
-                </div>
+                <DrawerGetReady 
+                    fixture={fixture}
+                    startMatch={actions.startMatch}
+                    teamSheetProvided={actions.teamSheetProvided}
+                    visible={visibleDrawers.start}
+                    onClose={actions.closeDrawer}
+                />
                 <DrawerPostpone
                     fixture={fixture}
-                    delayByOne={delayByOne}
-                    delayUntilEnd={delayUntilEnd}
+                    delayByOne={actions.delayByOne}
+                    delayUntilEnd={actions.delayUntilEnd}
                     visible={visibleDrawers.postpone}
                     onClose={actions.closeDrawer}
                 />
