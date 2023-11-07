@@ -28,6 +28,14 @@ const UpdateFixture = ({
 
     useEffect(() => {
         setDrawerOpen(Object.values(visibleDrawers).some(f => f))
+        if (fixture.Started) {
+            setEnableStates({
+                start: 'disabled',
+                postpone: 'disabled',
+                cancel: 'enabled',
+                finish: 'enabled'
+            })
+        }
     }, [visibleDrawers, setDrawerOpen, drawerOpen])
 
 
@@ -47,6 +55,7 @@ const UpdateFixture = ({
             })
         },
         start: () => {
+            if (enableStates.start === 'disabled') return
             setEnableStates({
                 start: 'disabled',
                 postpone: 'disabled',
@@ -59,6 +68,7 @@ const UpdateFixture = ({
             })
         },
         postpone: () => {
+            if (enableStates.postpone === 'disabled') return
             setEnableStates({
                 start: 'disabled',
                 postpone: 'disabled',
@@ -117,7 +127,7 @@ const UpdateFixture = ({
     return (
         <div className={styles.updateFixture}>
             <div style={{ display: (drawerOpen || moreOpen) ? 'none' : 'grid' }}>
-                <button className={enableStates.start} onClick={actions.start}>
+                <button className={enableStates.start} onClick={actions.start} disabled={!enableStates.start}>
                     Prepare match &nbsp;
                     <svg width="29" height="29" viewBox="0 0 20 20">
                         <polygon points="8,5 16,12 8,19" fill="white"></polygon>

@@ -25,7 +25,7 @@ const DrawerGetReady = ({
                         <li>Pitch markings are correct?</li>
                         <li>Have all teams submitted team sheets?</li>
                     </ul>
-                    <button class="enabled">The game has started!</button>
+                    <button class="enabled" onClick={startMatch}>The game has started!</button>
                 </div>
             </div>
         </div>

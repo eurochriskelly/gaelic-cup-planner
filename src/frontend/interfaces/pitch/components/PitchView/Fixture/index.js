@@ -1,13 +1,15 @@
 import ScoreDisplay from './../../../generic/ScoreDisplay'
+import ClockIcon from './../../../generic/ClockIcon'
 import styles from './Fixture.module.css'
 
 const Fixture = ({ fixture, isFocus }) => {
     const {
         id, Scheduled,
+        Started,
         Category,
         Team1, Goals1, Points1,
         Team2, Goals2, Points2,
-    } = fixture;
+    } = fixture
 
     const tlen = 24
 
@@ -29,14 +31,7 @@ const Fixture = ({ fixture, isFocus }) => {
     return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
-                <span>
-                    <svg width="10" height="10" viewBox="0 0 30 30">
-                        <circle cx="12" cy="12" r="7" stroke="#869f84" strokeWidth={2} fill="#88b288"></circle>
-                        <path d="M 12,12 L 12,6" stroke="white"></path>
-                        <path d="M 12,12 L 16,16" stroke="white"></path>
-                    </svg>
-                    <span>{Scheduled}</span>
-                </span>
+                <ClockIcon started={Started} scheduled={Scheduled} played={scoreUpToDate} />
                 <span>
                     <span>GROUP:</span>
                     <span>{Category.replace(/[0-9]/g, '')}</span>
