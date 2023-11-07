@@ -52,7 +52,7 @@ const PitchView = () => {
                 const focusFixture = nextFixture && nextFixture.id === fixture.id
                 const focusStyle = {
                     border: '10px solid #4c226a',
-                    borderRadius: '18px',
+                    borderRadius: '1.5rem',
                     marginBottom: '8px',                    
                     backgroundColor: '#c6b3d3',
                 }

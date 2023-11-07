@@ -56,7 +56,7 @@ table {
   }
 
   .drawer-header {
-    background-color: #7a6d83;
+    background-color: darken(#7a6d83, 10%);
     line-height: 6rem;
     color: white;
     padding-left: 1rem;
@@ -64,6 +64,7 @@ table {
     border-top-left-radius: 1.6rem;
     border-top-right-radius: 1.6rem;
     font-size: 2.4rem;
+    text-align: center;
   }
 
   button {
