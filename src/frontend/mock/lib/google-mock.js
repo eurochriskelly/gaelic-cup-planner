@@ -4,6 +4,7 @@ const state = {
         {
             id: 'fixture1',
             Scheduled: '08:25',
+            Started: new Date().toISOString(),
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -18,6 +19,7 @@ const state = {
         {
             id: 'fixture2',
             Scheduled: '09:00',
+            Started: new Date().toISOString(),
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -32,6 +34,7 @@ const state = {
         {
             id: 'fixture3',
             Scheduled: '09:25',
+            Started: new Date().toISOString(),
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -45,7 +48,7 @@ const state = {
         },
         {
             id: 'fixture4',
-            Scheduled: '09:50',
+            Scheduled: '10:30',
             Stage: 'Group',
             Category: 'MS1',
             Group: '1',
@@ -59,7 +62,7 @@ const state = {
         },
         {
             id: 'fixture5',
-            Scheduled: '12:25',
+            Scheduled: '11:00',
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -73,7 +76,7 @@ const state = {
         },
         {
             id: 'fixture6',
-            Scheduled: '12:50',
+            Scheduled: '11:30',
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -87,7 +90,7 @@ const state = {
         },
         {
             id: 'fixture7',
-            Scheduled: '12:25',
+            Scheduled: '12:00',
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -101,7 +104,7 @@ const state = {
         },
         {
             id: 'fixture8',
-            Scheduled: '12:25',
+            Scheduled: '13:15',
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
@@ -115,12 +118,12 @@ const state = {
         },
         {
             id: 'fixture9',
-            Scheduled: '12:25',
+            Scheduled: '13:45',
             Stage: 'Group',
             Category: 'MJ1',
             Group: '1',
             Pitch: 'Z1',
-            Team1: 'Amsterdam',
+            Team1: 'Amsterdam dd',
             Goals1: '',
             Points1: '',
             Team2: 'Eindhoven',
@@ -284,6 +287,13 @@ const google = {
                             }
                         })
                         callback(state.fixtures)
+                    },
+                    startFixture: (fixtureId) => {
+                        state.fixtures.forEach(f => {
+                            if (f.id === fixtureId) {
+                                f.Started = new Date().toISOString()
+                            }
+                        })
                     },
                     getTeamStatus: (team) => {
                         callback({
