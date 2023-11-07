@@ -33,12 +33,8 @@ const Fixture = ({ fixture, isFocus }) => {
             <div>
                 <ClockIcon started={Started} scheduled={Scheduled} focus={isFocus} played={scoreUpToDate} />
                 <span>
-                    <span>GROUP:</span>
+                    <span>Group Stage</span>
                     <span>{Category.replace(/[0-9]/g, '')}</span>
-                </span>
-                <span>
-                    <span>STAGE:</span>
-                    <span>Group</span>
                 </span>
             </div>
             <div>
