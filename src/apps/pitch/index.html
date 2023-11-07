@@ -34071,6 +34071,7 @@ const Fixture = ({ fixture, isFocus })=>{
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _clockIconDefault.default), {
                             started: Started,
                             scheduled: Scheduled,
+                            focus: isFocus,
                             played: scoreUpToDate
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/Fixture/index.js",
@@ -34197,15 +34198,7 @@ $RefreshReg$(_c, "Fixture");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Fixture.module.css":"4rTCq","./../../../generic/ScoreDisplay":"lL5ug","./../../../generic/ClockIcon":"kkRab"}],"4rTCq":[function(require,module,exports) {
-module.exports["fixture"] = `_4UxuVq_fixture`;
-module.exports["focusFixture"] = `_4UxuVq_focusFixture`;
-module.exports["group"] = `_4UxuVq_group`;
-module.exports["header"] = `_4UxuVq_header`;
-module.exports["teamName"] = `_4UxuVq_teamName`;
-module.exports["winner"] = `_4UxuVq_winner`;
-
-},{}],"lL5ug":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","./../../../generic/ScoreDisplay":"lL5ug","./../../../generic/ClockIcon":"kkRab","./Fixture.module.css":"4rTCq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lL5ug":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$fdc9 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34309,14 +34302,19 @@ try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
-const ClockIcon = ({ started, played, scheduled })=>{
+const ClockIcon = ({ started, played, scheduled, focus })=>{
     let strokeColor = "white";
     let fillColor = "#888";
     let circleColor = "none";
     let timeColor = "#888";
     let timeWeight = "normal";
     let swid = 1;
-    const shortTime = started?.split("T")[1].split(":").slice(0, 2).join(":") || scheduled;
+    const st = (s)=>s?.split("T")[1].split(":").slice(0, 2).join(":");
+    const shortTime = st(started) || scheduled;
+    if (focus) {
+        console.log("shortTime", shortTime);
+        console.log("scheduled", scheduled);
+    }
     if (started && !played) {
         fillColor = "green";
         strokeColor = "white";
@@ -34329,7 +34327,17 @@ const ClockIcon = ({ started, played, scheduled })=>{
         fillColor = "white";
         circleColor = "#999";
         strokeColor = "#666";
-        if (shortTime > scheduled) timeColor = "red";
+    }
+    if (!started && !played && focus) {
+        if (st(new Date().toISOString()) > scheduled) {
+            //timeColor = 'red'
+            fillColor = "red";
+            circleColor = "red";
+        } else {
+            fillColor = "#cf9428";
+            circleColor = "#cf9428";
+        }
+        strokeColor = "white";
     }
     const [hour, minute] = scheduled.split(":").map(Number);
     const minuteAngle = minute * 6; // 60 minutes, 360 degrees
@@ -34350,7 +34358,7 @@ const ClockIcon = ({ started, played, scheduled })=>{
                         fill: fillColor
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-                        lineNumber: 35,
+                        lineNumber: 50,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34360,7 +34368,7 @@ const ClockIcon = ({ started, played, scheduled })=>{
                         transform: `rotate(${minuteAngle} 15 15)`
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-                        lineNumber: 39,
+                        lineNumber: 54,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("path", {
@@ -34370,13 +34378,13 @@ const ClockIcon = ({ started, played, scheduled })=>{
                         transform: `rotate(${hourAngle} 15 15)`
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-                        lineNumber: 43,
+                        lineNumber: 58,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-                lineNumber: 34,
+                lineNumber: 49,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -34388,13 +34396,13 @@ const ClockIcon = ({ started, played, scheduled })=>{
                 children: scheduled
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-                lineNumber: 48,
+                lineNumber: 63,
                 columnNumber: 13
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/pitch/generic/ClockIcon/index.js",
-        lineNumber: 33,
+        lineNumber: 48,
         columnNumber: 9
     }, undefined);
 };
@@ -34408,7 +34416,15 @@ $RefreshReg$(_c, "ClockIcon");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"h1XXZ":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"4rTCq":[function(require,module,exports) {
+module.exports["fixture"] = `_4UxuVq_fixture`;
+module.exports["focusFixture"] = `_4UxuVq_focusFixture`;
+module.exports["group"] = `_4UxuVq_group`;
+module.exports["header"] = `_4UxuVq_header`;
+module.exports["teamName"] = `_4UxuVq_teamName`;
+module.exports["winner"] = `_4UxuVq_winner`;
+
+},{}],"h1XXZ":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$6b3f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -35390,13 +35406,6 @@ const DrawerGetReady = ({ fixture, visible, startMatch, teamSheetProvided, onClo
                 className: "drawer-container",
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h5", {
-                            children: "Check list"
-                        }, void 0, false, {
-                            fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                            lineNumber: 22,
-                            columnNumber: 21
-                        }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
                             children: [
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
@@ -35406,43 +35415,43 @@ const DrawerGetReady = ({ fixture, visible, startMatch, teamSheetProvided, onClo
                                             children: umpiringTeam
                                         }, void 0, false, {
                                             fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                                            lineNumber: 24,
+                                            lineNumber: 23,
                                             columnNumber: 33
                                         }, undefined),
                                         " umpires ready?      \xa0"
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                                    lineNumber: 24,
+                                    lineNumber: 23,
                                     columnNumber: 25
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
                                     children: "Pitch markings are correct?"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                                    lineNumber: 25,
+                                    lineNumber: 24,
                                     columnNumber: 25
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
                                     children: "Have all teams submitted team sheets?"
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                                    lineNumber: 26,
+                                    lineNumber: 25,
                                     columnNumber: 25
                                 }, undefined)
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                            lineNumber: 23,
+                            lineNumber: 22,
                             columnNumber: 21
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                             class: "enabled",
                             onClick: startMatch,
-                            children: "The game has started!"
+                            children: "Start the clock!"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/pitch/components/PitchView/UpdateFixture/DrawerGetReady/index.js",
-                            lineNumber: 28,
+                            lineNumber: 27,
                             columnNumber: 21
                         }, undefined)
                     ]

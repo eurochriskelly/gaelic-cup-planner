@@ -31,7 +31,7 @@ const Fixture = ({ fixture, isFocus }) => {
     return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
-                <ClockIcon started={Started} scheduled={Scheduled} played={scoreUpToDate} />
+                <ClockIcon started={Started} scheduled={Scheduled} focus={isFocus} played={scoreUpToDate} />
                 <span>
                     <span>GROUP:</span>
                     <span>{Category.replace(/[0-9]/g, '')}</span>

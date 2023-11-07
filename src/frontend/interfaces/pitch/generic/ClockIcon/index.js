@@ -1,12 +1,18 @@
-const ClockIcon = ({ started, played, scheduled }) => {
+const ClockIcon = ({ started, played, scheduled, focus }) => {
     let strokeColor = 'white';
     let fillColor = '#888';
     let circleColor = 'none';
     let timeColor = '#888';
     let timeWeight = 'normal';
     let swid = 1;
-    const shortTime = started?.split('T')[1].split(':').slice(0, 2).join(':') || scheduled
-
+    const st = (s) => s?.split('T')[1].split(':').slice(0, 2).join(':') 
+    const shortTime = st(started) || scheduled
+    
+    if (focus) {
+        console.log('shortTime', shortTime)
+        console.log('scheduled', scheduled)
+    }
+    
     if (started && !played) {
         fillColor = 'green';
         strokeColor = 'white';
@@ -20,9 +26,18 @@ const ClockIcon = ({ started, played, scheduled }) => {
         fillColor = 'white';
         circleColor = '#999';
         strokeColor = '#666';
-        if (shortTime > scheduled) {
-            timeColor = 'red'
+    }
+
+    if (!started && !played && focus) {
+        if (st(new Date().toISOString()) > scheduled) {
+            //timeColor = 'red'
+            fillColor = 'red';
+            circleColor = 'red';
+        } else {
+            fillColor = '#cf9428'
+            circleColor = '#cf9428'
         }
+        strokeColor = 'white';
     }
 
     const [hour, minute] = scheduled.split(':').map(Number);
