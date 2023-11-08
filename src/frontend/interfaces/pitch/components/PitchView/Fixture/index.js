@@ -1,6 +1,6 @@
 import ScoreDisplay from './../../../generic/ScoreDisplay'
 import ClockIcon from './../../../generic/ClockIcon'
-import styles from './Fixture.module.css'
+import './Fixture.css'
 
 const Fixture = ({ fixture, isFocus }) => {
     const {
@@ -23,12 +23,12 @@ const Fixture = ({ fixture, isFocus }) => {
     const rowClasses = () => {
         const classes = []
         if (scoreUpToDate) {
-            classes.push(styles.scoreUpToDate)
+            classes.push('scoreUpToDate')
         }
         return classes.join(' ')
     }
 
-    return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
+    return <div className={`fixture ${isFocus ? 'focusFixture' : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
                 <ClockIcon started={Started} scheduled={Scheduled} focus={isFocus} played={scoreUpToDate} />
@@ -38,7 +38,7 @@ const Fixture = ({ fixture, isFocus }) => {
                 </span>
             </div>
             <div>
-                <div className={(winner === Team1 ? styles.winner : '') + ' teamName'}>{
+                <div className={(winner === Team1 ? 'winner' : '') + ' teamName'}>{
                     Team1.length > tlen
                         ? Team1.substring(0, tlen) + '...'
                         : Team1
@@ -46,7 +46,7 @@ const Fixture = ({ fixture, isFocus }) => {
                 <ScoreDisplay goals={Goals1} points={Points1} />
             </div>
             <div>
-                <div className={(winner === Team2 ? styles.winner : '') + ' teamName'}>{
+                <div className={(winner === Team2 ? 'winner' : '') + ' teamName'}>{
                     Team2.length > tlen
                         ? Team2.substring(0, tlen) + '...'
                         : Team2

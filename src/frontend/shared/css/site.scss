@@ -1,3 +1,5 @@
+$mainColor: #84aa80;
+
 body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
@@ -25,7 +27,7 @@ table {
 
   h1 {
     background: #344b32;
-    color: #84aa80;
+    color: $mainColor;
     font-size: 3.2em;
     line-height: 7rem;
     padding: 0 0;
@@ -36,7 +38,7 @@ table {
   }
   h2 {
     font-size: 1.8em;
-    background: #4e7a4e;
+    background: darken($mainColor, 10%);
     color: white;
     line-height: 6rem;
     text-align: center;

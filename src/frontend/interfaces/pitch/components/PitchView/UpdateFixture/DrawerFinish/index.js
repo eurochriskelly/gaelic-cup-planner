@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './DrawerFinish.module.scss'
+import './DrawerFinish.css'
 
 const DrawerFinish = ({
     fixture,
@@ -68,7 +68,7 @@ const DrawerFinish = ({
         const squares = [];
         for (let i = 0; i <= 23; i++) {
             squares.push(
-                <div key={i} className={styles.square} onClick={() => {
+                <div key={i} className='square' onClick={() => {
                     const newScore = {
                         ...scores,
                         [currentTeam]: {
@@ -98,38 +98,38 @@ const DrawerFinish = ({
         const score = scores[team][type]
         return score || score === 0 ? score : '?'
     }
-    return <div className={styles.drawerFinish}>
-        <div className={styles.drawerStep} style={rules.score}>
+    return <div className='drawerFinish'>
+        <div className='drawerStep' style={rules.score}>
             <div className="drawer-header">Update match score</div>
             <div className="drawer-container" style={{ position: 'relative' }}>
                 <div>
-                    <div className={styles.teamScore}>
+                    <div className='teamScore'>
                         <h4>{Team1}</h4>
                         <div>
                             <div onClick={actions.updateScore.bind(null, 'Team1', 'goals')}>{displayScore('Team1', 'goals')}</div>
                             <div onClick={actions.updateScore.bind(null, 'Team1', 'points')}>{displayScore('Team1', 'points')}</div>
                         </div>
                     </div>
-                    <div className={styles.teamScore}>
+                    <div className='teamScore'>
                         <h4>{Team2}</h4>
                         <div>
                             <div onClick={actions.updateScore.bind(null, 'Team2', 'goals')}>{displayScore('Team2', 'goals')}</div>
                             <div onClick={actions.updateScore.bind(null, 'Team2', 'points')}>{displayScore('Team2', 'points')}</div>
                         </div>
                     </div>
-                    <div className={styles.proceedButtons} >
+                    <div className='proceedButtons' >
                         <button disabled={scoresNotReady()} className={ scoresNotReady() ? 'disabled' : 'enabled'} onClick={actions.saveScore}>Proceed</button>
                         <button onClick={actions.notReadyToSaveScore}>Cancel</button>
                     </div>
                 </div>
-                <div className={styles.scoreSelect} style={{ display: scorePicker.visible ? 'block' : 'none' }}>
+                <div className='scoreSelect' style={{ display: scorePicker.visible ? 'block' : 'none' }}>
                     {showSquares()}
                 </div>
             </div>
         </div>
 
 
-        <div className={styles.drawerStep} style={rules.fillCards}>
+        <div className='drawerStep' style={rules.fillCards}>
             <div className="drawer-header">List carded players</div>
             <div className="drawer-container">
                 <div> TODO: allow entry of carded players here </div>

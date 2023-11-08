@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Fixture from "./Fixture"
 import UpdateFixture from "./UpdateFixture"
-import styles from './PitchView.module.css'
+import './PitchView.css'
 
 const PitchView = () => {
     const { pitchId } = useParams()
@@ -40,14 +40,14 @@ const PitchView = () => {
     }, [])
 
 
-    return <div className={styles.pitchView}>
-        <div className={styles.fixturesHead}>
+    return <div className='pitchView'>
+        <div className='fixturesHead'>
             <h2>
                 <span onClick={backToSelection}></span>
                 <span>Fixtures for pitch: {pitchId}</span>
             </h2>
         </div>
-        <div className={styles.fixturesArea}>{
+        <div className='fixturesArea'>{
             fixtures.map(fixture => {
                 const focusFixture = nextFixture && nextFixture.id === fixture.id
                 const focusStyle = {

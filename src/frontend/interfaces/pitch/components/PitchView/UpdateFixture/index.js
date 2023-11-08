@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DrawerFinish from './DrawerFinish'
 import DrawerPostpone from './DrawerPostpone';
 import DrawerGetReady from './DrawerGetReady';
-import styles from './UpdateFixture.module.css'
+import './UpdateFixture.css'
 
 const UpdateFixture = ({
     fixture,
@@ -125,7 +125,7 @@ const UpdateFixture = ({
         </svg>
     }
     return (
-        <div className={styles.updateFixture}>
+        <div className='updateFixture'>
             <div style={{ display: (drawerOpen || moreOpen) ? 'none' : 'grid' }}>
                 <button className={enableStates.start} onClick={actions.start} disabled={!enableStates.start}>
                     Prepare match &nbsp;
@@ -139,12 +139,12 @@ const UpdateFixture = ({
                         <rect x="5" y="5" width="14" height="14" fill="white"></rect>
                     </svg>
                 </button>
-                <div className={styles.more} onClick={actions.moreOptions}>
+                <div className='more' onClick={actions.moreOptions}>
                     <Triang />
                 </div>
             </div>
             <div style={morebuttonsStyle}>
-                <div className={styles.more} onClick={actions.moreOptions}>
+                <div className='more' onClick={actions.moreOptions}>
                     <Triang direction='left' />
                 </div>
                 <button className={enableStates.postpone} onClick={actions.postpone}>
@@ -165,7 +165,7 @@ const UpdateFixture = ({
             </div>
 
             {/* DRAWERS */}
-            <div className={styles.drawers} style={drawerStyle}>
+            <div className='drawers' style={drawerStyle}>
                 <DrawerGetReady 
                     fixture={fixture}
                     startMatch={actions.startMatch}

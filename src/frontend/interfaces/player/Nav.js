@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+tyles fromimport { Link } from "react-router-dom";
 
 function Nav() {
     return <>

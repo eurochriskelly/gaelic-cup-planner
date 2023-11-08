@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './DrawerGetReady.module.scss';
+import './DrawerGetReady.css';
 
 const DrawerGetReady = ({
     fixture,
@@ -15,7 +15,7 @@ const DrawerGetReady = ({
     const { umpiringTeam = 'Berlin' } = fixture
 
     return (
-        <div className={styles.drawerGetReady}>
+        <div className='drawerGetReady'>
             <div className='drawer-header'>Game prep checklist</div>
             <div className='drawer-container'>
                 <div>

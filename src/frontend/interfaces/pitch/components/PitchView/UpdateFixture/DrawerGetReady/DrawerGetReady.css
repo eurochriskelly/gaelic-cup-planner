@@ -1,0 +1,35 @@
+@charset "UTF-8";
+.drawerGetReady {
+  background-color: white;
+  border-radius: 2rem;
+  width: 100%;
+  margin: 0.5rem 1rem; }
+  .drawerGetReady button {
+    width: 100%;
+    margin: auto;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase; }
+  .drawerGetReady ul {
+    list-style: none;
+    margin: 3rem;
+    margin-bottom: 1rem; }
+  .drawerGetReady li {
+    font-size: 1.8rem; }
+  .drawerGetReady li::before {
+    content: "✓";
+    /* Unicode character for a checkmark */
+    margin-right: 5px;
+    /* Add some spacing between the checkmark and the text */
+    color: #5e885b;
+    /* Change the color of the checkmark */
+    font-size: 3rem; }
+  .drawerGetReady li span {
+    background-color: #9e85b0;
+    color: white;
+    border-radius: 1rem;
+    padding: 0.3rem 1.1rem;
+    font-weight: bold; }
+  .drawerGetReady div > div:last-child p {
+    margin: 4rem;
+    text-align: center; }

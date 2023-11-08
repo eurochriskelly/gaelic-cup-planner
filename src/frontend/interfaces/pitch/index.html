@@ -2,21 +2,25 @@
 <html lang="en">
 
 <head>
-    <base target="_top">
     <meta charset="UTF-8">
     <title>Document</title>
 </head>
 
 <body>
     <style>
-        @import './../../shared/css/site.scss';
-        @import './main.scss';
+        @import './../../shared/css/site.css';
+        @import './components/SelectPitchView/SelectPitch/SelectPitch.css';
     </style>
     <div id="app"></div>
     <script type="module">
         console.log('Loading app...')
         import './index.js'
-        
+        /** BEGIN: REMOVE THIS LINE IN PRODUCTION */
+        import googleMock from '../../mock/lib/google-mock.js'
+        if (!window.google) {
+            window.google = googleMock
+        }
+        /** END: REMOVE THIS LINE IN PRODUCTION */
     </script>
 </body>
 
