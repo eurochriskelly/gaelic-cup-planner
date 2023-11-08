@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import styles from './SelectPitch.module.css';
+import './SelectPitch.css';
 
 const MAX_LOCATION_LENGTH = 35;
 function SelectPitch(props) {
@@ -20,7 +20,7 @@ function SelectPitch(props) {
         <Container onClick={() => {
             onChoosePitch()
             navigate(`/pitch/${id}`)
-        }} style={header ? h3Styles : {}} className={styles.container}>
+        }} style={header ? h3Styles : {}} className='container'>
             <span>{id}</span>
             <span>{
                 location.length > MAX_LOCATION_LENGTH ?

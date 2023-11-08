@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import SelectPitch from "./SelectPitch"
 
 const SelectPitchView = () => {
+    console.log('SelectPitchView')
     const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
     async function fetchData() {
@@ -9,6 +10,7 @@ const SelectPitchView = () => {
             console.log('Fetching data...')
             google.script.run
                 .withSuccessHandler(data => {
+                    console.log('Getting pitch data')
                     setPitchData(data)
                 })
                 .getListOfPitches()
