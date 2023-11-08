@@ -10,3 +10,4 @@ node_modules
 /src/apps/pitch/watch/
 /src/apps/player/dist/
 /src/apps/player/watch/
+/.parcel-cache/
