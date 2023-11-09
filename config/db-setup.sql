@@ -1,0 +1,94 @@
+-- SQL Script to create the EuroTourno database and its tables
+
+-- Create the EuroTourno database
+CREATE DATABASE IF NOT EXISTS EuroTourno;
+USE EuroTourno;
+
+-- Create the tournaments table
+CREATE TABLE IF NOT EXISTS tournaments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    Date DATE,
+    Title VARCHAR(255),
+    Location VARCHAR(255),
+    Lat FLOAT NULL,
+    Lon FLOAT NULL
+);
+
+-- Create the groupings table
+CREATE TABLE IF NOT EXISTS groupings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tournamentId INT,
+    category VARCHAR(255),
+    sex ENUM('Mens', 'Ladies', 'Mixed'),
+    groupNumber INT,
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+);
+
+-- Create the fixtures table
+CREATE TABLE IF NOT EXISTS fixtures (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tournamentId INT,
+    category VARCHAR(255),
+    groupNumber INT,
+    stage ENUM('playoffs'),
+    pitch VARCHAR(255),
+    scheduled TIMESTAMP,
+    started TIMESTAMP,
+    team1Id VARCHAR(255),
+    goals1 INT DEFAULT NULL,
+    points1 INT DEFAULT NULL,
+    team2Id VARCHAR(255),
+    goals2 INT DEFAULT NULL,
+    points2 INT DEFAULT NULL,
+    umpireTeamId VARCHAR(255),
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+    -- Additional foreign keys will be added when the teams table is created
+);
+
+-- Create the teams table
+CREATE TABLE IF NOT EXISTS teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teamName VARCHAR(255),
+    groupId INT,
+    teamSheetSubmitted BOOLEAN,
+    notes TEXT,
+    FOREIGN KEY (groupId) REFERENCES groupings(id)
+);
+
+-- Create the pitches table
+CREATE TABLE IF NOT EXISTS pitches (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pitch VARCHAR(255),
+    location VARCHAR(255),
+    type ENUM('grass', 'astro')
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+);
+
+-- Create the cards table
+CREATE TABLE IF NOT EXISTS cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teamId INT,
+    stage ENUM('group', 'playoffs'),
+    playerName VARCHAR(255),
+    cardType ENUM('yellow', 'black', 'red'),
+    FOREIGN KEY (teamId) REFERENCES teams(id)
+);
+
+-- Create the coordinators table
+CREATE TABLE IF NOT EXISTS coordinators (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    pitchId INT,
+    FOREIGN KEY (pitchId) REFERENCES pitches(id)
+);
+
+-- Create the players table
+CREATE TABLE IF NOT EXISTS players (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(255),
+    secondName VARCHAR(255),
+    dateOfBirth DATE,
+    foirreannId VARCHAR(255),
+    teamId INT,
+    FOREIGN KEY (teamId) REFERENCES teams(id)
+);

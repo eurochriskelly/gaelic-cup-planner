@@ -6,17 +6,16 @@ const SelectPitchView = () => {
     const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
     async function fetchData() {
-        try {
-            console.log('Fetching data...')
-            google.script.run
-                .withSuccessHandler(data => {
-                    console.log('Getting pitch data')
-                    setPitchData(data)
-                })
-                .getListOfPitches()
-        } catch (error) {
+        console.log('Fetching data...')
+        fetch('/api/pitches')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            setPitchData(data.data);
+        })
+        .catch(error => {
             console.error('Error fetching data:', error);
-        }
+        })
     }
 
     useEffect(() => {
@@ -36,7 +35,7 @@ const SelectPitchView = () => {
         {
             pitchData.map(pitch =>
                 <SelectPitch
-                    key={pitch.id} {...pitch}
+                    key={pitch.pitch} {...pitch}
                     onChoosePitch={() => {
                         console.log('clicked')
                     }}

@@ -6,8 +6,7 @@
 .clasp.json
 node_modules
 *superseded*
-/src/apps/pitch/dist/
-/src/apps/pitch/watch/
-/src/apps/player/dist/
-/src/apps/player/watch/
-/.parcel-cache/
+
+
+config/secret
+

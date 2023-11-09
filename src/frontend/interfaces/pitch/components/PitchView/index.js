@@ -14,18 +14,18 @@ const PitchView = () => {
 
     const actions = {
         fetchFixtures: async () => {
-            try {
-                google.script.run
-                    .withSuccessHandler(data => {
-                        setFixtures(data)
-                        setNextFixture(data
-                            .filter(f => f.Goals1 === '' && f.Goals2 === '')
-                            .shift())
-                    })
-                    .getFixtures(pitchId)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
+            fetch(`/api/fixtures/${pitchId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('fixtures', data)
+                    setFixtures(data.data)
+                    setNextFixture(data.data
+                        .filter(f => f.Goals1 === '' && f.Goals2 === '')
+                        .shift())
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                })
         },
         delayByOne: async (fixtureId) => {
             console.log('delayByOne')
@@ -34,7 +34,7 @@ const PitchView = () => {
             console.log('delayUntilEnd')
         },
     }
-    
+
     useEffect(() => {
         actions.fetchFixtures()
     }, [])
@@ -53,11 +53,11 @@ const PitchView = () => {
                 const focusStyle = {
                     border: '10px solid #4c226a',
                     borderRadius: '1.5rem',
-                    marginBottom: '8px',                    
+                    marginBottom: '8px',
                     backgroundColor: '#c6b3d3',
                 }
                 return <div key={fixture.id}
-                    className={focusFixture ? 'focusFixture' : ''} 
+                    className={focusFixture ? 'focusFixture' : ''}
                     style={focusFixture ? focusStyle : {}}>
                     <Fixture fixture={fixture} isFocus={focusFixture} />
                     {

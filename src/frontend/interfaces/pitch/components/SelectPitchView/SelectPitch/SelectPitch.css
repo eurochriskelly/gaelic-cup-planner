@@ -37,6 +37,7 @@
     /* This item should not be selectable! */
     
 }
+
 h3.container span {
     line-height: 4rem;
     color: #777;
@@ -44,6 +45,7 @@ h3.container span {
     margin:0;
     padding:0;
 }
+
 /* Resetting line-height for h3 within .container */
 
 h3.container {
