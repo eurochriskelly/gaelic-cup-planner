@@ -7,8 +7,10 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "serve": "nodemon src/backend/server.js",
         "deploy": "bash scripts/deploy.sh",
         "build": "bash scripts/build-fe.sh --build",
+        "db:setup": "bash scripts/db-setup.sh",
         "start": "bash scripts/build-fe.sh --watch",
         "css": "bash scripts/build-css.sh",
         "test:fe": "bash scripts/test-fe.sh",
@@ -50,6 +52,10 @@
     },
     "dependencies": {
         "@types/google-apps-script": "^1.0.76",
+        "body-parser": "^1.20.2",
+        "express": "^4.18.2",
+        "googleapis": "^128.0.0",
+        "mysql": "^2.18.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.17.0"

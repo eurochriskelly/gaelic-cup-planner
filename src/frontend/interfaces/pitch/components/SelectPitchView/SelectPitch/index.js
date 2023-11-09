@@ -7,7 +7,7 @@ function SelectPitch(props) {
     const navigate = useNavigate();
     const { 
         header, 
-        id = '??', location='?????', type='astro',
+        pitch = '??', location='?????', type='astro',
         onChoosePitch = () => {},
     } = props;
     
