@@ -36,6 +36,7 @@
         "@babel/core": "^7.23.2",
         "@babel/preset-env": "^7.23.2",
         "@babel/preset-react": "^7.22.15",
+        "@parcel/transformer-inline-string": "^2.10.1",
         "@parcel/transformer-sass": "^2.10.1",
         "babel-cli": "^6.26.0",
         "babel-loader": "^9.1.3",
