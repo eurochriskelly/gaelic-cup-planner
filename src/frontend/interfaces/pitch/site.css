@@ -1,0 +1,110 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: #a2a2a2; }
+
+table {
+  width: 100%;
+  border-collapse: collapse; }
+
+#app * {
+  user-select: none; }
+
+#app h1,
+#app h2,
+#app h3 {
+  width: 100%;
+  text-transform: uppercase;
+  margin: 0;
+  user-select: none; }
+
+#app h1 {
+  background: #344b32;
+  color: #84aa80;
+  font-size: 3.2em;
+  line-height: 7rem;
+  padding: 0 0;
+  letter-spacing: 0.12em;
+  text-align: center;
+  position: fixed;
+  top: 0; }
+
+#app h2 {
+  font-size: 1.8em;
+  background: #4e7a4e;
+  color: white;
+  line-height: 6rem;
+  text-align: center; }
+
+#app h3 {
+  color: #444444;
+  background: #d2e1d2;
+  line-height: 4rem;
+  font-weight: normal; }
+
+#app .row {
+  height: 4rem;
+  border-bottom: 1px solid #ddd;
+  width: 100%; }
+
+#app .ck-test132 {
+  background-color: red; }
+
+#app .drawer-header {
+  background-color: #605667;
+  line-height: 6rem;
+  color: white;
+  padding-left: 1rem;
+  text-transform: uppercase;
+  border-top-left-radius: 1.6rem;
+  border-top-right-radius: 1.6rem;
+  font-size: 2.4rem;
+  text-align: center; }
+
+#app button {
+  padding: 1.6rem 0.6rem;
+  min-width: 160px;
+  border-radius: 0.8rem; }
+  #app button.enabled {
+    cursor: pointer;
+    background-color: #4c226a;
+    color: white; }
+  #app button.disabled {
+    cursor: not-allowed;
+    background-color: #ddd;
+    color: #444; }
+
+#app .drawer-container {
+  margin: 0; }
+  #app .drawer-container > div {
+    margin: 2rem; }
+
+button {
+  margin: 8px;
+  padding: 25px;
+  font-size: 32px; }
+
+input[type="number"] {
+  width: 100%; }
+
+.hidden {
+  display: none; }
+
+.submit-container,
+#confirmation {
+  margin-top: 20px;
+  text-align: center; }
+
+table {
+  width: 100%; }
+
+.hidden {
+  display: none; }
+
+/* General styling for the select elements */
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  display: block; }
