@@ -2,6 +2,8 @@
 
 set -e 
 
+interfaces=src/frontend/interfaces
+
 cleanup() {
     echo "Cleaning up ..."
     for pid in $(cat /tmp/build-fe.pids);do
@@ -34,16 +36,15 @@ TOP_DIR=$(pwd)
 runParcel() {
     echo "Bundling apps ..."
     port=1234
-    for ui in $(ls src/frontend/interfaces);do
-        htm=src/frontend/interfaces/$ui/index.html
+    for ui in $(ls $interfaces);do
+        thisui=$interfaces/$ui
+        htm=$thisui/index.html
         if [ ! -f $htm ];then
             echo "ERROR: $htm not found"
             exit 1
         fi
         if "$build";then
-            echo "Parcel building app [$ui] from dir [$(pwd) on port [$port]"
-            mkdir -p src/apps/$ui/dist
-            parcel build $htm --dist-dir src/apps/$ui/dist
+            parcel build $htm --dist-dir $thisui/dist
             echo "Showing dist contents ..."
             ls -alh src/apps/$ui/dist
             if [ -f src/apps/$ui/dist/index.html ];then
@@ -53,35 +54,14 @@ runParcel() {
             fi
         fi
         if "$watch";then
-            echo "Watching app [$ui] from dir [$(pwd)] on port [$port]"
-            echo $TOP_DIR
             echo "Parcel watch app [$ui] from dir [$(pwd)] on port [$port]"
-            mkdir -p src/apps/$ui/dist/watch
-            parcel $htm --port $port --dist-dir src/apps/$ui/watch &
+            mkdir -p $thisui/watch
+            parcel $htm --port $port --dist-dir $thisui/watch &
             echo $! >> /tmp/build-fe.pids
         fi
 	port=$(($port + 1))
     done   
 }
 
-watchClasp() {
-    echo "Deploying google app script... "
-    for ui in $(ls src/frontend/interfaces);do
-        cd src/apps/$ui
-        echo "Pushing app [$ui]"
-        clasp push --watch &
-        echo $! >> /tmp/build-fe.pids
-    done
-}
-
 runParcel
-
-if "$build";then
-    echo "Done"
-else 
-    echo "Pushing apps ..."
-    watchClasp
-    wait
-    echo "Done"
-fi
 
