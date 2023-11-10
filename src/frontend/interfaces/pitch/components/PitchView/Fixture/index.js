@@ -4,22 +4,25 @@ import './Fixture.css'
 
 const Fixture = ({ fixture, isFocus }) => {
     const {
-        id, Scheduled,
-        Started,
-        Category,
-        Team1, Goals1, Points1,
-        Team2, Goals2, Points2,
+        id, tournamentId,
+        scheduled = '', started = '',
+        startedTime = '',  scheduledTime ='',
+        category, stage,
+        team1, goals1, points1,
+        team2, goals2, points2,
+        played,
+        umpireTeam
     } = fixture
 
     const tlen = 24
 
-    const totalTeam1 = (Goals1 || 0) * 3 + (Points1 || 0)
-    const totalTeam2 = (Goals2 || 0) * 3 + (Points2 || 0)
+    const totalTeam1 = (goals1 || 0) * 3 + (points1 || 0)
+    const totalTeam2 = (goals2 || 0) * 3 + (points2 || 0)
     const winner = totalTeam1 > totalTeam2
-        ? Team1
-        : totalTeam1 < totalTeam2 ? Team2 : ''
+        ? team1
+        : totalTeam1 < totalTeam2 ? team2 : ''
 
-    const scoreUpToDate = (Goals1 || Goals1 === 0) && (Goals2 || Goals2 === 0) && (Points1 || Points1 === 0) && (Points2 || Points2 === 0)
+    const scoreUpToDate = !!played
     const rowClasses = () => {
         const classes = []
         if (scoreUpToDate) {
@@ -31,27 +34,27 @@ const Fixture = ({ fixture, isFocus }) => {
     return <div className={`fixture ${isFocus ? 'focusFixture' : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
-                <ClockIcon started={Started} scheduled={Scheduled} focus={isFocus} played={scoreUpToDate} />
+                <ClockIcon started={started} scheduled={scheduledTime} focus={isFocus} played={scoreUpToDate} />
                 <span>
                     <span>Group Stage</span>
-                    <span>{Category.replace(/[0-9]/g, '')}</span>
+                    <span>{category.replace(/[0-9]/g, '')}</span>
                 </span>
             </div>
             <div>
-                <div className={(winner === Team1 ? 'winner' : '') + ' teamName'}>{
-                    Team1.length > tlen
-                        ? Team1.substring(0, tlen) + '...'
-                        : Team1
+                <div className={(winner === team1 ? styles.winner : '') + ' teamName'}>{
+                    team1.length > tlen
+                        ? team1.substring(0, tlen) + '...'
+                        : team1
                 }</div>
-                <ScoreDisplay goals={Goals1} points={Points1} />
+                <ScoreDisplay goals={goals1} points={points1} />
             </div>
             <div>
-                <div className={(winner === Team2 ? 'winner' : '') + ' teamName'}>{
-                    Team2.length > tlen
-                        ? Team2.substring(0, tlen) + '...'
-                        : Team2
+                <div className={(winner === team2 ? styles.winner : '') + ' teamName'}>{
+                    team2.length > tlen
+                        ? team2.substring(0, tlen) + '...'
+                        : team2
                 }</div>
-                <ScoreDisplay goals={Goals2} points={Points2} />
+                <ScoreDisplay goals={goals2} points={points2} />
             </div>
         </div>
     </div>

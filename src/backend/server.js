@@ -7,7 +7,7 @@ const syncWithMaster = require('./google-sheet-sync');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../../src/apps/pitch/watch')));
+app.use(express.static(path.join(__dirname, '../../src/frontend/interfaces/pitch/watch')));
 
 // Set up MySQL connection
 const db = mysql.createConnection({
@@ -70,7 +70,7 @@ app.post('/api/data', (req, res) => {
 
 // Catchall handler to serve the React index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../src/apps/pitch/watch/index.html'));
+  res.sendFile(path.join(__dirname, '../../src/frontend/interfaces/pitch/watch/index.html'));
 });
 
 // Start the server

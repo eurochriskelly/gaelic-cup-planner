@@ -20,7 +20,7 @@ const PitchView = () => {
                     console.log('fixtures', data)
                     setFixtures(data.data)
                     setNextFixture(data.data
-                        .filter(f => f.Goals1 === '' && f.Goals2 === '')
+                        .filter(f => !f.played)
                         .shift())
                 })
                 .catch(error => {

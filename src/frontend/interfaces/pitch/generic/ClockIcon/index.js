@@ -5,7 +5,16 @@ const ClockIcon = ({ started, played, scheduled, focus }) => {
     let timeColor = '#888';
     let timeWeight = 'normal';
     let swid = 1;
-    const st = (s) => s?.split('T')[1].split(':').slice(0, 2).join(':') 
+
+
+    const st = (s) => {
+        /* splt aaa bbb ccc */
+        if (!s) return null
+        const parts = s?.split('T')
+        if (parts.length !== 2) return ''
+        return parts[1].split(':').slice(0, 2).join(':') 
+    }
+
     const shortTime = st(started) || scheduled
     
     if (focus) {
