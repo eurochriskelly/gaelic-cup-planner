@@ -29,28 +29,32 @@ const syncWithMasterTable = (db) => {
                 });
                 // Do something with the retrieved rows
 
-                getRows.data.values
-                    // .slice(0, 1)
-                    .filter(info.rowFilter || (() => true))
-                    .forEach((row, i) => {
-                        const fields = Object.keys(info.mappings).join(', ')
-                        const values = Object.values(info.mappings)
-                            .map((mapping, index) => {
-                                if (typeof mapping === 'function') {
-                                    return mapping(row) || 'NULL'
+                db.query('DELETE FROM fixtures WHERE tournamentId = ?', [TOURNAMENT_ID], (err, results) => {
+                    getRows.data.values
+                        // .slice(0, 1)
+                        .filter(info.rowFilter || (() => true))
+                        .forEach((row, i) => {
+                            const fields = Object.keys(info.mappings).join(', ')
+                            const values = Object.values(info.mappings)
+                                .map((mapping, index) => {
+                                    if (typeof mapping === 'function') {
+                                        return mapping(row) || 'NULL'
+                                    }
+                                    return row[mapping] || 'NULL'
+                                })
+                                .map(x => x === 'NULL' ? x : `'${x}'`)
+                            const sql = `INSERT INTO fixtures (${fields}) VALUES (${values});`
+                            db.query(sql, (err, results) => {
+                                if (err) {
+                                    console.error('Error inserting data:', err);
+                                    return;
                                 }
-                                return row[mapping] || 'NULL'
+                                console.log(`Inserted row [${i}] into fixtures table.`);
                             })
-                            .map(x => x === 'NULL' ? x : `'${x}'`)
-                        const sql = `INSERT INTO fixtures (${fields}) VALUES (${values});`
-                        db.query(sql, (err, results) => {
-                            if (err) {
-                                console.error('Error inserting data:', err);
-                                return;
-                            }
-                            console.log(`Inserted row [${i}] into fixtures table.`);
                         })
-                    })
+                })
+
+
             })
     }
 

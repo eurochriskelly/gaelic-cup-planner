@@ -92,3 +92,15 @@ CREATE TABLE IF NOT EXISTS players (
     teamId INT,
     FOREIGN KEY (teamId) REFERENCES teams(id)
 );
+
+-- Create an audit log table to capture changes to the database
+CREATE TABLE audit_log (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  table_name VARCHAR(255),
+  record_id INT,
+  column_name VARCHAR(255),
+  old_value VARCHAR(255),
+  new_value VARCHAR(255),
+  user_id INT,
+  change_date TIMESTAMP
+);

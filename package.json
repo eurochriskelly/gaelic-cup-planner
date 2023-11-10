@@ -6,13 +6,12 @@
         "doc": "docs"
     },
     "scripts": {
+        "start": "bash scripts/build-fe.sh --watch",
         "test": "echo \"Error: no test specified\" && exit 1",
         "serve": "nodemon src/backend/server.js",
         "deploy": "bash scripts/deploy.sh",
         "build": "bash scripts/build-fe.sh --build",
         "db:setup": "bash scripts/db-setup.sh",
-        "start": "bash scripts/build-fe.sh --watch",
-        "css": "bash scripts/build-css.sh",
         "test:fe": "bash scripts/test-fe.sh",
         "glogin": "clasp login",
         "glogout": "clasp logout",
