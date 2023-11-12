@@ -17,7 +17,6 @@ const TournamentView = () => {
         fetch(`/api/group/standings/${tournamentId}`)
             .then(response => response.json())
             .then(data => {
-                console.log('ooo oo oo')
                 setGroups(data.groups)
                 setStandings(data.data)
                 console.log(data)

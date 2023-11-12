@@ -3,7 +3,6 @@ import SelectTournamentView from "./components/SelectTournamentView";
 import TournamentView from "./components/TournamentView";
 
 function App() {
-    console.log('App is starting')
     return <>
         <h1>Group standings</h1>
         <Routes>
