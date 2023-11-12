@@ -148,9 +148,14 @@ app.post('/api/data', (req, res) => {
   });
 });
 
+
+
+
 // Catchall handler to serve the React index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../src/frontend/interfaces/pitch/watch/index.html'));
+  console.log(`Serving [${ARGS.staticPath}]`)
+
+  res.sendFile(path.join(__dirname, ARGS.staticPath + '/index.html'));
 });
 
 const { port } = ARGS
