@@ -1,12 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import SelectPitchView from "./components/SelectPitchView";
 import PitchView from "./components/PitchView";
-import './site.css'
 
 function App() {
     return <>
-        <h1>Field Coordination1</h1>
-        <SelectPitchView />
+        <h1>Field Coordinator</h1>
+        <Routes>
+            <Route path="/" element={<SelectPitchView />} />
+            <Route path="/pitch/:pitchId" element={<PitchView />} />
+        </Routes>
     </>
 }
 

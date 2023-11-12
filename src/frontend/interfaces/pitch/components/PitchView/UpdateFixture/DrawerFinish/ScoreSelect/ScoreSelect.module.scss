@@ -1,0 +1,40 @@
+.scoreSelect {
+    display: grid;
+    grid-template-columns: 2fr 1fr 4fr;
+    align-items: center;
+    width: 100%;
+
+    .goals {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .points {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .points>div,
+    .goals>div {
+        width: 5rem;
+        padding: 2rem 1rem;
+        color: white;
+        background: #9066ad;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .square {
+        width: 100%;
+        cursor: pointer;
+
+        &.active {
+            background-color: #007bff;
+            color: white;
+        }
+    }
+}

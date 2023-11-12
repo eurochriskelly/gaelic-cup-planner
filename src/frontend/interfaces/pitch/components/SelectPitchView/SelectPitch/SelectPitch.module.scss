@@ -1,0 +1,110 @@
+$col: #2b7624;
+$darkCol: darken($col, 20%);
+$bgCol: desaturate(lighten(#2b7624, 60%), 35%);
+$bgColOver: desaturate(lighten(#2b7624, 60%), 75%);
+
+.allDone {
+    background-color: red;
+}
+
+// SelectPitch.module.scss
+.selectPitch {
+    background-color: white;
+    border-radius: 1rem;
+    text-align: center;
+    padding: 20px;
+    margin: 1rem 0.7rem;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0.8rem 0.8rem 0 rgba(0, 0, 0, 0.3);
+
+    >div:nth-child(2),
+    >div:nth-child(3) {
+        border-radius: 0.5rem;
+        background-color: $bgCol;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .pitch {
+            font-size: 2.0em;
+            font-weight: bold;
+            background-color: lighten(desaturate(darken(#44c835, 20%), 45%), 37%);
+            color: white;
+            min-width: 5rem;
+            padding: 0.1rem 0.3;
+            border-radius: 0.6rem;
+        }
+
+        .location {
+            text-align: left;
+            font-size: 2em;
+        }
+
+        .type {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+        }
+    }
+
+    .nextUp {
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        padding: 0.3rem;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        background-color: darken(#b0bdae, 19%);
+        color: white;
+        text-align: left;
+        border-bottom: 0.24rem solid white;
+    }
+
+    .details {
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr 0.1fr;
+        > div {
+            margin: 0;
+            padding: 0 1rem;
+        }
+        .category {
+            color: #689463;
+            text-transform: uppercase;
+            text-align: left;
+            font-size: 1.2em;
+        }
+
+        .time {
+            color: $darkCol;
+            font-size: 1.2em;
+            text-align: right;
+            font-weight: bold;
+        }
+    }
+
+    .teams {
+        font-size: 1.2em;
+        padding-top: 0.3rem;
+        padding-bottom: 0.9rem;
+        color: #666;
+
+        .team1,
+        .team2 {
+            font-size: 1.6rem;
+            color: darken(saturate($col, 20%), 20%);
+            font-weight: bold;
+            padding: 0.5rem;
+        }
+    }
+}
+
+.noMoreFixtures {
+    font-size: 1.4rem;
+    padding: 5rem;
+    color: lighten(desaturate($col, 30%), 30%);
+    background-color: $bgColOver;
+}
