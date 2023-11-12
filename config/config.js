@@ -1,3 +1,5 @@
+const secrets = require('./secret/info.js')
+
 const TOURNAMENT_ID = 3;
 
 const mapfns = {
@@ -80,5 +82,6 @@ module.exports = {
                 name: 1,
             }
         }
-    }
+    },
+    DB_CONN: secrets.db_conn,
 }
