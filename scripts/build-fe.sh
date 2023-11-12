@@ -40,9 +40,11 @@ runParcel() {
         thisui=$interfaces/$ui
         htm=$thisui/index.html
         if [ ! -f $htm ];then
-            echo "ERROR: $htm not found"
-            exit 1
+            echo "WARNING: $htm not found."
+            break
         fi
+
+        # Build the app cleanly
         if "$build";then
             parcel build $htm --dist-dir $thisui/dist
             echo "Showing dist contents ..."
@@ -53,6 +55,8 @@ runParcel() {
                 echo "ERROR: dist html not found!"
             fi
         fi
+
+        # Watch for changes
         if "$watch";then
             echo "Parcel watch app [$ui] from dir [$(pwd)] on port [$port]"
             mkdir -p $thisui/watch

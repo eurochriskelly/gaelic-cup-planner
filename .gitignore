@@ -6,6 +6,7 @@
 .clasp.json
 node_modules
 *superseded*
+.parcel-cache
 
 config/secret
 /src/frontend/interfaces/player/watch/

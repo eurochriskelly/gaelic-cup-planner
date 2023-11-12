@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import './DrawerFinish.css'
+import API from '../../../../../../shared/api/pitch'
+import ScoreSelect from './ScoreSelect'
+import styles from './DrawerFinish.module.scss'
 
 const DrawerFinish = ({
     fixture,
@@ -17,11 +19,11 @@ const DrawerFinish = ({
         step: 0,
     })
     const [scores, setScores] = useState({
-        Team1: {
+        team1: {
             goals: '',
             points: '',
         },
-        Team2: {
+        team2: {
             goals: '',
             points: '',
         },
@@ -38,17 +40,10 @@ const DrawerFinish = ({
     }
 
     const actions = {
-        yesCardedPlayers: () => {
-            setState({ step: 2 })
-        },
-        noCardedPlayers: () => {
-            setState({ step: 2 })
-        },
         saveScore: async () => {
             await onConfirm()
-            google.script.run
-                .withSuccessHandler(fixtures => setState({ step: 1 }))
-                .updateMatchScore(fixture.id, scores)
+            await API.updateScore(fixture.id, scores)
+            setState({ step: 1 })
         },
         notReadyToSaveScore: () => {
             setState({ step: 1 })
@@ -60,76 +55,69 @@ const DrawerFinish = ({
         updateScore: (team, type, amount) => {
             setCurrentTeam(team)
             setCurrentType(type)
+            console.log({ team, type })
             setScorePicker({ visible: true })
         }
     }
 
-    const showSquares = () => {
-        const squares = [];
-        for (let i = 0; i <= 23; i++) {
-            squares.push(
-                <div key={i} className='square' onClick={() => {
-                    const newScore = {
-                        ...scores,
-                        [currentTeam]: {
-                            ...scores[currentTeam],
-                            [currentType]: i
-                        }
-                    }
-                    setScores(newScore)
-                    setScorePicker({ visible: false })
-                }}>
-                    {(i && (i % 23 === 0)) ? '...' : i}
-                </div>
-            );
-        }
-        return <div>{squares}</div>
-    }
 
     const scoresNotReady = () => {
-        return !(scores.Team1.goals !== '' &&
-            scores.Team1.points !== '' &&
-            scores.Team2.goals !== '' &&
-            scores.Team2.points !== '')
+        return !(scores.team1.goals !== '' &&
+           scores.team1.points !== '' &&
+            scores.team2.goals !== '' &&
+            scores.team2.points !== '')
     }
 
-    const { Team1, Team2 } = fixture
+    const { team1, team2 } = fixture
     const displayScore = (team, type) => {
         const score = scores[team][type]
         return score || score === 0 ? score : '?'
     }
-    return <div className='drawerFinish'>
-        <div className='drawerStep' style={rules.score}>
+    return <div className={styles.drawerFinish}>
+        <div className={styles.drawerStep} style={rules.score}>
             <div className="drawer-header">Update match score</div>
             <div className="drawer-container" style={{ position: 'relative' }}>
                 <div>
-                    <div className='teamScore'>
-                        <h4>{Team1}</h4>
+                    <div className={styles.teamScore}>
+                        <h4>{team1}</h4>
                         <div>
-                            <div onClick={actions.updateScore.bind(null, 'Team1', 'goals')}>{displayScore('Team1', 'goals')}</div>
-                            <div onClick={actions.updateScore.bind(null, 'Team1', 'points')}>{displayScore('Team1', 'points')}</div>
+                            <div onClick={actions.updateScore.bind(null, 'team1', 'goals')}>{displayScore('team1', 'goals')}</div>
+                            <div onClick={actions.updateScore.bind(null, 'team1', 'points')}>{displayScore('team1', 'points')}</div>
                         </div>
                     </div>
-                    <div className='teamScore'>
-                        <h4>{Team2}</h4>
+                    <div className={styles.teamScore}>
+                        <h4>{team2}</h4>
                         <div>
-                            <div onClick={actions.updateScore.bind(null, 'Team2', 'goals')}>{displayScore('Team2', 'goals')}</div>
-                            <div onClick={actions.updateScore.bind(null, 'Team2', 'points')}>{displayScore('Team2', 'points')}</div>
+                            <div onClick={actions.updateScore.bind(null, 'team2', 'goals')}>{displayScore('team2', 'goals')}</div>
+                            <div onClick={actions.updateScore.bind(null, 'team2', 'points')}>{displayScore('team2', 'points')}</div>
                         </div>
                     </div>
-                    <div className='proceedButtons' >
-                        <button disabled={scoresNotReady()} className={ scoresNotReady() ? 'disabled' : 'enabled'} onClick={actions.saveScore}>Proceed</button>
+                    <div className={styles.proceedButtons} >
+                        <button disabled={scoresNotReady()} className={scoresNotReady() ? 'disabled' : 'enabled'} onClick={actions.saveScore}>Proceed</button>
                         <button onClick={actions.notReadyToSaveScore}>Cancel</button>
                     </div>
                 </div>
-                <div className='scoreSelect' style={{ display: scorePicker.visible ? 'block' : 'none' }}>
-                    {showSquares()}
-                </div>
+                {
+                    scorePicker.visible &&
+                    <div className={styles.scoreSelector}>
+                        <ScoreSelect
+                            scores={scores}
+                            currentTeam={currentTeam}
+                            updateScore={a => {
+                                setScores({ ...scores, [currentTeam]: a })
+                                setTimeout(() => {
+                                    setScorePicker({ visible: false })
+                                }, 500)
+                                
+                            }} />
+                    </div>
+                }
+
             </div>
         </div>
 
 
-        <div className='drawerStep' style={rules.fillCards}>
+        <div className={styles.drawerStep} style={rules.fillCards}>
             <div className="drawer-header">List carded players</div>
             <div className="drawer-container">
                 <div> TODO: allow entry of carded players here </div>

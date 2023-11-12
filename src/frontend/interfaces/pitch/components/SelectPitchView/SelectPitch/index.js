@@ -1,35 +1,51 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import './SelectPitch.css';
+import styles from './SelectPitch.module.scss';
 
-const MAX_LOCATION_LENGTH = 35;
-function SelectPitch(props) {
+const SelectPitch = ({
+    pitch, type, location,
+    category, team1, team2,
+    scheduledTime, pitchColor,
+    onChoosePitch,
+}) => {
     const navigate = useNavigate();
-    const { 
-        header, 
-        pitch = '??', location='?????', type='astro',
-        onChoosePitch = () => {},
-    } = props;
-    
-    const Container = header  ? 'h3' : 'div';
-    const h3Styles = { 
-        lineHeight: '10px',
-        borderRadius: '0',
+    const navigateToPitch = () => {
+        onChoosePitch()
+        console.log('Navigating to pitch with id:', pitch)
+        navigate(`/pitch/${pitch}`)
     }
+
+    const stAllDone = category ? '' : styles.allDone
+    console.log('allDone', stAllDone)
+
     return (
-        <Container onClick={() => {
-            onChoosePitch()
-            navigate(`/pitch/${id}`)
-        }} style={header ? h3Styles : {}} className='container'>
-            <span>{id}</span>
-            <span>{
-                location.length > MAX_LOCATION_LENGTH ?
-                    location.substring(0, MAX_LOCATION_LENGTH) + '...' :
-                    location
-            }</span>
-            <span>{type}</span>
-        </Container>
+        <div className={`${styles.allDone} ${styles.selectPitch}`} onClick={navigateToPitch}>
+            <div className={styles.header}>
+                <div className={styles.pitch}>{pitch}</div>
+                <div className={styles.location}>{location}</div>
+                <div className={styles.type}>{type.toUpperCase()}</div>
+            </div>
+            {
+                category
+                ? <div>
+                    <div className={styles.nextUp}>NEXT UP:</div>
+                    <div className={styles.details}>
+                        <div className={styles.category}>{category}</div>
+                        <div className={styles.time}>{`@${scheduledTime}`}</div>
+                    </div>
+                    <div className={styles.teams}>
+                        <div className={styles.team1}>{team1}</div>
+                        <div>vs</div>
+                        <div className={styles.team2}>{team2}</div>
+                    </div>
+                </div>
+                : <div className={styles.noMoreFixtures}>
+                    <div>All scheduled games complete!</div>
+                </div>
+            }
+        </div>
     );
-}
+};
+
 
 export default SelectPitch

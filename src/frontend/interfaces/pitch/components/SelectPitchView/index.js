@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import SelectPitch from "./SelectPitch"
+import styles from './SelectPitchView.module.scss'
 
 const SelectPitchView = () => {
     console.log('SelectPitchView')
@@ -8,14 +9,14 @@ const SelectPitchView = () => {
     async function fetchData() {
         console.log('Fetching data...')
         fetch('/api/pitches')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            setPitchData(data.data);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                setPitchData(data.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            })
     }
 
     useEffect(() => {
@@ -24,25 +25,18 @@ const SelectPitchView = () => {
         fetchData();
     }, []);
 
-    return <>
+    return <div className={styles.container}>
         <h2>Please select pitch</h2>
-        <SelectPitch
-            header={true}
-            id="Id"
-            location="Location"
-            type="Type"
-        />
-        {
-            pitchData.map(pitch =>
-                <SelectPitch
-                    key={pitch.pitch} {...pitch}
-                    onChoosePitch={() => {
-                        console.log('clicked')
-                    }}
-                />
+        <div className={styles.selectPitchView}>          {
+            pitchData.map(pitch => <SelectPitch
+                key={pitch.pitch} {...pitch}
+                onChoosePitch={() => {
+                    console.log('clicked')
+                }}
+            />
             )
-        }
-    </>
+        }</div>
+    </div>
 }
 
 export default SelectPitchView

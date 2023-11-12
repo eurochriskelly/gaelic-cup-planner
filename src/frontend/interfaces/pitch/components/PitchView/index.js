@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import API from "../../../../shared/api/pitch"
 import Fixture from "./Fixture"
 import UpdateFixture from "./UpdateFixture"
 import './PitchView.css'
@@ -14,24 +15,22 @@ const PitchView = () => {
 
     const actions = {
         fetchFixtures: async () => {
-            fetch(`/api/fixtures/${pitchId}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('fixtures', data)
-                    setFixtures(data.data)
-                    setNextFixture(data.data
-                        .filter(f => !f.played)
-                        .shift())
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                })
+            const data = await API.fetchFixtures(pitchId)
+            setFixtures(data.data)
+            setNextFixture(data.data
+                .filter(f => !f.played)
+                .shift())
         },
         delayByOne: async (fixtureId) => {
             console.log('delayByOne')
         },
         delayUntilEnd: async (fixtureId) => {
             console.log('delayUntilEnd')
+        },
+        startMatch: async (fixtureId) => {
+            await API.startMatch(fixtureId)
+            const data = await API.fetchFixtures(pitchId)
+            setFixtures(data.data)
         },
     }
 
@@ -65,6 +64,7 @@ const PitchView = () => {
                         <UpdateFixture
                             fixture={fixture}
                             updateFixtures={actions.fetchFixtures}
+                            startMatch={actions.startMatch}
                             delayByOne={actions.delayByOne}
                             delayUntilEnd={actions.delayUntilEnd}
                         />

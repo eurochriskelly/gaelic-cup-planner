@@ -1,6 +1,6 @@
 import ScoreDisplay from './../../../generic/ScoreDisplay'
 import ClockIcon from './../../../generic/ClockIcon'
-import './Fixture.css'
+import styles from './Fixture.module.scss'
 
 const Fixture = ({ fixture, isFocus }) => {
     const {
@@ -31,7 +31,7 @@ const Fixture = ({ fixture, isFocus }) => {
         return classes.join(' ')
     }
 
-    return <div className={`fixture ${isFocus ? 'focusFixture' : ''}`} key={id}>
+    return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
                 <ClockIcon started={started} scheduled={scheduledTime} focus={isFocus} played={scoreUpToDate} />

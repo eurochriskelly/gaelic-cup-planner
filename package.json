@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start": "bash scripts/build-fe.sh --watch",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "launch": "bash scripts/launch.sh",
         "serve": "nodemon src/backend/server.js",
         "deploy": "bash scripts/deploy.sh",
         "build": "bash scripts/build-fe.sh --build",

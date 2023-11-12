@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DrawerGetReady.css';
+import styles from './DrawerGetReady.module.scss';
 
 const DrawerGetReady = ({
     fixture,
@@ -9,13 +9,19 @@ const DrawerGetReady = ({
     onClose = () => { }
 }) => {
     if (!visible) return null
-    const [ready, setReadyState] = useState(false);
-    const [fixtureReady, setFixtureReadyState] = useState(false);
 
     const { umpiringTeam = 'Berlin' } = fixture
+    console.log({fixture})
+
+    const actions = {
+        startMatch: async () => {
+            await startMatch(fixture.id)
+            onClose('start')
+        }
+    }
 
     return (
-        <div className='drawerGetReady'>
+        <div className={styles.drawerGetReady}>
             <div className='drawer-header'>Game prep checklist</div>
             <div className='drawer-container'>
                 <div>
@@ -24,7 +30,7 @@ const DrawerGetReady = ({
                         <li>Pitch markings are correct?</li>
                         <li>Have all teams submitted team sheets?</li>
                     </ul>
-                    <button class="enabled" onClick={startMatch}>Start the clock!</button>
+                    <button className="enabled" onClick={actions.startMatch}>Start the clock ...</button>
                 </div>
             </div>
         </div>
