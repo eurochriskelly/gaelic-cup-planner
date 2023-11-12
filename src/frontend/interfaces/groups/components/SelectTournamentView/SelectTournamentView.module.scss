@@ -1,0 +1,32 @@
+$color: #255e1f;
+
+.selectTournamentView {
+    > article {
+        > section {
+            background-color: desaturate(lighten($color, 60%), 30%);
+            &:hover {
+                background-color: desaturate(lighten($color, 50%), 30%);
+            }
+            border: 1px solid #ccc;
+            margin: 1rem;
+            h3 {
+                text-align: center;
+                margin: 0.5rem 0 1.2rem 0
+            }
+            > div {
+                > div {
+                    padding: 0.3rem 1rem;
+                    display: grid;
+                    grid-template-columns: 1fr 2fr;
+                    > span:first-child {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                    }
+                    > span:last-child {
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+        }
+    }
+}

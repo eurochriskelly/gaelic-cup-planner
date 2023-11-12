@@ -2,9 +2,10 @@
 const processArgs = (args) => {
     const ARGS = {}
     args.forEach(arg => {
+        console.log("Processing option: ", arg)
         if (arg.startsWith('--')) {
             const [key, value] = arg.split('=')
-            ARGS[key] = value
+            ARGS[key.replace('--', '')] = value
         }
     })
     if (!ARGS.port) {
