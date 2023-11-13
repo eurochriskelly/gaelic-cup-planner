@@ -11,4 +11,5 @@ node_modules
 config/secret
 /src/frontend/interfaces/player/watch/
 /src/frontend/interfaces/pitch/watch/
+/src/frontend/interfaces/groups/watch/
 

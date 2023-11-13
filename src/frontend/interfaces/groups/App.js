@@ -4,7 +4,7 @@ import TournamentView from "./components/TournamentView";
 
 function App() {
     return <>
-        <h1>Group standings</h1>
+        <h1>Live Group Information</h1>
         <Routes>
             <Route path="/" element={<SelectTournamentView />} />
             <Route path="/tournament/:tournamentId" element={<TournamentView />} />

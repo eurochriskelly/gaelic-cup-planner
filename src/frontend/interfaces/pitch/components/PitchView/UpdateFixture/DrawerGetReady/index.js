@@ -9,8 +9,9 @@ const DrawerGetReady = ({
     onClose = () => { }
 }) => {
     if (!visible) return null
-
-    const { umpiringTeam = 'Berlin' } = fixture
+    console.log(' we must have a fixture')
+    const { umpiringTeam } = fixture
+    console.log('fixture - in DrawerGetReady', fixture)
     console.log({fixture})
 
     const actions = {
@@ -26,7 +27,7 @@ const DrawerGetReady = ({
             <div className='drawer-container'>
                 <div>
                     <ul>
-                        <li>Are <span>{umpiringTeam}</span> umpires ready?      &nbsp;</li>
+                        <li>Are [<span>{umpiringTeam}</span>] umpires ready?      &nbsp;</li>
                         <li>Pitch markings are correct?</li>
                         <li>Have all teams submitted team sheets?</li>
                     </ul>
