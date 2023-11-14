@@ -40,14 +40,28 @@ app.get('/api/pitches', async (req, res) => {
   }
 });
 
-app.get('/api/fixtures/:parameter', (req, res) => {
-  II('Calling API: /api/fixtures/:parameter')
-  const parameter = req.params.parameter;
+app.get('/api/fixtures/:pitch', (req, res) => {
+  II('Calling API: /api/fixtures/:pitch')
+  const pitch = req.params.pitch;
   // Now you can use the 'parameter' variable to fetch specific data from your database
-  const query = `SELECT * FROM v_fixture_information WHERE pitch = '${parameter}'`;
+  const query = `SELECT * FROM v_fixture_information WHERE pitch = '${pitch}'`;
 
   db.query(query, (err, results) => {
     if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ data: results });
+  });
+});
+
+app.get('/api/fixtures/nextup/:tournament_id', (req, res) => {
+  II('Calling API: /api/fixtures/nextup/:tournament_id')
+  const { tournament_id } = req.params
+  const query = `SELECT * FROM v_next_up WHERE tournamentId = ${tournament_id}`
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.log('Error occured', err)
       return res.status(500).json({ error: err.message });
     }
     res.json({ data: results });
