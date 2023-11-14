@@ -9,7 +9,7 @@ node_modules
 .parcel-cache
 
 config/secret
-/src/frontend/interfaces/player/watch/
+/src/frontend/interfaces/player/watch/*
 /src/frontend/interfaces/pitch/watch/
-/src/frontend/interfaces/groups/watch/
+/src/frontend/interfaces/groups/watch/*
 
