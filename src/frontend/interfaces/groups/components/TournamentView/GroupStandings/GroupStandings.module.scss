@@ -1,7 +1,7 @@
 $mainColor: #6f9c6b;
 // $smallColumnWidth: 25px;
-$scw: 22px;
-$scw: 40px;
+$scw: 2vw;
+$fs: 0.8vw;
 
 .groupStandings {
     margin-left: 0.5rem;
@@ -13,7 +13,7 @@ $scw: 40px;
         background-color: #d7ebd5;
     }
     th, td {
-        font-size: 1.3em;
+        font-size: $fs;
         &:nth-child(n+2):nth-child(-n+8) {
             width: $scw * 1.2;
             text-align: center;
@@ -45,9 +45,9 @@ $scw: 40px;
         border: none;
     }
     td {
+        border: 0;
         border-bottom: 1px solid #ddd;
         line-height: 3.3em;
-        border-right: 2px solid white;
     }
 }
 
@@ -83,3 +83,4 @@ td > div.total  {
     padding: 0;
     margin: 0.2rem;
 }
+
