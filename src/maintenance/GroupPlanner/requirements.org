@@ -1,0 +1,72 @@
+I want to design a function or class in javascript for organizing tournaments and filtering players into groups.
+
+The requirements are as follows:
+
+- I have a set of teams in a category. 
+  e.g. 4, 6 or, maybe 13 teams. It varies and could be higher or lower
+
+- I'd like to be able to auto group the teams. e.g. for 13 teams maybe I have 1 group of 5 and 2 groups of 4. 
+  For 6 teams I have 2 groups of 3. For 4 teams I have 1 group of 4.
+
+- I'd like to be able to speciy the optimal group size
+
+- I'd like to be able to specify the maximum group size
+
+- Each team in the group should play each other group.
+  So a group with 4 teams should each get 3 matches in the group stage
+  
+- One team must provide umpires while other teams are playing.
+  This should be auto-calculated
+
+- Some internal knowledge may be used to put teams with each other so overrides must be possible
+  e.g. sometimes 2 teams are much stronger than the others and should not be in the same group as each other
+
+- If only the teams are provided, it should calculated a list of fixtures for the group stage in order
+
+- A team which just played should avoid playing immediately again if possible
+
+- The fixtures should be randomised so that the same teams don't always play each other first
+
+- After the group stage, there is a knockout stage. The top 2 teams of each group should participate in the knockout stage
+  - If there are not enough teams to make a power of 2, then the best 3rd place teams should be added to the knockout stage
+
+- The knockout stage should be provided in a calculated order
+  e.g. if there are 8 teams from 3 groups, it could go like this:
+
+  - Winner of Group A vs 3rd place team group B (umpired by 2nd place team group C)
+  - Winner of Group B vs 3rd place group A (umpired by 2nd place group A)
+  - Winner of Group C vs 2rd place group A (umpired by 1st place group A)
+  - 2nd place of Group A vs 2nd place of Group B
+  etc.
+
+
+Typical usage will be:
+
+generateFixtures(teams, optimalgroupSize, maxGroupSize, overrides)
+
+and it should generate an array as follows:
+
+{
+    groups: {
+        A: ["Team A", "Team B", "Team C"],
+        B: ["Team I", "Team J", "Team K"],
+    },
+    fixtures: [
+    {
+        team1: "Team A",
+        team2: "Team B",
+        umpire: "Team C"
+        stage: "group"
+    },
+    ... etc. ...,
+    {
+        team1: "Group[A]/Rank[1]",
+        team2: "Group[B]/Rank[3]",
+        umpire: "Group[C]/Rank[2]"
+        stage: "knockout"
+    }
+]
+}
+
+
+
