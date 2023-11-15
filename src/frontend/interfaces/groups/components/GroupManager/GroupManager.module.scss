@@ -1,0 +1,114 @@
+// GroupManager.module.scss
+.groupManager {
+    .inputArea {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+
+        input {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #4cae4c;
+            }
+        }
+        .groupButtons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); // creates 4 columns
+            grid-gap: 10px;
+            margin-top: 10px;
+
+            button {
+                background-color: #5cb85c;
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                text-align: center;
+                // Square buttons
+                width: 40px;
+                height: 40px;
+
+                &:hover {
+                    background-color: #4cae4c;
+                }
+
+                &:disabled {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    .teamList {
+        .teamRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: red;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            line-height: 100px;
+            &:hover {
+                background-color: #f7f7f7;
+            }
+
+            .teamGroup {
+                font-weight: bold;
+            }
+
+            .teamActions {
+                button {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    margin-left: 5px;
+
+                    &:hover {
+                        color: #337ab7;
+                    }
+                }
+            }
+        }
+    }
+    .group {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        .groupHeader {
+            background-color: #eee;
+            padding: 5px;
+            font-weight: bold;
+        }
+        .teamRow {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            line-height: 3rem;
+            border-top: 1px solid #ddd;
+            &:hover {
+                background-color: #f7f7f7;
+                .teamActions {
+                    display: block;
+                }
+            }
+        }
+        .teamActions {
+            display: none;
+            button {
+                margin-left: 5px;
+            }
+        }
+    }
+}
