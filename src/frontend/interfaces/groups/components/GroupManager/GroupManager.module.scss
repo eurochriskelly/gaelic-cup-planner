@@ -1,12 +1,16 @@
 // GroupManager.module.scss
 .groupManager {
+    margin: 2rem;
     .inputArea {
-        display: flex;
-        justify-content: space-between;
+        //display: flex;
+        //justify-content: space-between;
+        display: grid;
+        grid-template-columns: 3fr 1fr; // creates 3 columns
         margin-bottom: 20px;
 
-        input {
+        > input {
             margin-right: 10px;
+            font-size: 1.8rem;
         }
 
         button {

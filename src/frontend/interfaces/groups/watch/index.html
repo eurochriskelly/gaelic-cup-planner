@@ -33550,7 +33550,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./components/SelectTournamentView":"lv79n","./components/GroupManager":"6VlNo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./components/TournamentView":"ge8q8"}],"lv79n":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./components/SelectTournamentView":"lv79n","./components/TournamentView":"ge8q8","./components/GroupManager":"6VlNo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lv79n":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$d1a0 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -33834,246 +33834,7 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"7422ead32dcc1e6b":"786KC"}],"6VlNo":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$dfae = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$dfae.prelude(module);
-
-try {
-// GroupManager.js
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _groupManagerModuleScss = require("./GroupManager.module.scss");
-var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerModuleScss);
-var _s = $RefreshSig$();
-const GroupManager = ()=>{
-    _s();
-    const [teamList, setTeamList] = (0, _react.useState)([]);
-    const [newTeamName, setNewTeamName] = (0, _react.useState)("");
-    const [newGroup, setNewGroup] = (0, _react.useState)("");
-    const [editIndex, setEditIndex] = (0, _react.useState)(-1);
-    const groupLetters = "ABCDEFGH".split("");
-    const onChange = ()=>{
-        console.log(teamList);
-    };
-    (0, _react.useEffect)(()=>{
-        onChange(teamList);
-    }, [
-        teamList,
-        onChange
-    ]);
-    const addTeam = (group)=>{
-        const newTeam = {
-            name: newTeamName,
-            group: group,
-            _order: Math.max(...teamList.map((t)=>t._order || 0), 0) + 1
-        };
-        setTeamList([
-            ...teamList,
-            newTeam
-        ]);
-        setNewTeamName("");
-    };
-    const moveItem = (index, direction)=>{
-        const newTeamList = [
-            ...teamList
-        ];
-        const positionChange = direction === "up" ? -1 : 1;
-        const itemToMove = newTeamList.splice(index, 1)[0];
-        newTeamList.splice(index + positionChange, 0, itemToMove);
-        // Adjust the order
-        newTeamList.forEach((team, i)=>{
-            team._order = i + 1;
-        });
-        setTeamList(newTeamList);
-    };
-    const deleteItem = (index)=>{
-        const newTeamList = [
-            ...teamList
-        ];
-        newTeamList.splice(index, 1);
-        setTeamList(newTeamList);
-    };
-    const editItem = (index)=>{
-        setEditIndex(index);
-        setNewTeamName(teamList[index].name);
-        setNewGroup(teamList[index].group);
-    };
-    const saveEdit = (index)=>{
-        let newList = [
-            ...teamList
-        ];
-        newList[index] = {
-            ...newList[index],
-            name: newTeamName,
-            group: newGroup
-        };
-        setTeamList(newList);
-        setEditIndex(-1);
-        setNewTeamName("");
-        setNewGroup("");
-    };
-    const groupedTeams = teamList.reduce((acc, team)=>{
-        (acc[team.group] = acc[team.group] || []).push(team);
-        return acc;
-    }, {});
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _groupManagerModuleScssDefault.default).groupManager,
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: (0, _groupManagerModuleScssDefault.default).inputArea,
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                        type: "text",
-                        placeholder: "Team name",
-                        value: newTeamName,
-                        onChange: (e)=>setNewTeamName(e.target.value)
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                        lineNumber: 74,
-                        columnNumber: 17
-                    }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: (0, _groupManagerModuleScssDefault.default).groupButtons,
-                        children: groupLetters.map((letter, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                onClick: ()=>addTeam(letter),
-                                disabled: !newTeamName,
-                                className: (0, _groupManagerModuleScssDefault.default).groupButton,
-                                children: letter
-                            }, letter, false, {
-                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                lineNumber: 82,
-                                columnNumber: 25
-                            }, undefined))
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                        lineNumber: 80,
-                        columnNumber: 17
-                    }, undefined)
-                ]
-            }, void 0, true, {
-                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                lineNumber: 73,
-                columnNumber: 13
-            }, undefined),
-            Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    className: (0, _groupManagerModuleScssDefault.default).group,
-                    children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: (0, _groupManagerModuleScssDefault.default).groupHeader,
-                            children: group
-                        }, void 0, false, {
-                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                            lineNumber: 95,
-                            columnNumber: 21
-                        }, undefined),
-                        teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: (0, _groupManagerModuleScssDefault.default).teamRow,
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        className: (0, _groupManagerModuleScssDefault.default).teamName,
-                                        children: team.name
-                                    }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                        lineNumber: 98,
-                                        columnNumber: 29
-                                    }, undefined),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        className: (0, _groupManagerModuleScssDefault.default).teamActions,
-                                        children: editIndex === index ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                            onClick: ()=>saveEdit(index),
-                                            children: "Save"
-                                        }, void 0, false, {
-                                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                            lineNumber: 101,
-                                            columnNumber: 37
-                                        }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-                                            children: [
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>editItem(index),
-                                                    children: "Edit"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 104,
-                                                    columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>moveItem(index, "up"),
-                                                    children: "\u2191"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 105,
-                                                    columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>moveItem(index, "down"),
-                                                    children: "\u2193"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 106,
-                                                    columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>deleteItem(index),
-                                                    children: "\u2715"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 107,
-                                                    columnNumber: 41
-                                                }, undefined)
-                                            ]
-                                        }, void 0, true)
-                                    }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                        lineNumber: 99,
-                                        columnNumber: 29
-                                    }, undefined)
-                                ]
-                            }, team.name, true, {
-                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                lineNumber: 97,
-                                columnNumber: 25
-                            }, undefined))
-                    ]
-                }, group, true, {
-                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                    lineNumber: 94,
-                    columnNumber: 17
-                }, undefined))
-        ]
-    }, void 0, true, {
-        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-        lineNumber: 72,
-        columnNumber: 9
-    }, undefined);
-};
-_s(GroupManager, "aOzD2QQhTLEC9tiT3/jccwIU6J4=");
-_c = GroupManager;
-exports.default = GroupManager;
-var _c;
-$RefreshReg$(_c, "GroupManager");
-
-  $parcel$ReactRefreshHelpers$dfae.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.module.scss":"40VCq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"40VCq":[function(require,module,exports) {
-module.exports["group"] = `rUpNdG_group`;
-module.exports["groupButtons"] = `rUpNdG_groupButtons`;
-module.exports["groupHeader"] = `rUpNdG_groupHeader`;
-module.exports["groupManager"] = `rUpNdG_groupManager`;
-module.exports["inputArea"] = `rUpNdG_inputArea`;
-module.exports["teamActions"] = `rUpNdG_teamActions`;
-module.exports["teamGroup"] = `rUpNdG_teamGroup`;
-module.exports["teamList"] = `rUpNdG_teamList`;
-module.exports["teamRow"] = `rUpNdG_teamRow`;
-
-},{}],"ge8q8":[function(require,module,exports) {
+},{"7422ead32dcc1e6b":"786KC"}],"ge8q8":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$8f70 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34598,6 +34359,248 @@ module.exports["total"] = `QtwIEa_total`;
 },{}],"9RGht":[function(require,module,exports) {
 module.exports["nextArea"] = `EfzPkq_nextArea`;
 module.exports["tournamentView"] = `EfzPkq_tournamentView`;
+
+},{}],"6VlNo":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$dfae = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$dfae.prelude(module);
+
+try {
+// GroupManager.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _groupManagerModuleScss = require("./GroupManager.module.scss");
+var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerModuleScss);
+var _s = $RefreshSig$();
+const GroupManager = ()=>{
+    _s();
+    const [teamList, setTeamList] = (0, _react.useState)([]);
+    const [oldTeamName, setOldTeamName] = (0, _react.useState)("");
+    const [newTeamName, setNewTeamName] = (0, _react.useState)("");
+    const [newGroup, setNewGroup] = (0, _react.useState)("");
+    const [editIndex, setEditIndex] = (0, _react.useState)(-1);
+    const groupLetters = "ABCDEFGH".split("");
+    const onChange = ()=>{
+        console.log(teamList);
+    };
+    (0, _react.useEffect)(()=>{
+        onChange(teamList);
+    }, [
+        teamList,
+        onChange
+    ]);
+    const addTeam = (group)=>{
+        const newTeam = {
+            name: newTeamName,
+            group: group,
+            _order: Math.max(...teamList.map((t)=>t._order || 0), 0) + 1
+        };
+        setTeamList([
+            ...teamList.filter((x)=>x.name).filter((x)=>x.name !== newTeamName),
+            newTeam
+        ]);
+        setNewTeamName("");
+    };
+    const moveItem = (index, direction)=>{
+        debugger;
+        const newTeamList = [
+            ...teamList
+        ];
+        const positionChange = direction === "up" ? -1 : 1;
+        const itemToMove = newTeamList.splice(index, 1)[0];
+        newTeamList.splice(index + positionChange, 0, itemToMove);
+        // Adjust the order
+        newTeamList.forEach((team, i)=>{
+            team._order = i + 1;
+        });
+        setTeamList(newTeamList.filter((x)=>x.name));
+    };
+    const deleteItem = (index)=>{
+        const newTeamList = [
+            ...teamList
+        ];
+        newTeamList.splice(index, 1);
+        setTeamList(newTeamList.filter((x)=>x.name));
+    };
+    const editItem = (index)=>{
+        setEditIndex(index);
+        setNewTeamName(teamList[index].name);
+        setOldTeamName(teamList[index].name);
+        setNewGroup(teamList[index].group);
+    };
+    const saveEdit = (index)=>{
+        let newList = [
+            ...teamList
+        ];
+        newList[index] = {
+            ...newList[index],
+            name: newTeamName,
+            group: newGroup
+        };
+        setTeamList(newList.filter((x)=>x.name));
+        setEditIndex(-1);
+        setNewTeamName("");
+        setNewGroup("");
+    };
+    const groupedTeams = teamList.reduce((acc, team)=>{
+        (acc[team.group] = acc[team.group] || []).push(team);
+        return acc;
+    }, {});
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _groupManagerModuleScssDefault.default).groupManager,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _groupManagerModuleScssDefault.default).inputArea,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "text",
+                        placeholder: "Team name",
+                        value: newTeamName,
+                        onChange: (e)=>setNewTeamName(e.target.value)
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                        lineNumber: 80,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: (0, _groupManagerModuleScssDefault.default).groupButtons,
+                        children: groupLetters.map((letter, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: ()=>addTeam(letter),
+                                disabled: !newTeamName,
+                                className: (0, _groupManagerModuleScssDefault.default).groupButton,
+                                children: letter
+                            }, letter, false, {
+                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                lineNumber: 88,
+                                columnNumber: 25
+                            }, undefined))
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                        lineNumber: 86,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                lineNumber: 79,
+                columnNumber: 13
+            }, undefined),
+            Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    className: (0, _groupManagerModuleScssDefault.default).group,
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: (0, _groupManagerModuleScssDefault.default).groupHeader,
+                            children: group
+                        }, void 0, false, {
+                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                            lineNumber: 101,
+                            columnNumber: 21
+                        }, undefined),
+                        teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: (0, _groupManagerModuleScssDefault.default).teamRow,
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: (0, _groupManagerModuleScssDefault.default).teamName,
+                                        children: team.name
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                        lineNumber: 104,
+                                        columnNumber: 29
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: (0, _groupManagerModuleScssDefault.default).teamActions,
+                                        children: editIndex === index ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                            onClick: ()=>saveEdit(index),
+                                            children: "Save"
+                                        }, void 0, false, {
+                                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                            lineNumber: 107,
+                                            columnNumber: 37
+                                        }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                                            children: [
+                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                    onClick: ()=>editItem(index),
+                                                    children: "Edit"
+                                                }, void 0, false, {
+                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                                    lineNumber: 110,
+                                                    columnNumber: 41
+                                                }, undefined),
+                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                    onClick: ()=>moveItem(index, "up"),
+                                                    children: "\u2191"
+                                                }, void 0, false, {
+                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                                    lineNumber: 111,
+                                                    columnNumber: 41
+                                                }, undefined),
+                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                    onClick: ()=>moveItem(index, "down"),
+                                                    children: "\u2193"
+                                                }, void 0, false, {
+                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                                    lineNumber: 112,
+                                                    columnNumber: 41
+                                                }, undefined),
+                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                    onClick: ()=>deleteItem(index),
+                                                    children: "\u2715"
+                                                }, void 0, false, {
+                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                                    lineNumber: 113,
+                                                    columnNumber: 41
+                                                }, undefined)
+                                            ]
+                                        }, void 0, true)
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                        lineNumber: 105,
+                                        columnNumber: 29
+                                    }, undefined)
+                                ]
+                            }, team.name, true, {
+                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                                lineNumber: 103,
+                                columnNumber: 25
+                            }, undefined))
+                    ]
+                }, group, true, {
+                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+                    lineNumber: 100,
+                    columnNumber: 17
+                }, undefined))
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
+        lineNumber: 78,
+        columnNumber: 9
+    }, undefined);
+};
+_s(GroupManager, "WARKMqzMnGk1We2mSIJD8ggGetE=");
+_c = GroupManager;
+exports.default = GroupManager;
+var _c;
+$RefreshReg$(_c, "GroupManager");
+
+  $parcel$ReactRefreshHelpers$dfae.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.module.scss":"40VCq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"40VCq":[function(require,module,exports) {
+module.exports["group"] = `rUpNdG_group`;
+module.exports["groupButtons"] = `rUpNdG_groupButtons`;
+module.exports["groupHeader"] = `rUpNdG_groupHeader`;
+module.exports["groupManager"] = `rUpNdG_groupManager`;
+module.exports["inputArea"] = `rUpNdG_inputArea`;
+module.exports["teamActions"] = `rUpNdG_teamActions`;
+module.exports["teamGroup"] = `rUpNdG_teamGroup`;
+module.exports["teamList"] = `rUpNdG_teamList`;
+module.exports["teamRow"] = `rUpNdG_teamRow`;
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 
