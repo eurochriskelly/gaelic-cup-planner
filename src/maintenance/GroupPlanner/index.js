@@ -25,6 +25,7 @@ class GroupPlanner {
                 for (let j = i + 1; j < teams.length; j++) {
                     const umpire = teams[(i + j) % teams.length];
                     this.fixtures.push({
+                        group: group,
                         team1: teams[i],
                         team2: teams[j],
                         umpire: umpire,

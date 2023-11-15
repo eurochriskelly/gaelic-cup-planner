@@ -12,10 +12,10 @@ const TournamentView = () => {
     const [groups, setGroups] = useState([])
     const [standings, setStandings] = useState([])
     const [nextMatches, setNextMatches] = useState([])
-    const [tournament, setTournament] = useState({})
+    // const [tournament, setTournament] = useState({})
 
     useEffect(() => {
-        setTournament(location.state.tournament)
+        // setTournament(location.state.tournament)
         fetch(`/api/fixtures/nextup/${tournamentId}`)
             .then(response => response.json())
             .then(data => {
@@ -47,7 +47,7 @@ const TournamentView = () => {
                     groups
                         .slice(0, 3)
                         .map((group, id) => {
-                            console.log({nextMatches})
+                            console.log({ nextMatches })
                             return <>
                                 <section>
                                     <h3>{group}</h3>
