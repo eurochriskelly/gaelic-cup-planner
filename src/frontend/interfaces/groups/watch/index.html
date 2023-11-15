@@ -33493,8 +33493,8 @@ var _selectTournamentView = require("./components/SelectTournamentView");
 var _selectTournamentViewDefault = parcelHelpers.interopDefault(_selectTournamentView);
 var _tournamentView = require("./components/TournamentView");
 var _tournamentViewDefault = parcelHelpers.interopDefault(_tournamentView);
-var _groupManager = require("./components/GroupManager");
-var _groupManagerDefault = parcelHelpers.interopDefault(_groupManager);
+var _organizeTournament = require("./components/OrganizeTournament");
+var _organizeTournamentDefault = parcelHelpers.interopDefault(_organizeTournament);
 function App() {
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
         children: [
@@ -33525,7 +33525,7 @@ function App() {
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
                         path: "/manage",
-                        element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupManagerDefault.default), {}, void 0, false, void 0, void 0)
+                        element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _organizeTournamentDefault.default), {}, void 0, false, void 0, void 0)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/App.js",
                         lineNumber: 12,
@@ -33550,7 +33550,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./components/SelectTournamentView":"lv79n","./components/TournamentView":"ge8q8","./components/GroupManager":"6VlNo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lv79n":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-router-dom":"9xmpe","./components/SelectTournamentView":"lv79n","./components/TournamentView":"ge8q8","./components/OrganizeTournament":"kZTEt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lv79n":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$d1a0 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34360,11 +34360,51 @@ module.exports["total"] = `QtwIEa_total`;
 module.exports["nextArea"] = `EfzPkq_nextArea`;
 module.exports["tournamentView"] = `EfzPkq_tournamentView`;
 
-},{}],"6VlNo":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$dfae = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+},{}],"kZTEt":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$ddfa = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$dfae.prelude(module);
+$parcel$ReactRefreshHelpers$ddfa.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _groupManager = require("./GroupManager");
+var _groupManagerDefault = parcelHelpers.interopDefault(_groupManager);
+const OrganizeTournament = ()=>{
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Organize Tournament"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+                lineNumber: 5,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupManagerDefault.default), {}, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+                lineNumber: 6,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true);
+};
+_c = OrganizeTournament;
+exports.default = OrganizeTournament;
+var _c;
+$RefreshReg$(_c, "OrganizeTournament");
+
+  $parcel$ReactRefreshHelpers$ddfa.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"6gLSm":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$e8b4 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$e8b4.prelude(module);
 
 try {
 // GroupManager.js
@@ -34373,6 +34413,8 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
+var _groupManagerClass = require("./GroupManager.class");
+var _groupManagerClassDefault = parcelHelpers.interopDefault(_groupManagerClass);
 var _groupManagerModuleScss = require("./GroupManager.module.scss");
 var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerModuleScss);
 var _s = $RefreshSig$();
@@ -34384,8 +34426,9 @@ const GroupManager = ()=>{
     const [newGroup, setNewGroup] = (0, _react.useState)("");
     const [editIndex, setEditIndex] = (0, _react.useState)(-1);
     const groupLetters = "ABCDEFGH".split("");
+    const GM = new (0, _groupManagerClassDefault.default)();
     const onChange = ()=>{
-        console.log(teamList);
+        GM.teams = teamList;
     };
     (0, _react.useEffect)(()=>{
         onChange(teamList);
@@ -34462,8 +34505,8 @@ const GroupManager = ()=>{
                         value: newTeamName,
                         onChange: (e)=>setNewTeamName(e.target.value)
                     }, void 0, false, {
-                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                        lineNumber: 80,
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                        lineNumber: 83,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34474,19 +34517,19 @@ const GroupManager = ()=>{
                                 className: (0, _groupManagerModuleScssDefault.default).groupButton,
                                 children: letter
                             }, letter, false, {
-                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                lineNumber: 88,
+                                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                lineNumber: 91,
                                 columnNumber: 25
                             }, undefined))
                     }, void 0, false, {
-                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                        lineNumber: 86,
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                        lineNumber: 89,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
-                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                lineNumber: 79,
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                lineNumber: 82,
                 columnNumber: 13
             }, undefined),
             Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34496,8 +34539,8 @@ const GroupManager = ()=>{
                             className: (0, _groupManagerModuleScssDefault.default).groupHeader,
                             children: group
                         }, void 0, false, {
-                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                            lineNumber: 101,
+                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                            lineNumber: 104,
                             columnNumber: 21
                         }, undefined),
                         teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34507,8 +34550,8 @@ const GroupManager = ()=>{
                                         className: (0, _groupManagerModuleScssDefault.default).teamName,
                                         children: team.name
                                     }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                        lineNumber: 104,
+                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                        lineNumber: 107,
                                         columnNumber: 29
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34517,8 +34560,8 @@ const GroupManager = ()=>{
                                             onClick: ()=>saveEdit(index),
                                             children: "Save"
                                         }, void 0, false, {
-                                            fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                            lineNumber: 107,
+                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                            lineNumber: 110,
                                             columnNumber: 37
                                         }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
                                             children: [
@@ -34526,57 +34569,57 @@ const GroupManager = ()=>{
                                                     onClick: ()=>editItem(index),
                                                     children: "Edit"
                                                 }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 110,
+                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                    lineNumber: 113,
                                                     columnNumber: 41
                                                 }, undefined),
                                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                                                     onClick: ()=>moveItem(index, "up"),
                                                     children: "\u2191"
                                                 }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 111,
+                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                    lineNumber: 114,
                                                     columnNumber: 41
                                                 }, undefined),
                                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                                                     onClick: ()=>moveItem(index, "down"),
                                                     children: "\u2193"
                                                 }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 112,
+                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                    lineNumber: 115,
                                                     columnNumber: 41
                                                 }, undefined),
                                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                                                     onClick: ()=>deleteItem(index),
                                                     children: "\u2715"
                                                 }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                                    lineNumber: 113,
+                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                    lineNumber: 116,
                                                     columnNumber: 41
                                                 }, undefined)
                                             ]
                                         }, void 0, true)
                                     }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                        lineNumber: 105,
+                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                        lineNumber: 108,
                                         columnNumber: 29
                                     }, undefined)
                                 ]
                             }, team.name, true, {
-                                fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                                lineNumber: 103,
+                                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                lineNumber: 106,
                                 columnNumber: 25
                             }, undefined))
                     ]
                 }, group, true, {
-                    fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-                    lineNumber: 100,
+                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                    lineNumber: 103,
                     columnNumber: 17
                 }, undefined))
         ]
     }, void 0, true, {
-        fileName: "src/frontend/interfaces/groups/components/GroupManager/index.js",
-        lineNumber: 78,
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+        lineNumber: 81,
         columnNumber: 9
     }, undefined);
 };
@@ -34586,21 +34629,103 @@ exports.default = GroupManager;
 var _c;
 $RefreshReg$(_c, "GroupManager");
 
-  $parcel$ReactRefreshHelpers$dfae.postlude(module);
+  $parcel$ReactRefreshHelpers$e8b4.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.module.scss":"40VCq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"40VCq":[function(require,module,exports) {
-module.exports["group"] = `rUpNdG_group`;
-module.exports["groupButtons"] = `rUpNdG_groupButtons`;
-module.exports["groupHeader"] = `rUpNdG_groupHeader`;
-module.exports["groupManager"] = `rUpNdG_groupManager`;
-module.exports["inputArea"] = `rUpNdG_inputArea`;
-module.exports["teamActions"] = `rUpNdG_teamActions`;
-module.exports["teamGroup"] = `rUpNdG_teamGroup`;
-module.exports["teamList"] = `rUpNdG_teamList`;
-module.exports["teamRow"] = `rUpNdG_teamRow`;
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.class":"hDkmD","./GroupManager.module.scss":"feiCK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"hDkmD":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class GroupManagerHelper {
+    constructor(){
+        this.groupLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        this.matches = {};
+        this.teamList = [];
+        this.durations = [
+            {
+                groupSize: 3,
+                duration: 15,
+                break: 5,
+                gap: 10
+            },
+            {
+                groupSize: 4,
+                duration: 10,
+                break: 3,
+                gap: 5
+            },
+            {
+                groupSize: 5,
+                duration: 8,
+                break: 3,
+                gap: 5
+            }
+        ];
+        this.groupSizes = {};
+    }
+    set teams(teams) {
+        console.log("-------");
+        this.teamList = teams;
+        this.groupSizes = teams.reduce((p, team)=>{
+            p[team.group] = (p[team.group] || 0) + 1;
+            return p;
+        }, {});
+        console.table(this.teamList);
+        this.generateMatches();
+    }
+    generateMatches() {
+        const matches = [];
+        // Group teams by their group
+        const teamsByGroup = this.teamList.reduce((groups, team)=>{
+            if (!groups[team.group]) groups[team.group] = [];
+            groups[team.group].push(team.name);
+            matches[team.group] = [];
+            return groups;
+        }, {});
+        console.log(teamsByGroup);
+        // Generate matches for each group
+        Object.keys(teamsByGroup).forEach((group)=>{
+            const groupTeams = teamsByGroup[group];
+            for(let i = 0; i < groupTeams.length; i++)for(let j = i + 1; j < groupTeams.length; j++){
+                const d = this.durations.find((d)=>d.groupSize === this.groupSizes[group]);
+                const { duration = 0, break: breakDuration = 0, gap = 0 } = d || {};
+                matches[group].push({
+                    startTime: "00:00",
+                    team1: groupTeams[i],
+                    team2: groupTeams[j],
+                    time: {
+                        playing: duration * 2,
+                        gap: gap + breakDuration
+                    }
+                });
+            }
+        });
+        Object.keys(matches).forEach((group)=>{
+            console.log(`Group ${group}`);
+            console.table(matches[group].map((x)=>({
+                    ...x,
+                    time: `${x.time.playing} + ${x.time.gap}`
+                })));
+            const totalPlayingTime = matches[group].reduce((p, c)=>p + c.time.playing, 0);
+            console.log(`Playing time is ${totalPlayingTime} minutes.`);
+        });
+        this.matches = matches;
+        return matches;
+    }
+}
+exports.default = GroupManagerHelper;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"feiCK":[function(require,module,exports) {
+module.exports["group"] = `dSi1pG_group`;
+module.exports["groupButtons"] = `dSi1pG_groupButtons`;
+module.exports["groupHeader"] = `dSi1pG_groupHeader`;
+module.exports["groupManager"] = `dSi1pG_groupManager`;
+module.exports["inputArea"] = `dSi1pG_inputArea`;
+module.exports["teamActions"] = `dSi1pG_teamActions`;
+module.exports["teamGroup"] = `dSi1pG_teamGroup`;
+module.exports["teamList"] = `dSi1pG_teamList`;
+module.exports["teamRow"] = `dSi1pG_teamRow`;
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 

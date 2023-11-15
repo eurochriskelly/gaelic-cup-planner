@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import SelectTournamentView from "./components/SelectTournamentView";
 import TournamentView from "./components/TournamentView";
-import GroupManager from "./components/GroupManager";
+import OrganizeTournament from "./components/OrganizeTournament";
 
 function App() {
     return <>
@@ -9,7 +9,7 @@ function App() {
         <Routes>
             <Route path="/" element={<SelectTournamentView />} />
             <Route path="/tournament/:tournamentId" element={<TournamentView />} />
-            <Route path="/manage" element={<GroupManager  />} />
+            <Route path="/manage" element={<OrganizeTournament  />} />
         </Routes>
     </>
 }

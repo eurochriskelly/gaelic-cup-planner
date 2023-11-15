@@ -2,6 +2,7 @@ SELECT
   category,
   grp,
   team,
+  tournamentId,
   SUM(MatchesPlayed) AS MatchesPlayed,
   SUM(Wins) AS Wins,
   SUM(Draws) AS Draws,
