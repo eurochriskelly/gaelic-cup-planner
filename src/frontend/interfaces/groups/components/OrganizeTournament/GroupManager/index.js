@@ -1,5 +1,6 @@
 // GroupManager.js
 import React, { useState, useEffect } from 'react';
+import GroupManagerHelper from './GroupManager.class';
 import styles from './GroupManager.module.scss';
 
 const GroupManager = () => {
@@ -10,8 +11,10 @@ const GroupManager = () => {
     const [editIndex, setEditIndex] = useState(-1);
     const groupLetters = 'ABCDEFGH'.split('');
 
+    const GM = new GroupManagerHelper();
+
     const onChange = () => {
-        console.log(teamList)
+        GM.teams = teamList;
     }
 
     useEffect(() => {
