@@ -4,6 +4,7 @@ import styles from './GroupManager.module.scss';
 
 const GroupManager = () => {
     const [teamList, setTeamList] = useState([]);
+    const [oldTeamName, setOldTeamName] = useState('');
     const [newTeamName, setNewTeamName] = useState('');
     const [newGroup, setNewGroup] = useState('');
     const [editIndex, setEditIndex] = useState(-1);
@@ -23,11 +24,15 @@ const GroupManager = () => {
             group: group,
             _order: Math.max(...teamList.map(t => t._order || 0), 0) + 1,
         };
-        setTeamList([...teamList, newTeam]);
+        setTeamList([
+            ...teamList.filter(x => x.name).filter(x => x.name !== newTeamName), 
+            newTeam
+        ]);
         setNewTeamName('');
     };
 
     const moveItem = (index, direction) => {
+        debugger
         const newTeamList = [...teamList];
         const positionChange = direction === 'up' ? -1 : 1;
         const itemToMove = newTeamList.splice(index, 1)[0];
@@ -38,26 +43,27 @@ const GroupManager = () => {
             team._order = i + 1;
         });
 
-        setTeamList(newTeamList);
+        setTeamList(newTeamList.filter(x => x.name));
     };
 
     const deleteItem = (index) => {
         const newTeamList = [...teamList];
         newTeamList.splice(index, 1);
-        setTeamList(newTeamList);
+        setTeamList(newTeamList.filter(x => x.name));
     };
 
 
     const editItem = index => {
         setEditIndex(index);
         setNewTeamName(teamList[index].name);
+        setOldTeamName(teamList[index].name);
         setNewGroup(teamList[index].group);
     };
 
     const saveEdit = index => {
         let newList = [...teamList];
         newList[index] = { ...newList[index], name: newTeamName, group: newGroup };
-        setTeamList(newList);
+        setTeamList(newList.filter(x => x.name));
         setEditIndex(-1);
         setNewTeamName('');
         setNewGroup('');
