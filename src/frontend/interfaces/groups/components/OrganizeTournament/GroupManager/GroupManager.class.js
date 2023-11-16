@@ -4,25 +4,56 @@ export default class GroupManagerHelper {
         this.matches = {}
         this.teamList = []
         this.groupSizes = {}
-        this.durations = [
+        this.stageParameters = [
             {
+                stage: 'group',
                 groupSize: 3,
                 duration: 15,
                 break: 5,
                 gap: 5,
             },
             {
+                stage: 'group',
                 groupSize: 4,
                 duration: 10,
                 break: 3,
                 gap: 5,
             },
             {
+                stage: 'group',
                 groupSize: 5,
                 duration: 7.5,
                 break: 3,
                 gap: 5,
-            }
+            },
+            {
+                stage: 'eigth',
+                groupSize: 16,
+                duration: 7.5,
+                break: 3,
+                gap: 5,
+            },
+            {
+                stage: 'quarter',
+                groupSize: 8,
+                duration: 7.5,
+                break: 3,
+                gap: 5,
+            },
+            {
+                stage: 'semis',
+                groupSize: 8,
+                duration: 7.5,
+                break: 3,
+                gap: 5,
+            },
+            {
+                stage: 'finals',
+                groupSize: 8,
+                duration: 15,
+                break: 3,
+                gap: 5,
+            },
         ]
     }
     set teams(teams) {
@@ -49,7 +80,6 @@ export default class GroupManagerHelper {
             return groups;
         }, {});
 
-        console.log({teamsByGroup})
         Object.keys(teamsByGroup)
             .forEach(group => {
                 const groupTeams = teamsByGroup[group];
@@ -57,7 +87,7 @@ export default class GroupManagerHelper {
                 let nextStart = '09:00'
                 for (let i = 0; i < groupTeams.length; i++) {
                     for (let j = i + 1; j < groupTeams.length; j++) {
-                        const d = this.durations.find(d => d.groupSize === this.groupSizes[group])
+                        const d = this.stageParameters.find(d => d.groupSize === this.groupSizes[group])
                         const { duration = 0, break: breakDuration = 0, gap = 0 } = d || {}
                         matches[group].push({
                             offset: timeOffset,
@@ -94,13 +124,17 @@ export default class GroupManagerHelper {
                 console.log(`Group ${group}`)
                 const matches = this.matches[group].map(match => {
                     const { team1, team2, offset } = match;
+                    const goals1 = Math.round(Math.random() * 5)
+                    const points1 = Math.round(Math.random() * 15)
+                    const total1 = goals1 * 3 + points1
+                    const goals2 = Math.round(Math.random() * 5)
+                    const points2 = Math.round(Math.random() * 15)
+                    const total2 = goals2 * 3 + points2
+                    
                     return {
-                        team1,
-                        goals1: Math.round(Math.random() * 5),
-                        points1: Math.round(Math.random() * 10),
-                        team2,
-                        goals2: Math.round(Math.random() * 5),
-                        points2: Math.round(Math.random() * 10),
+                        team1, goals1, points1, total1,
+                        team2, goals2, points2, total2,
+                        winner: total1 > total2 ? team1 : team2,
                     }
                 })
                 console.table(matches)
