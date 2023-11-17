@@ -62,6 +62,10 @@
     color: #888;
  }
 
+ .fixture > div > div:first-child label {
+    color:#8c9c8c;
+ }
+
  /* Team names rows */
  .fixture > div > div:nth-child(2),
  .fixture > div > div:nth-child(3)
