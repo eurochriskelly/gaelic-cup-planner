@@ -18,18 +18,6 @@ const mapfns = {
     },
     lower: (n) => row => row[n].toLowerCase(),
     groupNumber: (n) => row => row[n] || -1,
-    category: (n) => row => {
-        const cat = row[n]
-        switch(cat.substring(0, 2)) {
-            case 'MJ': return 'Mens Junior'
-            case 'MI': return 'Mens Intermediate'
-            case 'MS': return 'Mens Senior'
-            case 'LJ': return 'Ladies Junior'
-            case 'LI': return 'Ladies Intermediate'
-            case 'LS': return 'Ladies Senior'
-            default: return 'NULL'
-        }
-    }
 }
 
 module.exports = {
@@ -50,7 +38,7 @@ module.exports = {
             rowFilter: row => row[7] && row[7] !== '#REF!', // Must have at least one team 
             mappings: {
                 tournamentId: () => TOURNAMENT_ID,
-                category: mapfns.category(1),
+                category: 1,
                 groupNumber: mapfns.groupNumber(2),
                 stage: mapfns.lower(3),
                 pitch: 4,

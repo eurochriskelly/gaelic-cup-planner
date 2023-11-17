@@ -8,6 +8,11 @@ const processArgs = (args) => {
             ARGS[key.replace('--', '')] = value
         }
     })
+
+    if (ARGS['sync-from-master']) {
+        return ARGS
+    }
+
     if (!ARGS.port) {
         throw new Error('Missing --port argument')
     }
@@ -16,10 +21,10 @@ const processArgs = (args) => {
     } else {
         switch (ARGS.app) {
             case 'pitch':
-                ARGS.staticPath = '../../src/frontend/interfaces/pitch/watch'
+                ARGS.staticPath = '../../../src/frontend/interfaces/pitch/watch'
                 break
             case 'groups':
-                ARGS.staticPath = '../../src/frontend/interfaces/groups/watch'
+                ARGS.staticPath = '../../../src/frontend/interfaces/groups/watch'
                 break
             default:
                 throw new Error('Invalid --app argument: ', ARGS.app)

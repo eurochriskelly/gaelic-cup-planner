@@ -60,7 +60,9 @@ runParcel() {
         if "$watch";then
             echo "Parcel watch app [$ui] from dir [$(pwd)] on port [$port]"
             mkdir -p $thisui/watch
+            set -o xtrace
             parcel $htm --port $port --dist-dir $thisui/watch &
+            set +o xtrace
             echo $! >> /tmp/build-fe.pids
         fi
 	port=$(($port + 1))
