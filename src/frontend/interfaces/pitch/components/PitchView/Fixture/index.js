@@ -31,28 +31,38 @@ const Fixture = ({ fixture, isFocus }) => {
         return classes.join(' ')
     }
 
+    const formatName = (name) => {
+        if (name.startsWith('~')) {
+            return 'T.B.D.'
+        }
+        return name.length > tlen
+            ? name.substring(0, tlen) + '...'
+            : name
+    }
+
+    const categoryLabel = () => {
+        return category.replace(/[^A-Z0-9]/g, '');
+    }
+
     return <div className={`${styles.fixture} ${isFocus ? styles.focusFixture : ''}`} key={id}>
         <div className={rowClasses()} style={{ backgroundColor: scoreUpToDate ? '#bcc6bc' : '' }}>
             <div>
                 <ClockIcon started={started} scheduled={scheduledTime} focus={isFocus} played={scoreUpToDate} />
                 <span>
-                    <span>Group Stage</span>
-                    <span>{category.replace(/[0-9]/g, '')}</span>
+                    <span>
+                        <label>STAGE:</label>{stage}</span>
+                    <span>{categoryLabel()}</span>
                 </span>
             </div>
             <div>
                 <div className={(winner === team1 ? styles.winner : '') + ' teamName'}>{
-                    team1.length > tlen
-                        ? team1.substring(0, tlen) + '...'
-                        : team1
+                    formatName(team1)
                 }</div>
                 <ScoreDisplay goals={goals1} points={points1} />
             </div>
             <div>
                 <div className={(winner === team2 ? styles.winner : '') + ' teamName'}>{
-                    team2.length > tlen
-                        ? team2.substring(0, tlen) + '...'
-                        : team2
+                    formatName(team2)
                 }</div>
                 <ScoreDisplay goals={goals2} points={points2} />
             </div>
