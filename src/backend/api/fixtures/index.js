@@ -6,30 +6,61 @@ module.exports = (app, db, select) => {
     const processStageCompletion = async (fixtureId) => {
         const selQuery = `SELECT tournamentId, stage, groupNumber, category FROM fixtures WHERE id = ${fixtureId}`
         const data = await select(selQuery)
-        const { tournamentId, stage, groupNumber, category } = data.data[0]
+        const { tournamentId, stage, groupNumber, category } = data?.data[0]
         const completedQuery = [
-            `select count(*) as remaining from fixtures where `,
-            `tournamentId = ${tournamentId} and `,
-            `stage = '${stage}' and `,
-            `groupNumber = ${groupNumber} and `,
-            `category = '${category}' and `,
-            `goals1 is null`,
+            `SELECT count(*) as remaining FROM fixtures WHERE `,
+            `  tournamentId = ${tournamentId} and `,
+            `  stage = '${stage}' and `,
+            `  groupNumber = ${groupNumber} and `,
+            `  category = '${category}' and `,
+            `  goals1 is null`,
 
         ].join(' ')
         const remainingMatchesInStage = +(await select(completedQuery))?.data[0]?.remaining
         if (!remainingMatchesInStage) {
             console.log(`No remaining matches in stage [${stage}/${groupNumber}] for [${category}]!`)
+            const qGroupStandings = [
+                `SELECT * FROM v_group_standings where `,
+                `  tournamentId = ${tournamentId} and `,
+                `  grp = ${groupNumber} and `,
+                `  category = '${category}'`
+            ].join(' ')
+            const groupStandings = (await select(qGroupStandings)).data
             // Loop over each team in stage/groupNumber and update any playoff fixtures 
             // that are dependent on this outcome of this stage
-            const teamsQuery = [
-                `SELECT DISTINCT team1 FROM fixtures WHERE `,
-                `tournamentId = ${tournamentId} and `,
-                `stage = '${stage}' and `,
-                `groupNumber = ${groupNumber} and `,
-                `category = '${category}'`,
+            const qNumPositions = [
+                `SELECT count(*) as numPositions FROM v_fixture_information WHERE `,
+                `  tournamentId = ${tournamentId} and `,
+                `  stage = '${stage}' and `,
+                `  groupNumber = ${groupNumber} and `,
+                `  category = '${category}'`,
             ].join(' ')
-            const teams = await select(teamsQuery)
-            console.log(teams.data)
+            const { numPositions = 0 } = (await select(qNumPositions)).data[0] || {}
+            const range = [...Array(numPositions).keys()]
+            range.forEach(async (position) => {
+                const placeHolder = `~${stage}:${groupNumber}/p:${position + 1}`
+                const newValue = groupStandings[position]?.team
+                const qUpdatePlayoffTeam1 = [
+                    `UPDATE fixtures `,
+                    `SET team1Id = '${newValue}' `,
+                    `WHERE `,
+                    ` team1Id = '${placeHolder}' and `,
+                    ` tournamentId = ${tournamentId} and `,
+                    ` category = '${category}'`,
+                ].join(' ')
+                const qUpdatePlayoffTeam2 = [
+                    `UPDATE fixtures `,
+                    `SET team2Id = '${newValue}' `,
+                    `WHERE `,
+                    ` team2Id = '${placeHolder}' and `,
+                    ` tournamentId = ${tournamentId} and `,
+                    ` category = '${category}'`,
+                ].join(' ')
+                console.log(qUpdatePlayoffTeam1)
+                console.log(qUpdatePlayoffTeam2)
+                await select(qUpdatePlayoffTeam1)
+                await select(qUpdatePlayoffTeam2)
+            })
             return true
         }
         console.log(`Stage [${stage}/${groupNumber}] for [${category}] has [${remainingMatchesInStage}] remaining matches.`)
@@ -116,5 +147,4 @@ module.exports = (app, db, select) => {
     app.get('/api/fixtures/:id/start', startFixture)
     app.post('/api/fixtures/:id/score', updateScore)
 }
-
 
