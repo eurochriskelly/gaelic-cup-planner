@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS fixtures (
     tournamentId INT,
     category VARCHAR(255),
     groupNumber INT,
-    stage ENUM('playoffs'),
+    stage ENUM('playoffs', 'group', 'finals', 'semis', 'runnerup', 'quarters', 'eights'),
     pitch VARCHAR(255),
     scheduled TIMESTAMP,
     started TIMESTAMP,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS pitches (
 CREATE TABLE IF NOT EXISTS cards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     teamId INT,
-    stage ENUM('group', 'playoffs'),
+    stage ENUM('playoffs', 'group', 'finals', 'semis', 'runnerup', 'quarters', 'eights'),
     playerName VARCHAR(255),
     cardType ENUM('yellow', 'black', 'red'),
     FOREIGN KEY (teamId) REFERENCES teams(id)
