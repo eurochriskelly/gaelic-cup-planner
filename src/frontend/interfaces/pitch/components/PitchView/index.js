@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import API from "../../../../shared/api/pitch"
 import Fixture from "./Fixture"
 import UpdateFixture from "./UpdateFixture"
-import './PitchView.css'
+import styles from './PitchView.module.scss'
 
 const PitchView = () => {
     const { pitchId } = useParams()
@@ -12,14 +12,40 @@ const PitchView = () => {
 
     const [fixtures, setFixtures] = useState([])
     const [nextFixture, setNextFixture] = useState(null)
+    const [fixtureVisibility, setFixtureVisibility] = useState([])
+    const [showEarlier, setShowEarlier] = useState(false)
+    const [showLater, setShowLater] = useState(false)
 
     const actions = {
         fetchFixtures: async () => {
-            const data = await API.fetchFixtures(pitchId)
-            setFixtures(data.data)
-            setNextFixture(data.data
+            const { data } = await API.fetchFixtures(pitchId)
+            setFixtures(data)
+            setNextFixture(data
                 .filter(f => !f.played)
                 .shift())
+            
+            const notPlayed = data.findIndex(f => !f.played)
+            const preNotPlayed = notPlayed - 1 >= 0 ? notPlayed - 1 : 0
+            const postNotPlayed = notPlayed + 1 < data.length ? notPlayed + 1 : notPlayed
+            const visibility = data.map((f, i) => {
+                if (i === notPlayed) {
+                    return 'visible'
+                }
+                if (i === preNotPlayed) {
+                    return 'visible'
+                }
+                if (i === postNotPlayed) {
+                    return 'visible'
+                }
+                if (i < preNotPlayed) {
+                    return 'earlier'
+                }                
+                if (i > preNotPlayed) {
+                    return 'later'
+                }                
+                return 'hidden'
+            })
+            setFixtureVisibility(visibility)
         },
         delayByOne: async (fixtureId) => {
             console.log('delayByOne')
@@ -32,6 +58,12 @@ const PitchView = () => {
             const data = await API.fetchFixtures(pitchId)
             setFixtures(data.data)
         },
+        showEarlier: () => {
+            setShowEarlier(true)
+        },
+        showLater: () => {
+            setShowLater(true)
+        }
     }
 
     useEffect(() => {
@@ -39,39 +71,55 @@ const PitchView = () => {
     }, [])
 
 
-    return <div className='pitchView'>
+    return <div className={styles.pitchView}>
         <div className='fixturesHead'>
             <h2>
                 <span onClick={backToSelection}></span>
                 <span>Fixtures for pitch: {pitchId}</span>
             </h2>
         </div>
-        <div className='fixturesArea'>{
-            fixtures.map(fixture => {
-                const focusFixture = nextFixture && nextFixture.id === fixture.id
-                const focusStyle = {
-                    border: '10px solid #4c226a',
-                    borderRadius: '1.5rem',
-                    marginBottom: '8px',
-                    backgroundColor: '#c6b3d3',
-                }
-                return <div key={fixture.id}
-                    className={focusFixture ? 'focusFixture' : ''}
-                    style={focusFixture ? focusStyle : {}}>
-                    <Fixture fixture={fixture} isFocus={focusFixture} />
-                    {
-                        nextFixture && nextFixture.id === fixture.id &&
-                        <UpdateFixture
-                            fixture={fixture}
-                            updateFixtures={actions.fetchFixtures}
-                            startMatch={actions.startMatch}
-                            delayByOne={actions.delayByOne}
-                            delayUntilEnd={actions.delayUntilEnd}
-                        />
+        <div>
+            <button style={{
+                display: showEarlier ? 'none' : 'block' }} onClick={actions.showEarlier}>Show Earlier</button>
+            <div className='fixturesArea'>{
+                fixtures.map((fixture , i)=> {
+                    const focusFixture = nextFixture && nextFixture.id === fixture.id
+                    console.log({
+                        i, v: fixtureVisibility[i]
+                    })
+                    const style = {
+                        display: ((fixtureVisibility[i] === 'earlier') && !showEarlier)
+                            ? 'none'
+                            : ((fixtureVisibility[i] === 'later') && !showLater)
+                              ? 'none'
+                              : 'block'
                     }
-                </div>
-            })
-        }</div>
+                    const focusStyle = {
+                        ...style,
+                        border: '10px solid #4c226a',
+                        borderRadius: '1.5rem',
+                        marginBottom: '8px',
+                        backgroundColor: '#c6b3d3',
+                    }
+                    return <div key={fixture.id}
+                        className={focusFixture ? 'focusFixture' : ''}
+                        style={focusFixture ? focusStyle : style}>
+                        <Fixture fixture={fixture} isFocus={focusFixture} />
+                        {
+                            nextFixture && nextFixture.id === fixture.id &&
+                            <UpdateFixture
+                                fixture={fixture}
+                                updateFixtures={actions.fetchFixtures}
+                                startMatch={actions.startMatch}
+                                delayByOne={actions.delayByOne}
+                                delayUntilEnd={actions.delayUntilEnd}
+                            />
+                        }
+                    </div>
+                })
+            }</div>
+            <button style={{display: showLater ? 'none' : 'block'}} onClick={actions.showLater}>Show Later</button>
+        </div>
     </div >
 }
 
