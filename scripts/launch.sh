@@ -1,18 +1,24 @@
 #!/bin/bash
 
-trap cleanup SIGINT SIGTERM
+trap cleanup SIGINT SIGTERM EXIT
+
 cleanup() {
     echo "Cleaning up ..."
-    for pid in $(cat /tmp/run-app.pids);do
-        echo "Killing $pid"
-        kill $pid
-    done
-    rm -f /tmp/run-app.pids
-    cd $TOP_DIR
+    if [[ -f /tmp/run-app.pids ]]; then
+        while read -r pid; do
+            if ps -p $pid > /dev/null; then
+                echo "Killing $pid"
+                kill $pid
+            fi
+        done < /tmp/run-app.pids
+        rm -f /tmp/run-app.pids
+    fi
+    cd "$TOP_DIR" || exit
 }
 
-touch /tmp/run-app.pids
-echo "" > /tmp/run-app.pids
+# Ensure the PID file exists and is empty
+: > /tmp/run-app.pids
+
 runApp() {
     echo "Running app [$1] ..."
     nodemon src/backend/server.js \
