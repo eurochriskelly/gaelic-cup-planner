@@ -10,7 +10,7 @@ const DrawerGetReady = ({
 }) => {
     if (!visible) return null
     console.log(' we must have a fixture')
-    const { umpiringTeam } = fixture
+    const { umpireTeam } = fixture
     console.log('fixture - in DrawerGetReady', fixture)
     console.log({fixture})
 
@@ -27,7 +27,7 @@ const DrawerGetReady = ({
             <div className='drawer-container'>
                 <div>
                     <ul>
-                        <li>Are [<span>{umpiringTeam}</span>] umpires ready?      &nbsp;</li>
+                        <li>Are [<span>{umpireTeam}</span>] umpires ready?      &nbsp;</li>
                         <li>Pitch markings are correct?</li>
                         <li>Have all teams submitted team sheets?</li>
                     </ul>
