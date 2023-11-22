@@ -21,11 +21,11 @@ cleanup() {
 
 runApp() {
     echo "Running app [$1] ..."
-    nodemon src/backend/server.js \
-        --port="$2" \
-        --app="$1" &
+    node src/backend/server.js --port="$2" --app="$1" &
     echo $! >> /tmp/run-app.pids
 }
 
 runApp "groups" 4000
 runApp "pitch" 4001
+
+wait
