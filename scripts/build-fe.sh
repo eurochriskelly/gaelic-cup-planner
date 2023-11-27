@@ -70,4 +70,4 @@ runParcel() {
 }
 
 runParcel
-
+wait

@@ -1,9 +1,4 @@
-// Variables for Colors
-$primary-color: #84aa80;
-$secondary-color: #6c757d;
-$background-color: #f8f9fa;
-$text-color: #333;
-$mainColor: #84aa80;
+@import '$shared/_colors.scss';
 
 // Typography
 $font-family: Arial, sans-serif;
