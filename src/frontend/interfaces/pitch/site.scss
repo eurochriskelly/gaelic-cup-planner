@@ -9,11 +9,31 @@ table {
   border-collapse: collapse;
 }
 
+/* CSS for non-mobile devices */
+@media screen and (min-width: 768px) {
+  .mobile-warning {
+      display: block;
+      font-size: 24px;
+      color: red;
+      text-align: center;
+      margin-top: 20px;
+  }
+}
+
+/* CSS for mobile devices */
+@media screen and (max-width: 767px) {
+    .mobile-warning {
+        display: none;
+    }
+}
+
 
 #app {
   * {
     user-select: none;
   }
+
+  
   h1,
   h2,
   h3 {

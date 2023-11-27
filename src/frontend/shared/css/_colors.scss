@@ -1,0 +1,29 @@
+$primary-color: #84aa80;
+$mainColor: $primary-color;
+$secondary-color: #6c757d;
+$background-color: #f8f9fa;
+$pc: $primary-color;
+$sc: $secondary-color;
+$bg: $background-color;
+$text-color: #333;
+
+// darken by 10%
+$pc-dark-10: darken($pc, 10%);
+$sc-dark-10: darken($sc, 10%);
+$bg-dark-10: darken($bg, 10%);
+
+// darken by 20%
+$pc-dark-20: darken($pc, 20%);
+$sc-dark-20: darken($sc, 20%);
+$bg-dark-20: darken($bg, 20%);
+
+// lighten by 10%
+$pc-light-10: lighten($pc, 10%);
+$sc-light-10: lighten($sc, 10%);
+$bg-light-10: lighten($bg, 10%);
+
+// lighten by 20%
+$pc-light-20: lighten($pc, 20%);
+$sc-light-20: lighten($sc, 20%);
+$bg-light-20: lighten($bg, 20%);
+

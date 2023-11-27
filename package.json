@@ -13,6 +13,7 @@
         "build": "bash scripts/build-fe.sh --build",
         "db:setup": "bash scripts/db-setup.sh",
         "test:fe": "bash scripts/test-fe.sh",
+	"relink:css": "bash node_modules/gather-links/bin/relink.sh --type=css --type=scss --src=. --dest=../all-styles --ignore=node_modules",
         "glogin": "clasp login",
         "glogout": "clasp logout",
         "gcreate": "bash scripts/create.sh",
@@ -29,6 +30,11 @@
         "gclone": "clasp clone",
         "pstart": "parcel src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player",
         "pbuild": "parcel build src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player"
+    },
+    "parcel": {
+	"aliases": {
+	    "$shared": "./src/frontend/shared/css/"
+	}
     },
     "author": "",
     "license": "ISC",
@@ -53,6 +59,7 @@
         "@types/google-apps-script": "^1.0.76",
         "body-parser": "^1.20.2",
         "express": "^4.18.2",
+        "gather-links": "^1.0.0",
         "googleapis": "^128.0.0",
         "mysql": "^2.18.1",
         "react": "^18.2.0",
