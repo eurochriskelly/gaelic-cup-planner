@@ -58,12 +58,8 @@ const PitchView = () => {
             const data = await API.fetchFixtures(pitchId)
             setFixtures(data.data)
         },
-        showEarlier: () => {
-            setShowEarlier(true)
-        },
-        showLater: () => {
-            setShowLater(true)
-        }
+        showEarlier: () => setShowEarlier(!showEarlier),
+        showLater: () => setShowLater(!showLater),
     }
 
     useEffect(() => {
@@ -79,14 +75,10 @@ const PitchView = () => {
             </h2>
         </div>
         <div>
-            <button style={{
-                display: showEarlier ? 'none' : 'block' }} onClick={actions.showEarlier}>Show Earlier</button>
+        <button onClick={actions.showEarlier}>{showEarlier ? 'Hide' : 'Show'} Earlier Fixtures</button>
             <div className='fixturesArea'>{
                 fixtures.map((fixture , i)=> {
                     const focusFixture = nextFixture && nextFixture.id === fixture.id
-                    console.log({
-                        i, v: fixtureVisibility[i]
-                    })
                     const style = {
                         display: ((fixtureVisibility[i] === 'earlier') && !showEarlier)
                             ? 'none'
@@ -118,7 +110,7 @@ const PitchView = () => {
                     </div>
                 })
             }</div>
-            <button style={{display: showLater ? 'none' : 'block'}} onClick={actions.showLater}>Show Later</button>
+            <button onClick={actions.showLater}>{showLater ? 'Hide' : 'Show'} Later Fixtures</button>
         </div>
     </div >
 }

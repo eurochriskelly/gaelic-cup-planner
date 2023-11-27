@@ -33,7 +33,7 @@
     },
     "parcel": {
 	"aliases": {
-	    "$shared": "./src/frontend/shared/css/"
+	    "$shared": "src/frontend/shared/css/"
 	}
     },
     "author": "",
