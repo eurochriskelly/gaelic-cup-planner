@@ -6,9 +6,12 @@
         margin-right: 0.2rem;
         z-index: -100;
         > button {
-            width:95%;
-            background-color: #a2a2a2;
+            width:100%;
+            margin:auto;
+            background-color: #c1c3c1;
+            color: white;
             margin: auto;
+            margin-bottom: 1rem;
             font-size: 3em;
             text-transform: uppercase;
         }
