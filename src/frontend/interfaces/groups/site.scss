@@ -14,6 +14,7 @@ table {
   * {
     user-select: none;
   }
+
   h1,
   h2,
   h3 {
@@ -22,6 +23,7 @@ table {
     margin: 0;
     user-select: none;
   }
+
   h1 {
     background: #344b32;
     color: #84aa80;
@@ -33,6 +35,7 @@ table {
     position: fixed;
     top: 0;
   }
+
   h2 {
     font-size: 1.8em;
     background: #4e7a4e;
@@ -53,9 +56,10 @@ table {
     border-bottom: 1px solid #ddd;
     width: 100%;
   }
-  .ck-test132{
+
+  .ck-test132 {
     background-color: red;
-    
+
   }
 
   .drawer-header {
@@ -74,11 +78,13 @@ table {
     padding: 1.6rem 0.6rem;
     min-width: 160px;
     border-radius: 0.8rem;
+
     &.enabled {
       cursor: pointer;
       background-color: #4c226a;
       color: white;
     }
+
     &.disabled {
       cursor: not-allowed;
       background-color: #ddd;
@@ -87,7 +93,8 @@ table {
   }
 
   .drawer-container {
-    margin:0;
+    margin: 0;
+
     &>div {
       margin: 2rem;
     }

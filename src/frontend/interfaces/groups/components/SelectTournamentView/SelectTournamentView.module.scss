@@ -1,11 +1,12 @@
-$color: #255e1f;
+
+@import "~/src/frontend/shared/css/_colors.scss";
 
 .selectTournamentView {
     > article {
         > section {
-            background-color: desaturate(lighten($color, 60%), 30%);
+            background-color: desaturate(lighten($pc, 60%), 30%);
             &:hover {
-                background-color: desaturate(lighten($color, 50%), 30%);
+                background-color: desaturate(lighten($pc, 50%), 30%);
             }
             border: 1px solid #ccc;
             margin: 1rem;

@@ -1,5 +1,6 @@
-.tournamentView {
+@import "~/src/frontend/shared/css/_colors.scss";
 
+.tournamentView {
     display: grid;
     grid-template-columns: 10% 90%;
     grid-template-rows: 280px 1fr;

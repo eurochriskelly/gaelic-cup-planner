@@ -1,5 +1,5 @@
-$mainColor: #6f9c6b;
-// $smallColumnWidth: 25px;
+@import "~/src/frontend/shared/css/_colors.scss";
+
 $scw: 2vw;
 $fs: 0.8vw;
 
@@ -10,7 +10,7 @@ $fs: 0.8vw;
         user-select: none;
     }
     h2 {
-        background-color: #d7ebd5;
+        background-color: $bg-light-20;
     }
     th, td {
         font-size: $fs;
@@ -37,7 +37,7 @@ $fs: 0.8vw;
         
     }
     th {
-        background-color: #888;
+        background-color: $sc-light-20;
         color:white;
         font-weight: normal;
         text-transform: uppercase;
@@ -54,15 +54,15 @@ $fs: 0.8vw;
 td.groupHeader {
     text-align: center;
     text-transform: uppercase;
-    color: $mainColor;
-    border-bottom: 5px solid lighten($mainColor, 20%);
+    color: $primary-color;
+    border-bottom: 5px solid $pc-light-20;
     padding:0;
     margin:0;
     padding-top: 1.2rem;
 }
 
 td.finished {
-    color: darken($mainColor, 20%);
+    color: $pc-dark-20;
     font-weight: bold;
 }   
 
@@ -76,8 +76,8 @@ td.finished {
 }
 
 td > div.total  {
-    color: darken($mainColor, 20%);
-    background-color: desaturate(lighten($mainColor, 40%), 1%);
+    color: $pc-dark-20;
+    background-color: desaturate(lighten($primary-color, 40%), 1%);
     border-radius: 3px;
     font-weight: bold;
     padding: 0;

@@ -1,3 +1,5 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
 /* MAIN CONTAINER */
 .fixture > div {
     width: 100%;
@@ -47,7 +49,7 @@
  .fixture > div > div:first-child > span:first-child > svg{
     width: 80px;
     height:80px;
-    fill: #88b288;
+    fill: $pc;
 
  }
  .fixture > div > div:first-child > span:first-child > span{
@@ -59,7 +61,7 @@
  }
 
  .fixture > div > div:first-child label {
-    color:#8c9c8c;
+    color: desaturate($pc, 20);
  }
 
  /* Team names rows */
@@ -93,15 +95,15 @@
 }
 .fixture div.winner {
     font-weight: bold;
-    color: #064800;
+    color: $pc-dark-20;
 }
 
 /* HEADER */
 .fixture > div.header {
     text-transform: uppercase;
     color: #aaa;
-    border-bottom: 2px ridge #344b32;
-    background-color: #e6f1e6;
+    border-bottom: 2px ridge $pc-dark-20;
+    background-color: $pc-light-40;
     border-radius: 0;
     padding: 0.4rem 1.3rem;
     width: 95%;
@@ -116,11 +118,10 @@
 }
 
 .group> span {
-    background: #b2cbb2;
+    background: $pc-light-40;
     color: white;
     text-align: center;
     border-radius: 6px;
     padding: 1px 3px;
-
 }
 

@@ -64,8 +64,8 @@ h6 {
 }
 
 h1 {
-  background: #344b32;
-  color: $mainColor;
+  background: desaturate($pc-dark-20, 30%);
+  color: $pc;
   font-size: 2.2em;
   line-height: 3rem;
   padding: 0 0;
@@ -85,7 +85,7 @@ h2 {
 
 h3 {
   font-size: 24px;
-  color: $secondary-color;
+  color: $sc;
   text-align: center;
   border-left: 1px solid white;
   border-right: 1px solid white;
@@ -93,7 +93,7 @@ h3 {
 
 h4 {
   font-size: 20px;
-  color: $secondary-color;
+  color: $sc;
   background-color: #ddd;
 }
 

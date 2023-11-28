@@ -1,7 +1,8 @@
-$col: #2b7624;
-$darkCol: darken($col, 20%);
-$bgCol: desaturate(lighten(#2b7624, 60%), 35%);
-$bgColOver: desaturate(lighten(#2b7624, 60%), 75%);
+@import "~/src/frontend/shared/css/_colors.scss";
+
+$darkCol: darken($pc, 20%);
+$bgCol: desaturate(lighten($pc, 60%), 35%);
+$bgColOver: desaturate(lighten($pc, 60%), 75%);
 
 .allDone {
     background-color: red;
@@ -38,12 +39,10 @@ $bgColOver: desaturate(lighten(#2b7624, 60%), 75%);
             padding: 0.1rem 0.3;
             border-radius: 0.6rem;
         }
-
         .location {
             text-align: left;
             font-size: 2em;
         }
-
         .type {
             border: 1px solid #ccc;
             padding: 5px 10px;
@@ -95,7 +94,7 @@ $bgColOver: desaturate(lighten(#2b7624, 60%), 75%);
         .team1,
         .team2 {
             font-size: 1.6rem;
-            color: darken(saturate($col, 20%), 20%);
+            color: darken(saturate($pc, 20%), 20%);
             font-weight: bold;
             padding: 0.5rem;
         }
@@ -105,6 +104,6 @@ $bgColOver: desaturate(lighten(#2b7624, 60%), 75%);
 .noMoreFixtures {
     font-size: 1.4rem;
     padding: 5rem;
-    color: lighten(desaturate($col, 30%), 30%);
+    color: lighten(desaturate($pc, 30%), 30%);
     background-color: $bgColOver;
 }

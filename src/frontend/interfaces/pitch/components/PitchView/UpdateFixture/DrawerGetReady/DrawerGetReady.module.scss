@@ -1,6 +1,4 @@
-$c-pri: #344b32;
-$c-sec: #4c226a;
-
+@import "~/src/frontend/shared/css/_colors.scss";
 
 .drawerGetReady {
     background-color: white;
@@ -26,11 +24,11 @@ $c-sec: #4c226a;
     li::before {
         content: "✓"; /* Unicode character for a checkmark */
         margin-right: 5px; /* Add some spacing between the checkmark and the text */
-        color: lighten($c-pri, 20%); /* Change the color of the checkmark */
+        color: $pc; /* Change the color of the checkmark */
         font-size: 3rem;
     }
     li span {
-        background-color: desaturate(lighten($c-sec, 33%), 30%);
+        background-color: desaturate($sc, 30%);
         color: white;
         border-radius: 1rem;
         padding: 0.3rem 1.1rem;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DrawerFinish from './DrawerFinish'
 import DrawerPostpone from './DrawerPostpone';
 import DrawerGetReady from './DrawerGetReady';
-import './UpdateFixture.css'
+import styles from './UpdateFixture.scss'
 
 const UpdateFixture = ({
     fixture,
@@ -118,7 +118,7 @@ const UpdateFixture = ({
         </svg>
     }
     return (
-        <div className='updateFixture'>
+        <div className={styles.updateFixtures}>
             <div style={{ display: (drawerOpen || moreOpen) ? 'none' : 'grid' }}>
                 <button className={enableStates.start} onClick={actions.start} disabled={!enableStates.start}>
                     Get ready &nbsp;
@@ -158,7 +158,7 @@ const UpdateFixture = ({
             </div>
 
             {/* DRAWERS */}
-            <div className='drawers' style={drawerStyle}>
+            <div className={styles.drawers} style={drawerStyle}>
                 <DrawerGetReady
                     fixture={fixture}
                     startMatch={startMatch}
