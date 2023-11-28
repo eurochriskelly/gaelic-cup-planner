@@ -1,3 +1,5 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
 body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
@@ -44,8 +46,8 @@ table {
   }
 
   h1 {
-    background: #344b32;
-    color: #84aa80;
+    background: darken($pc, 40%);
+    color: $pc-light-20;
     font-size: 3.2em;
     line-height: 7rem;
     padding: 0 0;
@@ -56,7 +58,7 @@ table {
   }
   h2 {
     font-size: 1.8em;
-    background: #4e7a4e;
+    background: $pc-dark-10;
     color: white;
     line-height: 6rem;
     text-align: center;
@@ -64,7 +66,7 @@ table {
 
   h3 {
     color: #444444;
-    background: #d2e1d2;
+    background: $pc-light-40;
     line-height: 4rem;
     font-weight: normal;
   }
@@ -80,7 +82,7 @@ table {
   }
 
   .drawer-header {
-    background-color: darken(#7a6d83, 10%);
+    background-color: $sc-dark-20;
     line-height: 6rem;
     color: white;
     padding-left: 1rem;
@@ -97,7 +99,7 @@ table {
     border-radius: 0.8rem;
     &.enabled {
       cursor: pointer;
-      background-color: #4c226a;
+      background-color: darken($sc-dark-20, 20%);
       color: white;
     }
     &.disabled {

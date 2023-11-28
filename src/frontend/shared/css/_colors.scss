@@ -1,6 +1,11 @@
-$primary-color: #84aa80;
+/*
+To import, add the following to the top of your scss file:
+@import "~/src/frontend/shared/css/_colors.scss";
+*/
+
+$primary-color: #2b7624;
 $mainColor: $primary-color;
-$secondary-color: #6c757d;
+$secondary-color: #885ea3;
 $background-color: #f8f9fa;
 $pc: $primary-color;
 $sc: $secondary-color;
@@ -26,4 +31,9 @@ $bg-light-10: lighten($bg, 10%);
 $pc-light-20: lighten($pc, 20%);
 $sc-light-20: lighten($sc, 20%);
 $bg-light-20: lighten($bg, 20%);
+
+// lighten by 40%
+$pc-light-40: lighten($pc, 40%);
+$sc-light-40: lighten($sc, 40%);
+$bg-light-40: lighten($bg, 40%);
 

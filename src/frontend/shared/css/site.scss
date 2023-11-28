@@ -26,8 +26,8 @@ table {
   }
 
   h1 {
-    background: #344b32;
-    color: $mainColor;
+    background: darken($pc, 40%);
+    color: $pc-light-20;
     font-size: 3.2em;
     line-height: 7rem;
     padding: 0 0;
@@ -39,7 +39,7 @@ table {
   }
   h2 {
     font-size: 1.8em;
-    background: darken($mainColor, 10%);
+    background: darken($pc, 10%);
     color: white;
     line-height: 6rem;
     text-align: center;
@@ -62,7 +62,7 @@ table {
   }
 
   .drawer-header {
-    background-color: darken(#7a6d83, 10%);
+    background-color: desaturate($sc-dark-20, 30%);
     line-height: 6rem;
     color: white;
     padding-left: 1rem;
@@ -79,7 +79,7 @@ table {
     border-radius: 0.8rem;
     &.enabled {
       cursor: pointer;
-      background-color: #4c226a;
+      background-color: $sc-light-20;
       color: white;
     }
     &.disabled {

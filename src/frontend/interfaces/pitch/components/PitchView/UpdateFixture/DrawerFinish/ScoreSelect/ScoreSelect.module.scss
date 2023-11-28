@@ -1,3 +1,5 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
 .scoreSelect {
     display: grid;
     grid-template-columns: 2fr 1fr 4fr;
@@ -23,7 +25,7 @@
         width: 5rem;
         padding: 2rem 1rem;
         color: white;
-        background: #9066ad;
+        background: $sc;
         text-align: center;
         vertical-align: top;
     }
