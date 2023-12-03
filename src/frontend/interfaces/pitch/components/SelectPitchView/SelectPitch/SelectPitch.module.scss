@@ -10,13 +10,16 @@ $bgColOver: desaturate(lighten($pc, 60%), 75%);
 
 // SelectPitch.module.scss
 .selectPitch {
-    background-color: white;
+    background-color: desaturate($pc-dark-10, 34%);
     border-radius: 1rem;
     text-align: center;
     padding: 20px;
+    color: white;
     margin: 1rem 0.7rem;
     font-family: Arial, sans-serif;
-    box-shadow: 0 0.8rem 0.8rem 0 rgba(0, 0, 0, 0.3);
+    border: 0.15rem solid rgba(255, 255, 255, 0.5);
+    ;
+    box-shadow: 0 0.8rem 1.2rem 0 rgba(255, 255, 255, 0.5);
 
     >div:nth-child(2),
     >div:nth-child(3) {
@@ -34,19 +37,22 @@ $bgColOver: desaturate(lighten($pc, 60%), 75%);
             font-size: 2.0em;
             font-weight: bold;
             background-color: lighten(desaturate(darken(#44c835, 20%), 45%), 37%);
-            color: white;
+            color: $darkCol;
             min-width: 5rem;
             padding: 0.1rem 0.3;
             border-radius: 0.6rem;
         }
+
         .location {
             text-align: left;
             font-size: 2em;
         }
+
         .type {
             border: 1px solid #ccc;
-            padding: 5px 10px;
-            background-color: #f0f0f0;
+            padding: 0.6rem 1.2rem;
+            font-size: 1.2rem;
+            background-color: $darkCol;
         }
     }
 
@@ -66,10 +72,12 @@ $bgColOver: desaturate(lighten($pc, 60%), 75%);
         margin-bottom: 20px;
         display: grid;
         grid-template-columns: 1fr 0.1fr;
-        > div {
+
+        >div {
             margin: 0;
             padding: 0 1rem;
         }
+
         .category {
             color: #689463;
             text-transform: uppercase;
@@ -99,11 +107,12 @@ $bgColOver: desaturate(lighten($pc, 60%), 75%);
             padding: 0.5rem;
         }
     }
-}
 
-.noMoreFixtures {
-    font-size: 1.4rem;
-    padding: 5rem;
-    color: lighten(desaturate($pc, 30%), 30%);
-    background-color: $bgColOver;
+    >div.noMoreFixtures {
+        font-size: 1.8rem;
+        padding: 5rem;
+        color: lighten(desaturate($pc, 30%), 30%);
+        background-color: desaturate($pc-dark-10, 40%);
+        border: 1px solid $pc;
+    }
 }
