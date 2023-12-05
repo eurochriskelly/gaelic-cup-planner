@@ -23,7 +23,7 @@ const PitchView = () => {
             setNextFixture(data
                 .filter(f => !f.played)
                 .shift())
-            
+
             const notPlayed = data.findIndex(f => !f.played)
             const preNotPlayed = notPlayed - 1 >= 0 ? notPlayed - 1 : 0
             const postNotPlayed = notPlayed + 1 < data.length ? notPlayed + 1 : notPlayed
@@ -39,10 +39,10 @@ const PitchView = () => {
                 }
                 if (i < preNotPlayed) {
                     return 'earlier'
-                }                
+                }
                 if (i > preNotPlayed) {
                     return 'later'
-                }                
+                }
                 return 'hidden'
             })
             setFixtureVisibility(visibility)
@@ -68,23 +68,23 @@ const PitchView = () => {
 
 
     return <div className={styles.pitchView}>
-        <div className='fixturesHead'>
+        <div className={styles.fixturesHead}>
             <h2>
                 <span onClick={backToSelection}></span>
                 <span>Fixtures for pitch: {pitchId}</span>
             </h2>
         </div>
-        <div>
-        <button onClick={actions.showEarlier}>{showEarlier ? 'Hide' : 'Show'} Earlier Fixtures</button>
-            <div className='fixturesArea'>{
-                fixtures.map((fixture , i)=> {
+        <div className={styles.fixturesBody}>
+            <button onClick={actions.showEarlier}>{showEarlier ? 'Hide' : 'Show'} Earlier Fixtures</button>
+            <div className={styles.fixturesArea}>{
+                fixtures.map((fixture, i) => {
                     const focusFixture = nextFixture && nextFixture.id === fixture.id
                     const style = {
                         display: ((fixtureVisibility[i] === 'earlier') && !showEarlier)
                             ? 'none'
                             : ((fixtureVisibility[i] === 'later') && !showLater)
-                              ? 'none'
-                              : 'block'
+                                ? 'none'
+                                : 'block'
                     }
                     const focusStyle = {
                         ...style,
