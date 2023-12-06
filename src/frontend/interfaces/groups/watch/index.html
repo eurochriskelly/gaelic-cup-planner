@@ -33461,7 +33461,7 @@ exports.defineInteropFlag = function(a) {
 };
 exports.exportAll = function(source, dest) {
     Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
         Object.defineProperty(dest, key, {
             enumerable: true,
             get: function() {
@@ -34415,6 +34415,8 @@ var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _groupManagerClass = require("./GroupManager.class");
 var _groupManagerClassDefault = parcelHelpers.interopDefault(_groupManagerClass);
+var _fixturesPreview = require("./FixturesPreview");
+var _fixturesPreviewDefault = parcelHelpers.interopDefault(_fixturesPreview);
 var _groupManagerModuleScss = require("./GroupManager.module.scss");
 var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerModuleScss);
 var _s = $RefreshSig$();
@@ -34506,7 +34508,7 @@ const GroupManager = ()=>{
                         onChange: (e)=>setNewTeamName(e.target.value)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 83,
+                        lineNumber: 84,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34518,108 +34520,129 @@ const GroupManager = ()=>{
                                 children: letter
                             }, letter, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 91,
+                                lineNumber: 92,
                                 columnNumber: 25
                             }, undefined))
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 89,
+                        lineNumber: 90,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                lineNumber: 82,
+                lineNumber: 83,
                 columnNumber: 13
             }, undefined),
             Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                     className: (0, _groupManagerModuleScssDefault.default).group,
                     children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: (0, _groupManagerModuleScssDefault.default).groupHeader,
-                            children: group
-                        }, void 0, false, {
-                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                            lineNumber: 104,
-                            columnNumber: 21
-                        }, undefined),
-                        teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: (0, _groupManagerModuleScssDefault.default).teamRow,
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        className: (0, _groupManagerModuleScssDefault.default).teamName,
-                                        children: team.name
-                                    }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                        lineNumber: 107,
-                                        columnNumber: 29
-                                    }, undefined),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        className: (0, _groupManagerModuleScssDefault.default).teamActions,
-                                        children: editIndex === index ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                            onClick: ()=>saveEdit(index),
-                                            children: "Save"
-                                        }, void 0, false, {
-                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                            lineNumber: 110,
-                                            columnNumber: 37
-                                        }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-                                            children: [
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>editItem(index),
-                                                    children: "Edit"
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                            children: [
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                    className: (0, _groupManagerModuleScssDefault.default).groupHeader,
+                                    children: group
+                                }, void 0, false, {
+                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                    lineNumber: 106,
+                                    columnNumber: 25
+                                }, undefined),
+                                teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: (0, _groupManagerModuleScssDefault.default).teamRow,
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                                className: (0, _groupManagerModuleScssDefault.default).teamName,
+                                                children: team.name
+                                            }, void 0, false, {
+                                                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                lineNumber: 109,
+                                                columnNumber: 33
+                                            }, undefined),
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                                className: (0, _groupManagerModuleScssDefault.default).teamActions,
+                                                children: editIndex === index ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                    onClick: ()=>saveEdit(index),
+                                                    children: "Save"
                                                 }, void 0, false, {
                                                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 113,
+                                                    lineNumber: 112,
                                                     columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>moveItem(index, "up"),
-                                                    children: "\u2191"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 114,
-                                                    columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>moveItem(index, "down"),
-                                                    children: "\u2193"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 115,
-                                                    columnNumber: 41
-                                                }, undefined),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                                    onClick: ()=>deleteItem(index),
-                                                    children: "\u2715"
-                                                }, void 0, false, {
-                                                    fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 116,
-                                                    columnNumber: 41
-                                                }, undefined)
-                                            ]
-                                        }, void 0, true)
-                                    }, void 0, false, {
+                                                }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                            onClick: ()=>editItem(index),
+                                                            children: "Edit"
+                                                        }, void 0, false, {
+                                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                            lineNumber: 115,
+                                                            columnNumber: 45
+                                                        }, undefined),
+                                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                            onClick: ()=>moveItem(index, "up"),
+                                                            children: "\u2191"
+                                                        }, void 0, false, {
+                                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                            lineNumber: 116,
+                                                            columnNumber: 45
+                                                        }, undefined),
+                                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                            onClick: ()=>moveItem(index, "down"),
+                                                            children: "\u2193"
+                                                        }, void 0, false, {
+                                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                            lineNumber: 117,
+                                                            columnNumber: 45
+                                                        }, undefined),
+                                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                                            onClick: ()=>deleteItem(index),
+                                                            children: "\u2715"
+                                                        }, void 0, false, {
+                                                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                            lineNumber: 118,
+                                                            columnNumber: 45
+                                                        }, undefined)
+                                                    ]
+                                                }, void 0, true)
+                                            }, void 0, false, {
+                                                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                                                lineNumber: 110,
+                                                columnNumber: 33
+                                            }, undefined)
+                                        ]
+                                    }, team.name, true, {
                                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
                                         lineNumber: 108,
                                         columnNumber: 29
-                                    }, undefined)
-                                ]
-                            }, team.name, true, {
+                                    }, undefined))
+                            ]
+                        }, void 0, true, {
+                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                            lineNumber: 105,
+                            columnNumber: 21
+                        }, undefined),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixturesPreviewDefault.default), {
+                                teams: teams
+                            }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 106,
+                                lineNumber: 126,
                                 columnNumber: 25
-                            }, undefined))
+                            }, undefined)
+                        }, void 0, false, {
+                            fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
+                            lineNumber: 125,
+                            columnNumber: 21
+                        }, undefined)
                     ]
                 }, group, true, {
                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                    lineNumber: 103,
+                    lineNumber: 104,
                     columnNumber: 17
                 }, undefined))
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-        lineNumber: 81,
+        lineNumber: 82,
         columnNumber: 9
     }, undefined);
 };
@@ -34634,7 +34657,7 @@ $RefreshReg$(_c, "GroupManager");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.class":"hDkmD","./GroupManager.module.scss":"feiCK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"hDkmD":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.class":"hDkmD","./GroupManager.module.scss":"feiCK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./FixturesPreview":"gLQms"}],"hDkmD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class GroupManagerHelper {
@@ -34799,6 +34822,8 @@ module.exports["teamActions"] = `dSi1pG_teamActions`;
 module.exports["teamGroup"] = `dSi1pG_teamGroup`;
 module.exports["teamList"] = `dSi1pG_teamList`;
 module.exports["teamRow"] = `dSi1pG_teamRow`;
+
+},{}],"gLQms":[function(require,module,exports) {
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 

@@ -1,6 +1,7 @@
 // GroupManager.js
 import React, { useState, useEffect } from 'react';
 import GroupManagerHelper from './GroupManager.class';
+import FixturesPreview from './FixturesPreview';
 import styles from './GroupManager.module.scss';
 
 const GroupManager = () => {
@@ -28,7 +29,7 @@ const GroupManager = () => {
             _order: Math.max(...teamList.map(t => t._order || 0), 0) + 1,
         };
         setTeamList([
-            ...teamList.filter(x => x.name).filter(x => x.name !== newTeamName), 
+            ...teamList.filter(x => x.name).filter(x => x.name !== newTeamName),
             newTeam
         ]);
         setNewTeamName('');
@@ -101,25 +102,31 @@ const GroupManager = () => {
             </div>
             {Object.entries(groupedTeams).map(([group, teams]) => (
                 <div key={group} className={styles.group}>
-                    <div className={styles.groupHeader}>{group}</div>
-                    {teams.map((team, index) => (
-                        <div className={styles.teamRow} key={team.name}>
-                            <div className={styles.teamName}>{team.name}</div>
-                            <div className={styles.teamActions}>
-                                {editIndex === index ? (
-                                    <button onClick={() => saveEdit(index)}>Save</button>
-                                ) : (
-                                    <>
-                                        <button onClick={() => editItem(index)}>Edit</button>
-                                        <button onClick={() => moveItem(index, 'up')}>↑</button>
-                                        <button onClick={() => moveItem(index, 'down')}>↓</button>
-                                        <button onClick={() => deleteItem(index)}>✕</button>
-                                    </>
-                                )}
+                    <section>
+                        <div className={styles.groupHeader}>{group}</div>
+                        {teams.map((team, index) => (
+                            <div className={styles.teamRow} key={team.name}>
+                                <div className={styles.teamName}>{team.name}</div>
+                                <div className={styles.teamActions}>
+                                    {editIndex === index ? (
+                                        <button onClick={() => saveEdit(index)}>Save</button>
+                                    ) : (
+                                        <>
+                                            <button onClick={() => editItem(index)}>Edit</button>
+                                            <button onClick={() => moveItem(index, 'up')}>↑</button>
+                                            <button onClick={() => moveItem(index, 'down')}>↓</button>
+                                            <button onClick={() => deleteItem(index)}>✕</button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </section>
+                    <section>
+                        <FixturesPreview teams={teams} />
+                    </section>
                 </div>
+
             ))}
         </div>
     );
