@@ -70,4 +70,5 @@ runParcel() {
 }
 
 runParcel
+echo "Waiting ..."
 wait

@@ -9,7 +9,6 @@
         display: grid;
         grid-template-columns: 3fr 1fr; // creates 3 columns
         margin-bottom: 20px;
-
         
         > input {
             margin-right: 10px;
@@ -93,6 +92,11 @@
     .group {
         border: 1px solid #ccc;
         margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        > section:last-child {
+            background-color: #ddd;
+        }
         .groupHeader {
             background-color: #eee;
             padding: 5px;
