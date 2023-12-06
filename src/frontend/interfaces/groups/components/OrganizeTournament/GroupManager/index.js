@@ -12,10 +12,10 @@ const GroupManager = () => {
     const [editIndex, setEditIndex] = useState(-1);
     const groupLetters = 'ABCDEFGH'.split('');
 
-    const GM = new GroupManagerHelper();
+    const groupMgr = new GroupManagerHelper();
 
     const onChange = () => {
-        GM.teams = teamList;
+        groupMgr.teams = teamList;
     }
 
     useEffect(() => {
@@ -123,7 +123,7 @@ const GroupManager = () => {
                         ))}
                     </section>
                     <section>
-                        <FixturesPreview teams={teams} />
+                        <FixturesPreview teams={teams} group={group} groupMgr={groupMgr} />
                     </section>
                 </div>
 

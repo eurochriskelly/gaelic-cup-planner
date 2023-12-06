@@ -108,13 +108,18 @@ export default class GroupManagerHelper {
 
             Object.keys(matches)
             .forEach(group => {
-                console.log(`Group ${group}`)
-                console.table(matches[group].map(x => ({ ...x, time: `${x.time.playing} + ${x.time.gap}` })))
+                //console.log(`Group ${group}`)
+                // console.table(matches[group].map(x => ({ ...x, time: `${x.time.playing} + ${x.time.gap}` })))
                 const totalPlayingTime = matches[group].reduce((p, c) => p + c.time.playing, 0)
                 console.log(`Active team playing time: ${totalPlayingTime/this.groupSizes[group]} minutes.`)
             });
         this.matches = matches;
         return matches;
+    }
+
+    matchesTable(group) {
+        if (this.matches[group] === undefined) return []
+        return this.matches[group].map(x => ({ ...x, time: `${x.time.playing} + ${x.time.gap}` }))
     }
 
     simulateMatches() {

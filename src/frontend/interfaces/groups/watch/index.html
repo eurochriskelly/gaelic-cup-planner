@@ -701,7 +701,7 @@ window.addEventListener("parcelhmraccept", ()=>{
     ErrorOverlay.dismissRuntimeErrors();
 });
 
-},{"6d18d6bd340e7473":"786KC","74ad5ea14201648c":"7i2ML"}],"786KC":[function(require,module,exports) {
+},{"6d18d6bd340e7473":"786KC","74ad5ea14201648c":"1dldy"}],"786KC":[function(require,module,exports) {
 "use strict";
 module.exports = require("96622d495519d4e");
 
@@ -1165,8 +1165,8 @@ module.exports = require("96622d495519d4e");
     exports.setSignature = setSignature;
 })();
 
-},{}],"7i2ML":[function(require,module,exports) {
-var process = require("e985fd95d100752a");
+},{}],"1dldy":[function(require,module,exports) {
+var process = require("d1546958eb39fdcf");
 !function(e, t) {
     module.exports = t();
 }(window, function() {
@@ -2896,7 +2896,7 @@ var process = require("e985fd95d100752a");
     ]);
 });
 
-},{"e985fd95d100752a":"d5jf4"}],"d5jf4":[function(require,module,exports) {
+},{"d1546958eb39fdcf":"d5jf4"}],"d5jf4":[function(require,module,exports) {
 // shim for using process in browser
 var process = module.exports = {};
 // cached from whatever global is present so that test runners that stub it
@@ -27265,7 +27265,7 @@ module.exports = require("ef03b89c8fe2794e");
 
 },{}],"9xmpe":[function(require,module,exports) {
 /**
- * React Router DOM v6.17.0
+ * React Router DOM v6.20.1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -27305,10 +27305,10 @@ parcelHelpers.export(exports, "redirect", ()=>(0, _reactRouter.redirect));
 parcelHelpers.export(exports, "redirectDocument", ()=>(0, _reactRouter.redirectDocument));
 parcelHelpers.export(exports, "renderMatches", ()=>(0, _reactRouter.renderMatches));
 parcelHelpers.export(exports, "resolvePath", ()=>(0, _reactRouter.resolvePath));
-parcelHelpers.export(exports, "unstable_useBlocker", ()=>(0, _reactRouter.unstable_useBlocker));
 parcelHelpers.export(exports, "useActionData", ()=>(0, _reactRouter.useActionData));
 parcelHelpers.export(exports, "useAsyncError", ()=>(0, _reactRouter.useAsyncError));
 parcelHelpers.export(exports, "useAsyncValue", ()=>(0, _reactRouter.useAsyncValue));
+parcelHelpers.export(exports, "useBlocker", ()=>(0, _reactRouter.useBlocker));
 parcelHelpers.export(exports, "useHref", ()=>(0, _reactRouter.useHref));
 parcelHelpers.export(exports, "useInRouterContext", ()=>(0, _reactRouter.useInRouterContext));
 parcelHelpers.export(exports, "useLoaderData", ()=>(0, _reactRouter.useLoaderData));
@@ -27334,6 +27334,7 @@ parcelHelpers.export(exports, "Link", ()=>Link);
 parcelHelpers.export(exports, "NavLink", ()=>NavLink);
 parcelHelpers.export(exports, "RouterProvider", ()=>RouterProvider);
 parcelHelpers.export(exports, "ScrollRestoration", ()=>ScrollRestoration);
+parcelHelpers.export(exports, "UNSAFE_FetchersContext", ()=>FetchersContext);
 parcelHelpers.export(exports, "UNSAFE_ViewTransitionContext", ()=>ViewTransitionContext);
 parcelHelpers.export(exports, "UNSAFE_useScrollRestoration", ()=>useScrollRestoration);
 parcelHelpers.export(exports, "createBrowserRouter", ()=>createBrowserRouter);
@@ -27350,6 +27351,7 @@ parcelHelpers.export(exports, "useLinkClickHandler", ()=>useLinkClickHandler);
 parcelHelpers.export(exports, "useSearchParams", ()=>useSearchParams);
 parcelHelpers.export(exports, "useSubmit", ()=>useSubmit);
 var _react = require("react");
+var _reactDom = require("react-dom");
 var _reactRouter = require("react-router");
 var _router = require("@remix-run/router");
 function _extends() {
@@ -27550,13 +27552,14 @@ const _excluded = [
     "unstable_viewTransition",
     "children"
 ], _excluded3 = [
+    "fetcherKey",
+    "navigate",
     "reloadDocument",
     "replace",
     "state",
     "method",
     "action",
     "onSubmit",
-    "submit",
     "relative",
     "preventScrollReset",
     "unstable_viewTransition"
@@ -27637,6 +27640,8 @@ const ViewTransitionContext = /*#__PURE__*/ _react.createContext({
     isTransitioning: false
 });
 ViewTransitionContext.displayName = "ViewTransition";
+const FetchersContext = /*#__PURE__*/ _react.createContext(new Map());
+FetchersContext.displayName = "Fetchers";
 //#endregion
 ////////////////////////////////////////////////////////////////////////////////
 //#region Components
@@ -27663,8 +27668,14 @@ ViewTransitionContext.displayName = "ViewTransition";
   See https://github.com/remix-run/react-router/issues/10579
 */ const START_TRANSITION = "startTransition";
 const startTransitionImpl = _react[START_TRANSITION];
+const FLUSH_SYNC = "flushSync";
+const flushSyncImpl = _reactDom[FLUSH_SYNC];
 function startTransitionSafe(cb) {
     if (startTransitionImpl) startTransitionImpl(cb);
+    else cb();
+}
+function flushSyncSafe(cb) {
+    if (flushSyncImpl) flushSyncImpl(cb);
     else cb();
 }
 class Deferred {
@@ -27698,6 +27709,7 @@ class Deferred {
     let [renderDfd, setRenderDfd] = _react.useState();
     let [transition, setTransition] = _react.useState();
     let [interruption, setInterruption] = _react.useState();
+    let fetcherData = _react.useRef(new Map());
     let { v7_startTransition } = future || {};
     let optInStartTransition = _react.useCallback((cb)=>{
         if (v7_startTransition) startTransitionSafe(cb);
@@ -27706,13 +27718,58 @@ class Deferred {
         v7_startTransition
     ]);
     let setState = _react.useCallback((newState, _ref2)=>{
-        let { unstable_viewTransitionOpts: viewTransitionOpts } = _ref2;
-        if (!viewTransitionOpts || router.window == null || typeof router.window.document.startViewTransition !== "function") // Mid-navigation state update, or startViewTransition isn't available
-        optInStartTransition(()=>setStateImpl(newState));
-        else if (transition && renderDfd) {
+        let { deletedFetchers, unstable_flushSync: flushSync, unstable_viewTransitionOpts: viewTransitionOpts } = _ref2;
+        deletedFetchers.forEach((key)=>fetcherData.current.delete(key));
+        newState.fetchers.forEach((fetcher, key)=>{
+            if (fetcher.data !== undefined) fetcherData.current.set(key, fetcher.data);
+        });
+        let isViewTransitionUnavailable = router.window == null || typeof router.window.document.startViewTransition !== "function";
+        // If this isn't a view transition or it's not available in this browser,
+        // just update and be done with it
+        if (!viewTransitionOpts || isViewTransitionUnavailable) {
+            if (flushSync) flushSyncSafe(()=>setStateImpl(newState));
+            else optInStartTransition(()=>setStateImpl(newState));
+            return;
+        }
+        // flushSync + startViewTransition
+        if (flushSync) {
+            // Flush through the context to mark DOM elements as transition=ing
+            flushSyncSafe(()=>{
+                // Cancel any pending transitions
+                if (transition) {
+                    renderDfd && renderDfd.resolve();
+                    transition.skipTransition();
+                }
+                setVtContext({
+                    isTransitioning: true,
+                    flushSync: true,
+                    currentLocation: viewTransitionOpts.currentLocation,
+                    nextLocation: viewTransitionOpts.nextLocation
+                });
+            });
+            // Update the DOM
+            let t = router.window.document.startViewTransition(()=>{
+                flushSyncSafe(()=>setStateImpl(newState));
+            });
+            // Clean up after the animation completes
+            t.finished.finally(()=>{
+                flushSyncSafe(()=>{
+                    setRenderDfd(undefined);
+                    setTransition(undefined);
+                    setPendingState(undefined);
+                    setVtContext({
+                        isTransitioning: false
+                    });
+                });
+            });
+            flushSyncSafe(()=>setTransition(t));
+            return;
+        }
+        // startTransition + startViewTransition
+        if (transition) {
             // Interrupting an in-progress transition, cancel and let everything flush
             // out, and then kick off a new transition from the interruption state
-            renderDfd.resolve();
+            renderDfd && renderDfd.resolve();
             transition.skipTransition();
             setInterruption({
                 state: newState,
@@ -27724,15 +27781,17 @@ class Deferred {
             setPendingState(newState);
             setVtContext({
                 isTransitioning: true,
+                flushSync: false,
                 currentLocation: viewTransitionOpts.currentLocation,
                 nextLocation: viewTransitionOpts.nextLocation
             });
         }
     }, [
-        optInStartTransition,
+        router.window,
         transition,
         renderDfd,
-        router.window
+        fetcherData,
+        optInStartTransition
     ]);
     // Need to use a layout effect here so we are subscribed early enough to
     // pick up on any render-driven redirects/navigations (useEffect/<Navigate>)
@@ -27743,9 +27802,9 @@ class Deferred {
     // When we start a view transition, create a Deferred we can use for the
     // eventual "completed" render
     _react.useEffect(()=>{
-        if (vtContext.isTransitioning) setRenderDfd(new Deferred());
+        if (vtContext.isTransitioning && !vtContext.flushSync) setRenderDfd(new Deferred());
     }, [
-        vtContext.isTransitioning
+        vtContext
     ]);
     // Once the deferred is created, kick off startViewTransition() to update the
     // DOM and then wait on the Deferred to resolve (indicating the DOM update has
@@ -27791,6 +27850,7 @@ class Deferred {
             setPendingState(interruption.state);
             setVtContext({
                 isTransitioning: true,
+                flushSync: false,
                 currentLocation: interruption.currentLocation,
                 nextLocation: interruption.nextLocation
             });
@@ -27839,6 +27899,8 @@ class Deferred {
         value: dataRouterContext
     }, /*#__PURE__*/ _react.createElement((0, _reactRouter.UNSAFE_DataRouterStateContext).Provider, {
         value: state
+    }, /*#__PURE__*/ _react.createElement(FetchersContext.Provider, {
+        value: fetcherData.current
     }, /*#__PURE__*/ _react.createElement(ViewTransitionContext.Provider, {
         value: vtContext
     }, /*#__PURE__*/ _react.createElement((0, _reactRouter.Router), {
@@ -27849,7 +27911,7 @@ class Deferred {
     }, state.initialized ? /*#__PURE__*/ _react.createElement(DataRoutes, {
         routes: router.routes,
         state: state
-    }) : fallbackElement)))), null);
+    }) : fallbackElement))))), null);
 }
 function DataRoutes(_ref3) {
     let { routes, state } = _ref3;
@@ -28025,7 +28087,13 @@ Link.displayName = "Link";
         nextLocationPathname = nextLocationPathname ? nextLocationPathname.toLowerCase() : null;
         toPathname = toPathname.toLowerCase();
     }
-    let isActive = locationPathname === toPathname || !end && locationPathname.startsWith(toPathname) && locationPathname.charAt(toPathname.length) === "/";
+    // If the `to` has a trailing slash, look at that exact spot.  Otherwise,
+    // we're looking for a slash _after_ what's in `to`.  For example:
+    //
+    // <NavLink to="/users"> and <NavLink to="/users/">
+    // both want to look for a / at index 6 to match URL `/users/matt`
+    const endSlashPosition = toPathname !== "/" && toPathname.endsWith("/") ? toPathname.length - 1 : toPathname.length;
+    let isActive = locationPathname === toPathname || !end && locationPathname.startsWith(toPathname) && locationPathname.charAt(endSlashPosition) === "/";
     let isPending = nextLocationPathname != null && (nextLocationPathname === toPathname || !end && nextLocationPathname.startsWith(toPathname) && nextLocationPathname.charAt(toPathname.length) === "/");
     let renderProps = {
         isActive,
@@ -28062,20 +28130,13 @@ NavLink.displayName = "NavLink";
  * that the interaction with the server is with `fetch` instead of new document
  * requests, allowing components to add nicer UX to the page as the form is
  * submitted and returns with data.
- */ const Form = /*#__PURE__*/ _react.forwardRef((props, ref)=>{
+ */ const Form = /*#__PURE__*/ _react.forwardRef((_ref9, forwardedRef)=>{
+    let { fetcherKey, navigate, reloadDocument, replace, state, method = defaultMethod, action, onSubmit, relative, preventScrollReset, unstable_viewTransition } = _ref9, props = _objectWithoutPropertiesLoose(_ref9, _excluded3);
     let submit = useSubmit();
-    return /*#__PURE__*/ _react.createElement(FormImpl, _extends({}, props, {
-        submit: submit,
-        ref: ref
-    }));
-});
-Form.displayName = "Form";
-const FormImpl = /*#__PURE__*/ _react.forwardRef((_ref9, forwardedRef)=>{
-    let { reloadDocument, replace, state, method = defaultMethod, action, onSubmit, submit, relative, preventScrollReset, unstable_viewTransition } = _ref9, props = _objectWithoutPropertiesLoose(_ref9, _excluded3);
-    let formMethod = method.toLowerCase() === "get" ? "get" : "post";
     let formAction = useFormAction(action, {
         relative
     });
+    let formMethod = method.toLowerCase() === "get" ? "get" : "post";
     let submitHandler = (event)=>{
         onSubmit && onSubmit(event);
         if (event.defaultPrevented) return;
@@ -28083,7 +28144,9 @@ const FormImpl = /*#__PURE__*/ _react.forwardRef((_ref9, forwardedRef)=>{
         let submitter = event.nativeEvent.submitter;
         let submitMethod = (submitter == null ? void 0 : submitter.getAttribute("formmethod")) || method;
         submit(submitter || event.currentTarget, {
+            fetcherKey,
             method: submitMethod,
+            navigate,
             replace,
             state,
             relative,
@@ -28098,7 +28161,7 @@ const FormImpl = /*#__PURE__*/ _react.forwardRef((_ref9, forwardedRef)=>{
         onSubmit: reloadDocument ? onSubmit : submitHandler
     }, props));
 });
-FormImpl.displayName = "FormImpl";
+Form.displayName = "Form";
 /**
  * This component will emulate the browser's scroll restoration on location
  * changes.
@@ -28125,9 +28188,11 @@ var DataRouterHook;
 })(DataRouterHook || (DataRouterHook = {}));
 var DataRouterStateHook;
 (function(DataRouterStateHook) {
+    DataRouterStateHook["UseFetcher"] = "useFetcher";
     DataRouterStateHook["UseFetchers"] = "useFetchers";
     DataRouterStateHook["UseScrollRestoration"] = "useScrollRestoration";
 })(DataRouterStateHook || (DataRouterStateHook = {}));
+// Internal hooks
 function getDataRouterConsoleError(hookName) {
     return hookName + " must be used within a data router.  See https://reactrouter.com/routers/picking-a-router.";
 }
@@ -28141,6 +28206,7 @@ function useDataRouterState(hookName) {
     !state && (0, _router.UNSAFE_invariant)(false, getDataRouterConsoleError(hookName));
     return state;
 }
+// External hooks
 /**
  * Handles the click behavior for router `<Link>` components. This is useful if
  * you need to create custom `<Link>` components with the same click behavior we
@@ -28210,6 +28276,8 @@ function useDataRouterState(hookName) {
 function validateClientSideSubmission() {
     if (typeof document === "undefined") throw new Error("You are calling submit during the server render. Try calling submit within a `useEffect` or callback instead.");
 }
+let fetcherId = 0;
+let getUniqueFetcherId = ()=>"__" + String(++fetcherId) + "__";
 /**
  * Returns a function that may be used to programmatically submit a form (or
  * some arbitrary data) to the server.
@@ -28221,7 +28289,17 @@ function validateClientSideSubmission() {
         if (options === void 0) options = {};
         validateClientSideSubmission();
         let { action, method, encType, formData, body } = getFormSubmissionInfo(target, basename);
-        router.navigate(options.action || action, {
+        if (options.navigate === false) {
+            let key = options.fetcherKey || getUniqueFetcherId();
+            router.fetch(key, currentRouteId, options.action || action, {
+                preventScrollReset: options.preventScrollReset,
+                formData,
+                body,
+                formMethod: options.method || method,
+                formEncType: options.encType || encType,
+                unstable_flushSync: options.unstable_flushSync
+            });
+        } else router.navigate(options.action || action, {
             preventScrollReset: options.preventScrollReset,
             formData,
             body,
@@ -28230,36 +28308,13 @@ function validateClientSideSubmission() {
             replace: options.replace,
             state: options.state,
             fromRouteId: currentRouteId,
+            unstable_flushSync: options.unstable_flushSync,
             unstable_viewTransition: options.unstable_viewTransition
         });
     }, [
         router,
         basename,
         currentRouteId
-    ]);
-}
-/**
- * Returns the implementation for fetcher.submit
- */ function useSubmitFetcher(fetcherKey, fetcherRouteId) {
-    let { router } = useDataRouterContext(DataRouterHook.UseSubmitFetcher);
-    let { basename } = _react.useContext((0, _reactRouter.UNSAFE_NavigationContext));
-    return _react.useCallback(function(target, options) {
-        if (options === void 0) options = {};
-        validateClientSideSubmission();
-        let { action, method, encType, formData, body } = getFormSubmissionInfo(target, basename);
-        !(fetcherRouteId != null) && (0, _router.UNSAFE_invariant)(false, "No routeId available for useFetcher()");
-        router.fetch(fetcherKey, fetcherRouteId, options.action || action, {
-            preventScrollReset: options.preventScrollReset,
-            formData,
-            body,
-            formMethod: options.method || method,
-            formEncType: options.encType || encType
-        });
-    }, [
-        router,
-        basename,
-        fetcherKey,
-        fetcherRouteId
     ]);
 }
 // v7: Eventually we should deprecate this entirely in favor of using the
@@ -28285,11 +28340,11 @@ function useFormAction(action, _temp2) {
         // Safe to write to this directly here since if action was undefined, we
         // would have called useResolvedPath(".") which will never include a search
         path.search = location.search;
-        // When grabbing search params from the URL, remove the automatically
-        // inserted ?index param so we match the useResolvedPath search behavior
-        // which would not include ?index
-        if (match.route.index) {
-            let params = new URLSearchParams(path.search);
+        // When grabbing search params from the URL, remove any included ?index param
+        // since it might not apply to our contextual route.  We add it back based
+        // on match.route.index below
+        let params = new URLSearchParams(path.search);
+        if (params.has("index") && params.get("index") === "") {
             params.delete("index");
             path.search = params.toString() ? "?" + params.toString() : "";
         }
@@ -28305,65 +28360,85 @@ function useFormAction(action, _temp2) {
     ]);
     return (0, _reactRouter.createPath)(path);
 }
-function createFetcherForm(fetcherKey, routeId) {
-    let FetcherForm = /*#__PURE__*/ _react.forwardRef((props, ref)=>{
-        let submit = useSubmitFetcher(fetcherKey, routeId);
-        return /*#__PURE__*/ _react.createElement(FormImpl, _extends({}, props, {
-            ref: ref,
-            submit: submit
-        }));
-    });
-    FetcherForm.displayName = "fetcher.Form";
-    return FetcherForm;
-}
-let fetcherId = 0;
 // TODO: (v7) Change the useFetcher generic default from `any` to `unknown`
 /**
  * Interacts with route loaders and actions without causing a navigation. Great
  * for any interaction that stays on the same page.
- */ function useFetcher() {
+ */ function useFetcher(_temp3) {
     var _route$matches;
+    let { key } = _temp3 === void 0 ? {} : _temp3;
     let { router } = useDataRouterContext(DataRouterHook.UseFetcher);
+    let state = useDataRouterState(DataRouterStateHook.UseFetcher);
+    let fetcherData = _react.useContext(FetchersContext);
     let route = _react.useContext((0, _reactRouter.UNSAFE_RouteContext));
-    !route && (0, _router.UNSAFE_invariant)(false, "useFetcher must be used inside a RouteContext");
     let routeId = (_route$matches = route.matches[route.matches.length - 1]) == null ? void 0 : _route$matches.route.id;
+    !fetcherData && (0, _router.UNSAFE_invariant)(false, "useFetcher must be used inside a FetchersContext");
+    !route && (0, _router.UNSAFE_invariant)(false, "useFetcher must be used inside a RouteContext");
     !(routeId != null) && (0, _router.UNSAFE_invariant)(false, 'useFetcher can only be used on routes that contain a unique "id"');
-    let [fetcherKey] = _react.useState(()=>String(++fetcherId));
-    let [Form] = _react.useState(()=>{
-        !routeId && (0, _router.UNSAFE_invariant)(false, "No routeId available for fetcher.Form()");
-        return createFetcherForm(fetcherKey, routeId);
-    });
-    let [load] = _react.useState(()=>(href)=>{
-            !router && (0, _router.UNSAFE_invariant)(false, "No router available for fetcher.load()");
-            !routeId && (0, _router.UNSAFE_invariant)(false, "No routeId available for fetcher.load()");
-            router.fetch(fetcherKey, routeId, href);
-        });
-    let submit = useSubmitFetcher(fetcherKey, routeId);
-    let fetcher = router.getFetcher(fetcherKey);
-    let fetcherWithComponents = _react.useMemo(()=>_extends({
-            Form,
-            submit,
-            load
-        }, fetcher), [
-        fetcher,
-        Form,
-        submit,
-        load
-    ]);
+    // Fetcher key handling
+    let [fetcherKey, setFetcherKey] = _react.useState(key || "");
+    if (key && key !== fetcherKey) setFetcherKey(key);
+    else if (!fetcherKey) setFetcherKey(getUniqueFetcherId());
+    // Registration/cleanup
     _react.useEffect(()=>{
-        // Is this busted when the React team gets real weird and calls effects
-        // twice on mount?  We really just need to garbage collect here when this
-        // fetcher is no longer around.
+        router.getFetcher(fetcherKey);
         return ()=>{
-            if (!router) {
-                console.warn("No router available to clean up from useFetcher()");
-                return;
-            }
+            // Tell the router we've unmounted - if v7_fetcherPersist is enabled this
+            // will not delete immediately but instead queue up a delete after the
+            // fetcher returns to an `idle` state
             router.deleteFetcher(fetcherKey);
         };
     }, [
         router,
         fetcherKey
+    ]);
+    // Fetcher additions
+    let load = _react.useCallback((href, opts)=>{
+        !routeId && (0, _router.UNSAFE_invariant)(false, "No routeId available for fetcher.load()");
+        router.fetch(fetcherKey, routeId, href, opts);
+    }, [
+        fetcherKey,
+        routeId,
+        router
+    ]);
+    let submitImpl = useSubmit();
+    let submit = _react.useCallback((target, opts)=>{
+        submitImpl(target, _extends({}, opts, {
+            navigate: false,
+            fetcherKey
+        }));
+    }, [
+        fetcherKey,
+        submitImpl
+    ]);
+    let FetcherForm = _react.useMemo(()=>{
+        let FetcherForm = /*#__PURE__*/ _react.forwardRef((props, ref)=>{
+            return /*#__PURE__*/ _react.createElement(Form, _extends({}, props, {
+                navigate: false,
+                fetcherKey: fetcherKey,
+                ref: ref
+            }));
+        });
+        FetcherForm.displayName = "fetcher.Form";
+        return FetcherForm;
+    }, [
+        fetcherKey
+    ]);
+    // Exposed FetcherWithComponents
+    let fetcher = state.fetchers.get(fetcherKey) || (0, _router.IDLE_FETCHER);
+    let data = fetcherData.get(fetcherKey);
+    let fetcherWithComponents = _react.useMemo(()=>_extends({
+            Form: FetcherForm,
+            submit,
+            load
+        }, fetcher, {
+            data
+        }), [
+        FetcherForm,
+        submit,
+        load,
+        fetcher,
+        data
     ]);
     return fetcherWithComponents;
 }
@@ -28372,16 +28447,19 @@ let fetcherId = 0;
  * routes that need to provide pending/optimistic UI regarding the fetch.
  */ function useFetchers() {
     let state = useDataRouterState(DataRouterStateHook.UseFetchers);
-    return [
-        ...state.fetchers.values()
-    ];
+    return Array.from(state.fetchers.entries()).map((_ref11)=>{
+        let [key, fetcher] = _ref11;
+        return _extends({}, fetcher, {
+            key
+        });
+    });
 }
 const SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 let savedScrollPositions = {};
 /**
  * When rendered inside a RouterProvider, will restore scroll positions on navigations
- */ function useScrollRestoration(_temp3) {
-    let { getKey, storageKey } = _temp3 === void 0 ? {} : _temp3;
+ */ function useScrollRestoration(_temp4) {
+    let { getKey, storageKey } = _temp4 === void 0 ? {} : _temp4;
     let { router } = useDataRouterContext(DataRouterHook.UseScrollRestoration);
     let { restoreScrollPosition, preventScrollReset } = useDataRouterState(DataRouterStateHook.UseScrollRestoration);
     let { basename } = _react.useContext((0, _reactRouter.UNSAFE_NavigationContext));
@@ -28520,9 +28598,9 @@ let savedScrollPositions = {};
  * Warning: This has *a lot of rough edges* and behaves very differently (and
  * very incorrectly in some cases) across browsers if user click addition
  * back/forward navigations while the confirm is open.  Use at your own risk.
- */ function usePrompt(_ref11) {
-    let { when, message } = _ref11;
-    let blocker = (0, _reactRouter.unstable_useBlocker)(when);
+ */ function usePrompt(_ref12) {
+    let { when, message } = _ref12;
+    let blocker = (0, _reactRouter.useBlocker)(when);
     _react.useEffect(()=>{
         if (blocker.state === "blocked") {
             let proceed = window.confirm(message);
@@ -28577,9 +28655,9 @@ let savedScrollPositions = {};
     return (0, _router.matchPath)(path.pathname, nextPath) != null || (0, _router.matchPath)(path.pathname, currentPath) != null;
 }
 
-},{"react":"21dqq","react-router":"dbWyW","@remix-run/router":"5ncDG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dbWyW":[function(require,module,exports) {
+},{"react":"21dqq","react-dom":"j6uA9","react-router":"dbWyW","@remix-run/router":"5ncDG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dbWyW":[function(require,module,exports) {
 /**
- * React Router v6.17.0
+ * React Router v6.20.1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -28622,10 +28700,10 @@ parcelHelpers.export(exports, "createMemoryRouter", ()=>createMemoryRouter);
 parcelHelpers.export(exports, "createRoutesFromChildren", ()=>createRoutesFromChildren);
 parcelHelpers.export(exports, "createRoutesFromElements", ()=>createRoutesFromChildren);
 parcelHelpers.export(exports, "renderMatches", ()=>renderMatches);
-parcelHelpers.export(exports, "unstable_useBlocker", ()=>useBlocker);
 parcelHelpers.export(exports, "useActionData", ()=>useActionData);
 parcelHelpers.export(exports, "useAsyncError", ()=>useAsyncError);
 parcelHelpers.export(exports, "useAsyncValue", ()=>useAsyncValue);
+parcelHelpers.export(exports, "useBlocker", ()=>useBlocker);
 parcelHelpers.export(exports, "useHref", ()=>useHref);
 parcelHelpers.export(exports, "useInRouterContext", ()=>useInRouterContext);
 parcelHelpers.export(exports, "useLoaderData", ()=>useLoaderData);
@@ -29210,9 +29288,8 @@ function useCurrentRouteId(hookName) {
  * Returns the action data for the nearest ancestor Route action
  */ function useActionData() {
     let state = useDataRouterState(DataRouterStateHook.UseActionData);
-    let route = _react.useContext(RouteContext);
-    !route && (0, _router.UNSAFE_invariant)(false, "useActionData must be used inside a RouteContext");
-    return Object.values((state == null ? void 0 : state.actionData) || {})[0];
+    let routeId = useCurrentRouteId(DataRouterStateHook.UseLoaderData);
+    return state.actionData ? state.actionData[routeId] : undefined;
 }
 /**
  * Returns the nearest ancestor Route error, which could be a loader/action
@@ -29763,7 +29840,7 @@ function createMemoryRouter(routes, opts) {
 
 },{"react":"21dqq","@remix-run/router":"5ncDG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5ncDG":[function(require,module,exports) {
 /**
- * @remix-run/router v1.10.0
+ * @remix-run/router v1.13.1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -30476,20 +30553,23 @@ function matchRouteBranch(branch, pathname) {
         caseSensitive: false,
         end: true
     };
-    let [matcher, paramNames] = compilePath(pattern.path, pattern.caseSensitive, pattern.end);
+    let [matcher, compiledParams] = compilePath(pattern.path, pattern.caseSensitive, pattern.end);
     let match = pathname.match(matcher);
     if (!match) return null;
     let matchedPathname = match[0];
     let pathnameBase = matchedPathname.replace(/(.)\/+$/, "$1");
     let captureGroups = match.slice(1);
-    let params = paramNames.reduce((memo, paramName, index)=>{
+    let params = compiledParams.reduce((memo, _ref, index)=>{
+        let { paramName, isOptional } = _ref;
         // We need to compute the pathnameBase here using the raw splat value
         // instead of using params["*"] later because it will be decoded then
         if (paramName === "*") {
             let splatValue = captureGroups[index] || "";
             pathnameBase = matchedPathname.slice(0, matchedPathname.length - splatValue.length).replace(/(.)\/+$/, "$1");
         }
-        memo[paramName] = safelyDecodeURIComponent(captureGroups[index] || "", paramName);
+        const value = captureGroups[index];
+        if (isOptional && !value) memo[paramName] = undefined;
+        else memo[paramName] = safelyDecodeURIComponent(value || "", paramName);
         return memo;
     }, {});
     return {
@@ -30503,16 +30583,21 @@ function compilePath(path, caseSensitive, end) {
     if (caseSensitive === void 0) caseSensitive = false;
     if (end === void 0) end = true;
     warning(path === "*" || !path.endsWith("*") || path.endsWith("/*"), 'Route path "' + path + '" will be treated as if it were ' + ('"' + path.replace(/\*$/, "/*") + '" because the `*` character must ') + "always follow a `/` in the pattern. To get rid of this warning, " + ('please change the route path to "' + path.replace(/\*$/, "/*") + '".'));
-    let paramNames = [];
+    let params = [];
     let regexpSource = "^" + path.replace(/\/*\*?$/, "") // Ignore trailing / and /*, we'll handle it below
     .replace(/^\/*/, "/") // Make sure it has a leading /
-    .replace(/[\\.*+^$?{}|()[\]]/g, "\\$&") // Escape special regex chars
-    .replace(/\/:(\w+)/g, (_, paramName)=>{
-        paramNames.push(paramName);
-        return "/([^\\/]+)";
+    .replace(/[\\.*+^${}|()[\]]/g, "\\$&") // Escape special regex chars
+    .replace(/\/:(\w+)(\?)?/g, (_, paramName, isOptional)=>{
+        params.push({
+            paramName,
+            isOptional: isOptional != null
+        });
+        return isOptional ? "/?([^\\/]+)?" : "/([^\\/]+)";
     });
     if (path.endsWith("*")) {
-        paramNames.push("*");
+        params.push({
+            paramName: "*"
+        });
         regexpSource += path === "*" || path === "/*" ? "(.*)$" // Already matched the initial /, just match the rest
          : "(?:\\/(.+)|\\/*)$"; // Don't include the / in params["*"]
     } else if (end) // When matching to the end, ignore trailing slashes
@@ -30528,7 +30613,7 @@ function compilePath(path, caseSensitive, end) {
     let matcher = new RegExp(regexpSource, caseSensitive ? undefined : "i");
     return [
         matcher,
-        paramNames
+        params
     ];
 }
 function safelyDecodeURI(value) {
@@ -30637,14 +30722,27 @@ function getInvalidPathError(char, field, dest, path) {
     // `to` values that do not provide a pathname. `to` can simply be a search or
     // hash string, in which case we should assume that the navigation is relative
     // to the current location's pathname and *not* the route pathname.
-    if (isPathRelative || toPathname == null) from = locationPathname;
-    else {
+    if (toPathname == null) from = locationPathname;
+    else if (isPathRelative) {
+        let fromSegments = routePathnames[routePathnames.length - 1].replace(/^\//, "").split("/");
+        if (toPathname.startsWith("..")) {
+            let toSegments = toPathname.split("/");
+            // With relative="path", each leading .. segment means "go up one URL segment"
+            while(toSegments[0] === ".."){
+                toSegments.shift();
+                fromSegments.pop();
+            }
+            to.pathname = toSegments.join("/");
+        }
+        from = "/" + fromSegments.join("/");
+    } else {
         let routePathnameIndex = routePathnames.length - 1;
         if (toPathname.startsWith("..")) {
             let toSegments = toPathname.split("/");
-            // Each leading .. segment means "go up one route" instead of "go up one
-            // URL segment".  This is a key difference from how <a href> works and a
-            // major reason we call this a "to" value instead of a "href".
+            // With relative="route" (the default), each leading .. segment means
+            // "go up one route" instead of "go up one URL segment".  This is a key
+            // difference from how <a href> works and a major reason we call this a
+            // "to" value instead of a "href".
             while(toSegments[0] === ".."){
                 toSegments.shift();
                 routePathnameIndex -= 1;
@@ -30711,8 +30809,8 @@ class DeferredData {
         let onAbort = ()=>reject(new AbortedDeferredError("Deferred data aborted"));
         this.unlistenAbortSignal = ()=>this.controller.signal.removeEventListener("abort", onAbort);
         this.controller.signal.addEventListener("abort", onAbort);
-        this.data = Object.entries(data).reduce((acc, _ref)=>{
-            let [key, value] = _ref;
+        this.data = Object.entries(data).reduce((acc, _ref2)=>{
+            let [key, value] = _ref2;
             return Object.assign(acc, {
                 [key]: this.trackPromise(key, value)
             });
@@ -30804,8 +30902,8 @@ class DeferredData {
     }
     get unwrappedData() {
         invariant(this.data !== null && this.done, "Can only unwrap data on initialized and settled deferreds");
-        return Object.entries(this.data).reduce((acc, _ref2)=>{
-            let [key, value] = _ref2;
+        return Object.entries(this.data).reduce((acc, _ref3)=>{
+            let [key, value] = _ref3;
             return Object.assign(acc, {
                 [key]: unwrapTrackedPromise(value)
             });
@@ -30962,6 +31060,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
     let basename = init.basename || "/";
     // Config driven behavior flags
     let future = _extends({
+        v7_fetcherPersist: false,
         v7_normalizeFormMethod: false,
         v7_prependBasename: false
     }, init.future);
@@ -31059,6 +31158,11 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
     let fetchRedirectIds = new Set();
     // Most recent href/match for fetcher.load calls for fetchers
     let fetchLoadMatches = new Map();
+    // Ref-count mounted fetchers so we know when it's ok to clean them up
+    let activeFetchers = new Map();
+    // Fetchers that have requested a delete when using v7_fetcherPersist,
+    // they'll be officially removed after they return to idle
+    let deletedFetchers = new Set();
     // Store DeferredData instances for active route matches.  When a
     // route loader returns defer() we stick one in here.  Then, when a nested
     // promise resolves we update loaderData.  If a new navigation starts we
@@ -31151,19 +31255,46 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         return ()=>subscribers.delete(fn);
     }
     // Update our state and notify the calling context of the change
-    function updateState(newState, viewTransitionOpts) {
+    function updateState(newState, opts) {
+        if (opts === void 0) opts = {};
         state = _extends({}, state, newState);
-        subscribers.forEach((subscriber)=>subscriber(state, {
-                unstable_viewTransitionOpts: viewTransitionOpts
+        // Prep fetcher cleanup so we can tell the UI which fetcher data entries
+        // can be removed
+        let completedFetchers = [];
+        let deletedFetchersKeys = [];
+        if (future.v7_fetcherPersist) state.fetchers.forEach((fetcher, key)=>{
+            if (fetcher.state === "idle") {
+                if (deletedFetchers.has(key)) // Unmounted from the UI and can be totally removed
+                deletedFetchersKeys.push(key);
+                else // Returned to idle but still mounted in the UI, so semi-remains for
+                // revalidations and such
+                completedFetchers.push(key);
+            }
+        });
+        // Iterate over a local copy so that if flushSync is used and we end up
+        // removing and adding a new subscriber due to the useCallback dependencies,
+        // we don't get ourselves into a loop calling the new subscriber immediately
+        [
+            ...subscribers
+        ].forEach((subscriber)=>subscriber(state, {
+                deletedFetchers: deletedFetchersKeys,
+                unstable_viewTransitionOpts: opts.viewTransitionOpts,
+                unstable_flushSync: opts.flushSync === true
             }));
+        // Remove idle fetchers from state since we only care about in-flight fetchers.
+        if (future.v7_fetcherPersist) {
+            completedFetchers.forEach((key)=>state.fetchers.delete(key));
+            deletedFetchersKeys.forEach((key)=>deleteFetcher(key));
+        }
     }
     // Complete a navigation returning the state.navigation back to the IDLE_NAVIGATION
     // and setting state.[historyAction/location/matches] to the new route.
     // - Location is a required param
     // - Navigation will always be set to IDLE_NAVIGATION
     // - Can pass any other state in newState
-    function completeNavigation(location, newState) {
+    function completeNavigation(location, newState, _temp) {
         var _location$state, _location$state2;
+        let { flushSync } = _temp === void 0 ? {} : _temp;
         // Deduce if we're in a loading/actionReload state:
         // - We have committed actionData in the store
         // - The current navigation was a mutation submission
@@ -31240,7 +31371,10 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             restoreScrollPosition: getSavedScrollPosition(location, newState.matches || state.matches),
             preventScrollReset,
             blockers
-        }), viewTransitionOpts);
+        }), {
+            viewTransitionOpts,
+            flushSync: flushSync === true
+        });
         // Reset stateful navigation vars
         pendingAction = Action.Pop;
         pendingPreventScrollReset = false;
@@ -31277,6 +31411,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         // action/loader this will be ignored and the redirect will be a PUSH
         historyAction = Action.Replace;
         let preventScrollReset = opts && "preventScrollReset" in opts ? opts.preventScrollReset === true : undefined;
+        let flushSync = (opts && opts.unstable_flushSync) === true;
         let blockerKey = shouldBlockNavigation({
             currentLocation,
             nextLocation,
@@ -31314,7 +31449,8 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             pendingError: error,
             preventScrollReset,
             replace: opts && opts.replace,
-            enableViewTransition: opts && opts.unstable_viewTransition
+            enableViewTransition: opts && opts.unstable_viewTransition,
+            flushSync
         });
     }
     // Revalidate all current loaders.  If a navigation is in progress or if this
@@ -31363,6 +31499,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         let routesToUse = inFlightDataRoutes || dataRoutes;
         let loadingNavigation = opts && opts.overrideNavigation;
         let matches = matchRoutes(routesToUse, location, basename);
+        let flushSync = (opts && opts.flushSync) === true;
         // Short circuit with a 404 on the root error boundary if we match nothing
         if (!matches) {
             let error = getInternalRouterError(404, {
@@ -31377,6 +31514,8 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 errors: {
                     [route.id]: error
                 }
+            }, {
+                flushSync
             });
             return;
         }
@@ -31389,6 +31528,8 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         if (state.initialized && !isRevalidationRequired && isHashChangeOnly(state.location, location) && !(opts && opts.submission && isMutationMethod(opts.submission.formMethod))) {
             completeNavigation(location, {
                 matches
+            }, {
+                flushSync
             });
             return;
         }
@@ -31407,19 +31548,21 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         else if (opts && opts.submission && isMutationMethod(opts.submission.formMethod)) {
             // Call action if we received an action submission
             let actionOutput = await handleAction(request, location, opts.submission, matches, {
-                replace: opts.replace
+                replace: opts.replace,
+                flushSync
             });
             if (actionOutput.shortCircuited) return;
             pendingActionData = actionOutput.pendingActionData;
             pendingError = actionOutput.pendingActionError;
             loadingNavigation = getLoadingNavigation(location, opts.submission);
+            flushSync = false;
             // Create a GET request for the loaders
             request = new Request(request.url, {
                 signal: request.signal
             });
         }
         // Call loaders
-        let { shortCircuited, loaderData, errors } = await handleLoaders(request, location, matches, loadingNavigation, opts && opts.submission, opts && opts.fetcherSubmission, opts && opts.replace, pendingActionData, pendingError);
+        let { shortCircuited, loaderData, errors } = await handleLoaders(request, location, matches, loadingNavigation, opts && opts.submission, opts && opts.fetcherSubmission, opts && opts.replace, flushSync, pendingActionData, pendingError);
         if (shortCircuited) return;
         // Clean up now that the action/loaders have completed.  Don't clean up if
         // we short circuited because pendingNavigationController will have already
@@ -31443,6 +31586,8 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         let navigation = getSubmittingNavigation(location, submission);
         updateState({
             navigation
+        }, {
+            flushSync: opts.flushSync === true
         });
         // Call our action and get the result
         let result;
@@ -31504,14 +31649,14 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
     }
     // Call all applicable loaders for the given matches, handling redirects,
     // errors, etc.
-    async function handleLoaders(request, location, matches, overrideNavigation, submission, fetcherSubmission, replace, pendingActionData, pendingError) {
+    async function handleLoaders(request, location, matches, overrideNavigation, submission, fetcherSubmission, replace, flushSync, pendingActionData, pendingError) {
         // Figure out the right navigation we want to use for data loading
         let loadingNavigation = overrideNavigation || getLoadingNavigation(location, submission);
         // If this was a redirect from an action we don't have a "submission" but
         // we have it on the loading navigation so use that if available
         let activeSubmission = submission || fetcherSubmission || getSubmissionFromNavigation(loadingNavigation);
         let routesToUse = inFlightDataRoutes || dataRoutes;
-        let [matchesToLoad, revalidatingFetchers] = getMatchesToLoad(init.history, state, matches, activeSubmission, location, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, pendingActionData, pendingError);
+        let [matchesToLoad, revalidatingFetchers] = getMatchesToLoad(init.history, state, matches, activeSubmission, location, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, deletedFetchers, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, pendingActionData, pendingError);
         // Cancel pending deferreds for no-longer-matched routes or routes we're
         // about to reload.  Note that if this is an action reload we would have
         // already cancelled all pending deferreds so this would be a no-op
@@ -31529,7 +31674,9 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 actionData: pendingActionData
             } : {}, updatedFetchers ? {
                 fetchers: new Map(state.fetchers)
-            } : {}));
+            } : {}), {
+                flushSync
+            });
             return {
                 shortCircuited: true
             };
@@ -31553,7 +31700,9 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 actionData
             } : {}, revalidatingFetchers.length > 0 ? {
                 fetchers: new Map(state.fetchers)
-            } : {}));
+            } : {}), {
+                flushSync
+            });
         }
         revalidatingFetchers.forEach((rf)=>{
             if (fetchControllers.has(rf.key)) abortFetcher(rf.key);
@@ -31612,31 +31761,33 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             fetchers: new Map(state.fetchers)
         } : {});
     }
-    function getFetcher(key) {
-        return state.fetchers.get(key) || IDLE_FETCHER;
-    }
     // Trigger a fetcher load/submit for the given fetcher key
     function fetch(key, routeId, href, opts) {
         if (isServer) throw new Error("router.fetch() was called during the server render, but it shouldn't be. You are likely calling a useFetcher() method in the body of your component. Try moving it to a useEffect or a callback.");
         if (fetchControllers.has(key)) abortFetcher(key);
+        let flushSync = (opts && opts.unstable_flushSync) === true;
         let routesToUse = inFlightDataRoutes || dataRoutes;
         let normalizedPath = normalizeTo(state.location, state.matches, basename, future.v7_prependBasename, href, routeId, opts == null ? void 0 : opts.relative);
         let matches = matchRoutes(routesToUse, normalizedPath, basename);
         if (!matches) {
             setFetcherError(key, routeId, getInternalRouterError(404, {
                 pathname: normalizedPath
-            }));
+            }), {
+                flushSync
+            });
             return;
         }
         let { path, submission, error } = normalizeNavigateOptions(future.v7_normalizeFormMethod, true, normalizedPath, opts);
         if (error) {
-            setFetcherError(key, routeId, error);
+            setFetcherError(key, routeId, error, {
+                flushSync
+            });
             return;
         }
         let match = getTargetMatch(matches, path);
         pendingPreventScrollReset = (opts && opts.preventScrollReset) === true;
         if (submission && isMutationMethod(submission.formMethod)) {
-            handleFetcherAction(key, routeId, path, match, matches, submission);
+            handleFetcherAction(key, routeId, path, match, matches, flushSync, submission);
             return;
         }
         // Store off the match so we can call it's shouldRevalidate on subsequent
@@ -31645,11 +31796,11 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             routeId,
             path
         });
-        handleFetcherLoader(key, routeId, path, match, matches, submission);
+        handleFetcherLoader(key, routeId, path, match, matches, flushSync, submission);
     }
     // Call the action for the matched fetcher.submit(), and then handle redirects,
     // errors, and revalidation
-    async function handleFetcherAction(key, routeId, path, match, requestMatches, submission) {
+    async function handleFetcherAction(key, routeId, path, match, requestMatches, flushSync, submission) {
         interruptActiveLoads();
         fetchLoadMatches.delete(key);
         if (!match.route.action && !match.route.lazy) {
@@ -31658,15 +31809,15 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 pathname: path,
                 routeId: routeId
             });
-            setFetcherError(key, routeId, error);
+            setFetcherError(key, routeId, error, {
+                flushSync
+            });
             return;
         }
         // Put this fetcher into it's submitting state
         let existingFetcher = state.fetchers.get(key);
-        let fetcher = getSubmittingFetcher(submission, existingFetcher);
-        state.fetchers.set(key, fetcher);
-        updateState({
-            fetchers: new Map(state.fetchers)
+        updateFetcherState(key, getSubmittingFetcher(submission, existingFetcher), {
+            flushSync
         });
         // Call the action for the fetcher
         let abortController = new AbortController();
@@ -31675,9 +31826,13 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         let originatingLoadId = incrementingLoadId;
         let actionResult = await callLoaderOrAction("action", fetchRequest, match, requestMatches, manifest, mapRouteProperties, basename);
         if (fetchRequest.signal.aborted) {
-            // We can delete this so long as we weren't aborted by ou our own fetcher
+            // We can delete this so long as we weren't aborted by our own fetcher
             // re-submit which would have put _new_ controller is in fetchControllers
             if (fetchControllers.get(key) === abortController) fetchControllers.delete(key);
+            return;
+        }
+        if (deletedFetchers.has(key)) {
+            updateFetcherState(key, getDoneFetcher(undefined));
             return;
         }
         if (isRedirectResult(actionResult)) {
@@ -31687,19 +31842,11 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 // should take precedence over this redirect navigation.  We already
                 // set isRevalidationRequired so all loaders for the new route should
                 // fire unless opted out via shouldRevalidate
-                let doneFetcher = getDoneFetcher(undefined);
-                state.fetchers.set(key, doneFetcher);
-                updateState({
-                    fetchers: new Map(state.fetchers)
-                });
+                updateFetcherState(key, getDoneFetcher(undefined));
                 return;
             } else {
                 fetchRedirectIds.add(key);
-                let loadingFetcher = getLoadingFetcher(submission);
-                state.fetchers.set(key, loadingFetcher);
-                updateState({
-                    fetchers: new Map(state.fetchers)
-                });
+                updateFetcherState(key, getLoadingFetcher(submission));
                 return startRedirectNavigation(state, actionResult, {
                     fetcherSubmission: submission
                 });
@@ -31724,7 +31871,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         fetchReloadIds.set(key, loadId);
         let loadFetcher = getLoadingFetcher(submission, actionResult.data);
         state.fetchers.set(key, loadFetcher);
-        let [matchesToLoad, revalidatingFetchers] = getMatchesToLoad(init.history, state, matches, submission, nextLocation, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, {
+        let [matchesToLoad, revalidatingFetchers] = getMatchesToLoad(init.history, state, matches, submission, nextLocation, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, deletedFetchers, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, {
             [match.route.id]: actionResult.data
         }, undefined // No need to send through errors since we short circuit above
         );
@@ -31769,7 +31916,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             let doneFetcher = getDoneFetcher(actionResult.data);
             state.fetchers.set(key, doneFetcher);
         }
-        let didAbortFetchLoads = abortStaleFetchLoads(loadId);
+        abortStaleFetchLoads(loadId);
         // If we are currently in a navigation loading state and this fetcher is
         // more recent than the navigation, we want the newer data so abort the
         // navigation and complete it with the fetcher data
@@ -31786,23 +31933,19 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             // otherwise just update with the fetcher data, preserving any existing
             // loaderData for loaders that did not need to reload.  We have to
             // manually merge here since we aren't going through completeNavigation
-            updateState(_extends({
+            updateState({
                 errors,
-                loaderData: mergeLoaderData(state.loaderData, loaderData, matches, errors)
-            }, didAbortFetchLoads || revalidatingFetchers.length > 0 ? {
+                loaderData: mergeLoaderData(state.loaderData, loaderData, matches, errors),
                 fetchers: new Map(state.fetchers)
-            } : {}));
+            });
             isRevalidationRequired = false;
         }
     }
     // Call the matched loader for fetcher.load(), handling redirects, errors, etc.
-    async function handleFetcherLoader(key, routeId, path, match, matches, submission) {
+    async function handleFetcherLoader(key, routeId, path, match, matches, flushSync, submission) {
         let existingFetcher = state.fetchers.get(key);
-        // Put this fetcher into it's loading state
-        let loadingFetcher = getLoadingFetcher(submission, existingFetcher ? existingFetcher.data : undefined);
-        state.fetchers.set(key, loadingFetcher);
-        updateState({
-            fetchers: new Map(state.fetchers)
+        updateFetcherState(key, getLoadingFetcher(submission, existingFetcher ? existingFetcher.data : undefined), {
+            flushSync
         });
         // Call the loader for this fetcher route match
         let abortController = new AbortController();
@@ -31819,16 +31962,16 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         // re-load which would have put _new_ controller is in fetchControllers
         if (fetchControllers.get(key) === abortController) fetchControllers.delete(key);
         if (fetchRequest.signal.aborted) return;
+        if (deletedFetchers.has(key)) {
+            updateFetcherState(key, getDoneFetcher(undefined));
+            return;
+        }
         // If the loader threw a redirect Response, start a new REPLACE navigation
         if (isRedirectResult(result)) {
             if (pendingNavigationLoadId > originatingLoadId) {
                 // A new navigation was kicked off after our loader started, so that
                 // should take precedence over this redirect navigation
-                let doneFetcher = getDoneFetcher(undefined);
-                state.fetchers.set(key, doneFetcher);
-                updateState({
-                    fetchers: new Map(state.fetchers)
-                });
+                updateFetcherState(key, getDoneFetcher(undefined));
                 return;
             } else {
                 fetchRedirectIds.add(key);
@@ -31838,26 +31981,12 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         }
         // Process any non-redirect errors thrown
         if (isErrorResult(result)) {
-            let boundaryMatch = findNearestBoundary(state.matches, routeId);
-            state.fetchers.delete(key);
-            // TODO: In remix, this would reset to IDLE_NAVIGATION if it was a catch -
-            // do we need to behave any differently with our non-redirect errors?
-            // What if it was a non-redirect Response?
-            updateState({
-                fetchers: new Map(state.fetchers),
-                errors: {
-                    [boundaryMatch.route.id]: result.error
-                }
-            });
+            setFetcherError(key, routeId, result.error);
             return;
         }
         invariant(!isDeferredResult(result), "Unhandled fetcher deferred data");
         // Put the fetcher back into an idle state
-        let doneFetcher = getDoneFetcher(result.data);
-        state.fetchers.set(key, doneFetcher);
-        updateState({
-            fetchers: new Map(state.fetchers)
-        });
+        updateFetcherState(key, getDoneFetcher(result.data));
     }
     /**
    * Utility function to handle redirects returned from an action or loader.
@@ -31877,8 +32006,8 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
    * navigation (including processed redirects).  This means that we never
    * actually touch history until we've processed redirects, so we just use
    * the history action from the original navigation (PUSH or REPLACE).
-   */ async function startRedirectNavigation(state, redirect, _temp) {
-        let { submission, fetcherSubmission, replace } = _temp === void 0 ? {} : _temp;
+   */ async function startRedirectNavigation(state, redirect, _temp2) {
+        let { submission, fetcherSubmission, replace } = _temp2 === void 0 ? {} : _temp2;
         if (redirect.revalidate) isRevalidationRequired = true;
         let redirectLocation = createLocation(state.location, redirect.location, {
             _isRedirect: true
@@ -31977,7 +32106,17 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
             }
         });
     }
-    function setFetcherError(key, routeId, error) {
+    function updateFetcherState(key, fetcher, opts) {
+        if (opts === void 0) opts = {};
+        state.fetchers.set(key, fetcher);
+        updateState({
+            fetchers: new Map(state.fetchers)
+        }, {
+            flushSync: (opts && opts.flushSync) === true
+        });
+    }
+    function setFetcherError(key, routeId, error, opts) {
+        if (opts === void 0) opts = {};
         let boundaryMatch = findNearestBoundary(state.matches, routeId);
         deleteFetcher(key);
         updateState({
@@ -31985,7 +32124,18 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
                 [boundaryMatch.route.id]: error
             },
             fetchers: new Map(state.fetchers)
+        }, {
+            flushSync: (opts && opts.flushSync) === true
         });
+    }
+    function getFetcher(key) {
+        if (future.v7_fetcherPersist) {
+            activeFetchers.set(key, (activeFetchers.get(key) || 0) + 1);
+            // If this fetcher was previously marked for deletion, unmark it since we
+            // have a new instance
+            if (deletedFetchers.has(key)) deletedFetchers.delete(key);
+        }
+        return state.fetchers.get(key) || IDLE_FETCHER;
     }
     function deleteFetcher(key) {
         let fetcher = state.fetchers.get(key);
@@ -31996,7 +32146,20 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         fetchLoadMatches.delete(key);
         fetchReloadIds.delete(key);
         fetchRedirectIds.delete(key);
+        deletedFetchers.delete(key);
         state.fetchers.delete(key);
+    }
+    function deleteFetcherAndUpdateState(key) {
+        if (future.v7_fetcherPersist) {
+            let count = (activeFetchers.get(key) || 0) - 1;
+            if (count <= 0) {
+                activeFetchers.delete(key);
+                deletedFetchers.add(key);
+            } else activeFetchers.set(key, count);
+        } else deleteFetcher(key);
+        updateState({
+            fetchers: new Map(state.fetchers)
+        });
     }
     function abortFetcher(key) {
         let controller = fetchControllers.get(key);
@@ -32166,7 +32329,7 @@ const TRANSITIONS_STORAGE_KEY = "remix-router-transitions";
         createHref: (to)=>init.history.createHref(to),
         encodeLocation: (to)=>init.history.encodeLocation(to),
         getFetcher,
-        deleteFetcher,
+        deleteFetcher: deleteFetcherAndUpdateState,
         dispose,
         getBlocker,
         deleteBlocker,
@@ -32215,8 +32378,8 @@ function createStaticHandler(routes, opts) {
    * redirect response is returned or thrown from any action/loader.  We
    * propagate that out and return the raw Response so the HTTP server can
    * return it directly.
-   */ async function query(request, _temp2) {
-        let { requestContext } = _temp2 === void 0 ? {} : _temp2;
+   */ async function query(request, _temp3) {
+        let { requestContext } = _temp3 === void 0 ? {} : _temp3;
         let url = new URL(request.url);
         let method = request.method;
         let location = createLocation("", createPath(url), null, "default");
@@ -32290,8 +32453,8 @@ function createStaticHandler(routes, opts) {
    * serialize the error as they see fit while including the proper response
    * code.  Examples here are 404 and 405 errors that occur prior to reaching
    * any user-defined loaders.
-   */ async function queryRoute(request, _temp3) {
-        let { routeId, requestContext } = _temp3 === void 0 ? {} : _temp3;
+   */ async function queryRoute(request, _temp4) {
+        let { routeId, requestContext } = _temp4 === void 0 ? {} : _temp4;
         let url = new URL(request.url);
         let method = request.method;
         let location = createLocation("", createPath(url), null, "default");
@@ -32531,11 +32694,9 @@ function isSubmissionNavigation(opts) {
 function normalizeTo(location, matches, basename, prependBasename, to, fromRouteId, relative) {
     let contextualMatches;
     let activeRouteMatch;
-    if (fromRouteId != null && relative !== "path") {
+    if (fromRouteId) {
         // Grab matches up to the calling route so our route-relative logic is
-        // relative to the correct source route.  When using relative:path,
-        // fromRouteId is ignored since that is always relative to the current
-        // location path
+        // relative to the correct source route
         contextualMatches = [];
         for (let match of matches){
             contextualMatches.push(match);
@@ -32688,7 +32849,7 @@ function getLoaderMatchesUntilBoundary(matches, boundaryId) {
     }
     return boundaryMatches;
 }
-function getMatchesToLoad(history, state, matches, submission, location, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, pendingActionData, pendingError) {
+function getMatchesToLoad(history, state, matches, submission, location, isRevalidationRequired, cancelledDeferredRoutes, cancelledFetcherLoads, deletedFetchers, fetchLoadMatches, fetchRedirectIds, routesToUse, basename, pendingActionData, pendingError) {
     let actionResult = pendingError ? Object.values(pendingError)[0] : pendingActionData ? Object.values(pendingActionData)[0] : undefined;
     let currentUrl = history.createURL(state.location);
     let nextUrl = history.createURL(location);
@@ -32724,7 +32885,7 @@ function getMatchesToLoad(history, state, matches, submission, location, isReval
     let revalidatingFetchers = [];
     fetchLoadMatches.forEach((f, key)=>{
         // Don't revalidate if fetcher won't be present in the subsequent render
-        if (!matches.some((m)=>m.route.id === f.routeId)) return;
+        if (!matches.some((m)=>m.route.id === f.routeId) || deletedFetchers.has(key)) return;
         let fetcherMatches = matchRoutes(routesToUse, f.path, basename);
         // If the fetcher path no longer matches, push it in with null matches so
         // we can trigger a 404 in callLoadersAndMaybeResolveData.  Note this is
@@ -33166,8 +33327,8 @@ function getShortCircuitMatches(routes) {
         route
     };
 }
-function getInternalRouterError(status, _temp4) {
-    let { pathname, routeId, method, type } = _temp4 === void 0 ? {} : _temp4;
+function getInternalRouterError(status, _temp5) {
+    let { pathname, routeId, method, type } = _temp5 === void 0 ? {} : _temp5;
     let statusText = "Unknown Server Error";
     let errorMessage = "Unknown @remix-run/router error";
     if (status === 400) {
@@ -34370,6 +34531,8 @@ try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _groupSelector = require("./GroupSelector");
+var _groupSelectorDefault = parcelHelpers.interopDefault(_groupSelector);
 var _groupManager = require("./GroupManager");
 var _groupManagerDefault = parcelHelpers.interopDefault(_groupManager);
 const OrganizeTournament = ()=>{
@@ -34379,12 +34542,17 @@ const OrganizeTournament = ()=>{
                 children: "Organize Tournament"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
-                lineNumber: 5,
+                lineNumber: 6,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupSelectorDefault.default), {}, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+                lineNumber: 7,
                 columnNumber: 9
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupManagerDefault.default), {}, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
-                lineNumber: 6,
+                lineNumber: 8,
                 columnNumber: 9
             }, undefined)
         ]
@@ -34400,7 +34568,7 @@ $RefreshReg$(_c, "OrganizeTournament");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"6gLSm":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./GroupSelector":"d7yAq"}],"6gLSm":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$e8b4 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34428,9 +34596,9 @@ const GroupManager = ()=>{
     const [newGroup, setNewGroup] = (0, _react.useState)("");
     const [editIndex, setEditIndex] = (0, _react.useState)(-1);
     const groupLetters = "ABCDEFGH".split("");
-    const GM = new (0, _groupManagerClassDefault.default)();
+    const groupMgr = new (0, _groupManagerClassDefault.default)();
     const onChange = ()=>{
-        GM.teams = teamList;
+        groupMgr.teams = teamList;
     };
     (0, _react.useEffect)(()=>{
         onChange(teamList);
@@ -34622,7 +34790,9 @@ const GroupManager = ()=>{
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
                             children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _fixturesPreviewDefault.default), {
-                                teams: teams
+                                teams: teams,
+                                group: group,
+                                groupMgr: groupMgr
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
                                 lineNumber: 126,
@@ -34657,7 +34827,7 @@ $RefreshReg$(_c, "GroupManager");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.class":"hDkmD","./GroupManager.module.scss":"feiCK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./FixturesPreview":"gLQms"}],"hDkmD":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupManager.class":"hDkmD","./FixturesPreview":"gLQms","./GroupManager.module.scss":"feiCK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"hDkmD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class GroupManagerHelper {
@@ -34760,16 +34930,20 @@ class GroupManagerHelper {
             }
         });
         Object.keys(matches).forEach((group)=>{
-            console.log(`Group ${group}`);
-            console.table(matches[group].map((x)=>({
-                    ...x,
-                    time: `${x.time.playing} + ${x.time.gap}`
-                })));
+            //console.log(`Group ${group}`)
+            // console.table(matches[group].map(x => ({ ...x, time: `${x.time.playing} + ${x.time.gap}` })))
             const totalPlayingTime = matches[group].reduce((p, c)=>p + c.time.playing, 0);
             console.log(`Active team playing time: ${totalPlayingTime / this.groupSizes[group]} minutes.`);
         });
         this.matches = matches;
         return matches;
+    }
+    matchesTable(group) {
+        if (this.matches[group] === undefined) return [];
+        return this.matches[group].map((x)=>({
+                ...x,
+                time: `${x.time.playing} + ${x.time.gap}`
+            }));
     }
     simulateMatches() {
         console.log("Simulating matches...");
@@ -34812,7 +34986,128 @@ function addMinutes(time, minsToAdd) {
     return `${formattedHours}:${formattedMinutes}`;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"feiCK":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gLQms":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$98ec = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$98ec.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _fixturesPreviewModuleScss = require("./FixturesPreview.module.scss");
+var _fixturesPreviewModuleScssDefault = parcelHelpers.interopDefault(_fixturesPreviewModuleScss);
+const FixturesPreview = ({ teams, group, groupMgr })=>{
+    switch(teams.length){
+        case 0:
+            return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _fixturesPreviewModuleScssDefault.default).fixturesPreview,
+                children: "No fixtures"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                lineNumber: 7,
+                columnNumber: 20
+            }, undefined);
+        case 1:
+        case 2:
+            return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _fixturesPreviewModuleScssDefault.default).fixturesPreview,
+                children: "Too few teams to generate fixtures"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                lineNumber: 10,
+                columnNumber: 20
+            }, undefined);
+        case 3:
+        case 4:
+        case 5:
+            return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                        children: [
+                            "fixtures for group: ",
+                            group
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                        lineNumber: 16,
+                        columnNumber: 21
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: (0, _fixturesPreviewModuleScssDefault.default).fixturesPreview,
+                        children: groupMgr.matchesTable(group).map((match, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: (0, _fixturesPreviewModuleScssDefault.default).match,
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        className: (0, _fixturesPreviewModuleScssDefault.default).team1,
+                                        children: match.team1
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                                        lineNumber: 20,
+                                        columnNumber: 33
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        className: (0, _fixturesPreviewModuleScssDefault.default).vs,
+                                        children: "vs"
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                                        lineNumber: 21,
+                                        columnNumber: 33
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        className: (0, _fixturesPreviewModuleScssDefault.default).team2,
+                                        children: match.team2
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                                        lineNumber: 22,
+                                        columnNumber: 33
+                                    }, undefined)
+                                ]
+                            }, index, true, {
+                                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                                lineNumber: 19,
+                                columnNumber: 29
+                            }, undefined))
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                        lineNumber: 17,
+                        columnNumber: 21
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                lineNumber: 15,
+                columnNumber: 17
+            }, undefined);
+        default:
+            return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _fixturesPreviewModuleScssDefault.default).fixturesPreview,
+                children: "Too many teams to generate fixtures"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/FixturesPreview/index.jsx",
+                lineNumber: 29,
+                columnNumber: 20
+            }, undefined);
+    }
+};
+_c = FixturesPreview;
+exports.default = FixturesPreview;
+var _c;
+$RefreshReg$(_c, "FixturesPreview");
+
+  $parcel$ReactRefreshHelpers$98ec.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./FixturesPreview.module.scss":"jHP70","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"jHP70":[function(require,module,exports) {
+module.exports["fixturesPreview"] = `XqbcOq_fixturesPreview`;
+module.exports["match"] = `XqbcOq_match`;
+
+},{}],"feiCK":[function(require,module,exports) {
 module.exports["group"] = `dSi1pG_group`;
 module.exports["groupButtons"] = `dSi1pG_groupButtons`;
 module.exports["groupHeader"] = `dSi1pG_groupHeader`;
@@ -34823,7 +35118,57 @@ module.exports["teamGroup"] = `dSi1pG_teamGroup`;
 module.exports["teamList"] = `dSi1pG_teamList`;
 module.exports["teamRow"] = `dSi1pG_teamRow`;
 
-},{}],"gLQms":[function(require,module,exports) {
+},{}],"d7yAq":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$2f3e = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$2f3e.prelude(module);
+
+try {
+// GroupManager.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _groupSelectorModuleScss = require("./GroupSelector.module.scss");
+var _groupSelectorModuleScssDefault = parcelHelpers.interopDefault(_groupSelectorModuleScss);
+const GroupSelector = ()=>{
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: "G1"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 7,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: "G2"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 8,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+        lineNumber: 6,
+        columnNumber: 12
+    }, undefined);
+};
+_c = GroupSelector;
+exports.default = GroupSelector;
+var _c;
+$RefreshReg$(_c, "GroupSelector");
+
+  $parcel$ReactRefreshHelpers$2f3e.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupSelector.module.scss":"4Bp8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"4Bp8Q":[function(require,module,exports) {
+module.exports["groupSelector"] = `FdICHW_groupSelector`;
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 
