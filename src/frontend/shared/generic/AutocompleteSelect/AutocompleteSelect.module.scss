@@ -1,0 +1,25 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
+.autocompleteSelect {
+    input {
+        padding: 1rem;
+    }
+    ul {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); // creates 4 columns
+        li {
+            list-style: none;
+            background-color: $pc;
+            margin: 0.3rem 0.6rem;
+            padding: 1rem;
+            border-radius: 0.7rem;
+            color: white;
+            &:hover {
+                background-color: $pc-light-20;
+                font-weight: bold;
+                color: black;
+                cursor: pointer;
+            }
+        }
+    }
+}
