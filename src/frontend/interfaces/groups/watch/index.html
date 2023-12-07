@@ -34531,33 +34531,68 @@ try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
 var _groupSelector = require("./GroupSelector");
 var _groupSelectorDefault = parcelHelpers.interopDefault(_groupSelector);
 var _groupManager = require("./GroupManager");
 var _groupManagerDefault = parcelHelpers.interopDefault(_groupManager);
+var _tournamentSelector = require("./TournamentSelector");
+var _tournamentSelectorDefault = parcelHelpers.interopDefault(_tournamentSelector);
+var _organizeTournamentModuleScss = require("./OrganizeTournament.module.scss");
+var _organizeTournamentModuleScssDefault = parcelHelpers.interopDefault(_organizeTournamentModuleScss);
+var _s = $RefreshSig$();
 const OrganizeTournament = ()=>{
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+    _s();
+    const [selectedTournament, setSelectedTournament] = (0, _react.useState)(null);
+    const [selectedGroup, setSelectedGroup] = (0, _react.useState)(null);
+    const actions = {
+        setGroup: (group)=>setSelectedGroup(group)
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _organizeTournamentModuleScssDefault.default).organizeTournament,
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Organize Tournament"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
-                lineNumber: 6,
+                lineNumber: 15,
                 columnNumber: 9
             }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupSelectorDefault.default), {}, void 0, false, {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _tournamentSelectorDefault.default), {
+                selectedTournament: selectedTournament,
+                setTournament: setSelectedTournament
+            }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
-                lineNumber: 7,
+                lineNumber: 17,
                 columnNumber: 9
             }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupManagerDefault.default), {}, void 0, false, {
-                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
-                lineNumber: 8,
-                columnNumber: 9
-            }, undefined)
+            selectedTournament && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupSelectorDefault.default), {
+                        setGroup: actions.setGroup
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+                        lineNumber: 22,
+                        columnNumber: 13
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _groupManagerDefault.default), {
+                        group: selectedGroup
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+                        lineNumber: 23,
+                        columnNumber: 13
+                    }, undefined)
+                ]
+            }, void 0, true)
         ]
-    }, void 0, true);
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/index.js",
+        lineNumber: 14,
+        columnNumber: 12
+    }, undefined);
 };
+_s(OrganizeTournament, "pl5YnqXQuQ1k5QrvgvBR1E/rCPE=");
 _c = OrganizeTournament;
 exports.default = OrganizeTournament;
 var _c;
@@ -34568,7 +34603,7 @@ $RefreshReg$(_c, "OrganizeTournament");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./GroupSelector":"d7yAq"}],"6gLSm":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./GroupSelector":"d7yAq","react":"21dqq","./TournamentSelector":"kZk1Q","./OrganizeTournament.module.scss":"95AuD"}],"6gLSm":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$e8b4 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -35169,6 +35204,193 @@ $RefreshReg$(_c, "GroupSelector");
 }
 },{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupSelector.module.scss":"4Bp8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"4Bp8Q":[function(require,module,exports) {
 module.exports["groupSelector"] = `FdICHW_groupSelector`;
+
+},{}],"kZk1Q":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$c190 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$c190.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _autocompleteSelect = require("~/src/frontend/shared/generic/AutocompleteSelect");
+var _autocompleteSelectDefault = parcelHelpers.interopDefault(_autocompleteSelect);
+var _s = $RefreshSig$();
+const TournamentSelector = ({ selectedTournament, setTournament })=>{
+    _s();
+    const [existingTournaments, setExistingTournaments] = (0, _react.useState)([]);
+    (0, _react.useEffect)(()=>{
+        setExistingTournaments([
+            "Pan euros 2023 The Hague",
+            "Pan euros 2024 Copenhagen",
+            "Benenux round 1 2023",
+            "Benenux round 2 2023",
+            "Benenux round 3 2023",
+            "Benenux round 4 2023",
+            "Benenux round 1 2024",
+            "Benenux round 2 2024",
+            "Benenux round 3 2024",
+            "Benenux round 4 2024",
+            "foododd",
+            "baides",
+            "diarqe",
+            "abersy",
+            "dalway",
+            "erbeds",
+            "goelos"
+        ]);
+    }, []);
+    const actions = {
+        selectAction: (tournament)=>{
+            console.log("selectAction", tournament);
+            setTournament(tournament);
+        }
+    };
+    return selectedTournament ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                children: [
+                    "Selected tournament: ",
+                    selectedTournament
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+                lineNumber: 35,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                onClick: ()=>setTournament(null),
+                children: "Change"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+                lineNumber: 36,
+                columnNumber: 13
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+        lineNumber: 34,
+        columnNumber: 9
+    }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                children: "Tournament Selector"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+                lineNumber: 40,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _autocompleteSelectDefault.default), {
+                options: existingTournaments,
+                limit: 8,
+                selectAction: actions.selectAction
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+                lineNumber: 41,
+                columnNumber: 13
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
+        lineNumber: 39,
+        columnNumber: 9
+    }, undefined);
+};
+_s(TournamentSelector, "08FNziMUgawWu0k+UbCKZbnsgAg=");
+_c = TournamentSelector;
+exports.default = TournamentSelector;
+var _c;
+$RefreshReg$(_c, "TournamentSelector");
+
+  $parcel$ReactRefreshHelpers$c190.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","~/src/frontend/shared/generic/AutocompleteSelect":"2U5Hy"}],"2U5Hy":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$d285 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$d285.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _autocompleteSelectModuleScss = require("./AutocompleteSelect.module.scss");
+var _autocompleteSelectModuleScssDefault = parcelHelpers.interopDefault(_autocompleteSelectModuleScss);
+var _s = $RefreshSig$();
+const AutocompleteSelect = ({ options, limit = 100, selectAction = ()=>{} })=>{
+    _s();
+    const [inputValue, setInputValue] = (0, _react.useState)("");
+    const [filteredOptions, setFilteredOptions] = (0, _react.useState)(options);
+    (0, _react.useEffect)(()=>{
+        setFilteredOptions(options.slice(0, limit));
+    }, [
+        options
+    ]);
+    const handleInputChange = (event)=>{
+        const value = event.target.value;
+        setInputValue(value);
+        const filtered = options.filter((option)=>option.toLowerCase().includes(value.toLowerCase()));
+        setFilteredOptions(filtered.slice(0, limit));
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _autocompleteSelectModuleScssDefault.default).autocompleteSelect,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                type: "text",
+                value: inputValue,
+                onChange: handleInputChange,
+                placeholder: "Type to search..."
+            }, void 0, false, {
+                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                lineNumber: 28,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                children: filteredOptions.map((option, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        onClick: selectAction.bind(null, option),
+                        children: option
+                    }, index, false, {
+                        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                        lineNumber: 36,
+                        columnNumber: 11
+                    }, undefined))
+            }, void 0, false, {
+                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                lineNumber: 34,
+                columnNumber: 7
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+        lineNumber: 27,
+        columnNumber: 5
+    }, undefined);
+};
+_s(AutocompleteSelect, "JHECDkv5dnsOhsF//oRLAVE2D7o=");
+_c = AutocompleteSelect;
+exports.default = AutocompleteSelect; // Usage Example
+ // <AutocompleteSelect options={['Option 1', 'Option 2', 'Option 3']} />
+var _c;
+$RefreshReg$(_c, "AutocompleteSelect");
+
+  $parcel$ReactRefreshHelpers$d285.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./AutocompleteSelect.module.scss":"35BOA"}],"35BOA":[function(require,module,exports) {
+module.exports["autocompleteSelect"] = `lNZnVq_autocompleteSelect`;
+
+},{}],"95AuD":[function(require,module,exports) {
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 
