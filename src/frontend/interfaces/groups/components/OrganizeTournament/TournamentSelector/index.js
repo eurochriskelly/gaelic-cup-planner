@@ -2,46 +2,40 @@ import React, { useEffect, useState } from "react"
 import AutocompleteSelect from "~/src/frontend/shared/generic/AutocompleteSelect"
 
 const TournamentSelector = ({
-    selectedTournament,
+    tournamentId,
+    tournamentTitle,
     setTournament
 }) => {
     const [existingTournaments, setExistingTournaments] = useState([])
 
     useEffect(() => {
-        setExistingTournaments([
-            'Pan euros 2023 The Hague',
-            'Pan euros 2024 Copenhagen',
-            'Benenux round 1 2023',
-            'Benenux round 2 2023',
-            'Benenux round 3 2023',
-            'Benenux round 4 2023',
-            'Benenux round 1 2024',
-            'Benenux round 2 2024',
-            'Benenux round 3 2024',
-            'Benenux round 4 2024',
-            'foododd', 'baides', 'diarqe', 'abersy',
-            'dalway', 'erbeds', 'goelos'
-        ])
+        fetch(`/api/tournaments`)
+            .then(response => response.json())
+            .then(data => {
+                setExistingTournaments(data.data)
+            })
+            .catch(error => {
+                console.error('Error fetching next fixtures:', error)
+            })
     }, [])
 
-    const actions = {
-        selectAction: (tournament) => {
-            console.log('selectAction', tournament)
-            setTournament(tournament)
-        }
+    const setTournamentByTitle = (title) => {
+        const tournament = existingTournaments.find(x => x.Title === title)
+        setTournament(tournament)
     }
-    return selectedTournament ? (
+
+    return tournamentId ? (
         <h3>
-            <span>Selected tournament: {selectedTournament}</span>
+            <span>Selected tournament: {tournamentTitle}</span>
             <button onClick={() => setTournament(null)}>Change</button>
         </h3>
     ) : (
         <div>
             <h3>Tournament Selector</h3>
             <AutocompleteSelect
-                options={existingTournaments}
+                options={existingTournaments.map(x => x.Title)}
                 limit={8}
-                selectAction={actions.selectAction}
+                selectAction={setTournamentByTitle}
             />
         </div>
     )

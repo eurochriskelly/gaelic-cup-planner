@@ -11,16 +11,31 @@ const OrganizeTournament = () => {
     const actions = {
         setGroup: (group) => setSelectedGroup(group)
     }
+    const ss = (tournament) => {
+        console.log('setting tournament', tournament)
+        setSelectedTournament(tournament)
+    }
     return <div className={styles.organizeTournament}>
         <h2>Organize Tournament</h2>
 
         <TournamentSelector
-            selectedTournament={selectedTournament}
-            setTournament={setSelectedTournament}
+            tournamentId={selectedTournament?.Id}
+            tournamentTitle={selectedTournament?.Title}
+            setTournament={ss}
         />
-        {selectedTournament && <>
-            <GroupSelector setGroup={actions.setGroup} />
-            <GroupManager group={selectedGroup} />
+        {selectedTournament?.Id && <>
+            <GroupSelector
+                selectedGroup={selectedGroup}
+                tournamentId={selectedTournament?.Id}
+                setGroup={actions.setGroup}
+            />
+            {
+                selectedGroup && 
+                <GroupManager 
+                    group={selectedGroup} 
+                    tournamentId={selectedTournament?.Id}
+                />
+            }
         </>
         }
     </div>
