@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS fixtures (
 CREATE TABLE IF NOT EXISTS teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     teamName VARCHAR(255),
-    groupId INT,
+    groupLetter VARCHAR(1),
+    category VARCHAR(50),
     teamSheetSubmitted BOOLEAN,
     notes TEXT,
     FOREIGN KEY (groupId) REFERENCES groupings(id)

@@ -1,5 +1,11 @@
 @import "~/src/frontend/shared/css/_colors.scss";
 
 .organizeTournament {
-    
+    h3 {
+        text-align: left;
+        margin: 1rem;
+        >span {
+            margin-right: 2rem;
+        }
+    }
 }

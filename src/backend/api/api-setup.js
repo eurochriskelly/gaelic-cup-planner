@@ -13,6 +13,7 @@ module.exports = (db, ARGS) => {
 
     const { select } = require('../lib/db-helper')(db)
     require('./fixtures')(app, db, select)
+    require('./tournaments')(app, db, select)
 
     // API endpoint to get data from the database
     app.get('/api/pitches', async (req, res) => {
