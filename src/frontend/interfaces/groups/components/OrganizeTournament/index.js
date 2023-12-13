@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GroupSelector from "./GroupSelector";
 import GroupManager from "./GroupManager";
 import TournamentSelector from "./TournamentSelector";
+import TournamentLayout from "./TournamentLayout";
 import styles from './OrganizeTournament.module.scss';
 
 const OrganizeTournament = () => {
@@ -12,7 +13,6 @@ const OrganizeTournament = () => {
         setGroup: (group) => setSelectedGroup(group)
     }
     const ss = (tournament) => {
-        console.log('setting tournament', tournament)
         setSelectedTournament(tournament)
     }
     return <div className={styles.organizeTournament}>
@@ -23,20 +23,21 @@ const OrganizeTournament = () => {
             tournamentTitle={selectedTournament?.Title}
             setTournament={ss}
         />
-        {selectedTournament?.Id && <>
-            <GroupSelector
-                selectedGroup={selectedGroup}
-                tournamentId={selectedTournament?.Id}
-                setGroup={actions.setGroup}
-            />
-            {
-                selectedGroup && 
-                <GroupManager 
-                    group={selectedGroup} 
-                    tournamentId={selectedTournament?.Id}
-                />
-            }
-        </>
+        {selectedTournament?.Id && <TournamentLayout 
+            group={selectedGroup}
+            tournamentId={selectedTournament?.Id}
+            title={selectedTournament?.Title}
+            setGroup={actions.setGroup}>
+            <>
+                {
+                    selectedGroup &&
+                    <GroupManager
+                        group={selectedGroup}
+                        tournamentId={selectedTournament?.Id}
+                    />
+                }
+            </>
+        </TournamentLayout>
         }
     </div>
 }

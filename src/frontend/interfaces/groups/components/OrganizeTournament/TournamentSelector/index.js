@@ -24,13 +24,10 @@ const TournamentSelector = ({
         setTournament(tournament)
     }
 
-    return tournamentId ? (
-        <h3>
-            <span>Selected tournament: {tournamentTitle}</span>
-            <button onClick={() => setTournament(null)}>Change</button>
-        </h3>
-    ) : (
-        <div>
+    return (
+        <div style={{
+            display: tournamentId ? 'none' : 'block'
+        }}>
             <h3>Tournament Selector</h3>
             <AutocompleteSelect
                 options={existingTournaments.map(x => x.Title)}

@@ -1,0 +1,15 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
+button {
+    .btn {
+        background-color: $pc;
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        &:hover {
+            background-color: $pc-light-20;
+            cursor: pointer;
+        }
+    }
+}
