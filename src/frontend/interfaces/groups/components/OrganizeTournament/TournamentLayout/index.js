@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { DD } from '~/src/frontend/shared/js/log'
 import styles from './TournamentLayout.module.scss';
 
-const TournamentLayout = ({ 
+const TournamentLayout = ({
     title,
     group,
     setGroup,
     tournamentId,
-    children 
+    children
 }) => {
     const [existingGroups, setExistingGroups] = useState([])
     useEffect(() => {
@@ -21,7 +22,7 @@ const TournamentLayout = ({
                 console.error('Error fetching next fixtures:', error)
             })
     }, [tournamentId])
-
+    const list = ['Mens seniore', 'Mens intermediate', 'Mens junior']
     return (
         <div className={styles.tournamentLayout}>
             <div className={styles.sidePanel}>
@@ -29,21 +30,22 @@ const TournamentLayout = ({
                     <div className={styles.sideLabel}>Tournament:</div>
                     <div className={styles.tournamentTitle}>{title}</div>
                 </div>
-                <div className={styles.groupsSection}>
-                    <div>ggg {group}</div>
-                    <div className={styles.sideLabel}>Categories:</div>
-                    <div className={`${styles.groupItem} ${group === 'Mens senior' ? styles.active : ''}`}>
-                        Mens senior
+                    <div className={styles.groupsSection}>
+                        <div>Group: [{group}]</div>
+                        <div className={styles.sideLabel}>Categories:</div>
+                        <div>{list.map(x => (
+                            <div
+                                key={x}
+                                className={`${styles.groupItem} ${group === x ? styles.active : ''}`}
+                                onClick={() => {
+                                    DD('From TournamentLayout, group selected:', x)
+                                    setGroup(x)
+                                }}>{x}</div>
+                        ))}</div>
+                        <div className={styles.groupItem}>Ladies senior</div>
                     </div>
-                    {/* Add other groups here as needed */}
-                    <div className={styles.groupItem}>Ladies junior</div>
-                    <div className={styles.groupItem}>Ladies intermediate</div>
-                    <div className={styles.groupItem}>Ladies senior</div>
                 </div>
-            </div>
-            <div className={styles.groupDetailsSection}>
-                {children}
-            </div>
+            <div className={styles.groupDetailsSection}>{children}</div>
         </div>
     );
 };
