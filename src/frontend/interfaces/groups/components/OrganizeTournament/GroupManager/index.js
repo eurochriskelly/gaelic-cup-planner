@@ -109,8 +109,7 @@ const GroupManager = ({
                             key={letter}
                             onClick={() => addTeam(letter)}
                             disabled={!newTeamName}
-                            className={styles.groupButton}
-                        >
+                            className={styles.groupButton}>
                             {letter}
                         </button>
                     ))}
