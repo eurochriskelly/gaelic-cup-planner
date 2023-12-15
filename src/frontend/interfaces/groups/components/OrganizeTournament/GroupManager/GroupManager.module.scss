@@ -9,12 +9,10 @@
         display: grid;
         grid-template-columns: 3fr 1fr; // creates 3 columns
         margin-bottom: 20px;
-        
         > input {
             margin-right: 10px;
             font-size: 1.8rem;
         }
-
         button {
             background-color: #5cb85c;
             color: white;
@@ -29,10 +27,9 @@
         }
         .groupButtons {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); // creates 4 columns
+            grid-template-columns: repeat(8, 1fr); // creates 4 columns
             grid-gap: 10px;
             margin-top: 10px;
-
             button {
                 background-color: #5cb85c;
                 color: white;
