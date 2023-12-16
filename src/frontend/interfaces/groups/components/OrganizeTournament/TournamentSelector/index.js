@@ -21,7 +21,16 @@ const TournamentSelector = ({
 
     const setTournamentByTitle = (title) => {
         const tournament = existingTournaments.find(x => x.Title === title)
-        setTournament(tournament)
+        // Get all trounament data
+        fetch(`/api/tournaments/${tournament.Id}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(`Setting tournament to`, data.data)
+                setTournament(data.data)
+            })
+            .catch(error => {
+                console.error('Error fetching next fixtures:', error)
+            })
     }
 
     return (

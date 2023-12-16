@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { GroupCategoryEditor, GroupCategorySelector } from './GroupCategory';
+import { DD } from '~/src/frontend/shared/js/log'
 import styles from './TournamentLayout.module.scss';
 
 const TournamentLayout = ({
-    title,
-    group,
+    group = '',
     setGroup,
-    tournamentId,
+    tournament,
     children
 }) => {
     const [existingGroups, setExistingGroups] = useState([])
+    
     useEffect(() => {
+        const tournamentId = tournament?.id
         if (!tournamentId) return
         fetch(`/api/tournaments/${tournamentId}/groups`)
             .then(response => response.json())
@@ -20,28 +21,33 @@ const TournamentLayout = ({
             .catch(error => {
                 console.error('Error fetching next fixtures:', error)
             })
-    }, [tournamentId])
+    }, [tournament])
     
-    const pitches = ['Z1', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6', 'Z7', 'Z8']
-
     return (
         <div className={styles.tournamentLayout}>
             <div className={styles.sidePanel}>
                 <SideSection title="Tournament">
-                    <div className={styles.tournamentTitle}>{title}</div>
+                    <div className={styles.tournamentTitle}>{tournament?.Title}</div>
                 </SideSection>
 
                 <SideSection title="Categories">
-                    <GroupCategorySelector />
+                    <EditSelector 
+                        action={setGroup}
+                        current={group}
+                        list={['Mens senior', 'Mens intermediate', 'Mens junior']}
+                    />
                 </SideSection>
 
                 <SideSection title="Pitches">
-                            
+                    <EditSelector list={['Z1', 'Z2', 'Z3']} />
                 </SideSection>
             </div>
-            <EditSection>
-                <GroupCategoryEditor>{children}</GroupCategoryEditor>
-            </EditSection>
+            <div>
+                <div className={styles.groupDetailsSection}>
+                    <h3>Define groups for [{group}]</h3>
+                    <div>{children}</div>
+                </div>
+            </div>
             
         </div>
     );
@@ -59,3 +65,22 @@ function SideSection({title ="PLEASE SET!", children}) {
         </div>
     )
 }
+
+function EditSelector({ 
+    list = [],
+    current = '',
+    action = () => {}
+}) {
+    // 
+    return (
+        <div>{list.map((x, i) => (
+            <div
+                key={`{x}-${i}`}
+                className={`${styles.groupItem} ${current === x ? styles.active : ''}`}
+                onClick={() => {
+                    DD('From TournamentLayout, selected:', x)
+                    action(x)
+                }}>{x}</div>
+        ))}</div>
+    )
+}    
