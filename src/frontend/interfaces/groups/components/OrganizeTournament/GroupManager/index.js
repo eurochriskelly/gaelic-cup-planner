@@ -5,7 +5,7 @@ import FixturesPreview from './FixturesPreview';
 import styles from './GroupManager.module.scss';
 
 const GroupManager = ({
-    tournamentId,
+    tournament,
     group
 }) => {
     const [teamList, setTeamList] = useState([]);
@@ -20,23 +20,18 @@ const GroupManager = ({
     useEffect(() => {
         if (!group) return
         if (!tournamentId) return
-        const url = `/api/tournaments/${tournamentId}/group/${group.replace(/ /g, '_')}/teams`
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                setTeamList(data.data.map(x => ({ 
-                    ...x,
-                    name: x.teamName,
-                    group: x.groupLetter
-                })))
-                console.log(data.data)
-                console.log(teamList)
-                groupMgr.teams = teamList
-            })
-            .catch(error => {
-                console.error('Error fetching team list:', error)
-            })
-    }, [group]);
+
+        setTeamList(
+          tournament.groups
+            .filter(x => x.category === group)
+            .map(x => ({ 
+                ...x,
+                name: x.teamName,
+                group: x.groupLetter
+            }))
+        )
+
+    }, [group, tournament]);
 
     const addTeam = (group) => {
         const newTeam = {
