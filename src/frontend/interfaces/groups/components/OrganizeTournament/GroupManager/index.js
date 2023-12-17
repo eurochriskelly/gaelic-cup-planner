@@ -9,7 +9,6 @@ const GroupManager = ({
     group
 }) => {
     const [teamList, setTeamList] = useState([]);
-    const [oldTeamName, setOldTeamName] = useState('');
     const [newTeamName, setNewTeamName] = useState('');
     const [newGroup, setNewGroup] = useState('');
     const [editIndex, setEditIndex] = useState(-1);
@@ -17,19 +16,24 @@ const GroupManager = ({
 
     const groupMgr = new GroupManagerHelper();
 
+    const getGroupLetter = (group) => {
+        // if number, return upper case letter otherwise return group
+        console.log('Converting to group letter', group)
+        if (isNaN(group)) return group
+        return groupLetters[group - 1]
+    }
     useEffect(() => {
         if (!group) return
-        if (!tournamentId) return
-
-        setTeamList(
-          tournament.groups
+        if (!tournament?.id) return
+        const teamlist = tournament.groups
             .filter(x => x.category === group)
             .map(x => ({ 
                 ...x,
-                name: x.teamName,
-                group: x.groupLetter
+                name: x.team,
+                group: getGroupLetter(x.grp)
             }))
-        )
+        console.log('team list', teamlist, tournament, group)
+        setTeamList(teamlist)
 
     }, [group, tournament]);
 

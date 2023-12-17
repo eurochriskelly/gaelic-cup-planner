@@ -9,10 +9,12 @@ const TournamentLayout = ({
     children
 }) => {
     const [existingGroups, setExistingGroups] = useState([])
+    const [groupNames, setGroupNames] = useState([])
     
     useEffect(() => {
         const tournamentId = tournament?.id
         if (!tournamentId) return
+        setGroupNames(Array.from(new Set(tournament.groups?.map(x => x.category) || [])))
         fetch(`/api/tournaments/${tournamentId}/groups`)
             .then(response => response.json())
             .then(data => {
@@ -34,7 +36,7 @@ const TournamentLayout = ({
                     <EditSelector 
                         action={setGroup}
                         current={group}
-                        list={['Mens senior', 'Mens intermediate', 'Mens junior']}
+                        list={groupNames}
                     />
                 </SideSection>
 
