@@ -8,6 +8,7 @@ const GroupManager = ({
     tournament,
     group
 }) => {
+    console.log('foo boo')
     const [teamList, setTeamList] = useState([]);
     const [newTeamName, setNewTeamName] = useState('');
     const [newGroup, setNewGroup] = useState('');
