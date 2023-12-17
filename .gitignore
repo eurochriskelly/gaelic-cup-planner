@@ -13,3 +13,5 @@ config/secret
 /src/frontend/interfaces/pitch/watch/
 /src/frontend/interfaces/groups/watch/*
 
+/src/stories/
+/src/frontend/interfaces/groups/dist/
