@@ -33759,11 +33759,11 @@ const SelectTournamentView = ()=>{
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("article", {
-                children: tournaments.map((tournament)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        onClick: ()=>onSelect(tournament.id),
+                children: tournaments.map(({ Id, Title, Date, Tournament })=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        onClick: ()=>onSelect(Id),
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                                children: tournament.title
+                                children: Title
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
                                 lineNumber: 33,
@@ -33781,7 +33781,7 @@ const SelectTournamentView = ()=>{
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                children: tournament.date.substring(0, 10)
+                                                children: Date?.substring(0, 10)
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
                                                 lineNumber: 37,
@@ -33803,7 +33803,7 @@ const SelectTournamentView = ()=>{
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                children: tournament.location
+                                                children: Location
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
                                                 lineNumber: 41,
@@ -33822,7 +33822,7 @@ const SelectTournamentView = ()=>{
                                 columnNumber: 25
                             }, undefined)
                         ]
-                    }, tournament.id, true, {
+                    }, Id, true, {
                         fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
                         lineNumber: 32,
                         columnNumber: 21

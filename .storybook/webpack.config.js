@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = ({ config }) => {
   // Find the rule that contains a specific test regex for js/jsx files
   const rule = config.module.rules.find(rule =>

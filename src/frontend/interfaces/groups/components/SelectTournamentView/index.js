@@ -28,17 +28,17 @@ const SelectTournamentView = () => {
         <div className={styles.selectTournamentView}>
             <h2>Select a tournament</h2>
             <article>
-                {tournaments.map((tournament) => (
-                    <section key={tournament.id} onClick={() => onSelect(tournament.id)}>
-                        <h3>{tournament.title}</h3>
+                {tournaments.map(({Id, Title, Date, Tournament}) => (
+                    <section key={Id} onClick={() => onSelect(Id)}>
+                        <h3>{Title}</h3>
                         <div>
                             <div>
                                 <span>Date</span>
-                                <span>{tournament.date.substring(0,10)}</span>
+                                <span>{Date?.substring(0,10)}</span>
                             </div>
                             <div>
                                 <span>Location</span>
-                                <span>{tournament.location}</span>
+                                <span>{Location}</span>
                             </div>
                         </div>
                     </section>
