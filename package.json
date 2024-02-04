@@ -32,7 +32,6 @@
     "pstart": "parcel src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player",
     "pbuild": "parcel build src/frontend/interfaces/player/index.html --dist-dir ./src/apps/player",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
     "build-storybook": "storybook build",
     "ws:_init": "wsswitch --init",
     "ws": "wsswitch --select"
