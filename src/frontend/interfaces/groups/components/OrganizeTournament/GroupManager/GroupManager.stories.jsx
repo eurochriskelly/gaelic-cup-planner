@@ -20,6 +20,7 @@ export const Test1 = {
     primary: true,
     label: 'Button',
     tournament: null,
+    category: 'LS',
     group: 'Ladies Senior'
   },
 };
