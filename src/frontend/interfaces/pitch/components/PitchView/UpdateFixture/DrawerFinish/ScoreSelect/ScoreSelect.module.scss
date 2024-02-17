@@ -19,11 +19,13 @@
         gap: 10px;
         margin-bottom: 20px;
     }
-  .header {
+    .header {
         display: grid;
         grid-template-columns: 55px auto 55px;
+        background: desaturate(lighten($sc, 20%), 15%);
         gap: 10px;
         margin-bottom: 20px;
+        padding: 0.5rem;
         span {
           background: darken(desaturate($sc, 55%), 13%);
           color: white;
@@ -31,10 +33,11 @@
           text-align: center;
         }
         span:nth-child(2) {
-          background: desaturate(lighten($sc, 20%), 15%);
           color: darken($sc, 35%);
+          background: none;
         }
   }
+
   .points>div,
     .goals>div {
         width: 5rem;
