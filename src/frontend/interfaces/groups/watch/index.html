@@ -34632,6 +34632,7 @@ var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerM
 var _s = $RefreshSig$();
 const GroupManager = ({ tournament, group })=>{
     _s();
+    console.log("foo boo");
     const [teamList, setTeamList] = (0, _react.useState)([]);
     const [newTeamName, setNewTeamName] = (0, _react.useState)("");
     const [newGroup, setNewGroup] = (0, _react.useState)("");
@@ -34728,7 +34729,7 @@ const GroupManager = ({ tournament, group })=>{
                         onChange: (e)=>setNewTeamName(e.target.value)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 99,
+                        lineNumber: 100,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34740,18 +34741,18 @@ const GroupManager = ({ tournament, group })=>{
                                 children: letter
                             }, letter, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 107,
+                                lineNumber: 108,
                                 columnNumber: 25
                             }, undefined))
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 105,
+                        lineNumber: 106,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                lineNumber: 98,
+                lineNumber: 99,
                 columnNumber: 13
             }, undefined),
             Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34764,7 +34765,7 @@ const GroupManager = ({ tournament, group })=>{
                                     children: group
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                    lineNumber: 120,
+                                    lineNumber: 121,
                                     columnNumber: 25
                                 }, undefined),
                                 teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34775,7 +34776,7 @@ const GroupManager = ({ tournament, group })=>{
                                                 children: team.name
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                lineNumber: 123,
+                                                lineNumber: 124,
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34785,7 +34786,7 @@ const GroupManager = ({ tournament, group })=>{
                                                     children: "Save"
                                                 }, void 0, false, {
                                                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 126,
+                                                    lineNumber: 127,
                                                     columnNumber: 41
                                                 }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
                                                     children: [
@@ -34794,7 +34795,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "Edit"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 129,
+                                                            lineNumber: 130,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34802,7 +34803,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2191"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 130,
+                                                            lineNumber: 131,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34810,7 +34811,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2193"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 131,
+                                                            lineNumber: 132,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34818,26 +34819,26 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2715"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 132,
+                                                            lineNumber: 133,
                                                             columnNumber: 45
                                                         }, undefined)
                                                     ]
                                                 }, void 0, true)
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                lineNumber: 124,
+                                                lineNumber: 125,
                                                 columnNumber: 33
                                             }, undefined)
                                         ]
                                     }, team.name, true, {
                                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                        lineNumber: 122,
+                                        lineNumber: 123,
                                         columnNumber: 29
                                     }, undefined))
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                            lineNumber: 119,
+                            lineNumber: 120,
                             columnNumber: 21
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -34847,24 +34848,24 @@ const GroupManager = ({ tournament, group })=>{
                                 groupMgr: groupMgr
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 140,
+                                lineNumber: 141,
                                 columnNumber: 25
                             }, undefined)
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                            lineNumber: 139,
+                            lineNumber: 140,
                             columnNumber: 21
                         }, undefined)
                     ]
                 }, group, true, {
                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                    lineNumber: 118,
+                    lineNumber: 119,
                     columnNumber: 17
                 }, undefined))
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-        lineNumber: 97,
+        lineNumber: 98,
         columnNumber: 9
     }, undefined);
 };
@@ -35637,17 +35638,7 @@ $RefreshReg$(_c2, "EditSelector");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./TournamentLayout.module.scss":"AFzBa","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","~/src/frontend/shared/js/log":"55y7v"}],"AFzBa":[function(require,module,exports) {
-module.exports["active"] = `cqwova_active`;
-module.exports["groupDetailsSection"] = `cqwova_groupDetailsSection`;
-module.exports["groupItem"] = `cqwova_groupItem`;
-module.exports["groupsSection"] = `cqwova_groupsSection`;
-module.exports["sideLabel"] = `cqwova_sideLabel`;
-module.exports["sidePanel"] = `cqwova_sidePanel`;
-module.exports["sideSection"] = `cqwova_sideSection`;
-module.exports["tournamentLayout"] = `cqwova_tournamentLayout`;
-
-},{}],"55y7v":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","~/src/frontend/shared/js/log":"55y7v","./TournamentLayout.module.scss":"AFzBa","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"55y7v":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "DD", ()=>DD);
@@ -35658,7 +35649,17 @@ _c = DD;
 var _c;
 $RefreshReg$(_c, "DD");
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"AFzBa":[function(require,module,exports) {
+module.exports["active"] = `cqwova_active`;
+module.exports["groupDetailsSection"] = `cqwova_groupDetailsSection`;
+module.exports["groupItem"] = `cqwova_groupItem`;
+module.exports["groupsSection"] = `cqwova_groupsSection`;
+module.exports["sideLabel"] = `cqwova_sideLabel`;
+module.exports["sidePanel"] = `cqwova_sidePanel`;
+module.exports["sideSection"] = `cqwova_sideSection`;
+module.exports["tournamentLayout"] = `cqwova_tournamentLayout`;
+
+},{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 
 </script>
 </body>
