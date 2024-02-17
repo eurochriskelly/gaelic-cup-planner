@@ -93,11 +93,18 @@ const Fixture = ({ fixture, isFocus }) => {
           </div>
           <ScoreDisplay goals={goals2} points={points2} played={played} />
         </div>
-        {!played && <div className={styles.umpires}>{
-          umpireTeam 
-          ? <span><b>UMPIRING: </b>{formatName(umpireTeam)}</span>
-          : ''
-        }</div>}
+        {!played && (
+          <div className={styles.umpires}>
+            {umpireTeam ? (
+              <span>
+                <b>UMPIRING: </b>
+                {formatName(umpireTeam)}
+              </span>
+            ) : (
+              ""
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
