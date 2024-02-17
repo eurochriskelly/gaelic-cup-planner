@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./ScoreSelect.module.scss";
+import { argv0 } from "process";
 
 const Header = ({ name, team, pages, setPages, setScores, scores }) => {
   const updateScore = () => {
@@ -32,9 +33,14 @@ const Header = ({ name, team, pages, setPages, setScores, scores }) => {
   };
   return (
     <div className={styles.header}>
-      <span onClick={decreasePage}>&larr;</span>
+      <button
+        disabled={pages[name] < 0 ? "disabled" : ""}
+        onClick={decreasePage}
+      >
+        &larr;
+      </button>
       <span>{name.toUpperCase()}</span>
-      <span onClick={increasePage}>&rarr;</span>
+      <button onClick={increasePage}>&rarr;</button>
     </div>
   );
 };

@@ -5,6 +5,8 @@
     grid-template-columns: 2fr 1fr 4fr;
     align-items: center;
     width: 100%;
+    padding: 0.5rem;
+    background: rgba(255,255,2,0.1);
 
     .goals {
         display: grid;

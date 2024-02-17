@@ -2,7 +2,7 @@ import DrawerFinish from './';
 import styles from './DrawerFinish.module.scss'
 
 export default {
-  title: 'pitch/Pitch/UpdateFixture/DrawerFinish',
+  title: 'pitch/UpdateFixture/DrawerFinish',
   component: DrawerFinish,
   parameters: {
     layout: 'centered',
