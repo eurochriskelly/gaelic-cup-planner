@@ -1,8 +1,19 @@
-import Fixture from './';
+import React from 'react'
+import UpdateFixture from './';
+import styles from './UpdateFixture.module.scss'
+
+const TestUpdateFixture = (props) => {
+  return (
+    <div className={styles.storybook}>
+      <div>fixture goes here</div>
+      <UpdateFixture {...props} />
+    </div>
+  )
+}
 
 export default {
-  title: 'pitch/Pitch/Fixture',
-  component: Fixture,
+  title: 'pitch/Pitch/UpdateFixture',
+  component: TestUpdateFixture,
   parameters: {
     layout: 'centered',
   },
@@ -22,21 +33,14 @@ const fCommon = {
   points2: 3,
   umpireTeam: 'Andalusian Celts',
 }
-export const PlayedMatch = {
+export const BeforeMatchStarts = {
   args: {
     fixture: {
       ...fCommon,
       played: true,
-    }, 
+    },
+    updateFixtures: () => {},
+    startMatch: () => {},
   },
 };
 
-
-export const UnPlayedMatch = {
-  args: {
-    fixture: {
-      ...fCommon,
-      played: false,
-    }, 
-  },
-};

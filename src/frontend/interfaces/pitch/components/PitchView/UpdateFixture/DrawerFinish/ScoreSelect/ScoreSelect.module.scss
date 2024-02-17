@@ -19,17 +19,37 @@
         gap: 10px;
         margin-bottom: 20px;
     }
-
-    .points>div,
+  .header {
+        display: grid;
+        grid-template-columns: 55px auto 55px;
+        gap: 10px;
+        margin-bottom: 20px;
+        span {
+          background: darken(desaturate($sc, 55%), 13%);
+          color: white;
+          padding: 1.5rem 0;
+          text-align: center;
+        }
+        span:nth-child(2) {
+          background: desaturate(lighten($sc, 20%), 15%);
+          color: darken($sc, 35%);
+        }
+  }
+  .points>div,
     .goals>div {
         width: 5rem;
         padding: 2rem 1rem;
         color: white;
-        background: $sc;
         text-align: center;
         vertical-align: top;
     }
 
+    .goals>div {
+      background: darken($sc, 5%);
+    }
+    .points>div {
+      background: lighten($sc, 5%);
+    }
     .square {
         width: 100%;
         cursor: pointer;
