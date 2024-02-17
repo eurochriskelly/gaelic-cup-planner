@@ -1,18 +1,33 @@
 import React, { useState } from "react";
 import styles from "./ScoreSelect.module.scss";
 
-const Header = ({ name, pages, setPages }) => {
+const Header = ({ name, team, pages, setPages, setScores, scores }) => {
+  const updateScore = () => {
+    const newScore = {
+      ...scores,
+      [team]: {
+        ...scores[team],
+        [name]: null,
+      },
+    };
+    setScores(newScore);
+  };
   const increasePage = () => {
-    console.log('Increasing page')
+    updateScore();
+    let end = pages[name] + 1;
+    if (end > 4) end = 4;
     setPages({
       ...pages,
-      [name]: pages[name] + 1,
+      [name]: end,
     });
   };
   const decreasePage = () => {
+    updateScore();
+    let end = pages[name] - 1;
+    if (end < 0) end = 0;
     setPages({
       ...pages,
-      [name]: pages[name] - 1,
+      [name]: end,
     });
   };
   return (
@@ -35,7 +50,6 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
 
   const actions = {
     setScore: (i, team, type, total) => {
-      console.log("i is ", i, "type is ", type, "team is ", team);
       const newScore = {
         ...localScores,
         [team]: {
@@ -85,12 +99,26 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
   return (
     <div className={styles.scoreSelect}>
       <div>
-        <Header name="goals" pages={pages} setPages={setPages}/>
+        <Header
+          name="goals"
+          team={currentTeam}
+          pages={pages}
+          setPages={setPages}
+          scores={scores}
+          setScores={setScores}
+        />
         <div className={styles.goals}>{squaresGoals}</div>
       </div>
       <div>-</div>
       <div>
-        <Header name="points" pages={pages} setPages={setPages} />
+        <Header
+          name="points"
+          team={currentTeam}
+          pages={pages}
+          setPages={setPages}
+          scores={scores}
+          setScores={setScores}
+        />
         <div className={styles.points}>{squaresPoints}</div>
       </div>
     </div>

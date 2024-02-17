@@ -1,4 +1,3 @@
-import React from 'react'
 import ScoreSelect from './';
 import styles from './ScoreSelect.module.scss'
 
