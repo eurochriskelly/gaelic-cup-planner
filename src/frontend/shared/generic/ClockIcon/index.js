@@ -1,3 +1,5 @@
+import React from "react"
+
 const ClockIcon = ({ started, played, scheduled, focus }) => {
     let strokeColor = 'white';
     let fillColor = '#888';

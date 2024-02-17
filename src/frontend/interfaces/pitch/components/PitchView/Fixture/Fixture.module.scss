@@ -7,7 +7,7 @@
     margin: 0 0 15px 0;
     border-radius: 18px;
     display: grid;
-    grid-template-rows: 9rem 5rem 5rem;
+    grid-template-rows: 9rem 5rem 5rem auto;
     /* 1fr and 1fr will distribute the available space equally */
     width: 100%;
     padding-bottom: 0.4rem;
@@ -31,6 +31,12 @@
             color: #444;
          }
      }
+    div.umpires {
+      text-align: center;
+      font-size: 2.3rem;
+      margin: 2rem;
+    }
+    
 }
 
 .focusFixture > div {
