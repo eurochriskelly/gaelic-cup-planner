@@ -47,3 +47,15 @@
 .updateFixture .header {
     color: red !important;
 }
+
+/** TEST MODULES **/
+.storybook {
+  background: red;
+  width: 800px;
+  >div:nth-child(2) {
+    display: grid;
+    background: blue;
+    width: 100%;
+    grid-template-columns: auto auto auto;
+  }
+}
