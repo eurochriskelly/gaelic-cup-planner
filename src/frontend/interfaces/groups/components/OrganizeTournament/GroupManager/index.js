@@ -8,7 +8,6 @@ const GroupManager = ({
     tournament,
     group
 }) => {
-    console.log('foo boo')
     const [teamList, setTeamList] = useState([]);
     const [newTeamName, setNewTeamName] = useState('');
     const [newGroup, setNewGroup] = useState('');
@@ -19,7 +18,6 @@ const GroupManager = ({
 
     const getGroupLetter = (group) => {
         // if number, return upper case letter otherwise return group
-        console.log('Converting to group letter', group)
         if (isNaN(group)) return group
         return groupLetters[group - 1]
     }
@@ -33,7 +31,6 @@ const GroupManager = ({
                 name: x.team,
                 group: getGroupLetter(x.grp)
             }))
-        console.log('team list', teamlist, tournament, group)
         setTeamList(teamlist)
 
     }, [group, tournament]);

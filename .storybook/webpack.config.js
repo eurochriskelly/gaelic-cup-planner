@@ -1,24 +1,26 @@
 const path = require('path');
 
-module.exports = ({ config }) => {
-  // Find the rule that contains a specific test regex for js/jsx files
-  const rule = config.module.rules.find(rule =>
-  	rule.test && rule.test.toString().includes('js')
-  );
+module.exports = ({ config, addons }) => {
+  const tildaPath = path.resolve(__dirname, '../');
+  config.resolve.alias['~'] = tildaPath;
 
-  // Modify this rule to include js files
-  if (rule) {
-    rule.test = /\.(js|jsx)$/;
+  if (!config.module) config.module = { rules: [] };
+
+  const jsRule = config.module.rules.find(rule =>
+    rule.test && rule.test.toString() === '/\\.(js|jsx)$/'
+  );
+  if (jsRule) {
+    jsRule.test = /\.(js|jsx)$/;
+  } else {
+    // Consider adding a new rule for js/jsx if not found
   }
+
   config.module.rules.push({
     test: /\.scss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
     include: path.resolve(__dirname, '../'),
-  })
-  
-  // Return the altered config
-  return config;
+  });
+
+  const existingOptions = config.options || {};
+  return config
 };
-
-
-
