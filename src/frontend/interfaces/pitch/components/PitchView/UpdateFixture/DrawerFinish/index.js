@@ -41,7 +41,7 @@ const DrawerFinish = ({
 
   const actions = {
     saveScore: async () => {
-      await onConfirm();
+      onConfirm();
       await API.updateScore(fixture.id, scores);
       setState({ step: 1 });
     },
@@ -150,4 +150,3 @@ const DrawerFinish = ({
 };
 
 export default DrawerFinish;
-
