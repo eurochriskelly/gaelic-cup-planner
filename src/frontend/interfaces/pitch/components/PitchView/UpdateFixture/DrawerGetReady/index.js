@@ -5,14 +5,10 @@ const DrawerGetReady = ({
     fixture,
     visible,
     startMatch,
-    teamSheetProvided,
     onClose = () => { }
 }) => {
     if (!visible) return null
-    console.log(' we must have a fixture')
     const { umpireTeam } = fixture
-    console.log('fixture - in DrawerGetReady', fixture)
-    console.log({fixture})
 
     const actions = {
         startMatch: async () => {
