@@ -1,5 +1,4 @@
 import DrawerFinish from './';
-import styles from './DrawerFinish.module.scss'
 
 export default {
   title: 'pitch/UpdateFixture/DrawerFinish',
