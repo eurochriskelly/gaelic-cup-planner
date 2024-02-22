@@ -34610,7 +34610,205 @@ $RefreshReg$(_c, "OrganizeTournament");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","./GroupManager":"6gLSm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./GroupSelector":"d7yAq","react":"21dqq","./TournamentSelector":"kZk1Q","./OrganizeTournament.module.scss":"95AuD","./TournamentLayout":"9y6Ly"}],"6gLSm":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupSelector":"d7yAq","./GroupManager":"6gLSm","./TournamentSelector":"kZk1Q","./TournamentLayout":"9y6Ly","./OrganizeTournament.module.scss":"95AuD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"d7yAq":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$2f3e = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$2f3e.prelude(module);
+
+try {
+// GroupManager.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _autocompleteSelect = require("~/src/frontend/shared/generic/AutocompleteSelect");
+var _autocompleteSelectDefault = parcelHelpers.interopDefault(_autocompleteSelect);
+var _groupSelectorModuleScss = require("./GroupSelector.module.scss");
+var _groupSelectorModuleScssDefault = parcelHelpers.interopDefault(_groupSelectorModuleScss);
+var _s = $RefreshSig$();
+const GroupSelector = ({ selectedGroup, tournamentId, setGroup })=>{
+    _s();
+    const [existingGroups, setExistingGroups] = (0, _react.useState)([]);
+    (0, _react.useEffect)(()=>{
+        if (!tournamentId) return;
+        console.log("fetching groups");
+        fetch(`/api/tournaments/${tournamentId}/groups`).then((response)=>response.json()).then((data)=>{
+            setExistingGroups(data.data.map((x)=>x.category));
+        }).catch((error)=>{
+            console.error("Error fetching next fixtures:", error);
+        });
+    }, [
+        tournamentId
+    ]);
+    return selectedGroup ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                children: [
+                    "Selected group: ",
+                    selectedGroup
+                ]
+            }, void 0, true, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 27,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                onClick: ()=>setGroup(null),
+                children: "Change"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 28,
+                columnNumber: 13
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+        lineNumber: 26,
+        columnNumber: 9
+    }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                children: "Group Selector"
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 32,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _autocompleteSelectDefault.default), {
+                options: existingGroups,
+                limit: 8,
+                selectAction: setGroup
+            }, void 0, false, {
+                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+                lineNumber: 33,
+                columnNumber: 13
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
+        lineNumber: 31,
+        columnNumber: 9
+    }, undefined);
+};
+_s(GroupSelector, "wfq8tX54LRiKo7I00fwzHCLPnDU=");
+_c = GroupSelector;
+exports.default = GroupSelector;
+var _c;
+$RefreshReg$(_c, "GroupSelector");
+
+  $parcel$ReactRefreshHelpers$2f3e.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","~/src/frontend/shared/generic/AutocompleteSelect":"2U5Hy","./GroupSelector.module.scss":"4Bp8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"2U5Hy":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$d285 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$d285.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _autocompleteSelectModuleScss = require("./AutocompleteSelect.module.scss");
+var _autocompleteSelectModuleScssDefault = parcelHelpers.interopDefault(_autocompleteSelectModuleScss);
+var _s = $RefreshSig$();
+const AutocompleteSelect = ({ options, limit = 100, selectAction = ()=>{} })=>{
+    _s();
+    const [inputValue, setInputValue] = (0, _react.useState)("");
+    const [filteredOptions, setFilteredOptions] = (0, _react.useState)(options);
+    // make limit number of blanks
+    const blanks = Array(limit).fill("");
+    (0, _react.useEffect)(()=>{
+        setFilteredOptions([
+            ...options,
+            ...blanks
+        ].slice(0, limit));
+    }, [
+        options
+    ]);
+    const handleInputChange = (event)=>{
+        const value = event.target.value;
+        setInputValue(value);
+        const filtered = options.filter((option)=>option.toLowerCase().includes(value.toLowerCase()));
+        setFilteredOptions([
+            ...filtered,
+            ...blanks
+        ].slice(0, limit));
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: (0, _autocompleteSelectModuleScssDefault.default).autocompleteSelect,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: (0, _autocompleteSelectModuleScssDefault.default).control,
+                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                    type: "text",
+                    value: inputValue,
+                    onChange: handleInputChange,
+                    placeholder: "Type to search..."
+                }, void 0, false, {
+                    fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                    lineNumber: 30,
+                    columnNumber: 9
+                }, undefined)
+            }, void 0, false, {
+                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                lineNumber: 29,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: filteredOptions.map((option, index)=>option == "" ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        children: "~"
+                    }, void 0, false, {
+                        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                        lineNumber: 40,
+                        columnNumber: 13
+                    }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                        className: option === "" ? "blnk" : "optn",
+                        onClick: selectAction.bind(null, option),
+                        children: option
+                    }, index, false, {
+                        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                        lineNumber: 41,
+                        columnNumber: 13
+                    }, undefined))
+            }, void 0, false, {
+                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+                lineNumber: 37,
+                columnNumber: 7
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
+        lineNumber: 28,
+        columnNumber: 5
+    }, undefined);
+};
+_s(AutocompleteSelect, "JHECDkv5dnsOhsF//oRLAVE2D7o=");
+_c = AutocompleteSelect;
+exports.default = AutocompleteSelect; // Usage Example
+ // <AutocompleteSelect options={['Option 1', 'Option 2', 'Option 3']} />
+var _c;
+$RefreshReg$(_c, "AutocompleteSelect");
+
+  $parcel$ReactRefreshHelpers$d285.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./AutocompleteSelect.module.scss":"35BOA","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"35BOA":[function(require,module,exports) {
+module.exports["autocompleteSelect"] = `lNZnVq_autocompleteSelect`;
+module.exports["control"] = `lNZnVq_control`;
+
+},{}],"4Bp8Q":[function(require,module,exports) {
+module.exports["groupSelector"] = `FdICHW_groupSelector`;
+
+},{}],"6gLSm":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$e8b4 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -34632,7 +34830,6 @@ var _groupManagerModuleScssDefault = parcelHelpers.interopDefault(_groupManagerM
 var _s = $RefreshSig$();
 const GroupManager = ({ tournament, group })=>{
     _s();
-    console.log("foo boo");
     const [teamList, setTeamList] = (0, _react.useState)([]);
     const [newTeamName, setNewTeamName] = (0, _react.useState)("");
     const [newGroup, setNewGroup] = (0, _react.useState)("");
@@ -34641,7 +34838,6 @@ const GroupManager = ({ tournament, group })=>{
     const groupMgr = new (0, _groupManagerClassDefault.default)();
     const getGroupLetter = (group)=>{
         // if number, return upper case letter otherwise return group
-        console.log("Converting to group letter", group);
         if (isNaN(group)) return group;
         return groupLetters[group - 1];
     };
@@ -34653,7 +34849,6 @@ const GroupManager = ({ tournament, group })=>{
                 name: x.team,
                 group: getGroupLetter(x.grp)
             }));
-        console.log("team list", teamlist, tournament, group);
         setTeamList(teamlist);
     }, [
         group,
@@ -34729,7 +34924,7 @@ const GroupManager = ({ tournament, group })=>{
                         onChange: (e)=>setNewTeamName(e.target.value)
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 100,
+                        lineNumber: 97,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34741,18 +34936,18 @@ const GroupManager = ({ tournament, group })=>{
                                 children: letter
                             }, letter, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 108,
+                                lineNumber: 105,
                                 columnNumber: 25
                             }, undefined))
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                        lineNumber: 106,
+                        lineNumber: 103,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                lineNumber: 99,
+                lineNumber: 96,
                 columnNumber: 13
             }, undefined),
             Object.entries(groupedTeams).map(([group, teams])=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34765,7 +34960,7 @@ const GroupManager = ({ tournament, group })=>{
                                     children: group
                                 }, void 0, false, {
                                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                    lineNumber: 121,
+                                    lineNumber: 118,
                                     columnNumber: 25
                                 }, undefined),
                                 teams.map((team, index)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34776,7 +34971,7 @@ const GroupManager = ({ tournament, group })=>{
                                                 children: team.name
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                lineNumber: 124,
+                                                lineNumber: 121,
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34786,7 +34981,7 @@ const GroupManager = ({ tournament, group })=>{
                                                     children: "Save"
                                                 }, void 0, false, {
                                                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                    lineNumber: 127,
+                                                    lineNumber: 124,
                                                     columnNumber: 41
                                                 }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
                                                     children: [
@@ -34795,7 +34990,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "Edit"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 130,
+                                                            lineNumber: 127,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34803,7 +34998,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2191"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 131,
+                                                            lineNumber: 128,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34811,7 +35006,7 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2193"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 132,
+                                                            lineNumber: 129,
                                                             columnNumber: 45
                                                         }, undefined),
                                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -34819,26 +35014,26 @@ const GroupManager = ({ tournament, group })=>{
                                                             children: "\u2715"
                                                         }, void 0, false, {
                                                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                            lineNumber: 133,
+                                                            lineNumber: 130,
                                                             columnNumber: 45
                                                         }, undefined)
                                                     ]
                                                 }, void 0, true)
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                                lineNumber: 125,
+                                                lineNumber: 122,
                                                 columnNumber: 33
                                             }, undefined)
                                         ]
                                     }, team.name, true, {
                                         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                        lineNumber: 123,
+                                        lineNumber: 120,
                                         columnNumber: 29
                                     }, undefined))
                             ]
                         }, void 0, true, {
                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                            lineNumber: 120,
+                            lineNumber: 117,
                             columnNumber: 21
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -34848,24 +35043,24 @@ const GroupManager = ({ tournament, group })=>{
                                 groupMgr: groupMgr
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                                lineNumber: 141,
+                                lineNumber: 138,
                                 columnNumber: 25
                             }, undefined)
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                            lineNumber: 140,
+                            lineNumber: 137,
                             columnNumber: 21
                         }, undefined)
                     ]
                 }, group, true, {
                     fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-                    lineNumber: 119,
+                    lineNumber: 116,
                     columnNumber: 17
                 }, undefined))
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupManager/index.js",
-        lineNumber: 98,
+        lineNumber: 95,
         columnNumber: 9
     }, undefined);
 };
@@ -35171,204 +35366,6 @@ module.exports["teamGroup"] = `dSi1pG_teamGroup`;
 module.exports["teamList"] = `dSi1pG_teamList`;
 module.exports["teamRow"] = `dSi1pG_teamRow`;
 
-},{}],"d7yAq":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$2f3e = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$2f3e.prelude(module);
-
-try {
-// GroupManager.js
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _autocompleteSelect = require("~/src/frontend/shared/generic/AutocompleteSelect");
-var _autocompleteSelectDefault = parcelHelpers.interopDefault(_autocompleteSelect);
-var _groupSelectorModuleScss = require("./GroupSelector.module.scss");
-var _groupSelectorModuleScssDefault = parcelHelpers.interopDefault(_groupSelectorModuleScss);
-var _s = $RefreshSig$();
-const GroupSelector = ({ selectedGroup, tournamentId, setGroup })=>{
-    _s();
-    const [existingGroups, setExistingGroups] = (0, _react.useState)([]);
-    (0, _react.useEffect)(()=>{
-        if (!tournamentId) return;
-        console.log("fetching groups");
-        fetch(`/api/tournaments/${tournamentId}/groups`).then((response)=>response.json()).then((data)=>{
-            setExistingGroups(data.data.map((x)=>x.category));
-        }).catch((error)=>{
-            console.error("Error fetching next fixtures:", error);
-        });
-    }, [
-        tournamentId
-    ]);
-    return selectedGroup ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                children: [
-                    "Selected group: ",
-                    selectedGroup
-                ]
-            }, void 0, true, {
-                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-                lineNumber: 27,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                onClick: ()=>setGroup(null),
-                children: "Change"
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-                lineNumber: 28,
-                columnNumber: 13
-            }, undefined)
-        ]
-    }, void 0, true, {
-        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-        lineNumber: 26,
-        columnNumber: 9
-    }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                children: "Group Selector"
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-                lineNumber: 32,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _autocompleteSelectDefault.default), {
-                options: existingGroups,
-                limit: 8,
-                selectAction: setGroup
-            }, void 0, false, {
-                fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-                lineNumber: 33,
-                columnNumber: 13
-            }, undefined)
-        ]
-    }, void 0, true, {
-        fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/GroupSelector/index.js",
-        lineNumber: 31,
-        columnNumber: 9
-    }, undefined);
-};
-_s(GroupSelector, "wfq8tX54LRiKo7I00fwzHCLPnDU=");
-_c = GroupSelector;
-exports.default = GroupSelector;
-var _c;
-$RefreshReg$(_c, "GroupSelector");
-
-  $parcel$ReactRefreshHelpers$2f3e.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupSelector.module.scss":"4Bp8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","~/src/frontend/shared/generic/AutocompleteSelect":"2U5Hy"}],"4Bp8Q":[function(require,module,exports) {
-module.exports["groupSelector"] = `FdICHW_groupSelector`;
-
-},{}],"2U5Hy":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$d285 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$d285.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _autocompleteSelectModuleScss = require("./AutocompleteSelect.module.scss");
-var _autocompleteSelectModuleScssDefault = parcelHelpers.interopDefault(_autocompleteSelectModuleScss);
-var _s = $RefreshSig$();
-const AutocompleteSelect = ({ options, limit = 100, selectAction = ()=>{} })=>{
-    _s();
-    const [inputValue, setInputValue] = (0, _react.useState)("");
-    const [filteredOptions, setFilteredOptions] = (0, _react.useState)(options);
-    // make limit number of blanks
-    const blanks = Array(limit).fill("");
-    (0, _react.useEffect)(()=>{
-        setFilteredOptions([
-            ...options,
-            ...blanks
-        ].slice(0, limit));
-    }, [
-        options
-    ]);
-    const handleInputChange = (event)=>{
-        const value = event.target.value;
-        setInputValue(value);
-        const filtered = options.filter((option)=>option.toLowerCase().includes(value.toLowerCase()));
-        setFilteredOptions([
-            ...filtered,
-            ...blanks
-        ].slice(0, limit));
-    };
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _autocompleteSelectModuleScssDefault.default).autocompleteSelect,
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: (0, _autocompleteSelectModuleScssDefault.default).control,
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                    type: "text",
-                    value: inputValue,
-                    onChange: handleInputChange,
-                    placeholder: "Type to search..."
-                }, void 0, false, {
-                    fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-                    lineNumber: 30,
-                    columnNumber: 9
-                }, undefined)
-            }, void 0, false, {
-                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-                lineNumber: 29,
-                columnNumber: 7
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                children: filteredOptions.map((option, index)=>option == "" ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                        children: "~"
-                    }, void 0, false, {
-                        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-                        lineNumber: 40,
-                        columnNumber: 13
-                    }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                        className: option === "" ? "blnk" : "optn",
-                        onClick: selectAction.bind(null, option),
-                        children: option
-                    }, index, false, {
-                        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-                        lineNumber: 41,
-                        columnNumber: 13
-                    }, undefined))
-            }, void 0, false, {
-                fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-                lineNumber: 37,
-                columnNumber: 7
-            }, undefined)
-        ]
-    }, void 0, true, {
-        fileName: "src/frontend/shared/generic/AutocompleteSelect/index.js",
-        lineNumber: 28,
-        columnNumber: 5
-    }, undefined);
-};
-_s(AutocompleteSelect, "JHECDkv5dnsOhsF//oRLAVE2D7o=");
-_c = AutocompleteSelect;
-exports.default = AutocompleteSelect; // Usage Example
- // <AutocompleteSelect options={['Option 1', 'Option 2', 'Option 3']} />
-var _c;
-$RefreshReg$(_c, "AutocompleteSelect");
-
-  $parcel$ReactRefreshHelpers$d285.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./AutocompleteSelect.module.scss":"35BOA"}],"35BOA":[function(require,module,exports) {
-module.exports["autocompleteSelect"] = `lNZnVq_autocompleteSelect`;
-module.exports["control"] = `lNZnVq_control`;
-
 },{}],"kZk1Q":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$c190 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
@@ -35404,16 +35401,17 @@ const TournamentSelector = ({ tournamentId, tournamentTitle, setTournament })=>{
             console.error("Error fetching next fixtures:", error);
         });
     };
+    const style = {
+        display: tournamentId ? "none" : "block"
+    };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        style: {
-            display: tournamentId ? "none" : "block"
-        },
+        style: style,
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
                 children: "Tournament Selector"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
-                lineNumber: 42,
+                lineNumber: 39,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _autocompleteSelectDefault.default), {
@@ -35422,13 +35420,13 @@ const TournamentSelector = ({ tournamentId, tournamentTitle, setTournament })=>{
                 selectAction: setTournamentByTitle
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
-                lineNumber: 43,
+                lineNumber: 40,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/OrganizeTournament/TournamentSelector/index.js",
-        lineNumber: 37,
+        lineNumber: 38,
         columnNumber: 5
     }, undefined);
 };
@@ -35443,10 +35441,7 @@ $RefreshReg$(_c, "TournamentSelector");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","~/src/frontend/shared/generic/AutocompleteSelect":"2U5Hy"}],"95AuD":[function(require,module,exports) {
-module.exports["organizeTournament"] = `W-M8WG_organizeTournament`;
-
-},{}],"9y6Ly":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","~/src/frontend/shared/generic/AutocompleteSelect":"2U5Hy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"9y6Ly":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$b0a2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -35658,6 +35653,9 @@ module.exports["sideLabel"] = `cqwova_sideLabel`;
 module.exports["sidePanel"] = `cqwova_sidePanel`;
 module.exports["sideSection"] = `cqwova_sideSection`;
 module.exports["tournamentLayout"] = `cqwova_tournamentLayout`;
+
+},{}],"95AuD":[function(require,module,exports) {
+module.exports["organizeTournament"] = `W-M8WG_organizeTournament`;
 
 },{}]},["1HMep","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 

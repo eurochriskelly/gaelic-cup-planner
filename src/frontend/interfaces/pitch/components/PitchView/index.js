@@ -5,9 +5,7 @@ import Fixture from "./Fixture";
 import UpdateFixture from "./UpdateFixture";
 import styles from "./PitchView.module.scss";
 
-const PitchView = ({
-  backToSelection
-}) => {
+const PitchView = ({ backToSelection }) => {
   const { pitchId } = useParams();
 
   const [fixtures, setFixtures] = useState([]);
@@ -75,7 +73,7 @@ const PitchView = ({
       </div>
       <div className={styles.fixturesBody}>
         <button onClick={actions.showEarlier}>
-          {showEarlier ? "Hide" : "Show"} Earlier Fixtures
+          {showEarlier ? "Hide" : "Show"} Earlier Fixturez
         </button>
         <div className={styles.fixturesArea}>
           {fixtures.map((fixture, i) => {
@@ -124,4 +122,3 @@ const PitchView = ({
 };
 
 export default PitchView;
-
