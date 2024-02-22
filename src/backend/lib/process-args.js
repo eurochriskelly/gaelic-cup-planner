@@ -26,7 +26,7 @@ const processArgs = (args) => {
             case 'groups':
                 ARGS.staticPath = '../../../src/frontend/interfaces/groups/watch'
                 break
-            case 'tournament':
+            case 'tournmgr':
                 ARGS.staticPath = '../../../src/frontend/interfaces/tournament/watch'
                 break
             default:

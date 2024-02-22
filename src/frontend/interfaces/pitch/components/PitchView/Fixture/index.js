@@ -50,7 +50,7 @@ const Fixture = ({ fixture, isFocus }) => {
   };
 
   const categoryLabel = () => {
-    return group.replace(/[^A-Z0-9]/g, "");
+    return group?.replace(/[^A-Z0-9]/g, "");
   };
 
   return (
