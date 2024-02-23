@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../../../shared/api/pitch";
 import Fixture from "./Fixture";
+import PitchViewHeader from './PitchViewHeader';
 import UpdateFixture from "./UpdateFixture";
 import styles from "./PitchView.module.scss";
 
@@ -59,21 +60,13 @@ const PitchView = ({ backToSelection }) => {
     showLater: () => setShowLater(!showLater),
   };
 
-  useEffect(() => {
-    actions.fetchFixtures();
-  }, []);
-
+  useEffect(actions.fetchFixtures);
   return (
     <div className={styles.pitchView}>
-      <div className={styles.fixturesHead}>
-        <h2>
-          <span onClick={backToSelection}></span>
-          <span>Fixtures for pitch: {pitchId}</span>
-        </h2>
-      </div>
+      <PitchViewHeader pitchId={pitchId} backToSelection={backToSelection} />  
       <div className={styles.fixturesBody}>
         <button onClick={actions.showEarlier}>
-          {showEarlier ? "Hide" : "Show"} Earlier Fixturez
+          {showEarlier ? "Hide" : "Show"} Earlier Fixtures
         </button>
         <div className={styles.fixturesArea}>
           {fixtures.map((fixture, i) => {

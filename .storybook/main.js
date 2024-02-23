@@ -7,6 +7,7 @@ const config = {
     "@storybook/addon-actions",
     "@storybook/addon-onboarding",
     "@storybook/addon-interactions",
+    "@storybook/addon-viewport",
   ],
   framework: {
     name: "@storybook/react-webpack5",
