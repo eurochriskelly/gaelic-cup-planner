@@ -26,23 +26,32 @@ table {
     margin: 0;
     user-select: none;
   }
-
+  // header colors for mobile
   h1 {
-    background: darken($pc, 40%);
-    color: $pc-light-20;
+      background: darken($pc, 41%);
+      color: $pc-light-20;
+  }
+  h2 {
+      background: desaturate(darken($pc, 20%), 10%);
+      color: darken(white, 10%);
+  }
+  h3 {
+      color: #444444;
+      background: #d2e1d2;
+  }
+  h1 {
     font-size: 3.2em;
     line-height: 7rem;
     padding: 0 0;
     letter-spacing: 0.12em;
     text-align: center;
     position: fixed;
+    left:0;
     top: 0;
     z-index: 100;
   }
   h2 {
     font-size: 1.8em;
-    background: darken($pc, 10%);
-    color: white;
     line-height: 6rem;
     text-align: center;
     position: fixed;
@@ -51,18 +60,14 @@ table {
   }
   
   h3 {
-    color: #444444;
-    background: #d2e1d2;
     line-height: 4rem;
     font-weight: normal;
   }
-
   .row {
     height: 4rem;
     border-bottom: 1px solid #ddd;
     width: 100%;
   }
-
   .drawer-header {
     background-color: desaturate($sc-dark-20, 30%);
     line-height: 6rem;
@@ -97,9 +102,7 @@ table {
       margin: 2rem;
     }
   }
-
 }
-
 
 button {
   margin: 8px;
@@ -125,7 +128,6 @@ table {
   width: 100%;
 }
 
-
 .hidden {
   display: none;
 }
@@ -138,3 +140,5 @@ select {
   box-sizing: border-box;
   display: block;
 }
+
+
