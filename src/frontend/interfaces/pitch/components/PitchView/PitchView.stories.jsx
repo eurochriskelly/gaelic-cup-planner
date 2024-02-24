@@ -1,7 +1,9 @@
 import React from 'react';
-
 import PitchView from './';
+import { overrideApis } from '~/src/frontend/shared/test/story-data.js';
 import '~/src/frontend/shared/css/site.scss';
+
+overrideApis()
 
 const Page = (props) => {
   return (
