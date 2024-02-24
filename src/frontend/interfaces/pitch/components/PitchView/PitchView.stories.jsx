@@ -16,13 +16,14 @@ export default {
   title: 'pitch/PitchView',
   component: Page,
   parameters: {
+    layout: 'centered',
     viewport: {
       defaultViewport: 'iphonex',
     }
   },
   tags: ['autodocs'],
 }
-export const ReasonDelayed = {
+export const BigView = {
   args: {
     backToSelection: () => {},
   },
