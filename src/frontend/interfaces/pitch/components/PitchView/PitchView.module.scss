@@ -19,7 +19,6 @@
             text-transform: uppercase;
         }
     }
-
     h2 {
         margin: 0;
         padding: 0;
@@ -27,9 +26,7 @@
         display: grid;
         padding-left: 0 !important;
         padding-right: 0 !important;
-
     }
-
     h2>span:first-child {
         user-select: none;
         margin: 0;
@@ -53,17 +50,13 @@
     }
 
     >div {
-        .fixturesHead {
-            position: fixed;
-            top: 7rem;
-            left: 0;
-            right: 0;
-        }
         >div.fixturesBody {
             margin: 4rem 2rem;
         }
     }
     >div.fixturesBody {
+        top: 3rem;
+        left: 0;
         .fixturesArea {
             /* Adjust this value to match the header's height */
             padding: 20px;

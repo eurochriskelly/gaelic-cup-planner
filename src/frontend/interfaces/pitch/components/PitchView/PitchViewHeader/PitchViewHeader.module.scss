@@ -1,0 +1,28 @@
+@import "~/src/frontend/shared/css/_colors.scss";
+
+.fixturesHead {
+    position: fixed;
+    top: 13rem;
+    left: 0;
+    right: 0;
+}
+
+.navBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  >span {
+    border: 2px solid darken(white, 30%);
+    background: white;
+    color: black;
+    font-size: 1.1rem;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 1.2rem 0.8rem;
+    border-bottom: 4px solid red;
+  }
+  >span.selected {
+    color: red;
+    border: 2px solid red;
+    border-bottom: none;
+  }
+}
