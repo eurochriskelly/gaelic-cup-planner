@@ -3,30 +3,27 @@ import React from 'react';
 import PitchView from './';
 import '~/src/frontend/shared/css/site.scss';
 
-const PhoneHolder = (props) => {
-  const phoneStyle = {
-    left :'0',
-    top: '0',
-    width: '800px',
-    height: '1200px',
-    position: 'absolute',
-    border: '4px dotted red',
-  }
+const Page = (props) => {
   return (
-    <div style={phoneStyle}>
-        <PitchView {...props} />
+    <div id='app'>
+      <h1>Mock Coordinator</h1>
+      <PitchView {...props} />
     </div>
   )
 }
+
 export default {
   title: 'pitch/PitchView',
-  component: PhoneHolder,
+  component: Page,
   parameters: {
     layout: 'centered',
+    viewport: {
+      defaultViewport: 'iphonex',
+    }
   },
   tags: ['autodocs'],
 }
-export const ReasonDelayed = {
+export const BigView = {
   args: {
     backToSelection: () => {},
   },

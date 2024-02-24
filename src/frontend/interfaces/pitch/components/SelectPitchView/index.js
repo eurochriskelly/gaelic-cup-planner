@@ -3,7 +3,6 @@ import SelectPitch from "./SelectPitch";
 import styles from "./SelectPitchView.module.scss";
 
 const SelectPitchView = () => {
-  console.log("SelectPitchView");
   const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
   async function fetchData() {
