@@ -5,6 +5,7 @@
     top: 13rem;
     left: 0;
     right: 0;
+    z-index: 1000;
 }
 
 .navBar {
@@ -14,15 +15,18 @@
     border: 2px solid darken(white, 30%);
     background: white;
     color: black;
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     text-align: center;
     text-transform: uppercase;
-    padding: 1.2rem 0.8rem;
-    border-bottom: 4px solid red;
+    padding: 1.6rem 0.8rem;
+    background-color: desaturate($sc-light-40, 30%);
+    border-bottom: 0.35rem solid $sc-dark-20;
   }
   >span.selected {
-    color: red;
-    border: 2px solid red;
+    color: $sc-dark-20;
+    border: 0.2rem solid $sc-dark-20;
     border-bottom: none;
+    background-color: white;
+    font-weight: bold;
   }
 }

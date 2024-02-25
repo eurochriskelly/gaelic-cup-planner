@@ -10,7 +10,7 @@ const PitchViewHeader = ({ pitchId, tab = "Next", backToSelection, changeTab }) 
     changeTab(tab)
   }
   return (
-    <div className={styles.fixturesHead} style={{border: '2px solid red'}}>
+    <div className={styles.fixturesHead}>
       <h2 >
         <span onClick={backToSelection}></span>
         <span>Fixtures for pitch: {pitchId}</span>
