@@ -37,3 +37,5 @@ $pc-light-40: lighten($pc, 40%);
 $sc-light-40: lighten($sc, 40%);
 $bg-light-40: lighten($bg, 40%);
 
+$radial1: darken(desaturate($pc, 45%), 0%);
+$radial2: darken(desaturate($pc, 45%), 7%);

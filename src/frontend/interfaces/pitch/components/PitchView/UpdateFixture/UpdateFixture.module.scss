@@ -6,7 +6,7 @@
     width: 100%;
     margin: auto;
     display: grid;
-    grid-template-columns: 0.6fr 0.6fr 0.1fr;
+    grid-template-columns: 0.6fr 0.6fr; 
 }
 .more {
     margin-left: 0.4rem;
@@ -15,15 +15,16 @@
     width: 100%;
     margin: auto;
     display: grid;
-    grid-template-columns: 0.1fr 0.6fr 0.6fr;
+    grid-template-columns: 0.6fr 0.6fr;
 }
 .updateFixture>div button {
-    line-height: 4rem;
-    font-size: 2.6rem;
+    line-height: 6rem;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    font-size: 2.2rem;
 }
 .updateFixture>div:first-child button:last-child,
 .updateFixture>div:nth-child(2) button:first-child  {
-    font-size: 4rem;
     padding:0;
     line-height: 2rem;
     background-color: #c6b3d3;

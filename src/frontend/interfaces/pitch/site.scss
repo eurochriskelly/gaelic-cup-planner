@@ -99,8 +99,8 @@ table {
     border-radius: 0.8rem;
     &.enabled {
       cursor: pointer;
-      background-color: darken($sc-dark-20, 20%);
-      color: white;
+      background-color: darken($sc-dark-20, 30%);
+      color: black;
     }
     &.disabled {
       cursor: not-allowed;
