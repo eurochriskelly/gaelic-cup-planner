@@ -4,6 +4,7 @@ module.exports = (app, db, select) => {
 
     /* Check if a given stage is complete */
     const processStageCompletion = async (fixtureId) => {
+    console.log('----------------------------------------------')
         const selQuery = `SELECT tournamentId, stage, groupNumber, category FROM fixtures WHERE id = ${fixtureId}`
         const data = await select(selQuery)
         const { tournamentId, stage, groupNumber, category } = data?.data[0]
@@ -18,7 +19,6 @@ module.exports = (app, db, select) => {
         ].join(' ')
         const remainingMatchesInStage = +(await select(completedQuery))?.data[0]?.remaining
         if (!remainingMatchesInStage) {
-            console.log(`No remaining matches in stage [${stage}/${groupNumber}] for [${category}]!`)
             const qGroupStandings = [
                 `SELECT * FROM v_group_standings where `,
                 `  tournamentId = ${tournamentId} and `,
@@ -35,8 +35,9 @@ module.exports = (app, db, select) => {
                 `  groupNumber = ${groupNumber} and `,
                 `  category = '${category}'`,
             ].join(' ')
-            const { numPositions = 0 } = (await select(qNumPositions)).data[0] || {}
+            const { numPositions = 0 } = stage === 'group' ? ((await select(qNumPositions)).data[0] || {}) : { numPositions: 2 }
             const range = [...Array(numPositions).keys()]
+      console.log('range is', range)
             range.forEach(async (position) => {
                 const placeHolder = `~${stage}:${groupNumber}/p:${position + 1}`
                 const newValue = groupStandings[position]?.team
@@ -44,7 +45,7 @@ module.exports = (app, db, select) => {
                     `UPDATE fixtures `,
                     `SET team1Id = '${newValue}' `,
                     `WHERE `,
-                    ` team1Id = '${placeHolder}' and `,
+                    ` team1Planned = '${placeHolder}' and `,
                     ` tournamentId = ${tournamentId} and `,
                     ` category = '${category}'`,
                 ].join(' ')
@@ -52,14 +53,24 @@ module.exports = (app, db, select) => {
                     `UPDATE fixtures `,
                     `SET team2Id = '${newValue}' `,
                     `WHERE `,
-                    ` team2Id = '${placeHolder}' and `,
+                    ` team2Planned = '${placeHolder}' and `,
+                    ` tournamentId = ${tournamentId} and `,
+                    ` category = '${category}'`,
+                ].join(' ')
+                const qUpdateUmpireTeam = [
+                    `UPDATE fixtures `,
+                    `SET umpireTeamId = '${newValue}' `,
+                    `WHERE `,
+                    ` umpireTeamPlanned = '${placeHolder}' and `,
                     ` tournamentId = ${tournamentId} and `,
                     ` category = '${category}'`,
                 ].join(' ')
                 console.log(qUpdatePlayoffTeam1)
                 console.log(qUpdatePlayoffTeam2)
+                console.log(qUpdateUmpireTeam)
                 await select(qUpdatePlayoffTeam1)
                 await select(qUpdatePlayoffTeam2)
+                await select(qUpdateUmpireTeam)
             })
             return true
         }
@@ -84,7 +95,6 @@ module.exports = (app, db, select) => {
                 `WHERE id = ${id};`,
             ].join(' ')
             await select(updateQuery)
-            console.log('select group ...')
             await processStageCompletion(id)
             res.json({
                 message: 'Score updated successfully.'
