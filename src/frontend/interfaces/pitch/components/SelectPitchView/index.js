@@ -34,7 +34,7 @@ const SelectPitchView = () => {
             key={pitch.pitch}
             {...pitch}
             onChoosePitch={() => {
-              console.log("clicked");
+              console.log("Pitche selected ");
             }}
           />
         ))}
