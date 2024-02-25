@@ -33,7 +33,7 @@ const fCommon = {
   points2: 3,
   umpireTeam: 'Andalusian Celts',
 }
-export const BeforeMatchStarts = {
+export const BeforeMatchStarts1 = {
   args: {
     fixture: {
       ...fCommon,

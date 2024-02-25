@@ -50,7 +50,7 @@ const DrawerGetReady = ({
                                 checked={checklist.pitchMarked}
                                 onChange={handleCheckboxChange}
                             />
-                            Is pitch marked out?
+                            <span>Is pitch marked out?</span>
                         </li>
                         <li>
                             <input
@@ -59,7 +59,7 @@ const DrawerGetReady = ({
                                 checked={checklist.sheetsSubmitted}
                                 onChange={handleCheckboxChange}
                             />
-                            Have both teams submitted sheets?
+                            <span>Have both teams submitted sheets?</span>
                         </li>
                         <li>
                             <input
@@ -68,7 +68,7 @@ const DrawerGetReady = ({
                                 checked={checklist.umpiresReady}
                                 onChange={handleCheckboxChange}
                             />
-                            Are <span>{umpireTeam}</span> umpires ready?
+                            <span>Are <span>{umpireTeam}</span> umpires ready?</span>
                         </li>
                     </ul>
                     <button

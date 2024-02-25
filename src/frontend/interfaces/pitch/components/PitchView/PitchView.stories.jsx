@@ -15,7 +15,7 @@ const Page = (props) => {
 }
 
 export default {
-  title: 'pitch/PitchView',
+  title: 'pitch/Pitch',
   component: Page,
   parameters: {
     layout: 'centered',

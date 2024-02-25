@@ -22,6 +22,11 @@ const PitchView = ({ backToSelection }) => {
     delayUntilEnd: async (fixtureId) => {
       console.log("delayUntilEnd");
     },
+    fetchFixtures: async () => {
+      const { data } = await API.fetchFixtures(pitchId || 3);
+      setFixtures(data);
+      setNextFixture(data.filter((f) => !f.played).shift());
+    },
     startMatch: async (fixtureId) => {
       await API.startMatch(fixtureId);
       const data = await API.fetchFixtures(pitchId);
@@ -30,12 +35,7 @@ const PitchView = ({ backToSelection }) => {
   };
 
   useEffect(() => {
-    const fetchFixtures = async () => {
-      const { data } = await API.fetchFixtures(pitchId || 3);
-      setFixtures(data);
-      setNextFixture(data.filter((f) => !f.played).shift());
-    };
-    fetchFixtures();
+    actions.fetchFixtures();
   }, []);
 
   return (
