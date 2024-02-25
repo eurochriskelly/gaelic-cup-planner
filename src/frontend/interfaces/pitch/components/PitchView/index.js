@@ -6,7 +6,6 @@ import PitchViewHeader from "./PitchViewHeader";
 import UpdateFixture from "./UpdateFixture";
 import styles from "./PitchView.module.scss";
 
-
 const PitchView = ({ backToSelection }) => {
   const { pitchId } = useParams();
 
