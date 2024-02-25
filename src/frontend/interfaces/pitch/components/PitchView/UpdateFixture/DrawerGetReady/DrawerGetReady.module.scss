@@ -4,7 +4,7 @@
     background-color: white;
     border-radius: 2rem;
     width: 100%;
-    margin: 0.5rem 1rem;
+    margin: 0.8rem 0.5rem 2rem 0.5rem;
     button {
         width: 100%;
         margin: auto;
@@ -14,28 +14,36 @@
     }
     ul {
         list-style: none;
-        margin:3rem ;
-        margin-bottom: 1rem;
+        margin: 4rem 1rem;
+        margin-bottom: 5rem;
     }
     
     li {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
+        >span {
+            margin: 2rem;
+        }
     }
     li::before {
-        content: "✓"; /* Unicode character for a checkmark */
         margin-right: 5px; /* Add some spacing between the checkmark and the text */
         color: $pc; /* Change the color of the checkmark */
         font-size: 3rem;
     }
-    li span {
+    li>span>span {
         background-color: desaturate($sc, 30%);
         color: white;
-        border-radius: 1rem;
-        padding: 0.3rem 1.1rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.1rem;
         font-weight: bold;        
     }
     div > div:last-child p {
         margin: 4rem;
         text-align: center;
+    }
+    /* input checkboxes should be large */
+    input[type="checkbox"] {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 1.2rem;
     }
 }
