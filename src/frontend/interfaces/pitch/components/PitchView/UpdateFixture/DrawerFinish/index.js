@@ -5,9 +5,10 @@ import styles from "./DrawerFinish.module.scss";
 
 const DrawerFinish = ({
   fixture,
-  updateFixtures,
   visible,
+  updateFixtures,
   onConfirm = () => {},
+  onClose = () => {},
 }) => {
   if (!visible) return null;
   const steps = ["score", "cardedPlayers"];
@@ -15,18 +16,10 @@ const DrawerFinish = ({
   const [currentTeam, setCurrentTeam] = useState("");
   const [currentType, setCurrentType] = useState("");
 
-  const [state, setState] = useState({
-    step: 0,
-  });
+  const [state, setState] = useState({ step: 0 });
   const [scores, setScores] = useState({
-    team1: {
-      goals: "",
-      points: "",
-    },
-    team2: {
-      goals: "",
-      points: "",
-    },
+    team1: { goals: "", points: "" },
+    team2: { goals: "", points: "" },
   });
   const [scorePicker, setScorePicker] = useState({ visible: false });
 
@@ -46,16 +39,17 @@ const DrawerFinish = ({
       setState({ step: 1 });
     },
     notReadyToSaveScore: () => {
-      setState({ step: 1 });
+      setState({ step: 0 });
+      onClose()
     },
     cardPlayersUpdated: () => {
       setState({ step: 0 });
       updateFixtures();
+      onClose()
     },
     updateScore: (team, type, amount) => {
       setCurrentTeam(team);
       setCurrentType(type);
-      console.log({ team, type });
       setScorePicker({ visible: true });
     },
   };

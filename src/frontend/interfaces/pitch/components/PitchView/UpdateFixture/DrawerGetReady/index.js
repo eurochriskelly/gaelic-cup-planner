@@ -7,31 +7,81 @@ const DrawerGetReady = ({
     startMatch,
     onClose = () => { }
 }) => {
-    if (!visible) return null
-    const { umpireTeam } = fixture
+    if (!visible) return null;
+
+    const { umpireTeam } = fixture;
+
+    // Initialize state for checkboxes
+    const [checklist, setChecklist] = useState({
+        pitchMarked: false,
+        sheetsSubmitted: false,
+        umpiresReady: false,
+    });
+
+    // Function to handle checkbox change
+    const handleCheckboxChange = (event) => {
+        const { name, checked } = event.target;
+        setChecklist(prevChecklist => ({
+            ...prevChecklist,
+            [name]: checked,
+        }));
+    };
+
+    // Check if all checkboxes are checked
+    const allChecked = Object.values(checklist).every(value => value);
 
     const actions = {
         startMatch: async () => {
-            await startMatch(fixture.id)
-            onClose('start')
-        }
-    }
+            await startMatch(fixture.id);
+            onClose('start');
+        },
+    };
 
     return (
         <div className={styles.drawerGetReady}>
-            <div className='drawer-header'>Game prep checklist</div>
+            <div className='drawer-header'>Pre-match checklist</div>
             <div className='drawer-container'>
                 <div>
                     <ul>
-                        <li>Are [<span>{umpireTeam}</span>] umpires ready?      &nbsp;</li>
-                        <li>Pitch markings are correct?</li>
-                        <li>Have all teams submitted team sheets?</li>
+                        <li>
+                            <input
+                                type="checkbox"
+                                name="pitchMarked"
+                                checked={checklist.pitchMarked}
+                                onChange={handleCheckboxChange}
+                            />
+                            <span>Is pitch marked out?</span>
+                        </li>
+                        <li>
+                            <input
+                                type="checkbox"
+                                name="sheetsSubmitted"
+                                checked={checklist.sheetsSubmitted}
+                                onChange={handleCheckboxChange}
+                            />
+                            <span>Have both teams submitted sheets?</span>
+                        </li>
+                        <li>
+                            <input
+                                type="checkbox"
+                                name="umpiresReady"
+                                checked={checklist.umpiresReady}
+                                onChange={handleCheckboxChange}
+                            />
+                            <span>Are <span>{umpireTeam}</span> umpires ready?</span>
+                        </li>
                     </ul>
-                    <button className="enabled" onClick={actions.startMatch}>Start the clock ...</button>
+                    <button
+                        className={allChecked ? "enabled" : "disabled"}
+                        onClick={actions.startMatch}
+                        disabled={!allChecked}
+                    >
+                        Start the clock ...
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-export default DrawerGetReady
+export default DrawerGetReady;

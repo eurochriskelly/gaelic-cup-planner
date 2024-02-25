@@ -4,7 +4,7 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
   //background: radial-gradient(circle at top center, #7bb294, #7bb294 10%, #082e28 10%);
-  background: radial-gradient(circle at top center, #7bb294, #082e28 50%);
+  background: radial-gradient(circle at top center, #7bb294, $radial2 50%);
   min-height: 100vh; /* ensures full page height */
 }
 
@@ -29,7 +29,7 @@ table {
   // header colors for mobile
   h1 {
       background: darken($pc, 41%);
-      color: $pc-light-20;
+      color: desaturate($pc-light-20, 30%);
   }
   h2 {
       background: desaturate(darken($pc, 20%), 10%);
@@ -86,7 +86,8 @@ table {
     border-radius: 0.8rem;
     &.enabled {
       cursor: pointer;
-      background-color: $sc-light-20;
+      background-color: $sc-dark-10;
+      border: 1px solid $sc-light-20;
       color: white;
     }
     &.disabled {

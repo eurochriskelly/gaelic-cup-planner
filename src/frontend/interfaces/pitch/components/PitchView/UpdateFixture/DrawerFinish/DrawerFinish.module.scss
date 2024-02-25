@@ -1,20 +1,19 @@
 @import "~/src/frontend/shared/css/_colors.scss";
 
 .drawerFinish {
-    margin: 0.5rem 1rem;
+    margin: 0.8rem 1.2rem;
     background-color: white;
-    border-top-right-radius: 3rem;
-    border-top-left-radius: 3rem;
+    border-radius: 2rem;
     width: 100%;
     box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3);
-    
-    min-height: 30rem;
+    min-height: 64rem;
+    border: 4px outset #777;
 
     .scoreSelector {
         background-color: #d1c9d6;
-        border-radius: 1rem;
+        border-radius: 0.5rem;
         position: absolute;
-        height: 32rem;
+        height: 46rem;
         padding: 1rem 1.5rem;
         top: 0;
         left: 0;
