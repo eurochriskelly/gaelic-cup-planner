@@ -11,7 +11,7 @@ function App() {
         <h1>Field Coordinator</h1>
         <Routes>
             <Route path="/" element={<SelectPitchView />} />
-            <Route path="/pitch/:pitchId" element={<PitchView />} />
+            <Route path="/pitch/:pitchId" element={<PitchView backToSelection={backToSelection} />} />
         </Routes>
     </>
 }

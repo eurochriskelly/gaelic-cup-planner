@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import API from "../../../../shared/api/pitch";
 import Fixture from "./Fixture";
 import PitchViewHeader from "./PitchViewHeader";
@@ -33,10 +33,7 @@ const PitchView = ({ backToSelection }) => {
     },
   };
 
-  useEffect(() => {
-    actions.fetchFixtures();
-  }, []);
-
+  useEffect(() => actions.fetchFixtures(), []);
   return (
     <div className={styles.pitchView}>
       <PitchViewHeader
@@ -47,39 +44,39 @@ const PitchView = ({ backToSelection }) => {
       <div className={styles.fixturesBody}>
         <div className={styles.fixturesArea}>
           {fixtures
-          .filter(f => {
-            const focusFixture = nextFixture && nextFixture.id === f.id;
-            switch (fixtureFilter.toLowerCase()) {
-              case "next":
-                return focusFixture;
-              case "finished":
-                return f.played;
-              case "unplayed":
-                return !f.played && !focusFixture;
-              default:
-                return true;
-            }
-          })
-          .map((fixture, i) => {
-            const focusFixture = nextFixture && nextFixture.id === fixture.id;
-            return (
-              <div
-                key={fixture.id}
-                className={focusFixture ? "focusFixture" : ""}
-              >
-                <Fixture fixture={fixture} isFocus={focusFixture} />
-                {nextFixture && nextFixture.id === fixture.id && (
-                  <UpdateFixture
-                    fixture={fixture}
-                    updateFixtures={actions.fetchFixtures}
-                    startMatch={actions.startMatch}
-                    delayByOne={actions.delayByOne}
-                    delayUntilEnd={actions.delayUntilEnd}
-                  />
-                )}
-              </div>
-            );
-          })}
+            .filter((f) => {
+              const focusFixture = nextFixture && nextFixture.id === f.id;
+              switch (fixtureFilter.toLowerCase()) {
+                case "next":
+                  return focusFixture;
+                case "finished":
+                  return f.played;
+                case "unplayed":
+                  return !f.played && !focusFixture;
+                default:
+                  return true;
+              }
+            })
+            .map((fixture, i) => {
+              const focusFixture = nextFixture && nextFixture.id === fixture.id;
+              return (
+                <div
+                  key={fixture.id}
+                  className={focusFixture ? "focusFixture" : ""}
+                >
+                  <Fixture fixture={fixture} isFocus={focusFixture} />
+                  {nextFixture && nextFixture.id === fixture.id && (
+                    <UpdateFixture
+                      fixture={fixture}
+                      updateFixtures={actions.fetchFixtures}
+                      startMatch={actions.startMatch}
+                      delayByOne={actions.delayByOne}
+                      delayUntilEnd={actions.delayUntilEnd}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
