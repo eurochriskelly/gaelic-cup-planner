@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SelectPitch from "./SelectPitch";
 import styles from "./SelectPitchView.module.scss";
 
+
 const SelectPitchView = () => {
   const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
@@ -10,7 +11,6 @@ const SelectPitchView = () => {
     fetch("/api/pitches")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setPitchData(data.data);
       })
       .catch((error) => {
@@ -19,8 +19,6 @@ const SelectPitchView = () => {
   }
 
   useEffect(() => {
-    // Define the API call here
-    // Call the API when the component is mounted
     fetchData();
   }, []);
 

@@ -6,6 +6,11 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    h2 {
+      >span:first-child {
+        font-size: 4rem; 
+      }
+    }
 }
 
 .navBar {
@@ -30,3 +35,5 @@
     font-weight: bold;
   }
 }
+
+
