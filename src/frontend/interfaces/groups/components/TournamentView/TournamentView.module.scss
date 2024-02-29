@@ -3,7 +3,7 @@
 .tournamentView {
     display: grid;
     grid-template-columns: 10% 90%;
-    grid-template-rows: 280px 1fr;
+    grid-template-rows: 350px 1fr;
     height: 100vh;
 
     article {
@@ -14,7 +14,6 @@
         padding: 0px;
         background: #f8f8f8; // Light background for articles
         align-items: start;
-
         h2 {
             writing-mode: vertical-lr;
             text-orientation: mixed;
@@ -27,7 +26,6 @@
             grid-row: 1 / -1; // Span through all rows
             margin: 0;
         }
-
         section {
             display: grid;
             grid-template-columns: 100%;
@@ -37,7 +35,6 @@
                 margin: 0 0 10px 0; // Margin at the bottom
                 padding: 0.5em;
             }
-
             >div {
                 padding: 1em;
                 height: 150px; // Fixed height for illustration, adjust as needed
@@ -50,6 +47,7 @@
     border-radius: 0.3rem;
     background-color: #eee;
     line-height: 20px;
+    height: 5rem;
     >div {
         display:grid;
         grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
@@ -62,9 +60,6 @@
             padding: 0.2rem;
         }
     }    
-    >div:last-child {
-        
-    }
     span {
         text-align: center;
     }
