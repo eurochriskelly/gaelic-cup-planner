@@ -2,6 +2,7 @@ SELECT
   pi.pitch, 
   pi.location, 
   pi.type,
+  vfi.tournamentId,
   vfi.category, 
   vfi.team1, 
   vfi.team2, 
@@ -11,6 +12,7 @@ FROM
   pitches pi
 LEFT JOIN (
   SELECT 
+    tournamentId,
     pitch, 
     category, 
     team1, 

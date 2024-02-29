@@ -18,7 +18,8 @@ module.exports = (db, ARGS) => {
     // API endpoint to get data from the database
     app.get('/api/pitches', async (req, res) => {
         II('Calling API: /api/pitches')
-        const query = 'SELECT * FROM v_pitch_events';
+	// FIXME: We need a tournament selection screen when starting the app
+        const query = 'SELECT * FROM v_pitch_events where tournamentId = 5';
         try {
             const data = await select(query)
             return res.json(data)

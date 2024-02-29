@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import API from "../../../../shared/api/pitch";
 import Fixture from "./Fixture";
 import PitchViewHeader from "./PitchViewHeader";
 import UpdateFixture from "./UpdateFixture";
 import styles from "./PitchView.module.scss";
 
-const PitchView = ({ backToSelection }) => {
+const PitchView = () => {
   const { pitchId } = useParams();
 
   const [fixtures, setFixtures] = useState([]);
   const [nextFixture, setNextFixture] = useState(null);
   const [fixtureFilter, setFixtureFilter] = useState("next");
+  const navigate = useNavigate();
 
   const actions = {
     // Changing between tabs hides or shows a set of fixtures
@@ -33,12 +34,14 @@ const PitchView = ({ backToSelection }) => {
     },
   };
 
-  useEffect(() => actions.fetchFixtures(), []);
+  useEffect(() => {
+    actions.fetchFixtures()
+  }, []);
   return (
     <div className={styles.pitchView}>
       <PitchViewHeader
         pitchId={pitchId}
-        backToSelection={backToSelection}
+        backToSelection={() => navigate("/")}
         changeTab={setFixtureFilter}
       />
       <div className={styles.fixturesBody}>
