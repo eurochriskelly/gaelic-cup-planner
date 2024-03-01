@@ -1,11 +1,12 @@
 const { II, DD, EE } = require('../../lib/logging')
 
 module.exports = (app, db, select) => {
-
     /* Check if a given stage is complete */
     const processStageCompletion = async (fixtureId) => {
-    console.log('----------------------------------------------')
-        const selQuery = `SELECT tournamentId, stage, groupNumber, category FROM fixtures WHERE id = ${fixtureId}`
+        const selQuery = [
+            `SELECT tournamentId, stage, groupNumber, `,
+            `  category FROM fixtures WHERE id = ${fixtureId}`
+        ].join(' ')
         const data = await select(selQuery)
         const { tournamentId, stage, groupNumber, category } = data?.data[0]
         const completedQuery = [
@@ -37,7 +38,6 @@ module.exports = (app, db, select) => {
             ].join(' ')
             const { numPositions = 0 } = stage === 'group' ? ((await select(qNumPositions)).data[0] || {}) : { numPositions: 2 }
             const range = [...Array(numPositions).keys()]
-      console.log('range is', range)
             range.forEach(async (position) => {
                 const placeHolder = `~${stage}:${groupNumber}/p:${position + 1}`
                 const newValue = groupStandings[position]?.team
@@ -105,6 +105,26 @@ module.exports = (app, db, select) => {
         }
     }
 
+    const cardPlayers = (req, res) => {
+        II('Calling API: /api/fixtures/:id/carded')
+        const { id } = req.params
+        const query = [
+            "INSERT INTO cards",
+            "(tournament, fixture, playerNumber, playerName, cardColor)",
+            "VALUES",
+            req.body.map((player) => {
+                return `(5, ${id}, ${player.playerNumber}, '${player.playerName}', '${player.playerCard}')`
+            }).join(','),
+        ].join(' ')
+        db.query(query, (err, results) => {
+            if (err) {
+                console.log('Error occured', err)
+                return res.status(500).json({ error: err.message });
+            }
+            res.json({ data: results });
+        });
+    }
+
     const startFixture = (req, res) => {
         II('Calling API: /api/fixtures/:id/start')
         const { id } = req.params
@@ -123,7 +143,6 @@ module.exports = (app, db, select) => {
             res.json({ data: results });
         });
     }
-
     const nextFixtures = (req, res) => {
         II('Calling API: /api/fixtures/nextup/:tournament_id')
         const { tournament_id } = req.params
@@ -155,6 +174,7 @@ module.exports = (app, db, select) => {
     app.get('/api/fixtures/:pitch', fixturesByPitch)
     app.get('/api/fixtures/nextup/:tournament_id', nextFixtures)
     app.get('/api/fixtures/:id/start', startFixture)
+    app.post('/api/fixtures/:id/carded', cardPlayers)
     app.post('/api/fixtures/:id/score', updateScore)
 }
 
