@@ -41,7 +41,9 @@ const DrawerFinish = ({
       onClose()
     },
     cardPlayersUpdated: async (players) => {
-      await API.updateCardedPlayers(fixture.id, players);
+      if (players.length) {
+        await API.updateCardedPlayers(fixture.id, players);
+      }
       setCurrentStep(0);
       updateFixtures();
       onClose()

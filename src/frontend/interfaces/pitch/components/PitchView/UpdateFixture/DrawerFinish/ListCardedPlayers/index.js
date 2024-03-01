@@ -14,7 +14,6 @@ const CardedPlayerRow = ({ id, data, onAdd, onRemove }) => {
   return (
     <div className={styles.CardedPlayerRow} key={`cardedplayer-${id}`}>
       <CardSelector onCard={(card) => {
-        console.log('Setting card to: ', card)
         setPlayerCard(card)     
       }} />
       <input
@@ -57,15 +56,12 @@ const ListCardedPlayers = ({
   const [cardedPlayers, setCardedPlayers] = useState([]);
   const actions = {
     onAdd: (details) => {
-      console.log(details)
       setCardedPlayers([...cardedPlayers, details])
     },
     onRemove: (details) => {
-      console.log('removing', details)
       const newCardedPlayers = cardedPlayers.filter((player) => {
         return player.id !== details.id;
       });
-      console.log(newCardedPlayers)
       setCardedPlayers(newCardedPlayers);
     },
   };
@@ -89,7 +85,7 @@ const ListCardedPlayers = ({
         <input
           type="checkbox"
           id="allowClose"
-          onChange={() => console.log('is this running?') || setAllowClose(!allowClose)}
+          onChange={() => setAllowClose(!allowClose)}
         />
         <label>Ready to proceed?</label>
       </div>
