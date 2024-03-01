@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import API from "../../../../../../shared/api/pitch";
 import ScoreSelect from "./ScoreSelect";
+import ListCardedPlayers from "./ListCardedPlayers";
 import styles from "./DrawerFinish.module.scss";
 
 const DrawerFinish = ({
   fixture,
   visible,
   updateFixtures,
+  initialStep = 0,
   onConfirm = () => {},
   onClose = () => {},
 }) => {
@@ -15,6 +17,7 @@ const DrawerFinish = ({
   // create a state object to store the current step and the current task
   const [currentTeam, setCurrentTeam] = useState("");
   const [currentType, setCurrentType] = useState("");
+  const [currentStep, setCurrentStep] = useState(initialStep);
 
   const [state, setState] = useState({ step: 0 });
   const [scores, setScores] = useState({
@@ -23,14 +26,11 @@ const DrawerFinish = ({
   });
   const [scorePicker, setScorePicker] = useState({ visible: false });
 
-  const rules = {
-    score: {
-      display: state.step === 0 ? "block" : "none",
-    },
-    fillCards: {
-      display: state.step === 1 ? "block" : "none",
-    },
-  };
+  const drawerStepStyle = (step) => {
+    return {
+      display: steps[currentStep] === step ? "block" : "none",
+    };
+  }
 
   const actions = {
     saveScore: async () => {
@@ -70,7 +70,7 @@ const DrawerFinish = ({
   };
   return (
     <div className={styles.drawerFinish}>
-      <div className={styles.drawerStep} style={rules.score}>
+      <div className={styles.drawerStep} style={drawerStepStyle('score')}>
         <div className="drawer-header">Update match score</div>
         <div className="drawer-container" style={{ position: "relative" }}>
           <div>
@@ -128,15 +128,10 @@ const DrawerFinish = ({
         </div>
       </div>
 
-      <div className={styles.drawerStep} style={rules.fillCards}>
+      <div className={styles.drawerStep} style={drawerStepStyle('cardedPlayers')}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-          <div> TODO: allow entry of carded players here </div>
-          <div>
-            <button onClick={actions.cardPlayersUpdated} className="enabled">
-              Done
-            </button>
-          </div>
+           <ListCardedPlayers />
         </div>
       </div>
     </div>
