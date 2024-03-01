@@ -45,6 +45,7 @@ const DrawerGetReady = ({
                     <ul>
                         <li>
                             <input
+                                className="bigcheck"
                                 type="checkbox"
                                 name="pitchMarked"
                                 checked={checklist.pitchMarked}
@@ -54,6 +55,7 @@ const DrawerGetReady = ({
                         </li>
                         <li>
                             <input
+                                className='bigcheck'
                                 type="checkbox"
                                 name="sheetsSubmitted"
                                 checked={checklist.sheetsSubmitted}
@@ -63,6 +65,7 @@ const DrawerGetReady = ({
                         </li>
                         <li>
                             <input
+                                className='bigcheck'
                                 type="checkbox"
                                 name="umpiresReady"
                                 checked={checklist.umpiresReady}

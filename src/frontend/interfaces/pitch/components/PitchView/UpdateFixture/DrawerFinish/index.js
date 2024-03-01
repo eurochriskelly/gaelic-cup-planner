@@ -12,14 +12,13 @@ const DrawerFinish = ({
   onConfirm = () => {},
   onClose = () => {},
 }) => {
+  console.log('DrawerFinish running...')
   if (!visible) return null;
   const steps = ["score", "cardedPlayers"];
   // create a state object to store the current step and the current task
   const [currentTeam, setCurrentTeam] = useState("");
   const [currentType, setCurrentType] = useState("");
   const [currentStep, setCurrentStep] = useState(initialStep);
-
-  const [state, setState] = useState({ step: 0 });
   const [scores, setScores] = useState({
     team1: { goals: "", points: "" },
     team2: { goals: "", points: "" },
@@ -36,14 +35,14 @@ const DrawerFinish = ({
     saveScore: async () => {
       onConfirm();
       await API.updateScore(fixture.id, scores);
-      setState({ step: 1 });
+      setCurrentStep(1);
     },
     notReadyToSaveScore: () => {
-      setState({ step: 0 });
+      setCurrentStep(0);
       onClose()
     },
-    cardPlayersUpdated: () => {
-      setState({ step: 0 });
+    cardPlayersUpdated: (players) => {
+      setCurrentStep(0);
       updateFixtures();
       onClose()
     },
@@ -131,7 +130,7 @@ const DrawerFinish = ({
       <div className={styles.drawerStep} style={drawerStepStyle('cardedPlayers')}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-           <ListCardedPlayers />
+           <ListCardedPlayers onProceed={actions.cardPlayersUpdated} />
         </div>
       </div>
     </div>
