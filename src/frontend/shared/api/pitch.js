@@ -38,6 +38,24 @@ export default {
                 console.log('Error updating score, ', error)
                 reject(error)
             })
+    }),
+    updateCardedPlayers: (fixtureId, players) => new Promise((accept, reject) => {
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(players)
+        }
+        fetch(`/api/fixtures/${fixtureId}/carded`, request)
+            .then(response => response.json())
+            .then(async data => {
+                accept(data)
+            })
+            .catch(error => {
+                console.log('Error updating carded players, ', error)
+                reject(error)
+            })
     })
 }
 
