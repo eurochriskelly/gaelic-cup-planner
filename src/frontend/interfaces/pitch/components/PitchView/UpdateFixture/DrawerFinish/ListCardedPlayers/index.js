@@ -37,14 +37,11 @@ const CardedPlayerRow = ({ id, data, onAdd, onRemove }) => {
             id,
             playerCard,
             playerNumber,
-            playerName,
+            playerName: playerName.toUpperCase(),
           }
-          console.log('playerData: ', playerData)
           if (data) {
-            console.log('removing something')
             onRemove(data);
           } else {
-            console.log('adding something')
             onAdd(playerData);
           }
         }}
@@ -64,9 +61,11 @@ const ListCardedPlayers = ({
       setCardedPlayers([...cardedPlayers, details])
     },
     onRemove: (details) => {
+      console.log('removing', details)
       const newCardedPlayers = cardedPlayers.filter((player) => {
         return player.id !== details.id;
       });
+      console.log(newCardedPlayers)
       setCardedPlayers(newCardedPlayers);
     },
   };
