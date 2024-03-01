@@ -30,7 +30,7 @@
         font-size: 3rem;
     }
     li>span>span {
-        background-color: desaturate($sc, 30%);
+        background-color: saturate($sc, 10%);
         color: white;
         border-radius: 0.5rem;
         padding: 0.5rem 1.1rem;

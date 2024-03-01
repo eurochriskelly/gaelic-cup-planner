@@ -115,7 +115,7 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
         />
         <div className={styles.goals}>{squaresGoals}</div>
       </div>
-      <div>-</div>
+      <div/>
       <div>
         <Header
           name="points"

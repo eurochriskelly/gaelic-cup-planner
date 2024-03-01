@@ -1,63 +1,88 @@
-import styles from './GroupStandings.module.scss'
+import styles from "./GroupStandings.module.scss";
 
 const GroupStandings = ({ standings }) => {
-    console.log(standings)
-    let lastGroup = ''
+  let lastGroup = "";
 
-    const GroupDivider = ({ team }) => {
-        if (lastGroup !== team.grp) {
-            lastGroup = team.grp
-            return (
-                <tr key={team.id}>
-                    <td colSpan="9" className={styles.groupHeader}>Group {team.grp}</td>
-                </tr>
-            )
-        }
+
+  const GroupDivider = ({ team }) => {
+    if (lastGroup !== team.grp) {
+      lastGroup = team.grp;
+      return (
+        <tr key={team.id}>
+          <td colSpan="9" className={styles.groupHeader}>
+            Group {team.grp}
+          </td>
+        </tr>
+      );
     }
-    const NoData = () => <span className={styles.noData}>-</span>
-    return (
-        <table className={styles.groupStandings}>
-            <thead>
-                <tr>
-                    <th>Team</th>
-                    <th>MP</th>
-                    <th>W</th>
-                    <th>D</th>
-                    <th>L</th>
-                    <th>PF</th>
-                    <th>PD</th>
-                    <th>Pts</th>
-                </tr>
-            </thead>
-            <tbody>
-                {standings
+  };
+  const NoData = () => <span className={styles.noData}>-</span>;
+  return (
+    <table className={styles.groupStandings}>
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>MP</th>
+          <th>W</th>
+          <th>D</th>
+          <th>L</th>
+          <th>PF</th>
+          <th>PD</th>
+          <th>Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        {standings.map((team) => {
+          const {
+            id,
+            MatchesPlayed,
+            MatchesPlanned,
+            Wins,
+            Draws,
+            Losses,
+            PointsFrom,
+            PointsDifference,
+            TotalPoints,
+          } = team;
+          const mp = MatchesPlayed;
+          const finished = mp === MatchesPlanned;
+          return (
+            <>
+              {lastGroup !== team.group && <GroupDivider team={team} />}
+              <tr key={id}>
+                <td
+                  className={styles.teamName}
+                  style={{
+                    fontWeight: finished ? "bold" : "normal",
+                    color: finished ? "black" : "grey",
+                  }}
+                >
+                  {team.team}
+                </td>
+                <td>
+                  {MatchesPlayed}
+                  <span className={styles.lessRelevant}>/{MatchesPlanned}</span>
+                </td>
+                <td>{mp ? Wins : <NoData />}</td>
+                <td>{mp ? Draws : <NoData />}</td>
+                <td>{mp ? Losses : <NoData />}</td>
+                <td>{mp ? PointsFrom : <NoData />}</td>
+                <td>{mp ? PointsDifference : <NoData />}</td>
+                <td>
+                  {mp ? (
+                    <div className={styles.total}>{TotalPoints}</div>
+                  ) : (
+                    <NoData />
+                  )}
+                </td>
+              </tr>
+            </>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
 
-                    .map((team) => {
-                        const { id, MatchesPlanned, MatchesPlayed, Wins, Draws, Losses, PointsFrom, PointsDifference, TotalPoints } = team
-                        const mp = MatchesPlayed
-                        const finished = mp === MatchesPlanned
-                        return <>
-                            {
-                                lastGroup !== team.group && <GroupDivider team={team} />
-                            }
-                            <tr key={id}>
-                                <td className={styles.teamName} style={{
-                                    fontWeight: finished ? 'bold' : 'normal',
-                                    color: finished ? 'black' : 'grey'
-                                }}>{team.team}</td>
-                                <td>{MatchesPlayed}<span className={styles.lessRelevant}>/{MatchesPlanned}</span></td>
-                                <td>{mp ? Wins : <NoData/>}</td>
-                                <td>{mp ? Draws : <NoData />}</td>
-                                <td>{mp ? Losses : <NoData />}</td>
-                                <td>{mp ? PointsFrom : <NoData />}</td>
-                                <td>{mp ? PointsDifference : <NoData />}</td>
-                                <td>{mp ? <div className={styles.total}>{TotalPoints}</div> : <NoData />}</td>
-                            </tr>
-                        </>
-                    })}
-            </tbody>
-        </table>
-    )
-}
+export default GroupStandings;
 
-export default GroupStandings
