@@ -12,7 +12,6 @@ const DrawerFinish = ({
   onConfirm = () => {},
   onClose = () => {},
 }) => {
-  console.log('DrawerFinish running...')
   if (!visible) return null;
   const steps = ["score", "cardedPlayers"];
   // create a state object to store the current step and the current task
@@ -41,7 +40,8 @@ const DrawerFinish = ({
       setCurrentStep(0);
       onClose()
     },
-    cardPlayersUpdated: (players) => {
+    cardPlayersUpdated: async (players) => {
+      await API.updateCardedPlayers(fixture.id, players);
       setCurrentStep(0);
       updateFixtures();
       onClose()
