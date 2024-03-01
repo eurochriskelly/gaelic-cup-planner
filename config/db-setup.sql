@@ -14,6 +14,17 @@ CREATE TABLE IF NOT EXISTS tournaments (
     Lon FLOAT NULL
 );
 
+--Create cards
+CREATE TABLE IF NOT EXISTS cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tournament INT,
+    fixture INT,
+    playerNumber INT,
+    playerName VARCHAR(255),
+    cardColor ENUM('yellow', 'red', 'black'),
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+);
+
 -- Create the groupings table
 CREATE TABLE IF NOT EXISTS groupings (
     id INT AUTO_INCREMENT PRIMARY KEY,
