@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import API from "../../../../../../shared/api/pitch";
 import ScoreSelect from "./ScoreSelect";
+import ListCardedPlayers from "./ListCardedPlayers";
 import styles from "./DrawerFinish.module.scss";
 
 const DrawerFinish = ({
   fixture,
   visible,
   updateFixtures,
+  initialStep = 0,
   onConfirm = () => {},
   onClose = () => {},
 }) => {
@@ -15,35 +17,32 @@ const DrawerFinish = ({
   // create a state object to store the current step and the current task
   const [currentTeam, setCurrentTeam] = useState("");
   const [currentType, setCurrentType] = useState("");
-
-  const [state, setState] = useState({ step: 0 });
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [scores, setScores] = useState({
     team1: { goals: "", points: "" },
     team2: { goals: "", points: "" },
   });
   const [scorePicker, setScorePicker] = useState({ visible: false });
 
-  const rules = {
-    score: {
-      display: state.step === 0 ? "block" : "none",
-    },
-    fillCards: {
-      display: state.step === 1 ? "block" : "none",
-    },
-  };
+  const drawerStepStyle = (step) => {
+    return {
+      display: steps[currentStep] === step ? "block" : "none",
+    };
+  }
 
   const actions = {
     saveScore: async () => {
       onConfirm();
       await API.updateScore(fixture.id, scores);
-      setState({ step: 1 });
+      setCurrentStep(1);
     },
     notReadyToSaveScore: () => {
-      setState({ step: 0 });
+      setCurrentStep(0);
       onClose()
     },
-    cardPlayersUpdated: () => {
-      setState({ step: 0 });
+    cardPlayersUpdated: async (players) => {
+      await API.updateCardedPlayers(fixture.id, players);
+      setCurrentStep(0);
       updateFixtures();
       onClose()
     },
@@ -70,7 +69,7 @@ const DrawerFinish = ({
   };
   return (
     <div className={styles.drawerFinish}>
-      <div className={styles.drawerStep} style={rules.score}>
+      <div className={styles.drawerStep} style={drawerStepStyle('score')}>
         <div className="drawer-header">Update match score</div>
         <div className="drawer-container" style={{ position: "relative" }}>
           <div>
@@ -128,15 +127,10 @@ const DrawerFinish = ({
         </div>
       </div>
 
-      <div className={styles.drawerStep} style={rules.fillCards}>
+      <div className={styles.drawerStep} style={drawerStepStyle('cardedPlayers')}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-          <div> TODO: allow entry of carded players here </div>
-          <div>
-            <button onClick={actions.cardPlayersUpdated} className="enabled">
-              Done
-            </button>
-          </div>
+           <ListCardedPlayers onProceed={actions.cardPlayersUpdated} />
         </div>
       </div>
     </div>

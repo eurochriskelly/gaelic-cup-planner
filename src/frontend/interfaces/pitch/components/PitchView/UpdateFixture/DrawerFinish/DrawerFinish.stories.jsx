@@ -19,3 +19,15 @@ export const BeforeMatchStarts = {
   },
 };
 
+export const CardPlayers = {
+  args: {
+    fixture: {
+      id: 2,
+    },
+    visible: true,
+    initialStep: 1,
+    updateFixtures: () => {},
+    onConfirm: () => {},
+  },
+}
+

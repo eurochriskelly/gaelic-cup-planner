@@ -115,6 +115,13 @@ table {
       margin: 2rem;
     }
   }
+  
+  /* input checkboxes should be large */
+  input[type="checkbox"].bigcheck {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 1.2rem;
+    }
 
 }
 
