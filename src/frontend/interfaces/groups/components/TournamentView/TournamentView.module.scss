@@ -3,12 +3,17 @@
 .tournamentView {
     display: grid;
     grid-template-columns: 10% 90%;
-    grid-template-rows: 350px 1fr;
+    grid-template-rows: 1fr 2.4fr;
     height: 100vh;
+
+    h4 {
+      margin: 0;
+      padding: 0;
+      background: none;
+    }
 
     article {
         display: grid;
-        grid-template-columns: 4% 32% 32% 32%;
         grid-column: 1 / -1;
         grid-gap: 0px;
         padding: 0px;
@@ -47,7 +52,7 @@
     border-radius: 0.3rem;
     background-color: #eee;
     line-height: 20px;
-    height: 5rem;
+    height: 3rem;
     >div {
         display:grid;
         grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
@@ -65,3 +70,8 @@
     }
 }
 
+.empty {
+  border: 3px solid red;
+  padding: 2rem;
+  background: #ccc;
+}
