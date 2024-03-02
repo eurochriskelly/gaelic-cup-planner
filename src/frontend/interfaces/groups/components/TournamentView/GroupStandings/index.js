@@ -3,7 +3,6 @@ import styles from "./GroupStandings.module.scss";
 const GroupStandings = ({ standings }) => {
   let lastGroup = "";
 
-
   const GroupDivider = ({ team }) => {
     if (lastGroup !== team.grp) {
       lastGroup = team.grp;
@@ -32,7 +31,7 @@ const GroupStandings = ({ standings }) => {
         </tr>
       </thead>
       <tbody>
-        {standings.map((team) => {
+        {standings.map((team, si) => {
           const {
             id,
             MatchesPlayed,
@@ -48,8 +47,8 @@ const GroupStandings = ({ standings }) => {
           const finished = mp === MatchesPlanned;
           return (
             <>
-              {lastGroup !== team.group && <GroupDivider team={team} />}
-              <tr key={id}>
+              {lastGroup !== team.group && <GroupDivider key={`gd-${si}`} team={team} />}
+              <tr key={`standing-row-${id}`}>
                 <td
                   className={styles.teamName}
                   style={{
@@ -85,4 +84,3 @@ const GroupStandings = ({ standings }) => {
 };
 
 export default GroupStandings;
-

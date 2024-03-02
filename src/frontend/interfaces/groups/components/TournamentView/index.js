@@ -6,7 +6,6 @@ import { getDivisions } from "../../../../shared/js/styler";
 import styles from "./TournamentView.module.scss";
 
 const TournamentView = () => {
-  console.log("TournamentView is starting");
   const { tournamentId } = useParams();
 
   const [groups, setGroups] = useState([]);
@@ -15,7 +14,6 @@ const TournamentView = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      console.log('Refreshing page')
       fetch(`/api/fixtures/nextup/${tournamentId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -39,13 +37,15 @@ const TournamentView = () => {
 
     fetchData(); // Call it once immediately
 
-    const intervalId = setInterval(fetchData, 5000); // Then set it to run every 60 seconds
+    const intervalId = setInterval(fetchData, 20000); // Then set it to run every 60 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
   }, [tournamentId]); // Make sure to include `tournamentId` in the dependency array if it's expected to change
 
   return (
-    <div className={styles.tournamentView}>
+    <div className={styles.tournamentView} style={{
+      gridTemplateRows: '1fr 2fr'
+    }}>
       <UpcomingFixtures
         styles={styles}
         groups={groups}

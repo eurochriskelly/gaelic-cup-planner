@@ -84,9 +84,9 @@ module.exports = (app, db, select) => {
      *    2.1 If yes, update the playoff fixtures based on new information
      */
     const updateScore = async (req, res) => {
-        II('Calling API: /api/fixtures/:id/score')
+        const { id } = req.params
+        II('Calling API: /api/fixtures/' + id + 'score')
         try {
-            const { id } = req.params
             const { team1, team2 } = req.body
             const updateQuery = [
                 "UPDATE fixtures",
