@@ -16,8 +16,7 @@ const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
   return (
     <article style={liveStyle}>
       <h2>
-        <div>Upcoming</div>
-        <div>fixtures</div>
+        <div>Upcoming fixtures</div>
       </h2>
       {nextGroups.map((group, id) => {
         const candidateMatches = (nextMatches || [])

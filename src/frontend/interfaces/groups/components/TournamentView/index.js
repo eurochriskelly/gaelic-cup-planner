@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import GroupStandings from "./GroupStandings";
@@ -43,9 +44,12 @@ const TournamentView = () => {
   }, [tournamentId]); // Make sure to include `tournamentId` in the dependency array if it's expected to change
 
   return (
-    <div className={styles.tournamentView} style={{
-      gridTemplateRows: '1fr 2fr'
-    }}>
+    <div
+      className={styles.tournamentView}
+      style={{
+        gridTemplateRows: "1fr 2fr",
+      }}
+    >
       <UpcomingFixtures
         styles={styles}
         groups={groups}
