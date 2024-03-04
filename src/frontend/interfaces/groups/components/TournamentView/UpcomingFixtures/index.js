@@ -1,59 +1,45 @@
 import React from "react";
 import { getDivisions } from "../../../../../shared/js/styler";
 
+const blockStyle = (col = "green") => ({
+  border: `3px solid ${col}`,
+  height: "100px",
+  margin: '0.4rem'
+});
+
 const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
   const liveStyle = {
     gridTemplateColumns: getDivisions(groups.length),
   };
+  // We show a maximum of 3 groups
+  const nextGroups = groups.slice(0, 3);
   return (
     <article style={liveStyle}>
       <h2>
-        <div>Upcoming</div>
-        <div>fixtures</div>
+        <div>Upcoming fixtures</div>
       </h2>
-      {groups.slice(0, 3).map((group, id) => {
+      {nextGroups.map((group, id) => {
+        const candidateMatches = (nextMatches || [])
+          .filter((match) => match.category === group)
+          .slice(0, 3);
+
+        const showMatches = {
+          previous: candidateMatches
+            .filter((m) => typeof m.goals1 === "number" && m.startedTime)
+            .shift(),
+          current: candidateMatches
+            .filter((m) => typeof m.goals1 !== "number" && m.startedTime)
+            .shift(),
+          next: candidateMatches
+            .filter((m) => typeof m.goals1 !== "number" && !m.startedTime)
+            .shift(),
+        };
         return (
           <section key={`k${id}`}>
             <h3>{group}</h3>
-            <div>
-              {(nextMatches || [])
-                .filter((match) => match.category === group)
-                .slice(0, 3)
-                .map((match, i) => {
-                  const {
-                    scheduledTime,
-                    team1,
-                    team2,
-                    goals1,
-                    goals2,
-                    points1,
-                    points2,
-                    umpiringTeam,
-                  } = match;
-                  return (
-                    <div key={`match${i}`} className={styles.nextArea}>
-                      <div>
-                        <span>{scheduledTime}</span>
-                        <span>{team1}</span>
-                        <span>vs</span>
-                        <span>{team2}</span>
-                      </div>
-                      {goals1 && goals2 && (
-                        <div>
-                          <span></span>
-                          <span>
-                            {goals1}-{points1}
-                          </span>
-                          <span></span>
-                          <span>
-                            {goals2}-{points2}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-            </div>
+            <MatchLastPlayed match={showMatches.previous} styles={styles} />
+            <MatchInProgress match={showMatches.current} styles={styles} />
+            <MatchUpcoming match={showMatches.next} styles={styles} />
           </section>
         );
       })}
@@ -62,3 +48,68 @@ const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
 };
 
 export default UpcomingFixtures;
+
+function MatchLastPlayed({ match, styles }) {
+  console.log('please')
+  if (!match)
+    return (
+      <div style={blockStyle('green')}>No matches finished in group yet.</div>
+    );
+  const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } =
+    match;
+  return (
+    <div className={styles.nextArea} style={blockStyle("green")}>
+      <h4>Last played</h4>
+      <div>
+        <span>{scheduledTime}</span>
+        <span>{team1}</span>
+        <span>vs</span>
+        <span>{team2}</span>
+      </div>
+      {goals1 && goals2 && (
+        <div>
+          <span></span>
+          <span>
+            {goals1}-{points1}
+          </span>
+          <span></span>
+          <span>
+            {goals2}-{points2}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MatchInProgress({ match, styles }) {
+  if (!match) return <div style={blockStyle('red')} >No match in progress.</div>;
+  const { scheduledTime, team1, team2 } = match;
+  return (
+    <div className={styles.nextArea} style={blockStyle("red")}>
+      <h4>In progress</h4>
+      <div>
+        <span>{scheduledTime}</span>
+        <span>{team1}</span>
+        <span>vs</span>
+        <span>{team2}</span>
+      </div>
+    </div>
+  );
+}
+
+function MatchUpcoming({ match, styles }) {
+  if (!match) return <div style={blockStyle('blue')}>No match in progress.</div>;
+  const { scheduledTime, team1, team2, umpiringTeam } = match;
+  return (
+    <div className={styles.nextArea} style={blockStyle("blue")}>
+      <h4>Next up</h4>
+      <div>
+        <span>{scheduledTime}</span>
+        <span>{team1}</span>
+        <span>vs</span>
+        <span>{team2}</span>
+      </div>
+    </div>
+  );
+}
