@@ -36,6 +36,7 @@ module.exports = (db, ARGS) => {
         const query = `SELECT * FROM v_tournaments`;
         console.log(query)
         db.query(query, (err, results) => {
+
             if (err) {
                 return res.status(500).json({ error: err.message });
             }

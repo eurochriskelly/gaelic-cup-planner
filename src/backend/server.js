@@ -1,7 +1,6 @@
 const mysql = require("mysql");
 
 const { processArgs } = require("./lib/process-args");
-const syncWithMaster = require("./lib/google-sheet-sync");
 const CONFIG = require("../../config/config");
 const apiSetup = require("./api/api-setup");
 const ARGS = processArgs(process.argv);
@@ -19,15 +18,7 @@ const run = async () => {
     console.log("Connected to the MySQL server.");
   });
 
-  if (ARGS["sync-from-master"]) {
-    await syncWithMaster(db);
-    setTimeout(async () => {
-      process.exit();
-    }, 5000);
-  } else {
-    apiSetup(db, ARGS);
-  }
+  apiSetup(db, ARGS);
 };
 
 run();
-
