@@ -85,7 +85,7 @@ module.exports = (app, db, select) => {
      */
     const updateScore = async (req, res) => {
         const { id } = req.params
-        II('Calling API: /api/fixtures/' + id + 'score')
+        II('Calling API: /api/fixtures/' + id + '/score')
         try {
             const { team1, team2 } = req.body
             const updateQuery = [
@@ -94,6 +94,7 @@ module.exports = (app, db, select) => {
                 `    goals2 = '${team2.goals}', points2 = '${team2.points}'`,
                 `WHERE id = ${id};`,
             ].join(' ')
+            console.log('score update', updateQuery)
             await select(updateQuery)
             await processStageCompletion(id)
             res.json({

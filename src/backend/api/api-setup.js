@@ -19,7 +19,8 @@ module.exports = (db, ARGS) => {
     app.get('/api/pitches', async (req, res) => {
         II('Calling API: /api/pitches')
 	// FIXME: We need a tournament selection screen when starting the app
-        const query = 'SELECT * FROM v_pitch_events where tournamentId = 5';
+        const query = 'SELECT * FROM v_pitch_events where tournamentId = 6';
+        console.log(query)
         try {
             const data = await select(query)
             return res.json(data)
@@ -33,6 +34,7 @@ module.exports = (db, ARGS) => {
         const parameter = req.params.parameter;
         // Now you can use the 'parameter' variable to fetch specific data from your database
         const query = `SELECT * FROM v_tournaments`;
+        console.log(query)
         db.query(query, (err, results) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
@@ -43,8 +45,8 @@ module.exports = (db, ARGS) => {
     })
 
     app.get('/api/group/standings/:tournamentId', async (req, res) => {
-        II('Calling API: /api/group/standings/tournamentId ...')
         const { tournamentId } = req.params
+        II(`Calling API: /api/group/standings/tournamentId [${tournamentId}]`)
         // Now you can use the 'parameter' variable to fetch specific data from your database
 
         const groups = await select(`SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId}`)
@@ -65,7 +67,6 @@ module.exports = (db, ARGS) => {
      // Catchall handler to serve the React index.html
     app.get('*', (req, res) => {
         console.log(`Serving [${ARGS.staticPath}]`)
-
         res.sendFile(path.join(__dirname, ARGS.staticPath + '/index.html'));
     });
 
