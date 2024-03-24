@@ -1,4 +1,3 @@
-
 const processArgs = (args) => {
     const ARGS = {}
     args.forEach(arg => {
@@ -19,19 +18,7 @@ const processArgs = (args) => {
     if (!ARGS.app) {
         throw new Error('Missing --app argument')
     } else {
-        switch (ARGS.app) {
-            case 'pitch':
-                ARGS.staticPath = '../../../src/frontend/interfaces/pitch/watch'
-                break
-            case 'groups':
-                ARGS.staticPath = '../../../src/frontend/interfaces/groups/watch'
-                break
-            case 'tournmgr':
-                ARGS.staticPath = '../../../src/frontend/interfaces/tournament/watch'
-                break
-            default:
-                throw new Error('Invalid --app argument: ', ARGS.app)
-        }
+      ARGS.staticPath = `../../../src/frontend/interfaces/${ARGS.app}/watch`
     }
     return ARGS
 }
