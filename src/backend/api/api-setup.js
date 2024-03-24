@@ -34,6 +34,7 @@ module.exports = (db, ARGS) => {
         // Now you can use the 'parameter' variable to fetch specific data from your database
         const query = `SELECT * FROM v_tournaments`;
         db.query(query, (err, results) => {
+
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
