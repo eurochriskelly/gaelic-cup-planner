@@ -29,11 +29,12 @@ const OrganizeTournament = () => {
             setGroup={actions.setGroup}>
             <>
                 {
-                    selectedGroup &&
+                    selectedGroup && <>
                     <GroupManager
                         group={selectedGroup}
                         tournament={selectedTournament}
                     />
+                    </>
                 }
             </>
         </TournamentLayout>

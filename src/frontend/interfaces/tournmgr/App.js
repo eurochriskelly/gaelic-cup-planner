@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import OrganizeTournament from "./components/OrganizeTournament";
+import './App.module.scss';
 
 function App() {
     return <>
