@@ -20,7 +20,6 @@ module.exports = (db, ARGS) => {
         II('Calling API: /api/pitches')
 	// FIXME: We need a tournament selection screen when starting the app
         const query = 'SELECT * FROM v_pitch_events where tournamentId = 6';
-        console.log(query)
         try {
             const data = await select(query)
             return res.json(data)
@@ -34,7 +33,6 @@ module.exports = (db, ARGS) => {
         const parameter = req.params.parameter;
         // Now you can use the 'parameter' variable to fetch specific data from your database
         const query = `SELECT * FROM v_tournaments`;
-        console.log(query)
         db.query(query, (err, results) => {
 
             if (err) {
