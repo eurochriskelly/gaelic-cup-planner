@@ -1,4 +1,9 @@
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
+
+// At the top of your file
+const path = require('path');
+
+/** @type { import('@storybook/react-webpack5').StorybookConfig } */
 const config = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
@@ -20,5 +25,41 @@ const config = {
   docs: {
     autodocs: "tag",
   },
+  // Your existing config
+  /*
+  webpackFinal: async (config) => {
+    config.module.rules.push({
+      test: /\.css$/,
+      use: [
+        {
+          loader: 'style-loader',
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+          },
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              ident: 'postcss',
+              plugins: [
+                require('postcss-import'),
+                require('tailwindcss')(path.resolve(__dirname, '../tailwind.config.js')),
+                require('autoprefixer'),
+              ],
+            },
+          },
+        },
+      ],
+      include: path.resolve(__dirname, '../'),
+    });
+
+    return config;
+  },
+  */
 };
+
 export default config;
