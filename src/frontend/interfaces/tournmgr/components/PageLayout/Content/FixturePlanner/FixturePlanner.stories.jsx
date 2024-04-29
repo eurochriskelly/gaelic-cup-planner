@@ -1,11 +1,9 @@
-// import  GroupManager from '.';
-import GroupSelector from './index.js';         
-import { action } from '@storybook/addon-actions';
+import FixtureManager from './index.js';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: 'groups/GroupSelector',
-  component: GroupSelector,
+  title: 'manage/TournamentManager',
+  component: FixtureManager,
   parameters: {
     layout: 'centered',
   },
@@ -18,9 +16,6 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Test1 = {
   args: {
-    selectedGroup: 'Ladies Senior',
-    tournamentId: 2,
-    setGroup: () => console.log('setgroup') || action('setGroup'),
   },
 };
 

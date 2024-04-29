@@ -15,3 +15,4 @@ config/secret
 
 /src/stories/
 /src/frontend/interfaces/groups/dist/
+/src/frontend/interfaces/tournmgr/watch/
