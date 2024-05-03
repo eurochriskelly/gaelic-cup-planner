@@ -7,7 +7,6 @@ const SelectPitchView = () => {
   const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
   async function fetchData() {
-    console.log("Fetching data...");
     fetch("/api/pitches")
       .then((response) => response.json())
       .then((data) => {
@@ -32,7 +31,7 @@ const SelectPitchView = () => {
             key={pitch.pitch}
             {...pitch}
             onChoosePitch={() => {
-              console.log("Pitche selected ");
+              console.log("Pitch selected ");
             }}
           />
         ))}

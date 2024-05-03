@@ -10,7 +10,6 @@
     "help": "clear;cat docs/developers-guide.md",
     "start": "bash scripts/build-fe.sh --watch",
     "launch": "bash scripts/launch.sh",
-    "sync": "node src/backend/server.js --sync-from-master=true",
     "deploy": "bash scripts/deploy.sh",
     "build": "bash scripts/build-fe.sh --build",
     "db:setup": "bash scripts/db-setup.sh",
@@ -88,6 +87,5 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },
-  "main": "index.js",
   "keywords": []
 }

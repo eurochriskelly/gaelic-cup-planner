@@ -46,6 +46,5 @@ runApp() {
 
 runApp "groups" 4000 &
 runApp "pitch" 4001 &
-runApp "tournmgr" 4002 &
 
 wait

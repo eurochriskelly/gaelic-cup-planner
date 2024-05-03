@@ -3,10 +3,13 @@
 .selectPitchView {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    color: red;
+    background-color: blue;
 }
 
 .container {
     position: relative;
+    background-color: white;
 }
 .container > * {
     position: absolute;
@@ -14,7 +17,7 @@
     left:0;
 }
 .container > h2 {
-    top: 7rem;
+    top: 19rem;
     margin-top: 3rem;
 }
 
