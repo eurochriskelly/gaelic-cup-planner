@@ -49,12 +49,8 @@ runParcel() {
 			mkdir -p src/apps/$ui/dist
 			parcel build $htm --dist-dir src/apps/$ui/dist
 			echo "Showing dist contents ..."
+			mkdir -p src/apps/$ui/dist
 			ls -alh src/apps/$ui/dist
-			if [ -f src/apps/$ui/dist/index.html ]; then
-				cp src/apps/$ui/dist/index.html src/apps/$ui/index.html
-			else
-				echo "ERROR: dist html not found!"
-			fi
 		fi
 
 		# Watch for changes
