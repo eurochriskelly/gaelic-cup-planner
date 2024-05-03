@@ -1,0 +1,26 @@
+@import "src/frontend/shared/css/_colors.scss";
+
+.selectPitchView {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.container {
+    position: relative;
+}
+.container > * {
+    position: absolute;
+    right: 0;
+    left:0;
+}
+.container > h2 {
+    top: 19rem;
+    margin-top: 3rem;
+}
+
+.container > div {
+    top: 14rem;
+}
+.container > div > div {
+    min-height: 15rem;
+}

@@ -1,0 +1,42 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.autocompleteSelect {
+  display: grid;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: 0.5fr 2fr;
+  border: 1px solid #ccc;
+  background-color: #eeeeee91; }
+  .autocompleteSelect > div.control {
+    display: grid; }
+    .autocompleteSelect > div.control > input {
+      padding: 0.2rem 0.4rem;
+      height: 30px;
+      border-radius: 0.5rem; }
+    .autocompleteSelect > div.control > div {
+      display: grid;
+      grid-template-columns: 1fr 1fr; }
+  .autocompleteSelect > div {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); }
+    .autocompleteSelect > div > p, .autocompleteSelect > div > span {
+      list-style: none;
+      margin: 0.3rem 0.3rem;
+      padding: 0.5rem;
+      text-overflow: clip;
+      white-space: nowrap;
+      font-size: 0.9em;
+      border-radius: 0.2rem; }
+    .autocompleteSelect > div > span {
+      background-color: #386733;
+      color: white; }
+      .autocompleteSelect > div > span:hover {
+        background-color: #4a8944;
+        color: black;
+        cursor: pointer; }
+    .autocompleteSelect > div > p {
+      background: #ddd !important;
+      color: #ddd; }
