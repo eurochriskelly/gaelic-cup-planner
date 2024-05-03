@@ -1,0 +1,86 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.allDone {
+  font-size: 1rem; }
+
+.selectPitch {
+  background-color: #2b3d2a;
+  border-radius: 1rem;
+  text-align: center;
+  padding: 20px;
+  color: white;
+  margin: 1rem 0.7rem;
+  font-family: Arial, sans-serif;
+  border: 0.15rem solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0.8rem 1.2rem 0 rgba(255, 255, 255, 0.5); }
+  .selectPitch > div:nth-child(2),
+  .selectPitch > div:nth-child(3) {
+    border-radius: 0.5rem;
+    background-color: #e2ebe1; }
+  .selectPitch .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; }
+    .selectPitch .header .pitch {
+      font-size: 2.0em;
+      font-weight: bold;
+      background-color: #a1b59f;
+      color: #0f280c;
+      min-width: 5rem;
+      padding: 0.1rem 0.3;
+      border-radius: 0.6rem; }
+    .selectPitch .header .location {
+      text-align: left;
+      font-size: 2em; }
+    .selectPitch .header .type {
+      border: 1px solid #ccc;
+      padding: 0.6rem 1.2rem;
+      font-size: 1.2rem;
+      background-color: #0f280c; }
+  .selectPitch .nextUp {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    padding: 0.3rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-color: #7c9179;
+    color: white;
+    text-align: left;
+    border-bottom: 0.24rem solid white; }
+  .selectPitch .details {
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 0.1fr; }
+    .selectPitch .details > div {
+      margin: 0;
+      padding: 0 1rem; }
+    .selectPitch .details .category {
+      color: #689463;
+      text-transform: uppercase;
+      text-align: left;
+      font-size: 1.2em; }
+    .selectPitch .details .time {
+      color: #0f280c;
+      font-size: 1.2em;
+      text-align: right;
+      font-weight: bold; }
+  .selectPitch .teams {
+    font-size: 1.2em;
+    padding-top: 0.3rem;
+    padding-bottom: 0.9rem;
+    color: #666; }
+    .selectPitch .teams .team1,
+    .selectPitch .teams .team2 {
+      font-size: 1.6rem;
+      color: #0a2d07;
+      font-weight: bold;
+      padding: 0.5rem; }
+  .selectPitch > div.noMoreFixtures {
+    font-size: 1.8rem;
+    padding: 5rem;
+    color: #86b182;
+    background-color: #2e3a2d;
+    border: 1px solid #2b7624; }

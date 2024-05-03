@@ -1,0 +1,56 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.updateFixture > div:first-child {
+  width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 0.6fr 0.6fr; }
+
+.more {
+  margin-left: 0.4rem; }
+
+.updateFixture > div:nth-child(2) {
+  width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 0.6fr 0.6fr; }
+
+.updateFixture > div button {
+  line-height: 6rem;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  font-size: 2.2rem; }
+
+.updateFixture > div:first-child button:last-child,
+.updateFixture > div:nth-child(2) button:first-child {
+  padding: 0;
+  line-height: 2rem;
+  background-color: #c6b3d3;
+  border: none; }
+
+/* DRAWERS */
+.updateFixture > div.drawers {
+  margin-top: 1rem;
+  font-size: 1.7rem; }
+
+.scoresUpToDate {
+  color: #777;
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+  text-align: center; }
+
+.updateFixture .header {
+  color: red !important; }
+
+/** TEST MODULES **/
+.storybook {
+  background: red;
+  width: 800px; }
+  .storybook > div:nth-child(2) {
+    display: grid;
+    background: blue;
+    width: 100%;
+    grid-template-columns: auto auto auto; }
