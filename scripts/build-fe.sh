@@ -46,7 +46,8 @@ runParcel() {
 
 		# Build the app cleanly
 		if "$build"; then
-			parcel build $htm --dist-dir $thisui/dist
+			mkdir -p src/apps/$ui/dist
+			parcel build $htm --dist-dir src/apps/$ui/dist
 			echo "Showing dist contents ..."
 			ls -alh src/apps/$ui/dist
 			if [ -f src/apps/$ui/dist/index.html ]; then
@@ -61,7 +62,7 @@ runParcel() {
 			echo "Parcel watch app [$ui] from dir [$(pwd)] on port [$port]"
 			mkdir -p $thisui/watch
 			# set -o xtrace
-			parcel $htm --port $port --dist-dir $thisui/watch &
+			parcel $htm --port $port --dist-dir $thisui/watch --no-cache &
 			# set +o xtrace
 			echo $! >>/tmp/build-fe.pids
 		fi

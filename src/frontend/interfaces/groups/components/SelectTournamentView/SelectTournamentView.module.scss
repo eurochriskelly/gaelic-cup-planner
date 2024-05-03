@@ -2,6 +2,7 @@
 @import "~/src/frontend/shared/css/_colors.scss";
 
 .selectTournamentView {
+    background-color: red;
     > article {
         > section {
             background-color: desaturate(lighten($pc, 60%), 30%);
