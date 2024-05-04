@@ -4,7 +4,6 @@ import API from "../../../../shared/api/pitch";
 import Fixture from "./Fixture";
 import PitchViewHeader from "./PitchViewHeader";
 import UpdateFixture from "./UpdateFixture";
-import styles from "./PitchView.module.scss";
 
 const PitchView = () => {
   const { pitchId } = useParams();
@@ -38,14 +37,14 @@ const PitchView = () => {
     actions.fetchFixtures()
   }, []);
   return (
-    <div className={styles.pitchView}>
+    <div className="pitchView">
       <PitchViewHeader
         pitchId={pitchId}
         backToSelection={() => navigate("/")}
         changeTab={setFixtureFilter}
       />
-      <div className={styles.fixturesBody}>
-        <div className={styles.fixturesArea}>
+      <div className="fixturesBody">
+        <div className="fixturesArea">
           {fixtures
             .filter((f) => {
               const focusFixture = nextFixture && nextFixture.id === f.id;

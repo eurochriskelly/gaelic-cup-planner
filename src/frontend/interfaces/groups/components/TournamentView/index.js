@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import GroupStandings from "./GroupStandings";
 import UpcomingFixtures from "./UpcomingFixtures";
 import { getDivisions } from "../../../../shared/js/styler";
-import styles from "./TournamentView.module.scss";
 
 const TournamentView = () => {
   const { tournamentId } = useParams();
@@ -45,13 +44,12 @@ const TournamentView = () => {
 
   return (
     <div
-      className={styles.tournamentView}
+      className='tournamentView'
       style={{
         gridTemplateRows: "1fr 2fr",
       }}
     >
       <UpcomingFixtures
-        styles={styles}
         groups={groups}
         nextMatches={nextMatches}
       />

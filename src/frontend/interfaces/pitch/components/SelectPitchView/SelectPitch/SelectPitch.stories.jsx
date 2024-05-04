@@ -1,7 +1,7 @@
 import React from 'react';
 import SelectPitch from './';
 import { MemoryRouter } from 'react-router-dom';
-import styles from './SelectPitch.module.scss'
+import './SelectPitch.scss'
 
 export default {
   title: 'pitch/SelectPitchView/SelectPitch',

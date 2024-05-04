@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import styles from "./SelectTournamentView.module.scss"
 
 const SelectTournamentView = () => {
     const navigate = useNavigate()
@@ -25,7 +24,7 @@ const SelectTournamentView = () => {
     }
 
     return (
-        <div className={styles.selectTournamentView}>
+        <div className='selectTournamentView'>
             <h2>Select a tournament</h2>
             <article>
                 {tournaments.map(({Id, Title, Date, Tournament}) => (

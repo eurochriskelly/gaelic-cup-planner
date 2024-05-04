@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styles from './DrawerGetReady.module.scss';
 
 const DrawerGetReady = ({
     fixture,
@@ -38,7 +37,7 @@ const DrawerGetReady = ({
     };
 
     return (
-        <div className={styles.drawerGetReady}>
+        <div className='drawerGetReady'>
             <div className='drawer-header'>Pre-match checklist</div>
             <div className='drawer-container'>
                 <div>

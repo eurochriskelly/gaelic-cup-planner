@@ -1,0 +1,13 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+button .btn {
+  background-color: #2b7624;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 0.5rem; }
+  button .btn:hover {
+    background-color: #48c43c;
+    cursor: pointer; }

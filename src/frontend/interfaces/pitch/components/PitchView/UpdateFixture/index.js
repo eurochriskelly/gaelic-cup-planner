@@ -4,7 +4,6 @@ import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
 import DrawerGetReady from "./DrawerGetReady";
 
-import styles from "./UpdateFixture.module.scss";
 const UpdateFixture = ({
   fixture,
   updateFixtures,
@@ -100,7 +99,7 @@ const UpdateFixture = ({
   };
 
   return (
-    <div className={styles.updateFixture}>
+    <div className='updateFixture'>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
         <BtnGetReady btnClass={enableStates.start} onGetReady={actions.start} />
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
@@ -111,7 +110,7 @@ const UpdateFixture = ({
       </div>
 
       {/* DRAWERS */}
-      <div className={styles.drawers} style={drawerStyle}>
+      <div className='drawers' style={drawerStyle}>
         <DrawerGetReady
           fixture={fixture}
           startMatch={startMatch}
@@ -153,7 +152,7 @@ function BtnPostpone({
   btnClass
 }) {
   return (
-    <button className={btnClass} onClick={onPostpone}>
+    <button className={'disabled'} onClick={onPostpone}>
       Postpone&nbsp;
       <svg width="22" height="22" viewBox="0 0 20 20">
         <circle
@@ -175,8 +174,9 @@ function BtnCancel({
   onCancel,
   btnClass
 }) {
+  // class should be btnCancel
   return (
-    <button className={btnClass} onClick={onCancel}>
+    <button className='disabled' onClick={onCancel}>
       Cancel match&nbsp;
       <svg width="22" height="22" viewBox="0 0 22 22">
         <circle
