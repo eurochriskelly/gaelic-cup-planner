@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styles from "./PitchViewHeader.module.scss";
 
 const PitchViewHeader = ({
   pitchId,
@@ -15,18 +14,18 @@ const PitchViewHeader = ({
     changeTab(tab);
   };
   return (
-    <div className={styles.fixturesHead}>
+    <div className='fixturesHead'>
       <h2>
         <span onClick={backToSelection}>&larr;</span>
         <span>Fixtures for pitch: {pitchId}</span>
       </h2>
 
-      <div className={styles.navBar}>
+      <div className='navBar'>
         {tabNames.map((tn, i) => (
           <span
             key={`tn${i}`}
             onClick={tabSelected.bind(null, tn)}
-            className={`tab-${tn} ${tn === currentTab ? styles.selected : ""}`}
+            className={`tab-${tn} ${tn === currentTab ? 'selected' : ""}`}
           >
             {tn}
           </span>

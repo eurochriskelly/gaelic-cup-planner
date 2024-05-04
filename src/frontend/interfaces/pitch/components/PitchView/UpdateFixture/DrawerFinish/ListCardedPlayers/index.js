@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import CardSelector from "./CardSelector";
-import styles from "./ListCardedPlayers.module.scss";
 
 const CardedPlayerRow = ({ id, data, onAdd, onRemove }) => {
   const [playerNumber, setPlayerNumber] = useState("");
@@ -12,7 +11,7 @@ const CardedPlayerRow = ({ id, data, onAdd, onRemove }) => {
   };
   const filled = playerName && playerNumber && playerCard;
   return (
-    <div className={styles.CardedPlayerRow} key={`cardedplayer-${id}`}>
+    <div className='CardedPlayerRow' key={`cardedplayer-${id}`}>
       <CardSelector onCard={(card) => {
         setPlayerCard(card)     
       }} />
@@ -66,7 +65,7 @@ const ListCardedPlayers = ({
     },
   };
   return (
-    <div className={styles.ListCardedPlayers}>
+    <div className='ListCardedPlayersr'>
       <div style={{ display: allowClose ? "none" : "block" }}>
         {[...cardedPlayers, ""].map((player, index) => {
           const data = index < cardedPlayers.length ? cardedPlayers[index] : null;
@@ -81,7 +80,7 @@ const ListCardedPlayers = ({
           );
         })}
       </div>
-      <div className={styles.ready}>
+      <div className='ready'>
         <input
           type="checkbox"
           id="allowClose"
@@ -92,7 +91,7 @@ const ListCardedPlayers = ({
       <button
         onClick={onProceed.bind(null, cardedPlayers)}
         className="enabled"
-        style={{ display: allowClose ? "block" : "none" }}
+        style={{ display: allowClose ? "block" : "none", width: '100%' }}
       >
         Proceed to next game!
       </button>

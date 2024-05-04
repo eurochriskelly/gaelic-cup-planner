@@ -2,7 +2,6 @@ import React from "react";
 
 import ScoreDisplay from "../../../../../shared/generic/ScoreDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
-import styles from "./Fixture.module.scss";
 
 const Fixture = ({ fixture, isFocus }) => {
   const {
@@ -55,7 +54,7 @@ const Fixture = ({ fixture, isFocus }) => {
 
   return (
     <div
-      className={`${styles.fixture} ${isFocus ? styles.focusFixture : ""}`}
+      className={`fixture ${isFocus ? 'focusFixture' : ""}`}
       key={id}
     >
       <div
@@ -79,7 +78,7 @@ const Fixture = ({ fixture, isFocus }) => {
         </div>
         <div>
           <div
-            className={(winner === team1 ? styles.winner : "") + " teamName"}
+            className={(winner === team1 ? 'winner' : "") + " teamName"}
           >
             {formatName(team1, winner === team1)}
           </div>
@@ -87,14 +86,14 @@ const Fixture = ({ fixture, isFocus }) => {
         </div>
         <div>
           <div
-            className={(winner === team2 ? styles.winner : "") + " teamName"}
+            className={(winner === team2 ? 'winner' : "") + " teamName"}
           >
             {formatName(team2, winner === team2)}
           </div>
           <ScoreDisplay goals={goals2} points={points2} played={played} />
         </div>
         {!played && (
-          <div className={styles.umpires}>
+          <div className='umpires'>
             {umpireTeam ? (
               <span>
                 <b>UMPIRING: </b>
