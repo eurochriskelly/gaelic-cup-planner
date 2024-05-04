@@ -1,5 +1,8 @@
 const { II, DD, EE } = require('../../lib/logging')
 
+// FIXME: Please pass tournament back
+const TOURN_ID = 7;
+
 module.exports = (app, db, select) => {
     /* Check if a given stage is complete */
     const processStageCompletion = async (fixtureId) => {
@@ -65,6 +68,7 @@ module.exports = (app, db, select) => {
                     ` tournamentId = ${tournamentId} and `,
                     ` category = '${category}'`,
                 ].join(' ')
+                console.log('Updating playoff fixtures')
                 console.log(qUpdatePlayoffTeam1)
                 console.log(qUpdatePlayoffTeam2)
                 console.log(qUpdateUmpireTeam)
@@ -74,9 +78,32 @@ module.exports = (app, db, select) => {
             })
             return true
         }
+
         console.log(`Stage [${stage}/${groupNumber}] for [${category}] has [${remainingMatchesInStage}] remaining matches.`)
         return false
     }
+
+    const processAnyMatchDependentFixtures = async (teamInfo) => {
+        // Any time a match is updated attempt to update any teams were dependent on the outcome
+        const { name, position, matchId, category, tournamentId } = teamInfo
+        const placeHolder = `~match:${matchId}/p:${position}`
+        const qAnyMatchWinner = x => [
+            `UPDATE fixtures `,
+            `SET ${x}Id = '${name}' `,
+            `WHERE `,
+            `  ${x}Planned = '${placeHolder}' and `,
+            `  tournamentId = ${tournamentId} and `,
+            `  category = '${category}'`,
+        ].join(' ');
+        console.log('Updating fixtures depending out match outcome for match [', matchId, ']')
+        console.log(qAnyMatchWinner('team1'))
+        console.log(qAnyMatchWinner('team2'))
+        console.log(qAnyMatchWinner('umpireTeam'))
+        await select(qAnyMatchWinner('team1'))
+        await select(qAnyMatchWinner('team2'))
+        await select(qAnyMatchWinner('umpireTeam'))
+    }
+        
 
     /* Update the score
      * 1. Update the score
@@ -87,7 +114,11 @@ module.exports = (app, db, select) => {
         const { id } = req.params
         II('Calling API: /api/fixtures/' + id + '/score')
         try {
+            console.log('Body contains the following')
+            console.log(req.body)
             const { team1, team2 } = req.body
+            const team1Score = team1.goals*3 + team1.points
+            const team2Score = team2.goals*3 + team2.points
             const updateQuery = [
                 "UPDATE fixtures",
                 `SET goals1 = '${team1.goals}', points1 = '${team1.points}', `,
@@ -96,10 +127,23 @@ module.exports = (app, db, select) => {
             ].join(' ')
             console.log('score update', updateQuery)
             await select(updateQuery)
+            // TODO:: These queries can be run in parallel or in a combined statement
             await processStageCompletion(id)
-            res.json({
-                message: 'Score updated successfully.'
-            });
+            await processAnyMatchDependentFixtures({
+                name: team1.name,
+                category: team1.category,
+                position: (team1Score > team2Score) ? 1 : 2,
+                matchId: id,
+                tournamentId: TOURN_ID
+            })
+            await processAnyMatchDependentFixtures({
+                name: team2.name,
+                category: team2.category,
+                position: (team1Score > team2Score) ? 2 : 1,
+                matchId: id,
+                tournamentId: TOURN_ID
+            })
+            res.json({ message: 'Score updated successfully.' });
         } catch (err) {
             console.log('Error occured', err)
             return res.status(500).json({ error: err.message });
@@ -114,7 +158,7 @@ module.exports = (app, db, select) => {
             "(tournament, fixture, playerNumber, playerName, cardColor)",
             "VALUES",
             req.body.map((player) => {
-                return `(5, ${id}, ${player.playerNumber}, '${player.playerName}', '${player.playerCard}')`
+                return `(${TOURN_ID}, ${id}, ${player.playerNumber}, '${player.playerName}', '${player.playerCard}')`
             }).join(','),
         ].join(' ')
         db.query(query, (err, results) => {
