@@ -1,0 +1,43 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.drawerGetReady {
+  background-color: white;
+  border-radius: 2rem;
+  width: 100%;
+  margin: 0.8rem 0.5rem 2rem 0.5rem;
+  /* input checkboxes should be large */ }
+  .drawerGetReady button {
+    width: 100%;
+    margin: auto;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase; }
+  .drawerGetReady ul {
+    list-style: none;
+    margin: 4rem 1rem;
+    margin-bottom: 5rem; }
+  .drawerGetReady li {
+    font-size: 2.2rem; }
+    .drawerGetReady li > span {
+      margin: 2rem; }
+  .drawerGetReady li::before {
+    margin-right: 5px;
+    /* Add some spacing between the checkmark and the text */
+    color: #2b7624;
+    /* Change the color of the checkmark */
+    font-size: 3rem; }
+  .drawerGetReady li > span > span {
+    background-color: #8b51b0;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.1rem;
+    font-weight: bold; }
+  .drawerGetReady div > div:last-child p {
+    margin: 4rem;
+    text-align: center; }
+  .drawerGetReady input[type="checkbox"] {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 1.2rem; }
