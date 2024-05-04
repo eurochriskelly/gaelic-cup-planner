@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styles from "./ScoreSelect.module.scss";
 import { argv0 } from "process";
 
 const Header = ({ name, team, pages, setPages, setScores, scores }) => {
@@ -32,7 +31,7 @@ const Header = ({ name, team, pages, setPages, setScores, scores }) => {
     });
   };
   return (
-    <div className={styles.header}>
+    <div className='header'>
       <button
         disabled={pages[name] < 0 ? "disabled" : ""}
         onClick={decreasePage}
@@ -76,9 +75,9 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
     const to = from + total;
     for (let i = from; i <= to; i++) {
       const cname =
-        styles.square +
+        'square ' +
         (localScores[currentTeam][currentType] === i
-          ? ` ${styles.active}`
+          ? 'active'
           : "");
       squares.push(
         <div
@@ -103,7 +102,7 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
   squaresPoints = updateSquares(currentTeam, "points", 19);
 
   return (
-    <div className={styles.scoreSelect}>
+    <div className='scoreSelect'>
       <div>
         <Header
           name="goals"
@@ -113,7 +112,7 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
           scores={scores}
           setScores={setScores}
         />
-        <div className={styles.goals}>{squaresGoals}</div>
+        <div className='goals'>{squaresGoals}</div>
       </div>
       <div/>
       <div>
@@ -125,7 +124,7 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
           scores={scores}
           setScores={setScores}
         />
-        <div className={styles.points}>{squaresPoints}</div>
+        <div className='points'>{squaresPoints}</div>
       </div>
     </div>
   );

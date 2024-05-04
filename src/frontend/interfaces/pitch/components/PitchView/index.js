@@ -4,7 +4,6 @@ import API from "../../../../shared/api/pitch";
 import Fixture from "./Fixture";
 import PitchViewHeader from "./PitchViewHeader";
 import UpdateFixture from "./UpdateFixture";
-import "./PitchView.module.css";
 
 const PitchView = () => {
   const { pitchId } = useParams();
