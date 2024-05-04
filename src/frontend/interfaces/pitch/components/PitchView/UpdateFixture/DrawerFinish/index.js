@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import API from "../../../../../../shared/api/pitch";
 import ScoreSelect from "./ScoreSelect";
 import ListCardedPlayers from "./ListCardedPlayers";
-import styles from "./DrawerFinish.module.scss";
 
 const DrawerFinish = ({
   fixture,
@@ -19,8 +18,8 @@ const DrawerFinish = ({
   const [currentType, setCurrentType] = useState("");
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [scores, setScores] = useState({
-    team1: { goals: "", points: "" },
-    team2: { goals: "", points: "" },
+    team1: { goals: "", points: "", name: fixture.team1, category: fixture.category },
+    team2: { goals: "", points: "", name: fixture.team2, category: fixture.category },
   });
   const [scorePicker, setScorePicker] = useState({ visible: false });
 
@@ -70,12 +69,12 @@ const DrawerFinish = ({
     return score || score === 0 ? score : "?";
   };
   return (
-    <div className={styles.drawerFinish}>
-      <div className={styles.drawerStep} style={drawerStepStyle('score')}>
+    <div className='drawerFinish'>
+      <div className='drawerStep' style={drawerStepStyle('score')}>
         <div className="drawer-header">Update match score</div>
         <div className="drawer-container" style={{ position: "relative" }}>
           <div>
-            <div className={styles.teamScore}>
+            <div className='teamScore'>
               <h4>{team1}</h4>
               <div>
                 <div onClick={actions.updateScore.bind(null, "team1", "goals")}>
@@ -88,7 +87,7 @@ const DrawerFinish = ({
                 </div>
               </div>
             </div>
-            <div className={styles.teamScore}>
+            <div className='teamScore'>
               <h4>{team2}</h4>
               <div>
                 <div onClick={actions.updateScore.bind(null, "team2", "goals")}>
@@ -101,7 +100,7 @@ const DrawerFinish = ({
                 </div>
               </div>
             </div>
-            <div className={styles.proceedButtons}>
+            <div className='proceedButtons'>
               <button
                 disabled={scoresNotReady()}
                 className={scoresNotReady() ? "disabled" : "enabled"}
@@ -113,7 +112,7 @@ const DrawerFinish = ({
             </div>
           </div>
           {scorePicker.visible && (
-            <div className={styles.scoreSelector}>
+            <div className='scoreSelector'>
               <ScoreSelect
                 scores={scores}
                 currentTeam={currentTeam}
@@ -129,7 +128,7 @@ const DrawerFinish = ({
         </div>
       </div>
 
-      <div className={styles.drawerStep} style={drawerStepStyle('cardedPlayers')}>
+      <div className='drawerStep' style={drawerStepStyle('cardedPlayers')}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
            <ListCardedPlayers onProceed={actions.cardPlayersUpdated} />

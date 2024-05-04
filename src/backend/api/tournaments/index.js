@@ -45,7 +45,6 @@ module.exports = (app, db, select) => {
                 console.log('Error occured while getting groups', err)
                 return res.status(500).json({ error: err.message });
             }
-            console.log(results)
             res.json({ data: results });
         });
     }

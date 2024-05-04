@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SelectPitch from "./SelectPitch";
-import styles from "./SelectPitchView.module.scss";
-
 
 const SelectPitchView = () => {
   const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
   async function fetchData() {
-    console.log("Fetching data...");
     fetch("/api/pitches")
       .then((response) => response.json())
       .then((data) => {
@@ -23,16 +20,16 @@ const SelectPitchView = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <h2>Please select pitch</h2>
-      <div className={styles.selectPitchView}>
+      <div className="selectPitchView">
         {" "}
         {pitchData.map((pitch) => (
           <SelectPitch
             key={pitch.pitch}
             {...pitch}
             onChoosePitch={() => {
-              console.log("Pitche selected ");
+              console.log("Pitch selected ");
             }}
           />
         ))}

@@ -1,14 +1,13 @@
 import React from "react";
-import styles from './DrawerPostpone.module.scss'
 
 const DrawerPostpone = ({ onClose, delayByOne, delayUntilEnd, visible }) => {
   if (!visible) return null;
   return (
-    <div className={styles.DrawerPostpone}>
+    <div className='DrawerPostpone'>
       <div>
         <div className="drawer-header">Postpone match</div>
         <div className="drawer-container">
-          <div className={styles.postponeForm} >
+          <div className='postponeForm' >
             <div className="drawer-content-row">
               <div className="drawer-content-label">Reason</div>
               <div className="drawer-content-value">
@@ -16,7 +15,7 @@ const DrawerPostpone = ({ onClose, delayByOne, delayUntilEnd, visible }) => {
               </div>
             </div>
           </div>
-          <div className={styles.footer}>
+          <div className='footer'>
             <button className="btn btn-primary enabled" onClick={delayByOne}>
               by 1 match
             </button>

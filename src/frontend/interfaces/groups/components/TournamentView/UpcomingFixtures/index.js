@@ -7,7 +7,7 @@ const blockStyle = (col = "green") => ({
   margin: '0.4rem'
 });
 
-const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
+const UpcomingFixtures = ({ groups, nextMatches }) => {
   const liveStyle = {
     gridTemplateColumns: getDivisions(groups.length),
   };
@@ -37,9 +37,9 @@ const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
         return (
           <section key={`k${id}`}>
             <h3>{group}</h3>
-            <MatchLastPlayed match={showMatches.previous} styles={styles} />
-            <MatchInProgress match={showMatches.current} styles={styles} />
-            <MatchUpcoming match={showMatches.next} styles={styles} />
+            <MatchLastPlayed match={showMatches.previous} />
+            <MatchInProgress match={showMatches.current} />
+            <MatchUpcoming match={showMatches.next}  />
           </section>
         );
       })}
@@ -49,8 +49,7 @@ const UpcomingFixtures = ({ groups, styles, nextMatches }) => {
 
 export default UpcomingFixtures;
 
-function MatchLastPlayed({ match, styles }) {
-  console.log('please')
+function MatchLastPlayed({ match }) {
   if (!match)
     return (
       <div style={blockStyle('green')}>No matches finished in group yet.</div>
@@ -58,7 +57,7 @@ function MatchLastPlayed({ match, styles }) {
   const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } =
     match;
   return (
-    <div className={styles.nextArea} style={blockStyle("green")}>
+    <div className='nextArea' style={blockStyle("green")}>
       <h4>Last played</h4>
       <div>
         <span>{scheduledTime}</span>
@@ -82,11 +81,11 @@ function MatchLastPlayed({ match, styles }) {
   );
 }
 
-function MatchInProgress({ match, styles }) {
+function MatchInProgress({ match }) {
   if (!match) return <div style={blockStyle('red')} >No match in progress.</div>;
   const { scheduledTime, team1, team2 } = match;
   return (
-    <div className={styles.nextArea} style={blockStyle("red")}>
+    <div className='nextArea' style={blockStyle("red")}>
       <h4>In progress</h4>
       <div>
         <span>{scheduledTime}</span>
@@ -98,11 +97,11 @@ function MatchInProgress({ match, styles }) {
   );
 }
 
-function MatchUpcoming({ match, styles }) {
+function MatchUpcoming({ match }) {
   if (!match) return <div style={blockStyle('blue')}>No match in progress.</div>;
   const { scheduledTime, team1, team2, umpiringTeam } = match;
   return (
-    <div className={styles.nextArea} style={blockStyle("blue")}>
+    <div className='nextArea' style={blockStyle("blue")}>
       <h4>Next up</h4>
       <div>
         <span>{scheduledTime}</span>

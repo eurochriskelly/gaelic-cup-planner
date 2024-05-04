@@ -4,6 +4,8 @@ set -e
 
 interfaces=src/frontend/interfaces
 
+PARCEL=$(pwd)/node_modules/.bin/parcel
+
 cleanup() {
 	echo "Cleaning up ..."
 	for pid in $(cat /tmp/build-fe.pids); do
@@ -46,14 +48,11 @@ runParcel() {
 
 		# Build the app cleanly
 		if "$build"; then
-			parcel build $htm --dist-dir $thisui/dist
+			mkdir -p src/apps/$ui/dist
+			$PARCEL build $htm --dist-dir src/apps/$ui/dist
 			echo "Showing dist contents ..."
+			mkdir -p src/apps/$ui/dist
 			ls -alh src/apps/$ui/dist
-			if [ -f src/apps/$ui/dist/index.html ]; then
-				cp src/apps/$ui/dist/index.html src/apps/$ui/index.html
-			else
-				echo "ERROR: dist html not found!"
-			fi
 		fi
 
 		# Watch for changes
@@ -61,7 +60,7 @@ runParcel() {
 			echo "Parcel watch app [$ui] from dir [$(pwd)] on port [$port]"
 			mkdir -p $thisui/watch
 			# set -o xtrace
-			parcel $htm --port $port --dist-dir $thisui/watch &
+			$PARCEL $htm --port $port --dist-dir $thisui/watch --no-cache &
 			# set +o xtrace
 			echo $! >>/tmp/build-fe.pids
 		fi

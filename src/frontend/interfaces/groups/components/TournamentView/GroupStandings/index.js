@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./GroupStandings.module.scss";
 
 const GroupStandings = ({ standings }) => {
   let lastGroup = "";
@@ -9,16 +8,16 @@ const GroupStandings = ({ standings }) => {
       lastGroup = team.grp;
       return (
         <tr key={team.id}>
-          <td colSpan="9" className={styles.groupHeader}>
+          <td colSpan="9" className='groupHeader'>
             Group {team.grp}
           </td>
         </tr>
       );
     }
   };
-  const NoData = () => <span className={styles.noData}>-</span>;
+  const NoData = () => <span className='noData'>-</span>;
   return (
-    <table className={styles.groupStandings}>
+    <table className='groupStandings'>
       <thead>
         <tr>
           <th>Team</th>
@@ -51,7 +50,7 @@ const GroupStandings = ({ standings }) => {
               {lastGroup !== team.group && <GroupDivider key={`gd-${si}`} team={team} />}
               <tr key={`standing-row-${id}`}>
                 <td
-                  className={styles.teamName}
+                  className='teamName'
                   style={{
                     fontWeight: finished ? "bold" : "normal",
                     color: finished ? "black" : "grey",
@@ -61,7 +60,7 @@ const GroupStandings = ({ standings }) => {
                 </td>
                 <td>
                   {MatchesPlayed}
-                  <span className={styles.lessRelevant}>/{MatchesPlanned}</span>
+                  <span className='lessRelevant'>/{MatchesPlanned}</span>
                 </td>
                 <td>{mp ? Wins : <NoData />}</td>
                 <td>{mp ? Draws : <NoData />}</td>
@@ -70,7 +69,7 @@ const GroupStandings = ({ standings }) => {
                 <td>{mp ? PointsDifference : <NoData />}</td>
                 <td>
                   {mp ? (
-                    <div className={styles.total}>{TotalPoints}</div>
+                    <div className='total'>{TotalPoints}</div>
                   ) : (
                     <NoData />
                   )}
