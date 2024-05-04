@@ -1,5 +1,4 @@
 import ScoreSelect from './';
-import styles from './ScoreSelect.module.scss'
 
 export default {
   title: 'pitch/UpdateFixture/DrawerFinish/ScoreSelect',

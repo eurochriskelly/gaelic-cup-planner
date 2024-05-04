@@ -1,6 +1,10 @@
 @import "src/frontend/shared/css/_colors.scss";
 
-
+#allowClose {
+  height: 3rem;
+  margin: 6rem 2rem 2rem 2rem;
+  width: 4rem;
+}
 .pitchView {
     background: blue;
     height: 100%;
