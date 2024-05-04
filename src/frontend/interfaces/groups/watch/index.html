@@ -99,6 +99,203 @@ h6 {
   color: #333;
   font-size: 16px;
 }
+
+.tournamentView {
+  grid-template-rows: 1fr 2.4fr;
+  grid-template-columns: 10% 90%;
+  height: 100vh;
+  display: grid;
+}
+
+.tournamentView h4 {
+  background: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tournamentView article {
+  grid-gap: 0px;
+  background: #f8f8f8;
+  grid-column: 1 / -1;
+  align-items: start;
+  padding: 0;
+  display: grid;
+}
+
+.tournamentView article h2 {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  text-align: center;
+  background: #bbb;
+  grid-area: 1 / 1 / -1;
+  margin: 0;
+  padding: 0;
+  font-size: 2vh;
+  transform: rotate(180deg);
+}
+
+.tournamentView article section {
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 100%;
+  display: grid;
+}
+
+.tournamentView article section h3 {
+  background: #ccc;
+  margin: 0 0 10px;
+  padding: .5em;
+}
+
+.tournamentView article section > div {
+  height: 150px;
+  padding: 1em;
+}
+
+.nextArea {
+  background-color: #eee;
+  border-radius: .3rem;
+  height: 3rem;
+  line-height: 20px;
+}
+
+.nextArea > div {
+  grid-template-columns: .2fr 1fr .2fr 1fr;
+  margin: .4rem 0;
+  padding: .3rem;
+  display: grid;
+}
+
+.nextArea > div:first-child > span {
+  margin-right: .1rem;
+  padding: .2rem;
+}
+
+.nextArea span {
+  text-align: center;
+}
+
+.empty {
+  background: #ccc;
+  border: 3px solid red;
+  padding: 2rem;
+}
+
+.groupStandings {
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+
+.groupStandings * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.groupStandings h2 {
+  background-color: #fff;
+}
+
+.groupStandings th, .groupStandings td {
+  font-size: .8vw;
+}
+
+.groupStandings th:nth-child(n+2):nth-child(-n+8), .groupStandings td:nth-child(n+2):nth-child(-n+8) {
+  text-align: center;
+  width: 2.4vw;
+}
+
+.groupStandings th:nth-child(2), .groupStandings td:nth-child(2) {
+  letter-spacing: .2rem;
+  width: 3vw;
+}
+
+.groupStandings th:nth-child(n+3):nth-child(-n+5), .groupStandings td:nth-child(n+3):nth-child(-n+5) {
+  max-width: 1.6vw;
+}
+
+.groupStandings th:first-child, .groupStandings td:first-child {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.groupStandings th {
+  color: #fff;
+  text-transform: uppercase;
+  background-color: #b89fc8;
+  border: none;
+  font-weight: normal;
+  line-height: 1.3em;
+}
+
+.groupStandings td {
+  border: 0;
+  border-bottom: 1px solid #ddd;
+  line-height: 3.3em;
+}
+
+td.groupHeader {
+  text-align: center;
+  text-transform: uppercase;
+  color: #2b7624;
+  border-bottom: 5px solid #48c43c;
+  margin: 0;
+  padding: 1.2rem 0 0;
+}
+
+td.finished {
+  color: #0f280c;
+  font-weight: bold;
+}
+
+.lessRelevant {
+  color: #999;
+}
+
+.noData {
+  color: #999;
+  font-weight: normal;
+}
+
+td > div.total {
+  color: #0f280c;
+  background-color: #92db8b;
+  border-radius: 3px;
+  margin: .2rem;
+  padding: 0;
+  font-weight: bold;
+}
+
+.selectTournamentView > article > section {
+  background-color: #e1ece0;
+  border: 1px solid #ccc;
+  margin: 1rem;
+}
+
+.selectTournamentView > article > section:hover {
+  background-color: #c3d8c1;
+}
+
+.selectTournamentView > article > section h3 {
+  text-align: center;
+  margin: .5rem 0 1.2rem;
+}
+
+.selectTournamentView > article > section > div > div {
+  grid-template-columns: 1fr 2fr;
+  padding: .3rem 1rem;
+  display: grid;
+}
+
+.selectTournamentView > article > section > div > div > span:first-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.selectTournamentView > article > section > div > div > span:last-child {
+  font-size: 1.2rem;
+}
 </style>
     <div id="app"></div>
     <script>// modules are defined as an array
@@ -34132,8 +34329,6 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactRouterDom = require("react-router-dom");
-var _selectTournamentViewModuleScss = require("./SelectTournamentView.module.scss");
-var _selectTournamentViewModuleScssDefault = parcelHelpers.interopDefault(_selectTournamentViewModuleScss);
 var _s = $RefreshSig$();
 const SelectTournamentView = ()=>{
     _s();
@@ -34158,13 +34353,13 @@ const SelectTournamentView = ()=>{
         });
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _selectTournamentViewModuleScssDefault.default).selectTournamentView,
+        className: "selectTournamentView",
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Select a tournament"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                lineNumber: 29,
+                lineNumber: 28,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("article", {
@@ -34175,7 +34370,7 @@ const SelectTournamentView = ()=>{
                                 children: Title
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                lineNumber: 33,
+                                lineNumber: 32,
                                 columnNumber: 25
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34186,20 +34381,20 @@ const SelectTournamentView = ()=>{
                                                 children: "Date"
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                                lineNumber: 36,
+                                                lineNumber: 35,
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                                 children: Date?.substring(0, 10)
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                                lineNumber: 37,
+                                                lineNumber: 36,
                                                 columnNumber: 33
                                             }, undefined)
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                        lineNumber: 35,
+                                        lineNumber: 34,
                                         columnNumber: 29
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -34208,43 +34403,43 @@ const SelectTournamentView = ()=>{
                                                 children: "Location"
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                                lineNumber: 40,
+                                                lineNumber: 39,
                                                 columnNumber: 33
                                             }, undefined),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                                 children: Location
                                             }, void 0, false, {
                                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                                lineNumber: 41,
+                                                lineNumber: 40,
                                                 columnNumber: 33
                                             }, undefined)
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                        lineNumber: 39,
+                                        lineNumber: 38,
                                         columnNumber: 29
                                     }, undefined)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                                lineNumber: 34,
+                                lineNumber: 33,
                                 columnNumber: 25
                             }, undefined)
                         ]
                     }, Id, true, {
                         fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                        lineNumber: 32,
+                        lineNumber: 31,
                         columnNumber: 21
                     }, undefined))
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-                lineNumber: 30,
+                lineNumber: 29,
                 columnNumber: 13
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/SelectTournamentView/index.js",
-        lineNumber: 28,
+        lineNumber: 27,
         columnNumber: 9
     }, undefined);
 };
@@ -34263,10 +34458,7 @@ $RefreshReg$(_c, "SelectTournamentView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./SelectTournamentView.module.scss":"h6a0l","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"h6a0l":[function(require,module,exports) {
-module.exports["selectTournamentView"] = `UV4beG_selectTournamentView`;
-
-},{}],"km3Ru":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"km3Ru":[function(require,module,exports) {
 "use strict";
 var Refresh = require("7422ead32dcc1e6b");
 function debounce(func, delay) {
@@ -34886,8 +35078,6 @@ var _groupStandingsDefault = parcelHelpers.interopDefault(_groupStandings);
 var _upcomingFixtures = require("./UpcomingFixtures");
 var _upcomingFixturesDefault = parcelHelpers.interopDefault(_upcomingFixtures);
 var _styler = require("../../../../shared/js/styler");
-var _tournamentViewModuleScss = require("./TournamentView.module.scss");
-var _tournamentViewModuleScssDefault = parcelHelpers.interopDefault(_tournamentViewModuleScss);
 var _s = $RefreshSig$();
 const TournamentView = ()=>{
     _s();
@@ -34917,18 +35107,17 @@ const TournamentView = ()=>{
         tournamentId
     ]); // Make sure to include `tournamentId` in the dependency array if it's expected to change
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: (0, _tournamentViewModuleScssDefault.default).tournamentView,
+        className: "tournamentView",
         style: {
             gridTemplateRows: "1fr 2fr"
         },
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _upcomingFixturesDefault.default), {
-                styles: (0, _tournamentViewModuleScssDefault.default),
                 groups: groups,
                 nextMatches: nextMatches
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-                lineNumber: 53,
+                lineNumber: 52,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("article", {
@@ -34940,7 +35129,7 @@ const TournamentView = ()=>{
                         children: "Standings"
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-                        lineNumber: 59,
+                        lineNumber: 57,
                         columnNumber: 9
                     }, undefined),
                     groups.map((group, id)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -34948,24 +35137,24 @@ const TournamentView = ()=>{
                                 standings: standings.filter((team)=>team.category === group)
                             }, void 0, false, {
                                 fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-                                lineNumber: 62,
+                                lineNumber: 60,
                                 columnNumber: 13
                             }, undefined)
                         }, `g${id}`, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-                            lineNumber: 61,
+                            lineNumber: 59,
                             columnNumber: 11
                         }, undefined))
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-                lineNumber: 58,
+                lineNumber: 56,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/index.js",
-        lineNumber: 47,
+        lineNumber: 46,
         columnNumber: 5
     }, undefined);
 };
@@ -35007,7 +35196,7 @@ $RefreshReg$(_c, "TournamentView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./GroupStandings":"3p3Ow","./UpcomingFixtures":"qF8Ng","../../../../shared/js/styler":"1xY0L","./TournamentView.module.scss":"9RGht","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"3p3Ow":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-router-dom":"9xmpe","./GroupStandings":"3p3Ow","./UpcomingFixtures":"qF8Ng","../../../../shared/js/styler":"1xY0L","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"3p3Ow":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$32b4 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -35019,8 +35208,6 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
-var _groupStandingsModuleScss = require("./GroupStandings.module.scss");
-var _groupStandingsModuleScssDefault = parcelHelpers.interopDefault(_groupStandingsModuleScss);
 const GroupStandings = ({ standings })=>{
     let lastGroup = "";
     const GroupDivider = ({ team })=>{
@@ -35029,33 +35216,33 @@ const GroupStandings = ({ standings })=>{
             return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("tr", {
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
                     colSpan: "9",
-                    className: (0, _groupStandingsModuleScssDefault.default).groupHeader,
+                    className: "groupHeader",
                     children: [
                         "Group ",
                         team.grp
                     ]
                 }, void 0, true, {
                     fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                    lineNumber: 12,
+                    lineNumber: 11,
                     columnNumber: 11
                 }, undefined)
             }, team.id, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                lineNumber: 11,
+                lineNumber: 10,
                 columnNumber: 9
             }, undefined);
         }
     };
     const NoData = ()=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-            className: (0, _groupStandingsModuleScssDefault.default).noData,
+            className: "noData",
             children: "-"
         }, void 0, false, {
             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-            lineNumber: 19,
+            lineNumber: 18,
             columnNumber: 24
         }, undefined);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("table", {
-        className: (0, _groupStandingsModuleScssDefault.default).groupStandings,
+        className: "groupStandings",
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("thead", {
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("tr", {
@@ -35064,67 +35251,67 @@ const GroupStandings = ({ standings })=>{
                             children: "Team"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 24,
+                            lineNumber: 23,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "MP"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 25,
+                            lineNumber: 24,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "W"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 26,
+                            lineNumber: 25,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "D"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 27,
+                            lineNumber: 26,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "L"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 28,
+                            lineNumber: 27,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "PF"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 29,
+                            lineNumber: 28,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "PD"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 30,
+                            lineNumber: 29,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("th", {
                             children: "Pts"
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                            lineNumber: 31,
+                            lineNumber: 30,
                             columnNumber: 11
                         }, undefined)
                     ]
                 }, void 0, true, {
                     fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                    lineNumber: 23,
+                    lineNumber: 22,
                     columnNumber: 9
                 }, undefined)
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                lineNumber: 22,
+                lineNumber: 21,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("tbody", {
@@ -35138,13 +35325,13 @@ const GroupStandings = ({ standings })=>{
                                 team: team
                             }, `gd-${si}`, false, {
                                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                lineNumber: 51,
+                                lineNumber: 50,
                                 columnNumber: 44
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("tr", {
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        className: (0, _groupStandingsModuleScssDefault.default).teamName,
+                                        className: "teamName",
                                         style: {
                                             fontWeight: finished ? "bold" : "normal",
                                             color: finished ? "black" : "grey"
@@ -35152,34 +35339,45 @@ const GroupStandings = ({ standings })=>{
                                         children: team.team
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                        lineNumber: 53,
+                                        lineNumber: 52,
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
                                         children: [
                                             MatchesPlayed,
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                className: (0, _groupStandingsModuleScssDefault.default).lessRelevant,
+                                                className: "lessRelevant",
                                                 children: [
                                                     "/",
                                                     MatchesPlanned
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                                lineNumber: 64,
+                                                lineNumber: 63,
                                                 columnNumber: 19
                                             }, undefined)
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                        lineNumber: 62,
+                                        lineNumber: 61,
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
                                         children: mp ? Wins : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
                                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                            lineNumber: 66,
+                                            lineNumber: 65,
                                             columnNumber: 34
+                                        }, undefined)
+                                    }, void 0, false, {
+                                        fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
+                                        lineNumber: 65,
+                                        columnNumber: 17
+                                    }, undefined),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
+                                        children: mp ? Draws : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                            fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
+                                            lineNumber: 66,
+                                            columnNumber: 35
                                         }, undefined)
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
@@ -35187,10 +35385,10 @@ const GroupStandings = ({ standings })=>{
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        children: mp ? Draws : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                        children: mp ? Losses : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
                                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
                                             lineNumber: 67,
-                                            columnNumber: 35
+                                            columnNumber: 36
                                         }, undefined)
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
@@ -35198,10 +35396,10 @@ const GroupStandings = ({ standings })=>{
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        children: mp ? Losses : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                        children: mp ? PointsFrom : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
                                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
                                             lineNumber: 68,
-                                            columnNumber: 36
+                                            columnNumber: 40
                                         }, undefined)
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
@@ -35209,10 +35407,10 @@ const GroupStandings = ({ standings })=>{
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        children: mp ? PointsFrom : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                        children: mp ? PointsDifference : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
                                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
                                             lineNumber: 69,
-                                            columnNumber: 40
+                                            columnNumber: 46
                                         }, undefined)
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
@@ -35220,38 +35418,27 @@ const GroupStandings = ({ standings })=>{
                                         columnNumber: 17
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        children: mp ? PointsDifference : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                        children: mp ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                            className: "total",
+                                            children: TotalPoints
+                                        }, void 0, false, {
                                             fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                            lineNumber: 70,
-                                            columnNumber: 46
+                                            lineNumber: 72,
+                                            columnNumber: 21
+                                        }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
+                                            fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
+                                            lineNumber: 74,
+                                            columnNumber: 21
                                         }, undefined)
                                     }, void 0, false, {
                                         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
                                         lineNumber: 70,
                                         columnNumber: 17
-                                    }, undefined),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("td", {
-                                        children: mp ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                            className: (0, _groupStandingsModuleScssDefault.default).total,
-                                            children: TotalPoints
-                                        }, void 0, false, {
-                                            fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                            lineNumber: 73,
-                                            columnNumber: 21
-                                        }, undefined) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(NoData, {}, void 0, false, {
-                                            fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                            lineNumber: 75,
-                                            columnNumber: 21
-                                        }, undefined)
-                                    }, void 0, false, {
-                                        fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                        lineNumber: 71,
-                                        columnNumber: 17
                                     }, undefined)
                                 ]
                             }, `standing-row-${id}`, true, {
                                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                                lineNumber: 52,
+                                lineNumber: 51,
                                 columnNumber: 15
                             }, undefined)
                         ]
@@ -35259,13 +35446,13 @@ const GroupStandings = ({ standings })=>{
                 })
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-                lineNumber: 34,
+                lineNumber: 33,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/GroupStandings/index.js",
-        lineNumber: 21,
+        lineNumber: 20,
         columnNumber: 5
     }, undefined);
 };
@@ -35279,15 +35466,7 @@ $RefreshReg$(_c, "GroupStandings");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GroupStandings.module.scss":"e8PQY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"e8PQY":[function(require,module,exports) {
-module.exports["finished"] = `QtwIEa_finished`;
-module.exports["groupHeader"] = `QtwIEa_groupHeader`;
-module.exports["groupStandings"] = `QtwIEa_groupStandings`;
-module.exports["lessRelevant"] = `QtwIEa_lessRelevant`;
-module.exports["noData"] = `QtwIEa_noData`;
-module.exports["total"] = `QtwIEa_total`;
-
-},{}],"qF8Ng":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"qF8Ng":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$128e = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -35305,7 +35484,7 @@ const blockStyle = (col = "green")=>({
         height: "100px",
         margin: "0.4rem"
     });
-const UpcomingFixtures = ({ groups, styles, nextMatches })=>{
+const UpcomingFixtures = ({ groups, nextMatches })=>{
     const liveStyle = {
         gridTemplateColumns: (0, _styler.getDivisions)(groups.length)
     };
@@ -35344,24 +35523,21 @@ const UpcomingFixtures = ({ groups, styles, nextMatches })=>{
                             columnNumber: 13
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(MatchLastPlayed, {
-                            match: showMatches.previous,
-                            styles: styles
+                            match: showMatches.previous
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
                             lineNumber: 40,
                             columnNumber: 13
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(MatchInProgress, {
-                            match: showMatches.current,
-                            styles: styles
+                            match: showMatches.current
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
                             lineNumber: 41,
                             columnNumber: 13
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(MatchUpcoming, {
-                            match: showMatches.next,
-                            styles: styles
+                            match: showMatches.next
                         }, void 0, false, {
                             fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
                             lineNumber: 42,
@@ -35383,26 +35559,25 @@ const UpcomingFixtures = ({ groups, styles, nextMatches })=>{
 };
 _c = UpcomingFixtures;
 exports.default = UpcomingFixtures;
-function MatchLastPlayed({ match, styles }) {
-    console.log("please");
+function MatchLastPlayed({ match }) {
     if (!match) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: blockStyle("green"),
         children: "No matches finished in group yet."
     }, void 0, false, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 56,
+        lineNumber: 55,
         columnNumber: 7
     }, this);
     const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } = match;
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: styles.nextArea,
+        className: "nextArea",
         style: blockStyle("green"),
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
                 children: "Last played"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 62,
+                lineNumber: 61,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35411,41 +35586,41 @@ function MatchLastPlayed({ match, styles }) {
                         children: scheduledTime
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 64,
+                        lineNumber: 63,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: team1
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 65,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: "vs"
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 66,
+                        lineNumber: 65,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: team2
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 67,
+                        lineNumber: 66,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 63,
+                lineNumber: 62,
                 columnNumber: 7
             }, this),
             goals1 && goals2 && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {}, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 71,
+                        lineNumber: 70,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -35456,12 +35631,12 @@ function MatchLastPlayed({ match, styles }) {
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 72,
+                        lineNumber: 71,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {}, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 75,
+                        lineNumber: 74,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -35472,107 +35647,107 @@ function MatchLastPlayed({ match, styles }) {
                         ]
                     }, void 0, true, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 76,
+                        lineNumber: 75,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 70,
+                lineNumber: 69,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 61,
+        lineNumber: 60,
         columnNumber: 5
     }, this);
 }
 _c1 = MatchLastPlayed;
-function MatchInProgress({ match, styles }) {
+function MatchInProgress({ match }) {
     if (!match) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: blockStyle("red"),
         children: "No match in progress."
     }, void 0, false, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 86,
+        lineNumber: 85,
         columnNumber: 22
     }, this);
     const { scheduledTime, team1, team2 } = match;
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: styles.nextArea,
+        className: "nextArea",
         style: blockStyle("red"),
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
                 children: "In progress"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 90,
+                lineNumber: 89,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: scheduledTime
+                    }, void 0, false, {
+                        fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
+                        lineNumber: 91,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                        children: team1
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
                         lineNumber: 92,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                        children: team1
+                        children: "vs"
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
                         lineNumber: 93,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                        children: "vs"
-                    }, void 0, false, {
-                        fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 94,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: team2
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 95,
+                        lineNumber: 94,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 91,
+                lineNumber: 90,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 89,
+        lineNumber: 88,
         columnNumber: 5
     }, this);
 }
 _c2 = MatchInProgress;
-function MatchUpcoming({ match, styles }) {
+function MatchUpcoming({ match }) {
     if (!match) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: blockStyle("blue"),
         children: "No match in progress."
     }, void 0, false, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 102,
+        lineNumber: 101,
         columnNumber: 22
     }, this);
     const { scheduledTime, team1, team2, umpiringTeam } = match;
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: styles.nextArea,
+        className: "nextArea",
         style: blockStyle("blue"),
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
                 children: "Next up"
             }, void 0, false, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 106,
+                lineNumber: 105,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35581,40 +35756,40 @@ function MatchUpcoming({ match, styles }) {
                         children: scheduledTime
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 108,
+                        lineNumber: 107,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: team1
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 109,
+                        lineNumber: 108,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: "vs"
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 110,
+                        lineNumber: 109,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                         children: team2
                     }, void 0, false, {
                         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                        lineNumber: 111,
+                        lineNumber: 110,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-                lineNumber: 107,
+                lineNumber: 106,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/frontend/interfaces/groups/components/TournamentView/UpcomingFixtures/index.js",
-        lineNumber: 105,
+        lineNumber: 104,
         columnNumber: 5
     }, this);
 }
@@ -35644,12 +35819,7 @@ function getDivisions(n) {
     return result;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9RGht":[function(require,module,exports) {
-module.exports["empty"] = `EfzPkq_empty`;
-module.exports["nextArea"] = `EfzPkq_nextArea`;
-module.exports["tournamentView"] = `EfzPkq_tournamentView`;
-
-},{}]},["8UDxn","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["8UDxn","1xC6H","5qIMD"], "5qIMD", "parcelRequiredadd")
 
 </script>
 </body>
