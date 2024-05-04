@@ -18,7 +18,7 @@ module.exports = (db, ARGS) => {
     // API endpoint to get data from the database
     app.get('/api/pitches', async (req, res) => {
         II('Calling API: /api/pitches')
-	// FIXME: We need a tournament selection screen when starting the app
+        // FIXME: We need a tournament selection screen when starting the app
         const query = 'SELECT * FROM v_pitch_events where tournamentId = 7';
         try {
             const data = await select(query)
@@ -55,7 +55,6 @@ module.exports = (db, ARGS) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
-            console.log(results)
             res.json({
                 groups: groups.data.map(g => g.category),
                 data: results,
