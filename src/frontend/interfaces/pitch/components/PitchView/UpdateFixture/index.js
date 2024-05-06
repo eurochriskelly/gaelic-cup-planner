@@ -153,7 +153,7 @@ function BtnPostpone({
   btnClass
 }) {
   return (
-    <button className={'disabled'} onClick={onPostpone}>
+    <button className={'enabled'} onClick={onPostpone}>
       Postpone&nbsp;
       <svg width="22" height="22" viewBox="0 0 20 20">
         <circle
