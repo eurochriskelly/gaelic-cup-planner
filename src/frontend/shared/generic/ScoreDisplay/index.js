@@ -28,7 +28,8 @@ const ScoreDisplay = ({ header, goals, points, played }) => {
       </span>
     );
   }
-  const ifPlayed = (val) => (played ? val : "?");
+  const ifPlayed = (val) => (played ? `00${val}`.slice(-2) : "??");
+  const ifPlayedGoals = (val) => (played ? val : "?");
   return (
     <span
       style={{
@@ -39,12 +40,12 @@ const ScoreDisplay = ({ header, goals, points, played }) => {
         backgroundColor: "rgba(179,198,179,0.5)",
       }}
     >
-      {ifPlayed(goals || "0")}-{ifPlayed(points || "0")}{" "}
+      {ifPlayedGoals(goals || "0")}-{ifPlayed(points || "0")}{" "}
       <span style={{ color: "#888" }}>
         (
-        <span style={{ fontWeight: "bold", color: "#000" }}>
-          {ifPlayed((goals || 0) * 3 + (points || 0))}
-        </span>
+          <span style={{ fontWeight: "bold", color: "#000" }}>
+            {ifPlayed((goals || 0) * 3 + (points || 0))}
+          </span>
         )
       </span>
     </span>

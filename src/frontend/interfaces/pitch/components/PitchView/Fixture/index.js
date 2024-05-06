@@ -1,5 +1,6 @@
 import React from "react";
 
+import { formatTeamName } from "../../common/TeamNameDisplay";
 import ScoreDisplay from "../../../../../shared/generic/ScoreDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
 
@@ -40,7 +41,7 @@ const Fixture = ({ fixture, isFocus }) => {
 
   const formatName = (name, winner) => {
     if (name.startsWith("~")) {
-      return "T.B.D.";
+      return formatTeamName(name);
     }
     return (
       (winner ? "🏅" : "") +
