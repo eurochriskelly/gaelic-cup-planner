@@ -49,8 +49,9 @@ To import, add the following to the top of your scss file:
 .storybook {
   background: red;
   width: 800px; }
-  .storybook > div:nth-child(2) {
-    display: grid;
-    background: blue;
-    width: 100%;
-    grid-template-columns: auto auto auto; }
+
+.storybook > div:nth-child(2) {
+  display: grid;
+  background: blue;
+  width: 100%;
+  grid-template-columns: auto auto auto; }
