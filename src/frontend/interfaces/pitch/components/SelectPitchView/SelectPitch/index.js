@@ -8,7 +8,9 @@ const SelectPitch = ({
   category,
   team1,
   team2,
+  matchId,
   scheduledTime,
+  startedTime = null,
   onChoosePitch,
 }) => {
   const navigate = useNavigate();
@@ -29,15 +31,15 @@ const SelectPitch = ({
       </div>
       {category ? (
         <div>
-          <div className="nextUp">NEXT UP:</div>
+          <NextGameTitle match={matchId} started={startedTime} />
           <div className="details">
             <div className="category">{category}</div>
             <div className="time">{`@${scheduledTime}`}</div>
           </div>
           <div className="teams">
-            <div className="team1">{team1}</div>
+            <TeamNameDisplay number={1} team={team1} />
             <div>vs</div>
-            <div className="team2">{team2}</div>
+            <TeamNameDisplay number={2} team={team2} />
           </div>
         </div>
       ) : (
@@ -50,3 +52,52 @@ const SelectPitch = ({
 };
 
 export default SelectPitch;
+
+function TeamNameDisplay({
+  team,
+  number
+}) {
+  let displayTeam = team
+  if (team.startsWith('~')) {
+    // e.g. "~match:102/p:1"
+    const parts = team.replace('~', '').split('/')
+    const dependent = parts[0]
+    const position = +(parts[1].replace('p:', ''))
+    const [ type, order ] = dependent.split(':')
+    const outcome = order === 1 ? 'Winner' : 'Loser'
+    switch (type) {
+      case 'match':
+        displayTeam = `${outcome} of FIXTURE #${position}`
+        break
+      case 'semis':
+      case 'finals':
+      case 'quarters':
+        displayTeam = `${outcome} of ${type.toUpperCase()} #${position}`
+        break
+      default: 
+        displayTeam =  'T.B.D.'
+        break
+    }
+  }
+  return <div className={`team${number}`}>{displayTeam}</div>
+}
+
+function NextGameTitle({
+  started,
+  match
+}) {
+  const showMatchNumber = () => {
+    let matchstr = ''
+    if (match) {
+      matchstr = `: fixture(${match})`
+    }
+    return <i>{matchstr}</i>
+  }
+  return (
+    <div className="play">{
+      started
+      ? <span className="inProgress">In progress {showMatchNumber()}</span>
+      : <span className="nextUp">Next up {showMatchNumber()}</span>
+    }</div>
+  )
+}
