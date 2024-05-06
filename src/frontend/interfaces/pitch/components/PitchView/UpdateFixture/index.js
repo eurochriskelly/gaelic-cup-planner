@@ -154,7 +154,7 @@ function BtnPostpone({
 }) {
   return (
     <button className={'enabled'} onClick={onPostpone}>
-      Postpone&nbsp;
+      <span>Re-schedule</span>
       <svg width="22" height="22" viewBox="0 0 20 20">
         <circle
           cx="12"
