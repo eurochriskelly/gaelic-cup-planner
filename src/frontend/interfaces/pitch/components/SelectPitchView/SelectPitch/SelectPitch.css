@@ -46,16 +46,26 @@ To import, add the following to the top of your scss file:
   font-size: 1.2rem;
   background-color: #0f280c; }
 
-.selectPitch .nextUp {
+.selectPitch .play {
   margin-bottom: 20px;
+  text-transform: uppercase;
   font-size: 1.5em;
   padding: 0.3rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
-  background-color: #7c9179;
   color: white;
-  text-align: left;
+  text-align: center;
+  background-color: #7c9179;
   border-bottom: 0.24rem solid white; }
+
+.selectPitch .play i span {
+  text-decoration: underline; }
+
+.selectPitch .play > .nextUp {
+  color: white; }
+
+.selectPitch .play > .inProgress {
+  color: red; }
 
 .selectPitch .details {
   margin-bottom: 20px;
