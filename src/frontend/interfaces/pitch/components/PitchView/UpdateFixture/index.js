@@ -78,6 +78,7 @@ const UpdateFixture = ({
       });
     },
     finish: () => {
+      if (enableStates.finish === "disabled") return;
       setEnableStates({
         start: "disabled",
         postpone: "disabled",
