@@ -44,7 +44,15 @@ runApp() {
 	done
 }
 
-runApp "groups" 4000 &
-runApp "pitch" 4001 &
+PORT1=4000
+PORT2=4001
+for arg in "$@"; do
+    if [ "$arg" = "--dev" ]; then
+        PORT1=$(($PORT1 + 1000))
+        PORT2=$(($PORT2 + 1000))
+    fi
+done
+runApp "groups" $PORT1 &
+runApp "pitch" $PORT2 &
 
 wait
