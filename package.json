@@ -11,15 +11,13 @@
     "start": "bash scripts/build-fe.sh --watch",
     "launch": "bash scripts/launch.sh",
     "launch:dev": "bash scripts/launch.sh --dev",
+    "css:watch": "bash scripts/build-css.sh",
     "deploy": "bash scripts/deploy.sh",
     "build": "bash scripts/build-fe.sh --build",
     "db:setup": "bash scripts/db-setup.sh",
     "test:fe": "bash scripts/test-fe.sh",
-    "relink:css": "bash node_modules/gather-links/bin/relink.sh --type=css --type=scss --src=. --dest=../all-styles --ignore=node_modules",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "ws:_init": "wsswitch --init",
-    "ws": "wsswitch --select"
+    "build-storybook": "storybook build"
   },
   "parcel": {
     "aliases": {
