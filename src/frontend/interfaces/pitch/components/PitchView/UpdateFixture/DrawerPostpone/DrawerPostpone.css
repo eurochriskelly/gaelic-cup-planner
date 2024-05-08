@@ -7,17 +7,52 @@ To import, add the following to the top of your scss file:
   width: 100%;
   background-color: white;
   border-radius: 2rem; }
-  .drawerPostpone .postponeForm {
-    font-size: 3rem;
-    display: grid;
-    width: 100%;
-    box-sizing: border-box; }
-    .drawerPostpone .postponeForm input {
-      width: 90%;
-      box-sizing: border-box;
-      padding: 2rem;
-      font-size: 2rem;
-      border-radius: 1rem; }
-  .drawerPostpone .footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; }
+
+.drawerPostpone .postponeForm {
+  font-size: 3rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+  width: 90%;
+  box-sizing: border-box; }
+
+.drawerPostpone .postponeForm .drawer-content-row {
+  align-items: center; }
+
+.drawerPostpone .postponeForm .drawer-content-label {
+  margin-right: 1rem;
+  font-size: 2.4rem;
+  margin-top: 3rem; }
+
+.drawerPostpone .postponeForm input[type="text"], .drawerPostpone .postponeForm select {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 2rem;
+  font-size: 2rem;
+  border-radius: 1rem; }
+
+.drawerPostpone .postponeForm input[type="radio"] {
+  margin: 0 1rem 0 0;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle; }
+
+.drawerPostpone .footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+
+.drawerPostpone .footer button {
+  margin: 1rem;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  border-radius: 1rem; }
+
+.drawerPostpone .footer .btn-primary {
+  background-color: #2b7624;
+  color: white;
+  border: none; }
+
+.drawerPostpone .footer .btn-secondary {
+  background-color: #885ea3;
+  color: white;
+  border: none; }

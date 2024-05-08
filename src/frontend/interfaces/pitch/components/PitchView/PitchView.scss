@@ -68,5 +68,14 @@
             height: calc(100vh - 40px);
             /* Adjust height based on header's height */
         }
+        .noFixtures {
+            margin: 0 auto;
+            padding: 3rem;
+            font-size: 3rem;
+            width: 100%;
+            color: darken($pc, 20%);
+            border-radius: 1rem;
+            background-color: lighten(desaturate($pc, 45%), 30%);
+        }
     }
 }
