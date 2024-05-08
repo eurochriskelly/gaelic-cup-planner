@@ -10,6 +10,7 @@
     "help": "clear;cat docs/developers-guide.md",
     "start": "bash scripts/build-fe.sh --watch",
     "launch": "bash scripts/launch.sh",
+    "launch:dev": "bash scripts/launch.sh --dev",
     "deploy": "bash scripts/deploy.sh",
     "build": "bash scripts/build-fe.sh --build",
     "db:setup": "bash scripts/db-setup.sh",
