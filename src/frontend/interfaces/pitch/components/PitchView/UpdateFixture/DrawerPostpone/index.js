@@ -1,22 +1,73 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Select from 'react-select';
+import './DrawerPostpone.css';
 
-const DrawerPostpone = ({ onClose, delayByOne, delayUntilEnd, visible }) => {
+const DrawerPostpone = ({
+  onClose,
+  visible,
+}) => {
+
+  const [selPitch, setSelPitch] = useState('Pitch 4');
+  const [selFixture, setSelFixture] = useState(null);
+  const [placement, setPlacement] = useState("after");
+  const [fixtures, setFixtures] = useState([]);
+  const [pitches, setPitches] = useState([]);
+
+  useEffect(() => {
+    // When user opens the drawer, fetch all fixtures data
+    fetch("/api/pitches")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('pitch', data.data)
+        setPitches(data.data.map(pitch => pitch.pitch));
+      })
+      .catch((error) => {
+
+      });
+    fetch("/api/fixtures")
+      .then((response) => response.json())
+      .then((data) => { 
+        setFixtures(data.data);
+      })
+      .catch((error) => { console.error("Error fetching data:", error); });
+  }, []);
+
+  if (!visible) return null;
+
+  const handlePitchChange = ({value}) => setSelPitch(value);
+  const handleFixtureChange = ({value}) => setSelFixture(value);
+  const handlePlacementChange = (event) => {
+    console.log('placement', event)
+    setPlacement(event.target.value);
+  };
+
+  const customOptionLabel = ({ data }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+      <span>{`${data.id}: ${data.scheduledTime} ${data.category}/group-${data.groupNumber}`}</span>
+      <span>{`${data.team1} vs ${data.team2}`}</span>
+    </div>
+  );
+
   if (!visible) return null;
   return (
-    <div className='DrawerPostpone'>
+    <div className="drawerPostpone">
       <div>
-        <div className="drawer-header">Postpone match</div>
+        <div className="drawer-header">Reschedule match</div>
         <div className="drawer-container">
-          <div className='postponeForm' >
+          <div className="postponeForm">
+            <div className="drawer-content-row">
+              <div className="drawer-content-label">Select Pitch</div>
+              <div className="drawer-content-value">
                 <Select
                   options={pitches.map(pitch => ({ value: pitch, label: pitch }))}
                   onChange={handlePitchChange}
                   placeholder="Select pitch"
+                />
+              </div>
+            </div>
             <div className="drawer-content-row">
-              <div className="drawer-content-label">Reason</div>
+              <div className="drawer-content-label">Fixture</div>
               <div className="drawer-content-value">
-                <input type="text" />
               <Select
                 options={fixtures
                   .filter(fixture => fixture.pitch === selPitch)
@@ -33,13 +84,11 @@ const DrawerPostpone = ({ onClose, delayByOne, delayUntilEnd, visible }) => {
               />
               </div>
             </div>
+            <Placement placement={placement} handlePlacementChange={handlePlacementChange} />
           </div>
-          <div className='footer'>
-            <button className="btn btn-primary enabled" onClick={delayByOne}>
-              by 1 match
-            </button>
-            <button className="btn btn-primary enabled" onClick={delayUntilEnd}>
-              until end of group
+          <div className="footer">
+            <button className="btn btn-primary enabled">
+               Apply 
             </button>
             <button className="btn btn-secondary" onClick={onClose}>
               Cancel
@@ -53,3 +102,31 @@ const DrawerPostpone = ({ onClose, delayByOne, delayUntilEnd, visible }) => {
 
 export default DrawerPostpone;
 
+function Placement({
+  placement,
+  handlePlacementChange
+}) {
+  return (
+    <div className="drawer-content-row">
+      <div className="drawer-content-label">Placement</div>
+      <div className="drawer-content-value">
+        <input
+          type="radio"
+          name="placement"
+          value="before"
+          checked={placement === "before"}
+          onChange={handlePlacementChange}
+        />{" "}
+        Before
+        <input
+          type="radio"
+          name="placement"
+          value="after"
+          checked={placement === "after"}
+          onChange={handlePlacementChange}
+        />{" "}
+        After
+      </div>
+    </div>
+  )
+}

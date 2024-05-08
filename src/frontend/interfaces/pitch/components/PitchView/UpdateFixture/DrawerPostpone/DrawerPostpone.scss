@@ -9,19 +9,57 @@
     .postponeForm {
         font-size: 3rem;
         display: grid;
-        width: 100%;
+        grid-template-columns: 1fr;
+        grid-row-gap: 1rem;
+        width: 90%;
         box-sizing: border-box;
 
-        input {
+        .drawer-content-row {
+            align-items: center;
+        }
+
+        .drawer-content-label {
+            margin-right: 1rem;
+            font-size: 2.4rem;
+            margin-top: 3rem;
+        }
+
+        input[type="text"], select {
             width: 90%;
             box-sizing: border-box;
             padding: 2rem;
             font-size: 2rem;
             border-radius: 1rem;
         }
+
+        input[type="radio"] {
+            margin: 0 1rem 0 0;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
     }
+    
     .footer {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        button {
+            margin: 1rem;
+            padding: 1rem 2rem;
+            font-size: 2rem;
+            border-radius: 1rem;
+        }
+
+        .btn-primary {
+            background-color: $primary-color; // assuming $primary-color is defined in _colors.scss
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: $secondary-color; // assuming $secondary-color is defined in _colors.scss
+            color: white;
+            border: none;
+        }
     }
 }

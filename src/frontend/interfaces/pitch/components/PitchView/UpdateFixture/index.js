@@ -6,6 +6,7 @@ import DrawerGetReady from "./DrawerGetReady";
 
 const UpdateFixture = ({
   fixture,
+  fixtures,
   updateFixtures,
   startMatch,
   delayByOne,
@@ -121,6 +122,7 @@ const UpdateFixture = ({
         />
         <DrawerPostpone
           fixture={fixture}
+          fixtures={fixtures}
           delayByOne={actions.delayByOne}
           delayUntilEnd={actions.delayUntilEnd}
           visible={visibleDrawers.postpone}
