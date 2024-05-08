@@ -205,9 +205,8 @@ module.exports = (app, db, select) => {
     const fixturesByPitch = (req, res) => {
         II('Calling API: /api/fixtures/:pitch')
         const pitch = req.params.pitch;
-        // Now you can use the 'parameter' variable to fetch specific data from your database
-        const query = `SELECT * FROM v_fixture_information WHERE pitch = '${pitch}'`;
-
+        let where = pitch ? `WHERE pitch = '${pitch}'` : '';
+        const query = `SELECT * FROM v_fixture_information ${where}`;
         db.query(query, (err, results) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
@@ -216,6 +215,7 @@ module.exports = (app, db, select) => {
         });
     }
 
+    app.get('/api/fixtures', fixturesByPitch)
     app.get('/api/fixtures/:pitch', fixturesByPitch)
     app.get('/api/fixtures/nextup/:tournament_id', nextFixtures)
     app.get('/api/fixtures/:id/start', startFixture)
