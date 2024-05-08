@@ -1,3 +1,5 @@
+import { Schema } from "js-yaml"
+
 export const formatTeamName = (team) => {
   let displayTeam = team
   if (team.startsWith('~')) {
@@ -22,6 +24,18 @@ export const formatTeamName = (team) => {
     }
   }
   return displayTeam;
+}
+
+export const militaryTimeDiffMins = (startTime, endTime) => {
+  if (startTime && endTime) {
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    const [endHour, endMinute] = endTime.split(':').map(Number);
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+    return endTotalMinutes - startTotalMinutes;
+  } else {
+    return null 
+  }
 }
 
 function TeamNameDisplay({
