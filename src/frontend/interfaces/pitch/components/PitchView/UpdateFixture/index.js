@@ -9,8 +9,6 @@ const UpdateFixture = ({
   fixtures,
   updateFixtures,
   startMatch,
-  delayByOne,
-  delayUntilEnd,
 }) => {
   const { startedTime } = fixture;
   const started = !!startedTime;
@@ -40,6 +38,7 @@ const UpdateFixture = ({
       });
     }
   }, [visibleDrawers, setDrawerOpen, drawerOpen]);
+
   const actions = {
     closeDrawer: (from) => {
       setEnableStates({
@@ -63,7 +62,7 @@ const UpdateFixture = ({
         start: true,
       });
     },
-    postpone: () => {
+    reschedule: () => {
       if (enableStates.postpone === "disabled") return;
       setEnableStates({
         start: "disabled",
@@ -88,12 +87,6 @@ const UpdateFixture = ({
       });
       setVisibleDrawers({ ...closedDrawers, finish: true });
     },
-    delayByOne: () => {
-      console.log("delayByOne");
-    },
-    delayUntilEnd: () => {
-      console.log("delayUntilEnd");
-    },
     teamSheetProvided: () => {},
   };
   const drawerStyle = {
@@ -107,7 +100,7 @@ const UpdateFixture = ({
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
       </div>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
-        <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.postpone}/>
+        <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.reschedule}/>
         <BtnCancel btnClass={enableStates.cancel} onCancel={actions.cancel} />
       </div>
 
@@ -121,12 +114,9 @@ const UpdateFixture = ({
           onClose={actions.closeDrawer}
         />
         <DrawerPostpone
-          fixture={fixture}
-          fixtures={fixtures}
-          delayByOne={actions.delayByOne}
-          delayUntilEnd={actions.delayUntilEnd}
           visible={visibleDrawers.postpone}
           onClose={actions.closeDrawer}
+          onSubmit={actions.reschedule}
         />
         <div
           className="cancel"
@@ -212,8 +202,7 @@ function BtnGetReady({
       <button
         className={btnClass}
         onClick={onGetReady}
-        disabled={!btnClass}
-      >
+        disabled={!btnClass}>
         Get ready &nbsp;
         <svg width="29" height="29" viewBox="0 0 20 20">
           <polygon points="8,5 16,12 8,19" fill="white"></polygon>

@@ -24,18 +24,33 @@ To import, add the following to the top of your scss file:
   font-size: 2.4rem;
   margin-top: 3rem; }
 
+.drawerPostpone .postponeForm .drawer-content-value {
+  color: #885ea3; }
+
+.drawerPostpone .postponeForm .drawer-content-value > div > div > div {
+  background: #e7e3ea; }
+
+.drawerPostpone .postponeForm .drawer-content-value > div > div > div > div {
+  padding: 2rem;
+  color: #885ea3; }
+
+.drawerPostpone .postponeForm .radio-section {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  padding: 2rem; }
+
+.drawerPostpone .postponeForm .radio-section input[type="radio"] {
+  margin: 0 1rem 0 0;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: middle; }
+
 .drawerPostpone .postponeForm input[type="text"], .drawerPostpone .postponeForm select {
   width: 90%;
   box-sizing: border-box;
   padding: 2rem;
   font-size: 2rem;
   border-radius: 1rem; }
-
-.drawerPostpone .postponeForm input[type="radio"] {
-  margin: 0 1rem 0 0;
-  width: 20px;
-  height: 20px;
-  vertical-align: middle; }
 
 .drawerPostpone .footer {
   display: grid;

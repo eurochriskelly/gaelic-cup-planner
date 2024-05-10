@@ -23,6 +23,27 @@
             font-size: 2.4rem;
             margin-top: 3rem;
         }
+        .drawer-content-value {
+            > div > div > div {
+                background: desaturate(lighten($sc, 40%), 14%);
+                > div{
+                   padding: 2rem;
+                   color: $sc;
+                }
+            }
+            color: $sc;
+        }
+        .radio-section {
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            padding: 2rem;
+            input[type="radio"] {
+                margin: 0 1rem 0 0;
+                width: 3rem;
+                height: 3rem;
+                vertical-align: middle;
+            }
+        }
 
         input[type="text"], select {
             width: 90%;
@@ -32,17 +53,11 @@
             border-radius: 1rem;
         }
 
-        input[type="radio"] {
-            margin: 0 1rem 0 0;
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-        }
     }
     
     .footer {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr ;
         button {
             margin: 1rem;
             padding: 1rem 2rem;
