@@ -4,6 +4,7 @@ import './DrawerPostpone.css';
 
 const DrawerPostpone = ({
   onClose,
+  onSubmit,
   visible,
 }) => {
 
@@ -34,8 +35,16 @@ const DrawerPostpone = ({
 
   if (!visible) return null;
 
+  const readyToSubmit = () => selPitch && selFixture && placement;
   const handlePitchChange = ({value}) => setSelPitch(value);
-  const handleFixtureChange = ({value}) => setSelFixture(value);
+  const handleFixtureChange = ({value}) => {
+    setSelFixture(value);
+  };
+  const tryToSubmit = (e) => {
+    console.log(1231, e)
+    if (!readyToSubmit()) return false;
+    onSubmit(selFixture, placement);
+  };
   const handlePlacementChange = (event) => {
     console.log('placement', event)
     setPlacement(event.target.value);
@@ -50,7 +59,9 @@ const DrawerPostpone = ({
 
   if (!visible) return null;
   return (
-    <div className="drawerPostpone">
+    <div className="drawerPostpone" onClick={x => {
+      console.log(placement, selPitch, selFixture)
+    }}>
       <div>
         <div className="drawer-header">Reschedule match</div>
         <div className="drawer-container">
@@ -87,7 +98,9 @@ const DrawerPostpone = ({
             <Placement placement={placement} handlePlacementChange={handlePlacementChange} />
           </div>
           <div className="footer">
-            <button className="btn btn-primary enabled">
+            <button
+              className={`btn btn-primary ${readyToSubmit() ? 'enabled' : 'disabled'}`}
+              onClick={tryToSubmit}>
                Apply 
             </button>
             <button className="btn btn-secondary" onClick={onClose}>
@@ -109,14 +122,14 @@ function Placement({
   return (
     <div className="drawer-content-row">
       <div className="drawer-content-label">Placement</div>
-      <div className="drawer-content-value">
+      <div className="drawer-content-value radio-section">
         <input
           type="radio"
           name="placement"
           value="before"
           checked={placement === "before"}
           onChange={handlePlacementChange}
-        />{" "}
+        />
         Before
         <input
           type="radio"
@@ -124,7 +137,7 @@ function Placement({
           value="after"
           checked={placement === "after"}
           onChange={handlePlacementChange}
-        />{" "}
+        />
         After
       </div>
     </div>
