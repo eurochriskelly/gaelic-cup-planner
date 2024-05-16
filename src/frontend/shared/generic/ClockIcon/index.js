@@ -87,7 +87,7 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
         }}
       >
         <span>{scheduled}</span>
-        <span>{delay ? `(delays)` : ''}</span>
+        <span>{delay ? `*` : ''}</span>
       </span>
     </span>
   );
