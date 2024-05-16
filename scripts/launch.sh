@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+if [ -z "$GCP_TOURN_NUM" ];then
+  echo "Tournament num is not set. Source env.sh!"
+  exit 1
+fi
 
 trap cleanup SIGINT SIGTERM EXIT
 
@@ -19,6 +24,7 @@ cleanup() {
 runApp() {
 	local run_number=0
 	local pid=$2
+
 	local relaunch=true
 
 	while "$relaunch"; do
@@ -27,7 +33,7 @@ runApp() {
 			relaunch=false
 		else
       echo "Run # ${run_number}"
-			node src/backend/server.js --port="$2" --app="$1"
+			node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3"
 			run_number=$((run_number + 1))
 		fi
 	done
@@ -37,7 +43,7 @@ runApp() {
 			echo "Retrying in 5 seconds ..."
 			sleep 5
 		fi
-		if node src/backend/server.js --port="$2" --app="$1" &>/dev/null; then
+		if node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" &>/dev/null; then
 			break
 		fi
 		run_number=$((run_number + 1))
@@ -52,7 +58,7 @@ for arg in "$@"; do
         PORT2=$(($PORT2 + 1000))
     fi
 done
-runApp "groups" $PORT1 &
-runApp "pitch" $PORT2 &
+runApp "groups" $PORT1 $GCP_TOURN_NUM &
+runApp "pitch" $PORT2 $GCP_TOURN_NUM &
 
 wait
