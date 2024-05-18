@@ -1,7 +1,7 @@
 const { II, DD, EE } = require('../../lib/logging')
 
 // FIXME: Please pass tournament back
-const TOURN_ID = 7;
+const TOURN_ID = 8;
 
 module.exports = (app, db, select) => {
     /* Check if a given stage is complete */
@@ -155,10 +155,10 @@ module.exports = (app, db, select) => {
         const { id } = req.params
         const query = [
             "INSERT INTO cards",
-            "(tournament, fixture, playerNumber, playerName, cardColor)",
+            "(tournament, fixture, playerNumber, playerName, cardColor, team)",
             "VALUES",
             req.body.map((player) => {
-                return `(${TOURN_ID}, ${id}, ${player.playerNumber}, '${player.playerName}', '${player.playerCard}')`
+                return `(${TOURN_ID}, ${id}, ${player.playerNumber}, '${player.playerName}', '${player.playerCard}', '${player.team}')`
             }).join(','),
         ].join(' ')
         db.query(query, (err, results) => {

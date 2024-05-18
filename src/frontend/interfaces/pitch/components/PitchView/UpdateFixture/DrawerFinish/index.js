@@ -131,7 +131,7 @@ const DrawerFinish = ({
       <div className='drawerStep' style={drawerStepStyle('cardedPlayers')}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-           <ListCardedPlayers onProceed={actions.cardPlayersUpdated} />
+          <ListCardedPlayers team1={fixture.team1} team2={fixture.team2} onProceed={actions.cardPlayersUpdated} />
         </div>
       </div>
     </div>

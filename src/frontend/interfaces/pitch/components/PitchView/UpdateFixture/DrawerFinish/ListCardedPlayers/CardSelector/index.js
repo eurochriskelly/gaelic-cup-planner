@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import './CardSelector.css'; // Make sure to create this CSS file
+import React, { useState } from "react";
+import "./CardSelector.css"; // Make sure to create this CSS file
 
-const CardSelector = ({
-    onCard = () => {}
-}) => {
+const CardSelector = ({ onCard = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedColor, setSelectedColor] = useState("");
 
   const cardTypes = [
-    { color: 'yellow', label: 'Yellow Card' },
-    { color: 'red', label: 'Red Card' },
-    { color: 'black', label: 'Black Card' }
+    { color: "yellow", label: "Yellow Card" },
+    { color: "red", label: "Red Card" },
+    { color: "black", label: "Black Card" },
   ];
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => {
+    console.log('here')
+    setIsOpen(!isOpen);
+  }
 
   const selectCard = (color) => {
     setSelectedColor(color);
@@ -27,18 +28,28 @@ const CardSelector = ({
         {selectedColor ? (
           <div className={`color-box ${selectedColor}`}></div>
         ) : (
-          <div className="placeholder">Choose<br/>Card<br/>Type</div>
+          <div className="placeholder">
+            Choose
+            <br />
+            Card
+            <br />
+            Type
+          </div>
         )}
       </div>
       {isOpen && (
-        <div className="dropdown-menu">{
-        cardTypes.map((card, index) => (
-        <div key={index} className={`color-box ${card.color}`} onClick={() => selectCard(card.color)}></div>
-        ))
-        }</div>
+        <div className="dropdown-menu">
+          {cardTypes.map((card, index) => (
+            <div
+              key={index}
+              className={`color-box ${card.color}`}
+              onClick={() => selectCard(card.color)}
+            ></div>
+          ))}
+        </div>
       )}
     </div>
   );
-}
+};
 
 export default CardSelector;
