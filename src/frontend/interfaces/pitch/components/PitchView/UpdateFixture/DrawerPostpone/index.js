@@ -41,9 +41,8 @@ const DrawerPostpone = ({
     setSelFixture(value);
   };
   const tryToSubmit = (e) => {
-    console.log(1231, e)
     if (!readyToSubmit()) return false;
-    onSubmit(selFixture, placement);
+    //onSubmit(selFixture, placement);
   };
   const handlePlacementChange = (event) => {
     console.log('placement', event)
@@ -56,12 +55,9 @@ const DrawerPostpone = ({
       <span>{`${data.team1} vs ${data.team2}`}</span>
     </div>
   );
-
   if (!visible) return null;
   return (
-    <div className="drawerPostpone" onClick={x => {
-      console.log(placement, selPitch, selFixture)
-    }}>
+    <div className="drawerPostpone">
       <div>
         <div className="drawer-header">Reschedule match</div>
         <div className="drawer-container">

@@ -88,6 +88,7 @@ const UpdateFixture = ({
       setVisibleDrawers({ ...closedDrawers, finish: true });
     },
     teamSheetProvided: () => {},
+    rescheduleMatch: () => {},
   };
   const drawerStyle = {
     display: drawerOpen ? "flex" : "none",
@@ -100,7 +101,11 @@ const UpdateFixture = ({
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
       </div>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
-        <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.reschedule}/>
+        {/*
+          * FIXME: re-instate
+          * <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.reschedule}/>
+          */}
+        <BtnPostpone btnClass={'disabled'} onPostpone={() => {}}/>
         <BtnCancel btnClass={enableStates.cancel} onCancel={actions.cancel} />
       </div>
 
@@ -116,7 +121,7 @@ const UpdateFixture = ({
         <DrawerPostpone
           visible={visibleDrawers.postpone}
           onClose={actions.closeDrawer}
-          onSubmit={actions.reschedule}
+          onSubmit={actions.rescheduleMatch}
         />
         <div
           className="cancel"
@@ -145,7 +150,7 @@ function BtnPostpone({
   btnClass
 }) {
   return (
-    <button className={'space-button enabled'} onClick={onPostpone}>
+    <button className={'space-button disabled'} onClick={onPostpone}>
       <span>Re-schedule</span>
       <span>&nbsp;</span>
       <svg width="22" height="22" viewBox="0 0 20 20">
