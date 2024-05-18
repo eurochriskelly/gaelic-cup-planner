@@ -5,8 +5,7 @@
     background-color: #ccc;
 }
 
-.dropdown-selector,
-.dropdown-menu {
+.dropdown-selector, .dropdown-menu {
     border: 1px solid #ccc;
     cursor: pointer;
 }
