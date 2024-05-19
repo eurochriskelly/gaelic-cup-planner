@@ -40,24 +40,21 @@ const TournamentView = () => {
     const intervalId = setInterval(fetchData, 20000); // Then set it to run every 60 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [tournamentId]); // Make sure to include `tournamentId` in the dependency array if it's expected to change
+  }, [tournamentId]); 
 
   return (
     <div
       className='tournamentView'
       style={{
-        gridTemplateRows: "1fr 2fr",
+        gridTemplateRows: "1fr",
       }}
     >
-      <UpcomingFixtures
-        groups={groups}
-        nextMatches={nextMatches}
-      />
       <article style={{ gridTemplateColumns: getDivisions(groups.length) }}>
         <h2>Standings</h2>
-        {groups.map((group, id) => (
+        {groups.map((group, id) => console.log(group) || (
           <section key={`g${id}`}>
             <GroupStandings
+              group={group}
               standings={standings.filter((team) => team.category === group)}
             />
           </section>
