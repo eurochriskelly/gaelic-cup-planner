@@ -21,7 +21,7 @@ const TournamentView = () => {
       .then((response) => response.json())
       .then((data) => setNextMatches(data.data))
       .catch((error) => {
-        console.error("Error fetching next fixtures:", >>error);
+        console.error("Error fetching next fixtures:", error);
       });
 
     fetch(`/api/group/standings/${tournamentId}`)

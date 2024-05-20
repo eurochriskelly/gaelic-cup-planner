@@ -3,17 +3,17 @@ To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
 .media-phone * {
-  font-size: 1.5rem; }
+  font-size: 1.2rem; }
 
 .media-phone td.teamName {
   font-size: 1.4rem; }
 
 .media-phone section > table.groupStandings thead > tr > th {
-  font-size: 2rem;
+  font-size: 1.4rem;
   padding: 0.3rem; }
 
-.media-phone section > table.groupStandings tbody > tr > td {
-  font-size: 1.8rem;
+.media-phone section > table.groupStandings tbody > tr > td, .media-phone section > table.groupStandings tbody > tr > td > span {
+  font-size: 1.4rem;
   padding: 0.3rem; }
 
 .tournamentView {
@@ -22,7 +22,7 @@ To import, add the following to the top of your scss file:
 
 .tournamentView > div {
   display: grid;
-  grid-template-columns: 10% 90%;
+  grid-template-columns: 15% 85%;
   grid-template-rows: 0.5fr 1.4fr;
   height: 100vh; }
 
@@ -46,7 +46,7 @@ To import, add the following to the top of your scss file:
   background: #523863;
   text-align: center;
   padding: 0;
-  font-size: 2vh;
+  font-size: 2rem;
   grid-column: 1;
   grid-row: 1 / -1;
   margin: 0; }
