@@ -5,39 +5,66 @@ To import, add the following to the top of your scss file:
 .groupStandings {
   margin-left: 0.5rem;
   margin-right: 0.5rem; }
-  .groupStandings * {
-    user-select: none; }
-  .groupStandings h2 {
-    background-color: white; }
-  .groupStandings th, .groupStandings td {
-    font-size: 0.8vw;
-    /* Matches played */
-    /* win, lose, draw */ }
-    .groupStandings th:nth-child(n+2):nth-child(-n+8), .groupStandings td:nth-child(n+2):nth-child(-n+8) {
-      width: 2.4vw;
-      text-align: center; }
-    .groupStandings th:nth-child(2), .groupStandings td:nth-child(2) {
-      width: 3vw;
-      letter-spacing: 0.2rem; }
-    .groupStandings th:nth-child(n+3):nth-child(-n+5), .groupStandings td:nth-child(n+3):nth-child(-n+5) {
-      max-width: 1.6vw; }
-    .groupStandings th:first-child, .groupStandings td:first-child {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: 0.10em;
-      text-transform: uppercase; }
-  .groupStandings th {
-    background-color: #b89fc8;
-    color: white;
-    font-weight: normal;
-    text-transform: uppercase;
-    line-height: 1.3em;
-    border: none; }
-  .groupStandings td {
-    border: 0;
-    border-bottom: 1px solid #ddd;
-    line-height: 3.3em; }
+
+.groupStandings * {
+  user-select: none; }
+
+.groupStandings h2 {
+  background-color: white; }
+
+.groupStandings th, .groupStandings td {
+  font-size: 0.8vw;
+  /* Matches played */
+  /* win, lose, draw */ }
+
+.groupStandings th:nth-child(n+2):nth-child(-n+8), .groupStandings td:nth-child(n+2):nth-child(-n+8) {
+  width: 2.4vw;
+  text-align: center; }
+
+.groupStandings th:nth-child(2), .groupStandings td:nth-child(2) {
+  width: 3vw;
+  letter-spacing: 0.2rem; }
+
+.groupStandings th:nth-child(n+3):nth-child(-n+5), .groupStandings td:nth-child(n+3):nth-child(-n+5) {
+  max-width: 1.6vw; }
+
+.groupStandings th:first-child, .groupStandings td:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.10em;
+  text-transform: uppercase; }
+
+.groupStandings th {
+  background-color: #b89fc8;
+  color: white;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1.3em;
+  border: none; }
+
+.groupStandings td {
+  border: 0;
+  border-bottom: 1px solid #ddd;
+  line-height: 3.3em; }
+
+.media-phone .groupStandings th, .media-phone .groupStandings td {
+  font-size: 0.8vw;
+  /* Matches played */
+  /* win, lose, draw */ }
+
+.media-phone .groupStandings th:nth-child(n+2):nth-child(-n+8), .media-phone .groupStandings td:nth-child(n+2):nth-child(-n+8) {
+  width: 4.4vw; }
+
+.media-phone .groupStandings th:nth-child(2), .media-phone .groupStandings td:nth-child(2) {
+  width: 5vw; }
+
+.media-phone .groupStandings th:nth-child(n+3):nth-child(-n+5), .media-phone .groupStandings td:nth-child(n+3):nth-child(-n+5) {
+  max-width: 2.4vw; }
+
+.media-phone .groupStandings th:first-child, .media-phone .groupStandings td:first-child {
+  font-size: 1.5rem;
+  width: 200px; }
 
 td.groupHeader {
   text-align: center;
