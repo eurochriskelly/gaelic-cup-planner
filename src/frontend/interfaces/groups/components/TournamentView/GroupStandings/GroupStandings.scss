@@ -51,6 +51,27 @@ $fs: 0.8vw;
     }
 }
 
+.media-phone .groupStandings {
+    th, td {
+        font-size: $fs;
+        &:nth-child(n+2):nth-child(-n+8) {
+            width: $scw * 2.2;
+        }
+        /* Matches played */
+        &:nth-child(2) {
+            width: $scw * 2.5;
+        }
+        /* win, lose, draw */
+        &:nth-child(n+3):nth-child(-n+5) {
+            max-width: $scw * 1.2;
+        }
+        &:first-child {
+            font-size: 1.5rem;
+            width: 200px;
+        }
+    }
+}
+
 td.groupHeader {
     text-align: center;
     text-transform: uppercase;

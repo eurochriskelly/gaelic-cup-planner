@@ -4,7 +4,7 @@ import { getDivisions } from "../../../../../shared/js/styler";
 const blockStyle = (col = "green") => ({
   border: `3px solid ${col}`,
   height: "100px",
-  margin: '0.4rem'
+  margin: "0.4rem",
 });
 
 const UpcomingFixtures = ({ groups, nextMatches }) => {
@@ -18,31 +18,31 @@ const UpcomingFixtures = ({ groups, nextMatches }) => {
       <h2>
         <div>Upcoming fixtures</div>
       </h2>
-      {nextGroups.map((group, id) => {
-        const candidateMatches = (nextMatches || [])
-          .filter((match) => match.category === group)
-          .slice(0, 3);
+      {nextGroups
+        .map((group, id) => {
+          const candidateMatches = (nextMatches || [])
+            .filter((match) => match.category === group)
+            .slice(0, 3);
 
-        const showMatches = {
-          previous: candidateMatches
-            .filter((m) => typeof m.goals1 === "number" && m.startedTime)
-            .shift(),
-          current: candidateMatches
-            .filter((m) => typeof m.goals1 !== "number" && m.startedTime)
-            .shift(),
-          next: candidateMatches
-            .filter((m) => typeof m.goals1 !== "number" && !m.startedTime)
-            .shift(),
-        };
-        return (
-          <section key={`k${id}`}>
-            <h3>{group}</h3>
-            <MatchLastPlayed match={showMatches.previous} />
-            <MatchInProgress match={showMatches.current} />
-            <MatchUpcoming match={showMatches.next}  />
-          </section>
-        );
-      })}
+          const showMatches = {
+            previous: candidateMatches
+              .filter((m) => typeof m.goals1 === "number" && m.startedTime)
+              .shift(),
+            current: candidateMatches
+              .filter((m) => typeof m.goals1 !== "number" && m.startedTime)
+              .shift(),
+            next: candidateMatches
+              .filter((m) => typeof m.goals1 !== "number" && !m.startedTime)
+              .shift(),
+          };
+          return (
+            <section key={`k${id}`}>
+              <MatchLastPlayed match={showMatches.previous} />
+              <MatchInProgress match={showMatches.current} />
+              <MatchUpcoming match={showMatches.next} />
+            </section>
+          );
+        })}
     </article>
   );
 };
@@ -52,12 +52,12 @@ export default UpcomingFixtures;
 function MatchLastPlayed({ match }) {
   if (!match)
     return (
-      <div style={blockStyle('green')}>No matches finished in group yet.</div>
+      <div style={blockStyle("green")}>No matches finished in group yet.</div>
     );
   const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } =
     match;
   return (
-    <div className='nextArea' style={blockStyle("green")}>
+    <div className="nextArea" style={blockStyle("green")}>
       <h4>Last played</h4>
       <div>
         <span>{scheduledTime}</span>
@@ -82,10 +82,10 @@ function MatchLastPlayed({ match }) {
 }
 
 function MatchInProgress({ match }) {
-  if (!match) return <div style={blockStyle('red')} >No match in progress.</div>;
+  if (!match) return <div style={blockStyle("red")}>No match in progress.</div>;
   const { scheduledTime, team1, team2 } = match;
   return (
-    <div className='nextArea' style={blockStyle("red")}>
+    <div className="nextArea" style={blockStyle("red")}>
       <h4>In progress</h4>
       <div>
         <span>{scheduledTime}</span>
@@ -98,10 +98,11 @@ function MatchInProgress({ match }) {
 }
 
 function MatchUpcoming({ match }) {
-  if (!match) return <div style={blockStyle('blue')}>No match in progress.</div>;
+  if (!match)
+    return <div style={blockStyle("blue")}>No match in progress.</div>;
   const { scheduledTime, team1, team2, umpiringTeam } = match;
   return (
-    <div className='nextArea' style={blockStyle("blue")}>
+    <div className="nextArea" style={blockStyle("blue")}>
       <h4>Next up</h4>
       <div>
         <span>{scheduledTime}</span>
