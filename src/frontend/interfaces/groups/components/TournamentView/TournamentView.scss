@@ -3,7 +3,7 @@
 
 .media-phone {
     * {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     td.teamName {
@@ -12,11 +12,11 @@
 
     section>table.groupStandings {
         thead>tr>th {
-            font-size: 2rem;
+            font-size: 1.4rem;
             padding: 0.3rem;
         }
-        tbody>tr>td {
-            font-size: 1.8rem;
+        tbody>tr>td, tbody>tr>td>span {
+            font-size: 1.4rem;
             padding: 0.3rem;
         }
     }
@@ -30,7 +30,7 @@
 
     >div {
         display: grid;
-        grid-template-columns: 10% 90%;
+        grid-template-columns: 15% 85%;
         grid-template-rows: 0.5fr 1.4fr;
         height: 100vh;
 
@@ -52,10 +52,10 @@
                 writing-mode: vertical-lr;
                 text-orientation: mixed;
                 transform: rotate(180deg); // Flip the text for a better reading direction
-                background: darken($sc, 20%); // Darker grey background
+                background: desaturate(($sc, 20%), 10%); // Darker grey background
                 text-align: center;
                 padding: 0;
-                font-size: 2vh;
+                font-size: 2rem;
                 grid-column: 1;
                 grid-row: 1 / -1; // Span through all rows
                 margin: 0;

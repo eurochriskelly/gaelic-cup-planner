@@ -6,6 +6,9 @@ To import, add the following to the top of your scss file:
   margin-left: 0.5rem;
   margin-right: 0.5rem; }
 
+.groupStandings .even {
+  background-color: #eee; }
+
 .groupStandings * {
   user-select: none; }
 
@@ -69,8 +72,9 @@ To import, add the following to the top of your scss file:
 td.groupHeader {
   text-align: center;
   text-transform: uppercase;
-  color: #2b7624;
-  border-bottom: 5px solid #48c43c;
+  color: #885ea3;
+  background-color: #e7e3ea;
+  border-top: 5px solid #b89fc8;
   padding: 0;
   margin: 0;
   padding-top: 1.2rem; }

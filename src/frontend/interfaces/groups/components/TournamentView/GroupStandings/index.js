@@ -31,57 +31,70 @@ const GroupStandings = ({ group, standings }) => {
             <th>Pts</th>
           </tr>
         </thead>
-        <tbody>
-          {standings
-            .filter((team, i) => {
-              if (i === 0) console.log('first team', team)
-              return true
-            })
-            .filter((team) => team.category === group)
-            .map((team, si) => {
-              const {
-                MatchesPlayed,
-                MatchesPlanned,
-                Wins,
-                Draws,
-                Losses,
-                PointsFrom,
-                PointsDifference,
-                TotalPoints,
-              } = team;
-              console.log(MatchesPlayed, group)
-              const mp = MatchesPlayed;
-              const finished = mp === MatchesPlanned;
-              return (
-                <>
-                  {lastGroup !== team.group && <GroupDivider key={`gd-${si}`} team={team} />}
-                  <tr key={`standing-row-${si}`}>
-                    <td className='teamName'
-                      style={{
-                        fontWeight: finished ? "bold" : "normal",
-                        color: finished ? "black" : "grey",
-                      }}>{team.team}</td>
-                    <td>
-                      <span>{MatchesPlayed}</span>
-                      <span className='lessRelevant'>/{MatchesPlanned}</span>
-                    </td>
-                    <td>{mp ? Wins : <NoData />}</td>
-                    <td>{mp ? Draws : <NoData />}</td>
-                    <td>{mp ? Losses : <NoData />}</td>
-                    <td>{mp ? PointsFrom : <NoData />}</td>
-                    <td>{mp ? PointsDifference : <NoData />}</td>
-                    <td>
-                      {mp ? (
-                        <div className='total'>{TotalPoints}</div>
-                      ) : (
-                        <NoData />
-                      )}
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
-        </tbody>
+        {
+          // get unique groups from standings based on the group prop
+          Object.keys(
+            standings.reduce((acc, team) => {
+              acc[team.grp] = true;
+              return acc;
+            }, {})
+          ).map((grp, gi) => {
+            const groupStandings = standings.filter((team) => +team.grp === +grp);
+            return (
+              <tbody className={gi % 2 === 0 ? 'even' : 'odd'}>
+                {groupStandings
+                  .filter((team, i) => {
+                    if (i === 0) console.log('first team', team)
+                    return true
+                  })
+                  .filter((team) => team.category === group)
+                  .map((team, si) => {
+                    const {
+                      MatchesPlayed,
+                      MatchesPlanned,
+                      Wins,
+                      Draws,
+                      Losses,
+                      PointsFrom,
+                      PointsDifference,
+                      TotalPoints,
+                    } = team;
+                    console.log(MatchesPlayed, group)
+                    const mp = MatchesPlayed;
+                    const finished = mp === MatchesPlanned;
+                    return (
+                      <>
+                        { si ? null : <GroupDivider key={`gd-${gi}`} team={team} /> }
+                        <tr key={`standing-row-${si}`}>
+                          <td className='teamName'
+                            style={{
+                              fontWeight: finished ? "bold" : "normal",
+                              color: finished ? "black" : "grey",
+                            }}>{team.team}</td>
+                          <td>
+                            <span>{MatchesPlayed}</span>
+                            <span className='lessRelevant'>/{MatchesPlanned}</span>
+                          </td>
+                          <td>{mp ? Wins : <NoData />}</td>
+                          <td>{mp ? Draws : <NoData />}</td>
+                          <td>{mp ? Losses : <NoData />}</td>
+                          <td>{mp ? PointsFrom : <NoData />}</td>
+                          <td>{mp ? PointsDifference : <NoData />}</td>
+                          <td>
+                            {mp ? (
+                              <div className='total'>{TotalPoints}</div>
+                            ) : (
+                              <NoData />
+                            )}
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  })}
+              </tbody>
+            )
+          })
+        }
       </table>
     </>
   );
