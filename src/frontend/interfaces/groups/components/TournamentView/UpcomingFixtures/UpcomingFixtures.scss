@@ -1,0 +1,40 @@
+.upcomingFixtures {
+
+    .nextArea {
+        border-radius: 0.3rem;
+        line-height: 20px;
+        height: 1.8rem;
+        margin-left: 2rem;
+        color: white;
+        padding: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 0.2rem;
+
+        >div {
+            display: grid;
+            grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
+            padding: 0.2rem;
+            margin: 0.4rem 0;
+        }
+        >div:first-child {
+            >span {
+                margin-right: 0.1rem;
+                padding: 0.2rem;
+            }
+        }
+        span {
+            text-align: center;
+        }
+    }
+
+    .area-played {
+        background-color: lighten(desaturate(blue, 70%), 20%);
+        height: 50px;
+    }
+    .area-nextup {
+        background-color: lighten(desaturate(green, 70%), 20%);
+    }
+    .area-inprogress{
+        background-color: lighten(desaturate(red, 70%), 20%);
+    }
+}
