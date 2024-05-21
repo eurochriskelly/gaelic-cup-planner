@@ -15,8 +15,8 @@ module.exports = (db, ARGS) => {
     require('./tournaments')(app, db, select)
 
     // API endpoint to get data from the database
-    app.get('/api/tournament/:tournamentId/pitches', async (req, res) => {
-        II('Calling API: /api/tournament/:tournamentId/pitches')
+    app.get('/api/tournaments/:tournamentId/pitches', async (req, res) => {
+        II('Calling API: /api/tournaments/:tournamentId/pitches')
         // FIXME: We need a tournament selection screen when starting the app
         const { tournamentId } = req.params
         const query = 'SELECT * FROM v_pitch_events where tournamentId = ' + tournamentId;

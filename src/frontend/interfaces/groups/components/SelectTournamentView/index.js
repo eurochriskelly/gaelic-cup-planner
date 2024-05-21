@@ -20,7 +20,7 @@ const SelectTournamentView = () => {
         console.log('Selected tournament', tournamentId)
         const tournament = tournaments.find(t => t.id === tournamentId)
         console.log('Selected tournament', tournament)
-        navigate(`/tournament/${tournamentId}`, { state: { tournament } })
+        navigate(`/tournaments/${tournamentId}`, { state: { tournament } })
     }
 
     return (

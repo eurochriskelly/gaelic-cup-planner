@@ -5,9 +5,8 @@ import Fixture from "./Fixture";
 import PitchViewHeader from "./PitchViewHeader";
 import UpdateFixture from "./UpdateFixture";
 
-
 const PitchView = () => {
-  const { pitchId } = useParams();
+  const { pitchId, tournamentId } = useParams();
 
   const [fixtures, setFixtures] = useState([]);
   const [nextFixture, setNextFixture] = useState(null);
@@ -45,7 +44,7 @@ const PitchView = () => {
       <div className="pitchView">
         <PitchViewHeader
           pitchId={pitchId}
-          backToSelection={() => navigate("/tournaments/7")}
+          backToSelection={() => navigate(`/tournaments/${tournamentId}`)}
           changeTab={setFixtureFilter}
         />
         <div className="fixturesBody">
