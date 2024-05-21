@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePitchContext } from "../../PitchProvider";
 import './PinLogin.css';
 
 const PinLogin = () => {
+    const { setTournamentId } = usePitchContext();
     const navigate = useNavigate();
     const [pin, setPin] = useState(["", "", "", ""]);
     const [message, setMessage] = useState("");
@@ -26,17 +28,19 @@ const PinLogin = () => {
         }
     };
 
+    const selectTournament = id => {
+      setTournamentId(id);
+      navigate(`/tournaments/${id}`);
+    }
     const onPinEntered = (joined) => {
         switch (joined) {
-            case '1237':
-                navigate(`/tournament/7`);
+            case '1237': 
+                selectTournament(7);
                 break;
             case '1238':
-                navigate(`/tournament/8`);
+                selectTournament(8)
                 break;
             default:
-                console.log('bad pin')
-                // reset pin
                 setPin(["", "", "", ""]);
                 setMessage("Invalid pin!");
                 setTimeout(() => {
