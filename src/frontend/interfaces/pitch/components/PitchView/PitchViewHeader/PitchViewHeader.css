@@ -8,25 +8,6 @@ To import, add the following to the top of your scss file:
   left: 0;
   right: 0;
   z-index: 1000; }
-  .fixturesHead h2 > span:first-child {
-    font-size: 4rem; }
 
-.navBar {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; }
-  .navBar > span {
-    border: 2px solid #b3b3b3;
-    background: white;
-    color: black;
-    font-size: 1.8rem;
-    text-align: center;
-    text-transform: uppercase;
-    padding: 1.6rem 0.8rem;
-    background-color: #e7e7e7;
-    border-bottom: 0.35rem solid #523863; }
-  .navBar > span.selected {
-    color: #523863;
-    border: 0.2rem solid #523863;
-    border-bottom: none;
-    background-color: white;
-    font-weight: bold; }
+.fixturesHead h2 > span:first-child {
+  font-size: 4rem; }
