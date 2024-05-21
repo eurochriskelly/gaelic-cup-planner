@@ -8,6 +8,5 @@ To import, add the following to the top of your scss file:
   left: 0;
   right: 0;
   z-index: 1000; }
-
-.fixturesHead h2 > span:first-child {
-  font-size: 4rem; }
+  .fixturesHead h2 > span:first-child {
+    font-size: 4rem; }
