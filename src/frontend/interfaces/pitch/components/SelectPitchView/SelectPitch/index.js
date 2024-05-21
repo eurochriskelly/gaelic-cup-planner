@@ -17,7 +17,7 @@ const SelectPitch = ({
   const navigate = useNavigate();
   const navigateToPitch = () => {
     onChoosePitch();
-    navigate(`/pitch/${pitch}`);
+    navigate(`/tournament/7/pitch/${pitch}`);
   };
 
   return (

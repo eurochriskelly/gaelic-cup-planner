@@ -16,7 +16,7 @@ const DrawerPostpone = ({
 
   useEffect(() => {
     // When user opens the drawer, fetch all fixtures data
-    fetch("/api/pitches")
+    fetch("/api/tournament/7/pitches")
       .then((response) => response.json())
       .then((data) => {
         console.log('pitch', data.data)
