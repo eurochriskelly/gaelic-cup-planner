@@ -5,7 +5,7 @@ const SelectPitchView = () => {
   const [pitchData, setPitchData] = useState([]); // useState hook to store data
 
   async function fetchData() {
-    fetch("/api/pitches")
+    fetch("/api/tournament/7/pitches")
       .then((response) => response.json())
       .then((data) => {
         setPitchData(data.data);
@@ -21,6 +21,7 @@ const SelectPitchView = () => {
 
   return (
     <div className="container">
+      <h1>Field Coordinator</h1>
       <h2>Please select pitch</h2>
       <div className="selectPitchView">
         {" "}

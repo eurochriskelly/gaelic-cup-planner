@@ -40,39 +40,42 @@ const PitchView = () => {
     }
   })
   return (
-    <div className="pitchView">
-      <PitchViewHeader
-        pitchId={pitchId}
-        backToSelection={() => navigate("/")}
-        changeTab={setFixtureFilter}
-      />
-      <div className="fixturesBody">
-        <div className="fixturesArea">
-          {displayFixtures.length 
-          ? displayFixtures
-            .map((fixture, i) => {
-              const focusFixture = nextFixture && nextFixture.id === fixture.id;
-              return (
-                <div
-                  key={fixture.id}
-                  className={focusFixture ? "focusFixture" : ""}>
-                  <Fixture fixture={fixture} isFocus={focusFixture} />
-                  {nextFixture && nextFixture.id === fixture.id && (
-                    <UpdateFixture
-                      fixture={fixture}
-                      fixtures={fixtures}
-                      updateFixtures={actions.fetchFixtures}
-                      startMatch={actions.startMatch}
-                    />
-                  )}
-                </div>
-              );
-            })
-          : <div className="noFixtures">No <span>{fixtureFilter}</span> fixtures left to display</div>
-          }
+    <>
+      <h1>Field Coordinator</h1>
+      <div className="pitchView">
+        <PitchViewHeader
+          pitchId={pitchId}
+          backToSelection={() => navigate("/tournaments/7")}
+          changeTab={setFixtureFilter}
+        />
+        <div className="fixturesBody">
+          <div className="fixturesArea">
+            {displayFixtures.length 
+            ? displayFixtures
+              .map((fixture, i) => {
+                const focusFixture = nextFixture && nextFixture.id === fixture.id;
+                return (
+                  <div
+                    key={fixture.id}
+                    className={focusFixture ? "focusFixture" : ""}>
+                    <Fixture fixture={fixture} isFocus={focusFixture} />
+                    {nextFixture && nextFixture.id === fixture.id && (
+                      <UpdateFixture
+                        fixture={fixture}
+                        fixtures={fixtures}
+                        updateFixtures={actions.fetchFixtures}
+                        startMatch={actions.startMatch}
+                      />
+                    )}
+                  </div>
+                );
+              })
+            : <div className="noFixtures">No <span>{fixtureFilter}</span> fixtures left to display</div>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
