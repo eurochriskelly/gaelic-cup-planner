@@ -11,7 +11,7 @@
     }
 
     section>table.groupStandings {
-        thead>tr>th {
+        tbody>tr>th {
             font-size: 1.4rem;
             padding: 0.3rem;
         }
@@ -52,7 +52,7 @@
                 writing-mode: vertical-lr;
                 text-orientation: mixed;
                 transform: rotate(180deg); // Flip the text for a better reading direction
-                background: desaturate(($sc, 20%), 10%); // Darker grey background
+                background: desaturate(darken($sc, 20%), 10%); // Darker grey background
                 text-align: center;
                 padding: 0;
                 font-size: 2rem;
@@ -86,30 +86,6 @@
     }
 }
 
-.nextArea {
-    border-radius: 0.3rem;
-    background-color: #eee;
-    line-height: 20px;
-    height: 3rem;
-
-    >div {
-        display: grid;
-        grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
-        padding: 0.3rem;
-        margin: 0.4rem 0;
-    }
-
-    >div:first-child {
-        >span {
-            margin-right: 0.1rem;
-            padding: 0.2rem;
-        }
-    }
-
-    span {
-        text-align: center;
-    }
-}
 
 .empty {
     border: 3px solid red;

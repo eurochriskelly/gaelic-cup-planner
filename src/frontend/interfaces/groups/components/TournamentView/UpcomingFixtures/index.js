@@ -1,45 +1,51 @@
 import React from "react";
 import { getDivisions } from "../../../../../shared/js/styler";
 
-const blockStyle = (col = "green") => ({
-  border: `3px solid ${col}`,
-  height: "100px",
-  margin: "0.4rem",
-});
+import "./UpcomingFixtures.css";
 
-const UpcomingFixtures = ({ groups, nextMatches }) => {
-  const liveStyle = {
-    gridTemplateColumns: getDivisions(groups.length),
-  };
+
+const UpcomingFixtures = ({
+  groups, 
+  nextMatches
+}) => {
+  const liveStyle = { gridTemplateColumns: getDivisions(groups.length) };
   // We show a maximum of 3 groups
   const nextGroups = groups.slice(0, 3);
   return (
-    <article style={liveStyle}>
+    <article style={liveStyle} className="upcomingFixtures">
       <h2>
         <div>Upcoming fixtures</div>
       </h2>
       {nextGroups
         .map((group, id) => {
-          const candidateMatches = (nextMatches || [])
+          let candidateMatches = (nextMatches || [])
             .filter((match) => match.category === group)
             .slice(0, 3);
-
+      
           const showMatches = {
             previous: candidateMatches
-              .filter((m) => typeof m.goals1 === "number" && m.startedTime)
-              .shift(),
+              .filter((m) => typeof m.goals1 === "number" && m.startedTime),
             current: candidateMatches
-              .filter((m) => typeof m.goals1 !== "number" && m.startedTime)
-              .shift(),
+              .filter((m) => typeof m.goals1 !== "number" && m.startedTime),
             next: candidateMatches
               .filter((m) => typeof m.goals1 !== "number" && !m.startedTime)
-              .shift(),
           };
+          const showOrEmpty = (title, arr = [], T) => {
+              return <>
+                <h4>{title}</h4>
+                { arr.length
+                  ? arr?.map((m, i) => (
+                      <T key={`m${i}`} match={m} />
+                    ))
+                  : <T match={null} />
+                }
+              </>
+          }
           return (
             <section key={`k${id}`}>
-              <MatchLastPlayed match={showMatches.previous} />
-              <MatchInProgress match={showMatches.current} />
-              <MatchUpcoming match={showMatches.next} />
+              { showOrEmpty("Last played", showMatches.previous, MatchLastPlayed) }
+              { showOrEmpty("In progress", showMatches.current, MatchInProgress) }
+              { showOrEmpty("Next up", showMatches.next, MatchUpcoming) }
             </section>
           );
         })}
@@ -52,13 +58,12 @@ export default UpcomingFixtures;
 function MatchLastPlayed({ match }) {
   if (!match)
     return (
-      <div style={blockStyle("green")}>No matches finished in group yet.</div>
+      <div className="nextArea area-played">No matches finished in group yet.</div>
     );
   const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } =
     match;
   return (
-    <div className="nextArea" style={blockStyle("green")}>
-      <h4>Last played</h4>
+    <div className="nextArea area-played">
       <div>
         <span>{scheduledTime}</span>
         <span>{team1}</span>
@@ -82,11 +87,10 @@ function MatchLastPlayed({ match }) {
 }
 
 function MatchInProgress({ match }) {
-  if (!match) return <div style={blockStyle("red")}>No match in progress.</div>;
+  if (!match) return <div className="nextArea area-inprogress">No match in progress.</div>;
   const { scheduledTime, team1, team2 } = match;
   return (
-    <div className="nextArea" style={blockStyle("red")}>
-      <h4>In progress</h4>
+    <div className="nextArea area-inprogress">
       <div>
         <span>{scheduledTime}</span>
         <span>{team1}</span>
@@ -99,11 +103,10 @@ function MatchInProgress({ match }) {
 
 function MatchUpcoming({ match }) {
   if (!match)
-    return <div style={blockStyle("blue")}>No match in progress.</div>;
+    return <div className="nextArea area-nextup">No match in progress.</div>;
   const { scheduledTime, team1, team2, umpiringTeam } = match;
   return (
-    <div className="nextArea" style={blockStyle("blue")}>
-      <h4>Next up</h4>
+    <div className="nextArea area-nextup">
       <div>
         <span>{scheduledTime}</span>
         <span>{team1}</span>
