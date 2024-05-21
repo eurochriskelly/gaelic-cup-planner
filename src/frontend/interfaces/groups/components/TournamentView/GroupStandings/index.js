@@ -19,18 +19,6 @@ const GroupStandings = ({ group, standings }) => {
   return (
     <>
       <table className='groupStandings'>
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>MP</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>PF</th>
-            <th>PD</th>
-            <th>Pts</th>
-          </tr>
-        </thead>
         {
           // get unique groups from standings based on the group prop
           Object.keys(
@@ -43,10 +31,6 @@ const GroupStandings = ({ group, standings }) => {
             return (
               <tbody className={gi % 2 === 0 ? 'even' : 'odd'}>
                 {groupStandings
-                  .filter((team, i) => {
-                    if (i === 0) console.log('first team', team)
-                    return true
-                  })
                   .filter((team) => team.category === group)
                   .map((team, si) => {
                     const {
@@ -59,12 +43,24 @@ const GroupStandings = ({ group, standings }) => {
                       PointsDifference,
                       TotalPoints,
                     } = team;
-                    console.log(MatchesPlayed, group)
                     const mp = MatchesPlayed;
                     const finished = mp === MatchesPlanned;
                     return (
                       <>
-                        { si ? null : <GroupDivider key={`gd-${gi}`} team={team} /> }
+                        {si ? null : <>
+                          <GroupDivider key={`gd-${gi}`} team={team} />
+                          <tr>
+                            <th>Team</th>
+                            <th>MP</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>PF</th>
+                            <th>PD</th>
+                            <th>Pts</th>
+                          </tr>
+                        </>
+                        }
                         <tr key={`standing-row-${si}`}>
                           <td className='teamName'
                             style={{

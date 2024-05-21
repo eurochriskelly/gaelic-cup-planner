@@ -80,7 +80,6 @@ td.groupHeader {
     text-transform: uppercase;
     color: $secondary-color;
     background-color: lighten(desaturate($sc, 15%), 40%);
-    border-top: 5px solid $sc-light-20;
     padding:0;
     margin:0;
     padding-top: 1.2rem;
