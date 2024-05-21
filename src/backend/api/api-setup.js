@@ -6,7 +6,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-
 module.exports = (db, ARGS) => {
     console.log("Setting up API endpoints ...")
     app.use(express.static(path.join(__dirname, ARGS.staticPath)));
@@ -16,10 +15,11 @@ module.exports = (db, ARGS) => {
     require('./tournaments')(app, db, select)
 
     // API endpoint to get data from the database
-    app.get('/api/pitches', async (req, res) => {
-        II('Calling API: /api/pitches')
+    app.get('/api/tournaments/:tournamentId/pitches', async (req, res) => {
+        II('Calling API: /api/tournaments/:tournamentId/pitches')
         // FIXME: We need a tournament selection screen when starting the app
-        const query = 'SELECT * FROM v_pitch_events where tournamentId = ' + ARGS.tournamentId;
+        const { tournamentId } = req.params
+        const query = 'SELECT * FROM v_pitch_events where tournamentId = ' + tournamentId;
         console.log(query)
         try {
             const data = await select(query)
@@ -31,11 +31,8 @@ module.exports = (db, ARGS) => {
 
     app.get('/api/tournaments', (req, res) => {
         II('Calling API: /api/tournaments ...')
-        const parameter = req.params.parameter;
-        // Now you can use the 'parameter' variable to fetch specific data from your database
         const query = `SELECT * FROM v_tournaments`;
         db.query(query, (err, results) => {
-
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
@@ -47,8 +44,6 @@ module.exports = (db, ARGS) => {
     app.get('/api/group/standings/:tournamentId', async (req, res) => {
         const { tournamentId } = req.params
         II(`Calling API: /api/group/standings/tournamentId [${tournamentId}]`)
-        // Now you can use the 'parameter' variable to fetch specific data from your database
-
         const groups = await select(`SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId}`)
         const query = `SELECT * FROM v_group_standings where tournamentId = ${tournamentId}`;
 

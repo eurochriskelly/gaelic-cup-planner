@@ -3,90 +3,63 @@ To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
 .media-phone * {
-  font-size: 1.5rem; }
+  font-size: 1.2rem; }
 
 .media-phone td.teamName {
   font-size: 1.4rem; }
 
-.media-phone section > table.groupStandings thead > tr > th {
-  font-size: 2rem;
+.media-phone section > table.groupStandings tbody > tr > th {
+  font-size: 1.4rem;
   padding: 0.3rem; }
 
-.media-phone section > table.groupStandings tbody > tr > td {
-  font-size: 1.8rem;
+.media-phone section > table.groupStandings tbody > tr > td, .media-phone section > table.groupStandings tbody > tr > td > span {
+  font-size: 1.4rem;
   padding: 0.3rem; }
 
 .tournamentView {
   display: grid;
   grid-template-rows: 90px auto; }
-
-.tournamentView > div {
-  display: grid;
-  grid-template-columns: 10% 90%;
-  grid-template-rows: 0.5fr 1.4fr;
-  height: 100vh; }
-
-.tournamentView > div h4 {
-  margin: 0;
-  padding: 0;
-  background: none; }
-
-.tournamentView > div article {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-gap: 0px;
-  padding: 0px;
-  background: #f8f8f8;
-  align-items: start; }
-
-.tournamentView > div article h2 {
-  writing-mode: vertical-lr;
-  text-orientation: mixed;
-  transform: rotate(180deg);
-  background: #523863;
-  text-align: center;
-  padding: 0;
-  font-size: 2vh;
-  grid-column: 1;
-  grid-row: 1 / -1;
-  margin: 0; }
-
-.tournamentView > div article section {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto 1fr; }
-
-.tournamentView > div article section h3 {
-  background: #ccc;
-  margin: 0 0 10px 0;
-  padding: 0.5em; }
-
-.tournamentView > div article section > div {
-  padding: 1em;
-  height: 150px; }
-
-.tournamentView > div > div:first-child {
-  display: grid;
-  grid-template-columns: 100%; }
-
-.nextArea {
-  border-radius: 0.3rem;
-  background-color: #eee;
-  line-height: 20px;
-  height: 3rem; }
-
-.nextArea > div {
-  display: grid;
-  grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
-  padding: 0.3rem;
-  margin: 0.4rem 0; }
-
-.nextArea > div:first-child > span {
-  margin-right: 0.1rem;
-  padding: 0.2rem; }
-
-.nextArea span {
-  text-align: center; }
+  .tournamentView > div {
+    display: grid;
+    grid-template-columns: 15% 85%;
+    grid-template-rows: 0.5fr 1.4fr;
+    height: 100vh; }
+    .tournamentView > div h4 {
+      margin: 0;
+      padding: 0;
+      background: none; }
+    .tournamentView > div article {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-gap: 0px;
+      padding: 0px;
+      background: #f8f8f8;
+      align-items: start; }
+      .tournamentView > div article h2 {
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        background: #50405b;
+        text-align: center;
+        padding: 0;
+        font-size: 2rem;
+        grid-column: 1;
+        grid-row: 1 / -1;
+        margin: 0; }
+      .tournamentView > div article section {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: auto 1fr; }
+        .tournamentView > div article section h3 {
+          background: #ccc;
+          margin: 0 0 10px 0;
+          padding: 0.5em; }
+        .tournamentView > div article section > div {
+          padding: 1em;
+          height: 150px; }
+    .tournamentView > div > div:first-child {
+      display: grid;
+      grid-template-columns: 100%; }
 
 .empty {
   border: 3px solid red;
