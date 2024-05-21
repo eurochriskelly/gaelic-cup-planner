@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import SelectPitch from "./SelectPitch";
 
 const SelectPitchView = () => {
-  const [pitchData, setPitchData] = useState([]); // useState hook to store data
+  const { tournamentId } = useParams();
+  const [pitchData, setPitchData] = useState([]);
 
   async function fetchData() {
-    fetch("/api/tournament/7/pitches")
+    fetch(`/api/tournaments/${tournamentId}/pitches`)
       .then((response) => response.json())
       .then((data) => {
         setPitchData(data.data);
@@ -14,10 +16,7 @@ const SelectPitchView = () => {
         console.error("Error fetching data:", error);
       });
   }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData() }, []);
 
   return (
     <div className="container">
@@ -25,7 +24,7 @@ const SelectPitchView = () => {
       <h2>Please select pitch</h2>
       <div className="selectPitchView">
         {" "}
-        {pitchData.map((pitch) => console.log(pitch) || (
+        {pitchData.map((pitch) => (
           <SelectPitch
             key={pitch.pitch}
             {...pitch}

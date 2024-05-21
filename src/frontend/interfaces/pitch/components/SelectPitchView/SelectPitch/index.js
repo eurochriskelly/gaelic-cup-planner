@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TeamNameDisplay from "../../common/TeamNameDisplay";
 
 const SelectPitch = ({
@@ -14,17 +14,15 @@ const SelectPitch = ({
   startedTime = null,
   onChoosePitch,
 }) => {
+  const { tournamentId } = useParams();
   const navigate = useNavigate();
   const navigateToPitch = () => {
     onChoosePitch();
-    navigate(`/tournament/7/pitch/${pitch}`);
+    navigate(`/tournaments/${tournamentId}/pitches/${pitch}`);
   };
 
   return (
-    <div
-      className="allDone selectPitch"
-      onClick={navigateToPitch}
-    >
+    <div className="allDone selectPitch" onClick={navigateToPitch}>
       <div className="header">
         <div className="pitch">{pitch}</div>
         <div className="location">{location}</div>

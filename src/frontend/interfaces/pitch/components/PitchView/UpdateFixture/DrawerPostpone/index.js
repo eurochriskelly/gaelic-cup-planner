@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Select from 'react-select';
 import './DrawerPostpone.css';
 
@@ -7,6 +8,7 @@ const DrawerPostpone = ({
   onSubmit,
   visible,
 }) => {
+  const { tournamentId } = useParams();
 
   const [selPitch, setSelPitch] = useState('Pitch 4');
   const [selFixture, setSelFixture] = useState(null);
@@ -16,7 +18,7 @@ const DrawerPostpone = ({
 
   useEffect(() => {
     // When user opens the drawer, fetch all fixtures data
-    fetch("/api/tournament/7/pitches")
+    fetch(`/api/tournaments/${tournamentId}/pitches`)
       .then((response) => response.json())
       .then((data) => {
         console.log('pitch', data.data)
