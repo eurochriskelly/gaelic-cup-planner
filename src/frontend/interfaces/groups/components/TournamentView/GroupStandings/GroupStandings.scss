@@ -6,6 +6,9 @@ $fs: 0.8vw;
 .groupStandings {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    .even {
+        background-color: #eee;
+    }
     * {
         user-select: none;
     }
@@ -75,8 +78,8 @@ $fs: 0.8vw;
 td.groupHeader {
     text-align: center;
     text-transform: uppercase;
-    color: $primary-color;
-    border-bottom: 5px solid $pc-light-20;
+    color: $secondary-color;
+    background-color: lighten(desaturate($sc, 15%), 40%);
     padding:0;
     margin:0;
     padding-top: 1.2rem;

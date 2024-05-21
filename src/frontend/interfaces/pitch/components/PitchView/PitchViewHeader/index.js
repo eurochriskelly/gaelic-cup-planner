@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavBar } from 'gcp-core-fe';
 
 const PitchViewHeader = ({
   pitchId,
@@ -19,18 +20,7 @@ const PitchViewHeader = ({
         <span onClick={backToSelection}>&larr;</span>
         <span>Fixtures for pitch: {pitchId}</span>
       </h2>
-
-      <div className='navBar'>
-        {tabNames.map((tn, i) => (
-          <span
-            key={`tn${i}`}
-            onClick={tabSelected.bind(null, tn)}
-            className={`tab-${tn} ${tn === currentTab ? 'selected' : ""}`}
-          >
-            {tn}
-          </span>
-        ))}{" "}
-      </div>
+      <NavBar tabNames={tabNames} onSelect={tabSelected} selected={currentTab} />
     </div>
   );
 };

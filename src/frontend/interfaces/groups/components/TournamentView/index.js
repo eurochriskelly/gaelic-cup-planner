@@ -9,19 +9,22 @@ import CategorySelect from "./CategorySelect";
 import { getDivisions } from "../../../../shared/js/styler";
 
 const TournamentView = () => {
+  // Application State
   const { tournamentId } = useParams();
+  const { mediaType } = useGroupContext();
+
+  // Component State
   const [groups, setGroups] = useState([]);
   const [standings, setStandings] = useState([]);
   const [nextMatches, setNextMatches] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { mediaType } = useGroupContext();
 
   const fetchData = () => {
     fetch(`/api/fixtures/nextup/${tournamentId}`)
       .then((response) => response.json())
       .then((data) => setNextMatches(data.data))
       .catch((error) => {
-        console.error("Error fetching next fixtures:", >>error);
+        console.error("Error fetching next fixtures:", error);
       });
 
     fetch(`/api/group/standings/${tournamentId}`)
@@ -58,7 +61,6 @@ const TournamentView = () => {
 
   const changeCategory = (selected) => {
     setSelectedCategory(selected.value);
-    console.log('now fetching', selected.value);
     fetchData();
   } 
 

@@ -11,7 +11,7 @@
     "start": "bash scripts/build-fe.sh --watch",
     "launch": "bash scripts/launch.sh",
     "launch:dev": "bash scripts/launch.sh --dev",
-    "css:watch": "bash scripts/build-css.sh",
+    "css:watch": "bash node_modules/gcp-core-fe/scripts/build-css.sh",
     "deploy": "bash scripts/deploy.sh",
     "build": "bash scripts/build-fe.sh --build",
     "db:setup": "bash scripts/db-setup.sh",
@@ -27,6 +27,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "gcp-core-fe": "file:../gcp-core-fe",
     "@babel/cli": "^7.23.0",
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
