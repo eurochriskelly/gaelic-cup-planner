@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavBar } from 'gcp-core-fe';
+import NavBar from '../../../../../shared/generic/NavBar';
 
 const PitchViewHeader = ({
   pitchId,

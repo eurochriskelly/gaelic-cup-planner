@@ -7,13 +7,16 @@ $fs: 0.8vw;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     .even {
-        background-color: #eee;
+        //background-color: #eee;
     }
     * {
         user-select: none;
     }
     h2 {
         background-color: $bg-light-20;
+    }
+    td {
+        background-color: rgba(255, 255, 255, 0.5); 
     }
     th, td {
         font-size: $fs;
@@ -40,7 +43,7 @@ $fs: 0.8vw;
         
     }
     th {
-        background-color: $sc-light-20;
+        // background-color: $sc-light-20;
         color:white;
         font-weight: normal;
         text-transform: uppercase;
@@ -55,6 +58,11 @@ $fs: 0.8vw;
 }
 
 .media-phone .groupStandings {
+    th {
+        background-color: rgba(0, 0, 0, 0.25);
+        font-size: 1.2rem;
+        padding: 0.3rem;
+    }
     th, td {
         font-size: $fs;
         &:nth-child(n+2):nth-child(-n+8) {
@@ -78,11 +86,12 @@ $fs: 0.8vw;
 td.groupHeader {
     text-align: center;
     text-transform: uppercase;
-    color: $secondary-color;
-    background-color: lighten(desaturate($sc, 15%), 40%);
+    color: white;
+    font-weight: bold;
+    background:none;
     padding:0;
     margin:0;
-    padding-top: 1.2rem;
+    padding-top: 1.4rem;
 }
 
 td.finished {
@@ -95,7 +104,7 @@ td.finished {
 }
 
 .noData {
-    color: #999;
+    color: #555;
     font-weight: normal;
 }
 

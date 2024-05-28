@@ -1,30 +1,25 @@
 .categorySelect {
-  width: 100%;
   background: #11250f;
   color: #777;
   height: 100px;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 2fr 3fr;
   /* Assuming the class name for React-Select is "react-select" */
   /* Optional: Styles for dropdown options */
   /* Optional: Styles for selected option */ }
+  .categorySelect > span {
+    padding: 0.4rem; }
   .categorySelect .react-select__control {
     background-color: #333;
-    /* Grey background */
-    color: #fff;
-    /* White font color */ }
+    color: #fff; }
   .categorySelect .react-select-2-placeholder {
     color: #fff;
-    /* White font color */
     background-color: #333; }
   .categorySelect .react-select__menu {
     background-color: #333;
-    /* Grey background */
-    color: #fff;
-    /* White font color */ }
+    color: #fff; }
   .categorySelect .react-select__single-value {
-    color: #fff;
-    /* White font color */ }
+    color: #fff; }
   .categorySelect > span:nth-child(2) * > * {
     font-size: 3rem; }
   .categorySelect > span:nth-child(2) * > * > * {

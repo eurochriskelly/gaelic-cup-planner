@@ -1,20 +1,20 @@
 import React from "react";
 import Select from 'react-select';
 
-const CategorySelect = ({ 
+const CategorySelect = ({
   categories = [],
-  onSelect = () => {}
+  onSelect = () => { }
 }) => {
   return (
     <div className="categorySelect">
-        <span>&nbsp;</span>
-        <span>
-          <Select
-            options={categories.map(cat => ({ value: cat, label: cat}))}
-            onChange={onSelect}
-            placeholder="Choose competition..."
-          />
-        </span>
+      <span>&nbsp;</span>
+      <span>
+        <Select
+          options={categories.map(cat => ({ value: cat, label: cat }))}
+          onChange={onSelect}
+          placeholder="Choose competition..."
+        />
+      </span>
     </div>
   )
 };

@@ -65,7 +65,7 @@ const GroupStandings = ({ group, standings }) => {
                           <td className='teamName'
                             style={{
                               fontWeight: finished ? "bold" : "normal",
-                              color: finished ? "black" : "grey",
+                              color: finished ? "black" : "#666",
                             }}>{team.team}</td>
                           <td>
                             <span>{MatchesPlayed}</span>
