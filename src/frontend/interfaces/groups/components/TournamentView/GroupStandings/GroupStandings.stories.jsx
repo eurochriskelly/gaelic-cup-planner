@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import GroupStandings from './';
 import { overrideApis } from '~/src/frontend/shared/test/story-data.js';
-import '~/src/frontend/shared/css/site.scss';
+import '~/src/frontend/shared/css/site.css';
 
 overrideApis()
 
