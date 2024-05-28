@@ -208,7 +208,7 @@ function BtnGetReady({
         className={btnClass}
         onClick={onGetReady}
         disabled={!btnClass}>
-        Get ready &nbsp;
+        Start match &nbsp;
         <svg width="29" height="29" viewBox="0 0 20 20">
           <polygon points="8,5 16,12 8,19" fill="white"></polygon>
         </svg>

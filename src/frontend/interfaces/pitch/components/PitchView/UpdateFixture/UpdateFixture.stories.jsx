@@ -1,6 +1,6 @@
 import React from 'react'
 import UpdateFixture from './';
-import styles from './UpdateFixture.module.scss'
+import './UpdateFixture.css'
 
 const TestUpdateFixture = (props) => {
   return (
