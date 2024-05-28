@@ -1,0 +1,28 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.navBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: #333333; }
+  .navBar > span {
+    user-select: none;
+    font-size: 1.9em;
+    border: 4px solid #333333;
+    background: white;
+    color: #e8e0ed;
+    font-size: 1.8rem #333333;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 1.6rem 0.8rem;
+    background-color: #484848;
+    border-bottom: 0.35rem solid #94ab92;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem; }
+  .navBar > span.selected {
+    border: 0.2rem solid #323232;
+    border-bottom: none;
+    color: #495d47;
+    background-color: #94ab92;
+    font-weight: bold; }

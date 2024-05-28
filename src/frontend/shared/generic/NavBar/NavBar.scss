@@ -1,0 +1,34 @@
+@import "../../css/_colors.scss";
+
+$b: desaturate(lighten($pc, 32%), 40%);
+$c: lighten(black, 20%);
+
+.navBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: $c;
+
+  > span {
+    user-select: none;
+    font-size: 1.9em;;
+    border: 4px solid $c;
+    background: white;
+    color: $sc-light-40;
+    font-size: 1.8rem$c;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 1.6rem 0.8rem;
+    background-color: lighten(desaturate($pc-dark-10, 69%), 8%);
+    border-bottom: 0.35rem solid $b;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
+  }
+
+  > span.selected {
+    border: 0.2rem solid #323232;
+    border-bottom: none;
+    color: darken($b, 30%);
+    background-color: $b;
+    font-weight: bold;
+  }
+}
