@@ -6,7 +6,7 @@ import TournamentView from "./components/TournamentView";
 function App() {
   return (
     <GroupProvider>
-      <h1 style={{fontSize: '3.3em', background: 'black', padding: '2rem 0'}}>LIVE UPDATES</h1>
+      <h1>LIVE UPDATES</h1>
       <Routes>
         <Route path="/" element={<SelectTournamentView />} />
         <Route path="/tournaments/:tournamentId" element={<TournamentView />} />
