@@ -3,7 +3,6 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
-  //background: radial-gradient(circle at top center, #7bb294, #7bb294 10%, #082e28 10%);
   background: radial-gradient(circle at top center, #7bb294, $radial2 50%);
   min-height: 100vh; /* ensures full page height */
 }
