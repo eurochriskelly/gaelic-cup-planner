@@ -8,13 +8,22 @@ To import, add the following to the top of your scss file:
 .media-phone td.teamName {
   font-size: 1.4rem; }
 
-.media-phone section > table.groupStandings tbody > tr > th {
-  font-size: 1.4rem;
-  padding: 0.3rem; }
+.media-phone section > table.groupStandings {
+  width: 95%;
+  margin: 0 auto; }
+  .media-phone section > table.groupStandings tbody > tr > th {
+    font-size: 1.4rem;
+    padding: 0.3rem; }
+  .media-phone section > table.groupStandings tbody > tr > td, .media-phone section > table.groupStandings tbody > tr > td > span {
+    font-size: 1.4rem;
+    padding: 0.3rem; }
 
-.media-phone section > table.groupStandings tbody > tr > td, .media-phone section > table.groupStandings tbody > tr > td > span {
-  font-size: 1.4rem;
-  padding: 0.3rem; }
+.topView {
+  z-index: 1000;
+  position: fixed;
+  top: 7rem;
+  left: 0;
+  right: 0; }
 
 .tournamentView {
   display: grid;
@@ -33,7 +42,6 @@ To import, add the following to the top of your scss file:
       grid-column: 1 / -1;
       grid-gap: 0px;
       padding: 0px;
-      background: #f8f8f8;
       align-items: start; }
       .tournamentView > div article h2 {
         writing-mode: vertical-lr;
