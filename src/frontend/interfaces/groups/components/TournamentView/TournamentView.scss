@@ -11,6 +11,8 @@
     }
 
     section>table.groupStandings {
+        width: 95%;
+        margin: 0 auto;
         tbody>tr>th {
             font-size: 1.4rem;
             padding: 0.3rem;
@@ -20,6 +22,14 @@
             padding: 0.3rem;
         }
     }
+}
+
+.topView {
+    z-index: 1000;
+    position: fixed;
+    top: 7rem;
+    left: 0;
+    right: 0;
 }
 
 .tournamentView {
@@ -45,7 +55,7 @@
             grid-column: 1 / -1;
             grid-gap: 0px;
             padding: 0px;
-            background: #f8f8f8; // Light background for articles
+            // background: #f8f8f8; // Light background for articles
             align-items: start;
 
             h2 {
