@@ -6,17 +6,19 @@ const apiSetup = require("./api/api-setup");
 const ARGS = processArgs(process.argv);
 
 const run = async () => {
+  let db = null
   // Set up MySQL connection
-  const db = mysql.createConnection(CONFIG.DB_CONN);
-
-  // Connect to the database
-  db.connect((err) => {
-    if (err) {
-      console.error("Error connecting to the database: ", err);
-      return;
-    }
-    console.log("Connected to the MySQL server.");
-  });
+  if (!ARGS.mock) {
+    db = mysql.createConnection(CONFIG.DB_CONN);
+    // Connect to the database
+    db.connect((err) => {
+      if (err) {
+        console.error("Error connecting to the database: ", err);
+        return;
+      }
+      console.log("Connected to the MySQL server.");
+    });
+  } 
 
   apiSetup(db, ARGS);
 };
