@@ -1,0 +1,64 @@
+# Use an official Node.js 20.x Bullseye (slim) base image
+FROM node:20-bullseye-slim
+
+# Set up working directories
+RUN mkdir -p /root/app /root/repos /root/scripts
+
+COPY ./scripts/setup/* /root/scripts/
+
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    gnupg \
+    lsb-release \
+    tmux \
+    emacs \
+    tree \
+    default-mysql-client \
+    neovim \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install lazygit
+RUN curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest \
+    | grep "browser_download_url.*Linux_x86_64.tar.gz" \
+    | cut -d : -f 2,3 \
+    | tr -d \" \
+    | wget -qi - \
+    && tar -xzf lazygit_*_Linux_x86_64.tar.gz -C /usr/local/bin lazygit \
+    && rm lazygit_*_Linux_x86_64.tar.gz
+
+# Install build tools and Python for node-gyp, set architecture environment variables
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3 \
+    python3-pip \
+    make \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "npm_config_arch=arm64" >> ~/.npmrc \
+    && echo "npm_config_platform=linux" >> ~/.npmrc
+# Install Parcel globally using npm
+RUN npm install -g parcel
+
+# for parcel
+ENV npm_config_arch=arm64
+ENV npm_config_platform=linux
+
+# Set the working directory
+WORKDIR /root/app 
+
+# Reinstall node modules
+COPY package*.json ./
+RUN npm install
+# Copy your application source code (assumes you have a local directory with your source)
+COPY . /root/app/
+
+# Expose multiple ports
+EXPOSE 1234 1235 1236 4000 4001 4002 5000 5001 5002
+
+# Command to keep the container running
+CMD ["tail", "-f", "/dev/null"]
+
+
