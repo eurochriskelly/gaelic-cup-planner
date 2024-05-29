@@ -33,7 +33,7 @@ runApp() {
 			relaunch=false
 		else
       echo "Run # ${run_number}"
-			node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3"
+			node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" --use-mock=$DEV_MODE
 			run_number=$((run_number + 1))
 		fi
 	done
@@ -43,7 +43,7 @@ runApp() {
 			echo "Retrying in 5 seconds ..."
 			sleep 5
 		fi
-		if node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" &>/dev/null; then
+		if node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" --use-mock=$DEV_MODE &>/dev/null; then 
 			break
 		fi
 		run_number=$((run_number + 1))
@@ -52,10 +52,12 @@ runApp() {
 
 PORT1=4000
 PORT2=4001
+DEV_MODE=false
 for arg in "$@"; do
     if [ "$arg" = "--dev" ]; then
         PORT1=$(($PORT1 + 1000))
         PORT2=$(($PORT2 + 1000))
+        DEV_MODE=true
     fi
 done
 runApp "groups" $PORT1 $GCP_TOURN_NUM &
