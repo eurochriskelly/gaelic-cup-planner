@@ -12,6 +12,10 @@ const processArgs = (args) => {
         return ARGS
     }
 
+    if (ARGS['use-mock'] === 'true') {
+      ARGS.mock = true
+    }
+
     if (!ARGS.port) {
         throw new Error('Missing --port argument')
     }
