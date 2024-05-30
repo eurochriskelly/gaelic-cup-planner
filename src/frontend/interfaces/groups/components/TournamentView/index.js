@@ -8,6 +8,7 @@ import GroupStandings from "./GroupStandings";
 import UpcomingFixtures from "./UpcomingFixtures";
 import CategorySelect from "./CategorySelect";
 import { getDivisions } from "../../../../shared/js/styler";
+import { sections } from "../../../../../../config/config";
 
 const TournamentView = () => {
   // Application State
@@ -15,7 +16,7 @@ const TournamentView = () => {
   const { mediaType } = useGroupContext();
 
   // Component State
-  const sections = ['Upcoming', 'Standings', 'Knockout']
+  const tabNames = ["Upcoming", "Standings", "Knockout"];
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [groups, setGroups] = useState([]);
   const [standings, setStandings] = useState([]);
@@ -74,7 +75,6 @@ const TournamentView = () => {
   return (
     <div className='topView'>
       <CategorySelect categories={getCategories(standings)} onSelect={changeCategory} />
-      <NavBar tabNames={sections} onSelect={selectTab} selected={currentSection} />
       {
         mediaType === 'phone'
           ? <LayoutForPhone groups={groups} nextMatches={nextMatches} standings={standings} currentSection={currentSection} isPhone={mediaType === 'phone'} />
@@ -126,6 +126,7 @@ function LayoutForPhone({
       </div>
     </div>
   )
+      sections={sections}
 }
 
 function LayoutForDesktop({
