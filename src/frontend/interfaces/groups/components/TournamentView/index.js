@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CONF from "../../config.js";
 import { useGroupContext } from "../../GroupProvider";
-import MobileInterface from "../../../../shared/generic/MobileInterface";
 import MobileLayout from "../../../../shared/generic/MobileLayout";
 import NavBar from "../../../../shared/generic/NavBar";
 import GroupStandings from "./GroupStandings";
@@ -63,8 +62,8 @@ const TournamentView = () => {
   const handle = {
     back: () => {
       navigate(`/tournament/${tournamentId}`);
-    }
-  }
+    },
+  };
 
   const getCategories = (s = []) => {
     if (!s.length) return [];
@@ -85,18 +84,16 @@ const TournamentView = () => {
   };
   const isPhone = mediaType === "phone";
   return isPhone ? (
-    <MobileInterface>
-      <LayoutForPhone
-        groups={groups}
-        nextMatches={nextMatches}
-        standings={standings}
-        tabNames={tabNames}
-        category={category}
-        onBack={handle.back}
-        currentSection={currentSection}
-        isPhone={mediaType === "phone"}
-      />
-    </MobileInterface>
+    <LayoutForPhone
+      groups={groups}
+      nextMatches={nextMatches}
+      standings={standings}
+      tabNames={tabNames}
+      category={category}
+      onBack={handle.back}
+      currentSection={currentSection}
+      isPhone={mediaType === "phone"}
+    />
   ) : (
     <>
       <CategorySelect
@@ -206,3 +203,4 @@ function calculateMatchesPlayed(data) {
   });
   return data;
 }
+
