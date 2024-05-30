@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileInterface from "../../../../shared/generic/MobileInterface";
 import MainCard from "../../../../shared/generic/MainCard";
-import { Description } from "@storybook/blocks";
+import { sections } from "../../../../../../config/config";
 
 const SelectTournamentView = () => {
   console.log("ok wonet");
@@ -27,53 +27,17 @@ const SelectTournamentView = () => {
     navigate(`/tournaments/${tournamentId}`, { state: { tournament } });
   };
 
-  const sections = [
-    {
-      title: "live competitation status",
-      name: "competitions",
-      action: () => {
-        console.log("foo fah");
-      },
-    },
-    {
-      title: "field coordination",
-      name: "pitches",
-      action: () => {
-        console.log("fee faw");
-      },
-    },
-  ];
-  const cardInfo = [
-    { 
-      name: "LGFA_JNR",
-      description: "LGFA Junior",
-      numTeams: 4,
-      numGroups: 1, 
-      numCups: 1,
-      stage: 'preliminary',
-      matchesLeftInStage: 3
-    },
-    { 
-      name: "LGFA_SNR",
-      description: "LGFA Junior",
-      numTeams: 4,
-      numGroups: 1,
-      numCups: 1,  
-      stage: 'knockouts',
-      matchesLeftIrStage: 3
-    }
-  ];
   return (
     <MobileInterface
       title="Live tournament updates"
       topTitle="Select competition"
       tabNames={["upcoming", "standings", "knockouts"]}
-      sections={sections}
       // FIXME: only pass selected card
       cardInfo={cardInfo}
       viewType="topview">
       <IfTournamentSelected />
       <IfShowCards tournaments={tournaments} />
+      <MobileSelect sections={sections}>
     </MobileInterface>
   );
 };
