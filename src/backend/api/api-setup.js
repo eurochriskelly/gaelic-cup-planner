@@ -46,7 +46,7 @@ module.exports = (db, ARGS) => {
       });
     });
 
-    app.get("/api/group/standings/:tournamentId", async (req, res) => {
+    app.get("/api/tournaments/:tournamentId/standings", async (req, res) => {
       const { tournamentId } = req.params;
       II(`Calling API: /api/group/standings/tournamentId [${tournamentId}]`);
       const groups = await select(
