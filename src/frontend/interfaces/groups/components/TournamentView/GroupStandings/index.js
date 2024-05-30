@@ -19,6 +19,16 @@ const GroupStandings = ({ group, standings }) => {
   return (
     <>
       <table className='groupStandings'>
+        <colgroup>
+          <col width="46%" />
+          <col width="12%" />
+          <col width="7%" />
+          <col width="7%" />
+          <col width="7%" />
+          <col width="7%" />
+          <col width="7%" />
+          <col width="7%" />
+        </colgroup>
         {
           // get unique groups from standings based on the group prop
           Object.keys(
@@ -29,7 +39,7 @@ const GroupStandings = ({ group, standings }) => {
           ).map((grp, gi) => {
             const groupStandings = standings.filter((team) => +team.grp === +grp);
             return (
-              <tbody className={gi % 2 === 0 ? 'even' : 'odd'}>
+              <tbody key={`gs-${gi}`} className={gi % 2 === 0 ? 'even' : 'odd'}>
                 {groupStandings
                   .filter((team) => team.category === group)
                   .map((team, si) => {

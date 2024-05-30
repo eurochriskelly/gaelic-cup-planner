@@ -1,14 +1,11 @@
 @import "src/frontend/shared/css/_colors.scss";
 
 $scw: 2vw;
-$fs: 0.8vw;
+$fs: 1.8vw;
 
 .groupStandings {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-    .even {
-        //background-color: #eee;
-    }
     * {
         user-select: none;
     }
@@ -39,6 +36,7 @@ $fs: 0.8vw;
             text-overflow: ellipsis; 
             letter-spacing: 0.10em;
             text-transform: uppercase;
+            max-width: 100px;
         }
         
     }
@@ -83,15 +81,17 @@ $fs: 0.8vw;
     }
 }
 
-td.groupHeader {
+section.MobileLayout td.groupHeader {
     text-align: center;
     text-transform: uppercase;
     color: white;
     font-weight: bold;
+    font-size: 2rem;
     background:none;
     padding:0;
     margin:0;
     padding-top: 1.4rem;
+    padding-bottom: 1.4rem;
 }
 
 td.finished {
@@ -109,8 +109,8 @@ td.finished {
 }
 
 td > div.total  {
-    color: $pc-dark-20;
-    background-color: desaturate(lighten($primary-color, 40%), 1%);
+    color: $sc;
+    // background-color: desaturate(lighten($sc, 20%), 1%);
     border-radius: 3px;
     font-weight: bold;
     padding: 0;

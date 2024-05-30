@@ -6,22 +6,17 @@ To import, add the following to the top of your scss file:
   background-color: #e1ece0;
   border: 1px solid #ccc;
   margin: 1rem; }
-
-.selectTournamentView > article > section:hover {
-  background-color: #c3d8c1; }
-
-.selectTournamentView > article > section h3 {
-  text-align: center;
-  margin: 0.5rem 0 1.2rem 0; }
-
-.selectTournamentView > article > section > div > div {
-  padding: 0.3rem 1rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr; }
-
-.selectTournamentView > article > section > div > div > span:first-child {
-  font-size: 1.5rem;
-  font-weight: bold; }
-
-.selectTournamentView > article > section > div > div > span:last-child {
-  font-size: 1.2rem; }
+  .selectTournamentView > article > section:hover {
+    background-color: #c3d8c1; }
+  .selectTournamentView > article > section h3 {
+    text-align: center;
+    margin: 0.5rem 0 1.2rem 0; }
+  .selectTournamentView > article > section > div > div {
+    padding: 0.3rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr; }
+    .selectTournamentView > article > section > div > div > span:first-child {
+      font-size: 1.5rem;
+      font-weight: bold; }
+    .selectTournamentView > article > section > div > div > span:last-child {
+      font-size: 1.2rem; }

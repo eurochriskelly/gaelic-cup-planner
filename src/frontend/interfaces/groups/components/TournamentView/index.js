@@ -1,21 +1,24 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import CONF from '../../config.js';
+import { useParams, useNavigate } from "react-router-dom";
+import CONF from "../../config.js";
 import { useGroupContext } from "../../GroupProvider";
+import MobileLayout from "../../../../shared/generic/MobileLayout";
 import NavBar from "../../../../shared/generic/NavBar";
 import GroupStandings from "./GroupStandings";
 import UpcomingFixtures from "./UpcomingFixtures";
 import CategorySelect from "./CategorySelect";
 import { getDivisions } from "../../../../shared/js/styler";
+import { sections } from "../../../../../../config/config";
 
 const TournamentView = () => {
   // Application State
-  const { tournamentId } = useParams();
+  const navigate = useNavigate();
+  const { tournamentId, category } = useParams();
   const { mediaType } = useGroupContext();
 
   // Component State
-  const sections = ['Upcoming', 'Standings', 'Knockout']
+  const tabNames = ["Upcoming", "Standings", "Knockout"];
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [groups, setGroups] = useState([]);
   const [standings, setStandings] = useState([]);
@@ -25,18 +28,22 @@ const TournamentView = () => {
   const fetchData = () => {
     fetch(`/api/fixtures/nextup/${tournamentId}`)
       .then((response) => response.json())
-      .then((data) => setNextMatches(data.data))
+      .then((data) => console.log("nextup", data) || setNextMatches(data.data))
       .catch((error) => {
         console.error("Error fetching next fixtures:", error);
       });
 
-    fetch(`/api/group/standings/${tournamentId}`)
+    fetch(`/api/tournaments/${tournamentId}/standings`)
       .then((response) => response.json())
       .then((data) => {
-        if (!mediaType) setGroups([])
-        const g = mediaType === 'phone'
-          ? data.groups.filter(g => g === (selectedCategory || data.groups[0]))
-          : data.groups
+        console.log("standigns data", data);
+        if (!mediaType) setGroups([]);
+        const g =
+          mediaType === "phone"
+            ? data.groups.filter(
+                (g) => g === (selectedCategory || data.groups[0])
+              )
+            : data.groups;
         setGroups(g);
         const newData = calculateMatchesPlayed(data.data);
         setStandings(addMatchesPlannedPerTeam(newData));
@@ -52,6 +59,12 @@ const TournamentView = () => {
     return () => clearInterval(intervalId);
   }, [tournamentId, mediaType, selectedCategory]);
 
+  const handle = {
+    back: () => {
+      navigate(`/tournament/${tournamentId}`);
+    },
+  };
+
   const getCategories = (s = []) => {
     if (!s.length) return [];
     return s.reduce((acc, team) => {
@@ -60,27 +73,44 @@ const TournamentView = () => {
       }
       return acc;
     }, []);
-  }
+  };
 
   const changeCategory = (selected) => {
     setSelectedCategory(selected.value);
     fetchData();
-  }
+  };
   const selectTab = (tab) => {
-    console.log('selected tab', tab)
     setCurrentSection(tab);
-  }
-
-  return (
-    <div className='topView'>
-      <CategorySelect categories={getCategories(standings)} onSelect={changeCategory} />
-      <NavBar tabNames={sections} onSelect={selectTab} selected={currentSection} />
-      {
-        mediaType === 'phone'
-          ? <LayoutForPhone groups={groups} nextMatches={nextMatches} standings={standings} currentSection={currentSection} isPhone={mediaType === 'phone'} />
-          : <LayoutForDesktop groups={groups} nextMatches={nextMatches} standings={standings} />
-      }
-    </div>
+  };
+  const isPhone = mediaType === "phone";
+  return isPhone ? (
+    <LayoutForPhone
+      groups={groups}
+      nextMatches={nextMatches}
+      standings={standings}
+      tabNames={tabNames}
+      category={category}
+      onBack={handle.back}
+      currentSection={currentSection}
+      isPhone={mediaType === "phone"}
+    />
+  ) : (
+    <>
+      <CategorySelect
+        categories={getCategories(standings)}
+        onSelect={changeCategory}
+      />
+      <NavBar
+        tabNames={tabNames}
+        onSelect={selectTab}
+        selected={currentSection}
+      />
+      <LayoutForDesktop
+        groups={groups}
+        nextMatches={nextMatches}
+        standings={standings}
+      />
+    </>
   );
 };
 
@@ -90,50 +120,38 @@ function LayoutForPhone({
   groups,
   nextMatches,
   standings,
-  currentSection
+  category,
+  onBack = () => {},
+  tabNames,
 }) {
-  const getSection = () => {
-    switch (currentSection) {
-      case 'Upcoming':
-        return <UpcomingFixtures groups={groups} nextMatches={nextMatches} />
-      case 'Standings':
-        return (
-          <article>
-            {groups.map(
-              (group, id) => (
-                <section key={`g${id}`}>
-                  <GroupStandings
-                    group={group}
-                    standings={standings.filter(
-                      (team) => team.category === group
-                    )}
-                  />
-                </section>
-              )
-            )}
-          </article>
-        )
-      case 'Knockout':
-        return <div>TBD. knockouts!</div>
-      default:
-        return <div>No section</div>
-    }
-  }
   return (
-    <div className={`tournamentView media-phone`}>
-      <div>
-        {getSection()}
-      </div>
-    </div>
-  )
+    <MobileLayout
+      sections={sections}
+      onBack={onBack}
+      selected={1}
+      tabNames={tabNames}
+    >
+      <span>
+        <span>Category:</span>
+        <span>{category}</span>
+      </span>
+      <UpcomingFixtures groups={groups} nextMatches={nextMatches} />
+      <article>
+        {groups.map((group, id) => (
+          <section key={`g${id}`}>
+            <GroupStandings
+              group={group}
+              standings={standings.filter((team) => team.category === group)}
+            />
+          </section>
+        ))}
+      </article>
+      <div>TBD. knockouts!</div>
+    </MobileLayout>
+  );
 }
 
-function LayoutForDesktop({
-  groups,
-  nextMatches,
-  standings,
-  isPhone
-}) {
+function LayoutForDesktop({ groups, nextMatches, standings, isPhone }) {
   return (
     <div className={`tournamentView media-desktop`}>
       <div>
@@ -144,22 +162,18 @@ function LayoutForDesktop({
         />
         <article style={{ gridTemplateColumns: getDivisions(groups.length) }}>
           <h2>Standings</h2>
-          {groups.map(
-            (group, id) => (
-              <section key={`g${id}`}>
-                <GroupStandings
-                  group={group}
-                  standings={standings.filter(
-                    (team) => team.category === group
-                  )}
-                />
-              </section>
-            )
-          )}
+          {groups.map((group, id) => (
+            <section key={`g${id}`}>
+              <GroupStandings
+                group={group}
+                standings={standings.filter((team) => team.category === group)}
+              />
+            </section>
+          ))}
         </article>
       </div>
     </div>
-  )
+  );
 }
 
 // FIXME: Find a better view that calculates these for us
@@ -189,3 +203,4 @@ function calculateMatchesPlayed(data) {
   });
   return data;
 }
+
