@@ -24,7 +24,7 @@ const SelectPitchView = () => {
       <h2>Please select pitch</h2>
       <div className="selectPitchView">
         {" "}
-        {pitchData.map((pitch) => (
+        {pitchData?.map((pitch) => (
           <SelectPitch
             key={pitch.pitch}
             {...pitch}
