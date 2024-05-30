@@ -1,25 +1,25 @@
-const useMockEndpoints = (app) => {
-
-  const routes = {
-    "/api/tournaments/:tournamentId/pitches": "pitches",
-    // fixme: supersede this  and keep next
-    "/api/group/standings/:tournamentId": "standings",
-    "/api/tournaments/:tournamentId/standings": "standings",
-    "/api/tournaments": "tournaments",
-    // fixtures/index.js
-    "/api/fixtures": "fixtures",
-    "/api/fixtures/:pitch": "fixturesByPitchA"
-  };
-  
-  Object.keys(routes).forEach(route => {
-    const value = routes[route];
-    app.get(route, async (req, res) => 
-      res.json(require(`./data/${value}.js`))
-    )
-  })
+const refresh = (path) => {
+  const modulePath = require.resolve(path);
+  delete require.cache[modulePath];
+  return require(modulePath);
 }
 
+let routes = require('./routes');
+const useMockEndpoints = (app) => {
+  Object.keys(routes).forEach(route => {
+    const value = routes[route];
+    app.get(route, async (req, res) => {
+      console.log('Requested route: ', route);
+      const data = refresh(`./data/${value}.js`);
+      console.log(data);
+      console.log('Route', route);
+      res.json(data);
+      routes = refresh('./routes');
+    })
+  })
+}
 
 module.exports = {
   useMockEndpoints,
 }
+
