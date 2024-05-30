@@ -9,7 +9,8 @@ function App() {
       <h1>LIVE UPDATES</h1>
       <Routes>
         <Route path="/" element={<SelectTournamentView />} />
-        <Route path="/tournaments/:tournamentId" element={<TournamentView />} />
+        <Route path="/tournament/:tournamentId" element={<SelectTournamentView />} />
+        <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
       </Routes>
     </GroupProvider>
   );
