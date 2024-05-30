@@ -18,15 +18,12 @@ const MobileSelect = ({
     <section className="MobileSelect mobile">
       <header>
         <MainMenu sections={sections} />
-        <h2>
-          <span>&nbsp;</span>
-          <span>{SubHeading}</span>
-        </h2>
+        <h2>{SubHeading}</h2>
       </header>
       <section id="cardArea">{
         cardsPadded?.map((x, i) => {
           return (
-            <section key={`card_${i}`} className={`div-shadow card ${x ? 'card-real' : 'card-empty'}`} onClick={onSelect.bind(null, i)}>
+            <section key={`card_${i}`} className={`card ${x ? 'card-real div-shadow' : 'card-empty div-shadow-light'}`} onClick={onSelect.bind(null, i)}>
               {x}
             </section>
           );
