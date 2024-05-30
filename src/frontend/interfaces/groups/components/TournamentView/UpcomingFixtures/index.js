@@ -30,7 +30,7 @@ const UpcomingFixtures = ({
           };
           const showOrEmpty = (title, arr = [], T) => {
             return <tbody>
-              <tr><td colSpan={4}>{title}</td></tr>
+              <tr><td colSpan={4} className='groupHeader'>{title}</td></tr>
               {arr.length
                 ? arr?.map((m, i) => (
                   <T key={`m${i}`} match={m} />
@@ -89,7 +89,7 @@ function MatchLastPlayed({ match }) {
 }
 
 function MatchInProgress({ match }) {
-  if (!match) return <tr><td className="nextArea area-inprogress">No match in progress.</td></tr>;
+  if (!match) return <tr className="nextArea area-inprogress"><td >No match in progress.</td></tr>;
   const { scheduledTime, team1, team2 } = match;
   return (
     <tr className="nextArea area-inprogress">
@@ -106,8 +106,9 @@ function MatchInProgress({ match }) {
 }
 
 function MatchUpcoming({ match }) {
-  if (!match)
-    return <div className="nextArea area-nextup">No match in progress.</div>;
+  if (!match) {
+    return <tr className="nextArea area-nextup"><td>No match in progress.</td></tr>;
+  }
   const { scheduledTime, team1, team2, umpiringTeam } = match;
   return (
     <tr className="nextArea area-nextup">
