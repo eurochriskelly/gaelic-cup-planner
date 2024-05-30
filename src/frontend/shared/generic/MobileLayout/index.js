@@ -33,7 +33,7 @@ const MobileLayout = ({
         </h2>
         <NavBar tabNames={tabNames} onSelect={handle.changetab} selected={selected} />
       </header>
-      <article>{childrenArray.slice(1)[tabNames.indexOf(selected)]}</article>
+      <section>{childrenArray.slice(1)[tabNames.indexOf(selected)]}</section>
     </section>
   )
 };

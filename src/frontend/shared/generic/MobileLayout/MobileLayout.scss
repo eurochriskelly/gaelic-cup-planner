@@ -9,6 +9,9 @@
 
 section.MobileLayout {
   grid-template-rows: 14rem auto;
+  td, th {
+    font-size: 1.4rem;
+  }
 }
 
 .mobile {
@@ -22,14 +25,18 @@ section.MobileLayout {
 
   $shadow-x-offset: 10px;  // Horizontal offset
   $shadow-y-offset: 10px;  // Vertical offset
-  $shadow-blur-radius: 5px; // Blur radius
-  $shadow-spread-radius: 0px; // Spread radius
-  $shadow-color: rgba(0, 0, 0, 0.5); // Shadow color and opacity
+  $shadow-blur-radius: 0.1rem; // Blur radius
+  $shadow-spread-radius: 0.1rem; // Spread radius
+  $shadow-color: rgba(0, 0, 0, 0.43); // Shadow color and opacity
+  $shadow-color-light: rgba(0, 0, 0, 0.05); // Shadow color and opacity
 
   .div-shadow {
     box-shadow: $shadow-x-offset $shadow-y-offset $shadow-blur-radius $shadow-spread-radius $shadow-color;
   }
 
+  .div-shadow-light {
+    box-shadow: $shadow-x-offset $shadow-y-offset $shadow-blur-radius $shadow-spread-radius $shadow-color-light;
+  }
   .no-select { user-select: none; }
   .pressable {
     // background: rgba(255, 0, 0, 0.1);
@@ -40,8 +47,11 @@ section.MobileLayout {
   >header:first-child {
     height: 14rem;
   }
-  > article:last-child {
+  > section:last-child {
     margin: 1rem;
+    > article table {
+      width: 100%;
+    }
   }
   h1, h2 {
     padding-left: 1rem;
@@ -77,12 +87,27 @@ section.MobileLayout {
     }
   }
   h2 {
-    background: lighten(black, 10%);
-    line-height: 4rem;
-    > span:nth-child(2) {
-      div { display: inline; }
-      font-size: 3.0rem;
+    > div {
+      width: 100%;
+      text-align: center;
+      &::before {
+        font-size: 2rem;
+        content: '\1F447';
+        display: inline-block;
+        margin-right: 1rem;
+      }
+      &::after {
+        font-size: 2rem;
+        content: '\1F447';
+        margin-left: 1rem;
+        display: inline-block;
+        transform: scaleX(-1);
+      }
     }
+    background: lighten(black, 10%);
+    padding: 0;
+    line-height: 4rem;
+    font-size: 3.0rem;
   }
   .circled {
     margin: auto;

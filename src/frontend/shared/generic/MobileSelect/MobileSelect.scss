@@ -1,6 +1,8 @@
 @import "../../css/_colors.scss";
 
 $round: 0.6rem;
+$cheight: 340px;
+$cwidth: 340px;
 
 .MobileSelect {
   grid-template-rows: 8rem auto;
@@ -9,42 +11,84 @@ $round: 0.6rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     > .card {
+
+      font-size: 1.8em;
+      table { width: 100%; }
+      table > tbody > tr > td {
+        color: #666;
+        // don't break lines;
+        padding: 0.4rem 0;
+        vertical-align: top;
+      }
+      table > tbody > tr > td:nth-child(1) {
+        white-space: nowrap;
+        font-size:0.9em;
+        &::after {
+          content:":";
+        }
+      }
+      table > tbody > tr > td:nth-child(2) {
+        text-align: left;
+        font-weight: bold;
+        color:black;
+        width: 50%;
+        .pills {
+          white-space: wrap;
+          display: grid;
+          grid-gap: 0.1rem;
+          grid-template-rows: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr;
+        }
+        .pill {
+          text-align: center;
+          font-weight: normal;
+          margin: 0.2rem;
+          font-size: 0.9em;
+          padding: 0.1rem 0.2rem;
+          color: white;
+          background: $sc;
+          border-radius: 0.4rem;
+        }
+      }
+
+      max-height: $cheight;
+      min-height: $cheight;
       background: rgba(255, 255, 255, 0.6);
       > *:first-child {
         > div:first-child {
           border-top-left-radius: $round;
           border-top-right-radius: $round;
-          padding: 0.6rem;
+          padding: 0.9rem;
           background: darken(desaturate($sc, 20%), 20%);
           h3::before {
-            content:"\1F3C6";
+            content:"\1F9E9";
             margin-right: 1rem;
           }
           h3 {
-            max-width: 400px;
+            max-width: $cwidth;
+            min-width: $cwidth;
             color: white;
             padding: 0;
             margin: 0;
             flex-grow: 1;
             font-weight: normal;
             text-transform: uppercase;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
           }
         }
         > div:nth-child(2) {
-          background: green;
           margin: 1rem;
-          display: grid;
-          grid-template-rows: 4rem auto;
         }
       }
       margin: 1rem;
       border-radius: $round;
     }
     .card-empty {
+      max-height: $cheight;
+      min-height: $cheight;
       background: rgba(0, 0, 0, 0.05);
       border: 2px solid rgba(0, 0, 0, 0.2);
     }
