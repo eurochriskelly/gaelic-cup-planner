@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MobileInterface from "../../../../shared/generic/MobileInterface";
 import MobileSelect from "../../../../shared/generic/MobileSelect";
 import MainCard from "../../../../shared/generic/MainCard";
 import { sections } from "../../../../../../config/config";
@@ -32,7 +31,6 @@ const SelectTournamentView = () => {
   };
 
   return (
-    <MobileInterface>
       <MobileSelect sections={sections}>
         <div>Select competition</div>
         {categories.map(
@@ -72,7 +70,6 @@ const SelectTournamentView = () => {
           )
         )}
       </MobileSelect>
-    </MobileInterface>
   );
 };
 

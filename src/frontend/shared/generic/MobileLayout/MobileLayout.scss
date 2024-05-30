@@ -12,6 +12,13 @@ section.MobileLayout {
   td, th {
     font-size: 1.4rem;
   }
+
+  h2 > span:nth-child(2) > div:first-child {
+    > span:first-child {
+      color: darken(white, 60%);
+      margin-right: 1rem;
+    }
+  }
 }
 
 .mobile {
@@ -22,6 +29,11 @@ section.MobileLayout {
   bottom: 0;
   left: 0;
   right: 0;
+  background: #727272;
+
+  * {
+    font-family: Arial, Helvetica, sans-serif;
+  }
 
   $shadow-x-offset: 10px;  // Horizontal offset
   $shadow-y-offset: 10px;  // Vertical offset
@@ -37,6 +49,8 @@ section.MobileLayout {
   .div-shadow-light {
     box-shadow: $shadow-x-offset $shadow-y-offset $shadow-blur-radius $shadow-spread-radius $shadow-color-light;
   }
+
+
   .no-select { user-select: none; }
   .pressable {
     // background: rgba(255, 0, 0, 0.1);
