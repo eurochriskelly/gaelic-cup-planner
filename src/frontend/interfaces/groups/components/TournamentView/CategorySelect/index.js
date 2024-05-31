@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 const CategorySelect = ({
   categories = [],
-  onSelect = () => { }
+  onSelect = () => {}
 }) => {
   return (
     <div className="categorySelect">
