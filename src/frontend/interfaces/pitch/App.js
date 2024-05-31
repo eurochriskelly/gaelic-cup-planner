@@ -9,8 +9,9 @@ function App() {
     return <PitchProvider>
         <Routes>
             <Route path="/" element={<PinLogin />} />
-            <Route path="/tournaments/:tournamentId" element={<SelectPitchView />} />
-            <Route path="/tournaments/:tournamentId/pitches/:pitchId" element={<PitchView />} />
+            <Route path="/ping" element={<div>pong</div>} />
+            <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
+            <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchView />} />
         </Routes>
     </PitchProvider>
 }

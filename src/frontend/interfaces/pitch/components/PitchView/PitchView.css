@@ -8,7 +8,6 @@ To import, add the following to the top of your scss file:
   width: 4rem; }
 
 .pitchView {
-  background: blue;
   height: 100%; }
   .pitchView > div:nth-child(2) {
     position: absolute;
