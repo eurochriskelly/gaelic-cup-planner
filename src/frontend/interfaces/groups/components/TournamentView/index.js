@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CONF from "../../config.js";
 import { useGroupContext } from "../../GroupProvider";
@@ -61,7 +60,7 @@ const TournamentView = () => {
 
   const handle = {
     back: () => {
-      navigate(`/tournament/${tournamentId}`);
+      navigate(`/tournament/${tournamentId}/selectCategory`);
     },
   };
 
@@ -91,8 +90,6 @@ const TournamentView = () => {
       tabNames={tabNames}
       category={category}
       onBack={handle.back}
-      currentSection={currentSection}
-      isPhone={mediaType === "phone"}
     />
   ) : (
     <>

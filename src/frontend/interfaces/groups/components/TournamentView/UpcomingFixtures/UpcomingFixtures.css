@@ -8,23 +8,19 @@
   padding: 1rem;
   margin-right: 1rem;
   margin-bottom: 0.2rem; }
-
-.upcomingFixtures .nextArea td {
-  font-size: 2rem;
-  padding: 1rem; }
-
-.upcomingFixtures .nextArea > div {
-  display: grid;
-  grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
-  padding: 0.2rem;
-  margin: 0.4rem 0; }
-
-.upcomingFixtures .nextArea > div:first-child > span {
-  margin-right: 0.1rem;
-  padding: 0.2rem; }
-
-.upcomingFixtures .nextArea span {
-  text-align: center; }
+  .upcomingFixtures .nextArea td {
+    font-size: 2rem;
+    padding: 1rem; }
+  .upcomingFixtures .nextArea > div {
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr 1fr;
+    padding: 0.2rem;
+    margin: 0.4rem 0; }
+  .upcomingFixtures .nextArea > div:first-child > span {
+    margin-right: 0.1rem;
+    padding: 0.2rem; }
+  .upcomingFixtures .nextArea span {
+    text-align: center; }
 
 .upcomingFixtures .area-played {
   background-color: #9c9cc9;
