@@ -102,8 +102,9 @@ section.MobileLayout {
   }
   h2 {
     > div {
-      width: 100%;
+      width: 80%;
       text-align: center;
+      margin: auto;
       &::before {
         font-size: 2rem;
         content: '\1F447';

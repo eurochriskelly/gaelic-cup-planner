@@ -1,8 +1,43 @@
 @import "src/frontend/shared/css/_colors.scss";
 
-.selectPitchView {
+.SelectPitchView {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 3rem 3.4rem 10rem;
+    .play {
+      text-align: center;
+      background: desaturate($pc-light-20, 37%);
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      padding: 0.6rem;
+    }
+    .details {
+      display: grid;
+      grid-template-columns: auto auto;
+      padding:0.5rem;
+      font-size: 1.4rem;
+      >div:first-child {
+        &::before {
+          content: '\1F554';
+          margin-right:0.5rem;
+        }
+      }
+      >div:nth-child(2) {
+        text-align: right;
+        &::after{
+          content: '\1F3BD';
+          margin-left:0.5rem;
+        }
+      }
+    }
+    .teams {
+      text-align: center;
+      font-size: 1.2rem;
+      .team1, .team2 {
+        padding:0.6rem; 
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+    }
 }
 
 .container {
