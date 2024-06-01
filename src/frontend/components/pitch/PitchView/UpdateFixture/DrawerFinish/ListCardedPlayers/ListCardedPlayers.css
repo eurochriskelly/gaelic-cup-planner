@@ -6,6 +6,10 @@ To import, add the following to the top of your scss file:
   margin-bottom: 2rem;
   /* TODO: get working in site.css */ }
 
+.ListCardedPlayers h3 {
+  text-align: center;
+  text-size: 2.2rem; }
+
 .ListCardedPlayers .ready {
   margin: 5rem 0rem;
   font-size: 2rem; }

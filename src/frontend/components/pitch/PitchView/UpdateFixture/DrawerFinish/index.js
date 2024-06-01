@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import API from "../../../../../shared/api/pitch";
 import ScoreSelect from "./ScoreSelect";
 import ListCardedPlayers from "./ListCardedPlayers";
@@ -12,6 +13,9 @@ const DrawerFinish = ({
   onClose = () => {},
 }) => {
   if (!visible) return null;
+
+  const { tournamentId } = useParams();
+
   const steps = ["score", "cardedPlayers"];
   // create a state object to store the current step and the current task
   const [currentTeam, setCurrentTeam] = useState("");
@@ -32,7 +36,7 @@ const DrawerFinish = ({
   const actions = {
     saveScore: async () => {
       onConfirm();
-      await API.updateScore(fixture.id, scores);
+      await API.updateScore(tournamentId, fixture.id, scores);
       setCurrentStep(1);
     },
     notReadyToSaveScore: () => {
@@ -41,7 +45,7 @@ const DrawerFinish = ({
     },
     cardPlayersUpdated: async (players) => {
       if (players.length) {
-        await API.updateCardedPlayers(fixture.id, players);
+        await API.updateCardedPlayers(tournamentId, fixture.id, players);
       }
       setCurrentStep(0);
       updateFixtures();

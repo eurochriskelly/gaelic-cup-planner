@@ -1,0 +1,103 @@
+@import "src/frontend/shared/css/_colors.scss";
+
+.media-phone {
+    * {
+        font-size: 1.2rem;
+    }
+
+    td.teamName {
+        font-size: 1.4rem;
+    }
+
+    section>table.groupStandings {
+        width: 95%;
+        margin: 0 auto;
+        tbody>tr>th {
+            font-size: 1.4rem;
+            padding: 0.3rem;
+        }
+        tbody>tr>td, tbody>tr>td>span {
+            font-size: 1.4rem;
+            padding: 0.3rem;
+        }
+    }
+}
+
+.topView {
+    z-index: 1000;
+    position: fixed;
+    top: 7rem;
+    left: 0;
+    right: 0;
+}
+
+.tournamentView {
+    display: grid;
+    grid-template-rows: 90px auto;
+    >div:first-child {
+    }
+
+    >div {
+        display: grid;
+        grid-template-columns: 15% 85%;
+        grid-template-rows: 0.5fr 1.4fr;
+        height: 100vh;
+
+        h4 {
+            margin: 0;
+            padding: 0;
+            background: none;
+        }
+
+        article {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-gap: 0px;
+            padding: 0px;
+            // background: #f8f8f8; // Light background for articles
+            align-items: start;
+
+            h2 {
+                writing-mode: vertical-lr;
+                text-orientation: mixed;
+                transform: rotate(180deg); // Flip the text for a better reading direction
+                background: desaturate(darken($sc, 20%), 10%); // Darker grey background
+                text-align: center;
+                padding: 0;
+                font-size: 2rem;
+                grid-column: 1;
+                grid-row: 1 / -1; // Span through all rows
+                margin: 0;
+            }
+
+            section {
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: auto 1fr;
+
+                h3 {
+                    background: #ccc; // Grey background
+                    margin: 0 0 10px 0; // Margin at the bottom
+                    padding: 0.5em;
+                }
+
+                >div {
+                    padding: 1em;
+                    height: 150px;
+                }
+            }
+        }
+
+        >div:first-child {
+            display: grid;
+            grid-template-columns: 100%;
+        }
+    }
+}
+
+
+.empty {
+    border: 3px solid red;
+    padding: 2rem;
+    background: #ccc;
+}

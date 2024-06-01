@@ -11,6 +11,7 @@ const Fixture = ({ fixture, isFocus }) => {
     scheduledTime = "",
     stage,
     group,
+    category,
     team1,
     goals1,
     points1,
@@ -47,7 +48,6 @@ const Fixture = ({ fixture, isFocus }) => {
     );
   };
 
- console.log('sssss', scheduledTime, startedTime)
   return (
     <div className={`fixture ${isFocus ? 'focusFixture' : ""}`} key={id}>
       <div
@@ -60,7 +60,7 @@ const Fixture = ({ fixture, isFocus }) => {
           focus={focus}
           scoreUpToDate={scoreUpToDate}
           stage={stage}
-          group={group}
+          group={category}
         />
         <TeamResult goals={goals1} points={points1} team={team1} winner={winner} played={played} />
         <TeamResult goals={goals2} points={points2} team={team2} winner={winner} played={played} />
@@ -107,9 +107,7 @@ function ClockDisplay({
   stage,
   group
 }) {
-  const categoryLabel = () => {
-    return group?.replace(/[^A-Z0-9]/g, "");
-  };
+  const categoryLabel = () => group?.replace(/[^A-Z0-9]/g, "");
   return (
     <div className="ClockDisplay">
       <ClockIcon
@@ -124,7 +122,7 @@ function ClockDisplay({
           <label>STAGE:</label>
           {stage}
         </span>
-        <span>{categoryLabel()}</span>
+        <span class="type-category">{categoryLabel()}</span>
       </span>
     </div>
   )
