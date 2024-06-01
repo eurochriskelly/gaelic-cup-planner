@@ -8,60 +8,50 @@ To import, add the following to the top of your scss file:
   align-items: normal;
   width: 100%;
   padding: 0.5rem; }
-
-.scoreSelect .goals {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-  margin: auto; }
-
-.scoreSelect .points {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px; }
-
-.scoreSelect .header {
-  display: grid;
-  grid-template-columns: 55px auto 55px;
-  background: #b6aabd;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 0.2rem; }
-
-.scoreSelect .header span {
-  color: white;
-  padding: 1.5rem 0;
-  text-align: center; }
-
-.scoreSelect button {
-  max-width: 20px;
-  padding: 0 !important;
-  margin: 0 !important;
-  min-width: 3.5rem !important;
-  max-width: 0 !important;
-  border-radius: 0;
-  font-size: 3rem; }
-
-.scoreSelect .points > div,
-.scoreSelect .goals > div {
-  width: 5rem;
-  padding: 0.1rem 1rem;
-  color: white;
-  text-align: center;
-  vertical-align: top; }
-
-.scoreSelect .goals > div {
-  background: #7b5493; }
-
-.scoreSelect .points > div {
-  background: #946eac; }
-
-.scoreSelect .square {
-  width: 100%;
-  cursor: pointer; }
-
-.scoreSelect .square.active {
-  background-color: #007bff;
-  color: white; }
+  .scoreSelect .goals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin: auto; }
+  .scoreSelect .points {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px; }
+  .scoreSelect .header {
+    display: grid;
+    grid-template-columns: 55px auto 55px;
+    background: #b6aabd;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 0.2rem; }
+    .scoreSelect .header span {
+      color: white;
+      padding: 1.5rem 0;
+      text-align: center; }
+  .scoreSelect button {
+    max-width: 20px;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 3.5rem !important;
+    max-width: 0 !important;
+    border-radius: 0;
+    font-size: 3rem; }
+  .scoreSelect .points > div,
+  .scoreSelect .goals > div {
+    width: 5rem;
+    padding: 0.1rem 0.7rem;
+    color: white;
+    text-align: center;
+    vertical-align: top; }
+  .scoreSelect .goals > div {
+    background: #7b5493; }
+  .scoreSelect .points > div {
+    background: #946eac; }
+  .scoreSelect .square {
+    width: 100%;
+    cursor: pointer; }
+    .scoreSelect .square.active {
+      background-color: #007bff;
+      color: white; }

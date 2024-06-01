@@ -34,8 +34,8 @@ const SelectPitchView = () => {
   };
 
   return (
-    <MobileSelect sections={sections} selected={1}>
-      <div>Field Coordinator</div>
+    <MobileSelect sections={sections} active={1}>
+      <div>Select pitch</div>
       {pitchData?.map((pitchInfo, id) => {
         const {
           matchId,
@@ -86,7 +86,7 @@ function NextGameTitle({ started, match }) {
     return <i>{matchstr}</i>;
   };
   return (
-    <div className="play">
+    <div className={`play ${started ? 'in-progress' : 'next-up'}`}>
       {started ? (
         <span className="inProgress">In progress {showMatchNumber()}</span>
       ) : (

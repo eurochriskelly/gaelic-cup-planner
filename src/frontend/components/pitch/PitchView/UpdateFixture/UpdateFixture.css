@@ -2,6 +2,71 @@
 To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
+.updateFixture {
+  /* General styling for the select elements */ }
+
+.updateFixture .drawer-header {
+  background-color: #4e4e4e;
+  line-height: 6rem;
+  color: white;
+  padding-left: 1rem;
+  text-transform: uppercase;
+  border-top-left-radius: 1.6rem;
+  border-top-right-radius: 1.6rem;
+  font-size: 2.4rem;
+  text-align: center; }
+
+.updateFixture button {
+  padding: 1.6rem 0.6rem;
+  min-width: 160px;
+  border-radius: 0.8rem; }
+
+.updateFixture button.enabled {
+  cursor: pointer;
+  background-color: #6d4b83;
+  border: 1px solid #b89fc8;
+  color: white; }
+
+.updateFixture button.disabled {
+  cursor: not-allowed;
+  background-color: #ddd;
+  color: #444; }
+
+.updateFixture .drawer-container {
+  margin: 0; }
+
+.updateFixture .drawer-container > div {
+  margin: 2rem; }
+
+.updateFixture button {
+  margin: 8px;
+  padding: 25px;
+  font-size: 32px; }
+
+.updateFixture input[type="number"] {
+  width: 100%; }
+
+.updateFixture .hidden {
+  display: none; }
+
+.updateFixture .submit-container,
+.updateFixture #confirmation {
+  margin-top: 20px;
+  text-align: center; }
+
+.updateFixture table {
+  width: 100%; }
+
+.updateFixture .hidden {
+  display: none; }
+
+.updateFixture select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  display: block; }
+
 .updateFixture > div:first-child {
   width: 100%;
   margin: auto;
@@ -26,9 +91,7 @@ To import, add the following to the top of your scss file:
 .updateFixture > div:first-child button:last-child,
 .updateFixture > div:nth-child(2) button:first-child {
   padding: 0;
-  line-height: 2rem;
-  background-color: #c6b3d3;
-  border: none; }
+  line-height: 2rem; }
 
 /* DRAWERS */
 .updateFixture > div.drawers {

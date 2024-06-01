@@ -5,10 +5,16 @@
     grid-template-rows: 3rem 3.4rem 10rem;
     .play {
       text-align: center;
-      background: desaturate($pc-light-20, 37%);
       text-transform: uppercase;
       font-size: 1.4rem;
       padding: 0.6rem;
+    }
+    .in-progress {
+      background: $sc;
+      color: white;
+    }
+    .next-up {
+      background: desaturate($pc-light-20, 37%);
     }
     .details {
       display: grid;

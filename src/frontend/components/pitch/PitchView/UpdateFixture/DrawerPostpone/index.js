@@ -27,7 +27,7 @@ const DrawerPostpone = ({
       .catch((error) => {
 
       });
-    fetch("/api/fixtures")
+    fetch(`/api/tournaments/${tournamentId}/fixtures`)
       .then((response) => response.json())
       .then((data) => { 
         setFixtures(data.data);

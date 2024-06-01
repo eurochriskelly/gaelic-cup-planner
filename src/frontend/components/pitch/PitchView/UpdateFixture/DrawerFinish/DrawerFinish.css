@@ -10,21 +10,19 @@ To import, add the following to the top of your scss file:
   box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3);
   min-height: 64rem;
   border: 4px outset #777; }
-
-.drawerFinish .scoreSelector {
-  background-color: #d1c9d6;
-  border-radius: 0.5rem;
-  position: absolute;
-  height: 46rem;
-  padding: 1rem 1.5rem;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3); }
-
-.drawerFinish .scoreSelector > div {
-  display: grid; }
+  .drawerFinish .scoreSelector {
+    background-color: #d1c9d6;
+    border-radius: 0.5rem;
+    position: absolute;
+    height: 46rem;
+    padding: 1rem 1.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3); }
+    .drawerFinish .scoreSelector > div {
+      display: grid; }
 
 .square {
   width: 100%;

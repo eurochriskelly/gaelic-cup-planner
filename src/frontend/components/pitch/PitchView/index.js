@@ -17,19 +17,18 @@ const PitchView = () => {
 
   const actions = {
     fetchFixtures: async () => {
-      const { data } = await API.fetchFixtures(pitchId || 3);
+      const { data } = await API.fetchFixtures(tournamentId, pitchId);
       setFixtures(data);
       setNextFixture(data.filter((f) => !f.played).shift());
     },
     startMatch: async (fixtureId) => {
-      await API.startMatch(fixtureId);
-      const data = await API.fetchFixtures(pitchId);
+      await API.startMatch(tournamentId, fixtureId);
+      const data = await API.fetchFixtures(tournamentId, pitchId);
       setFixtures(data.data);
     },
   };
 
   useEffect(() => {
-    console.log('please we must')
     actions.fetchFixtures();
   }, []);
 
@@ -55,16 +54,21 @@ const PitchView = () => {
     finished: displayFixtures[1],
     unplayed: displayFixtures[2]
   }
+  const handle = {
+    back: () => {
+      const path = `/tournament/${tournamentId}/selectPitch`;
+      navigate(path)
+    }
+  }
   return (
     <MobileLayout
       sections={sections}
-      onBack={() => console.log("back back")}
-      selected={1}
+      onBack={handle.back}
+      active={1}
       tabNames={tabNames}
     >
       <span>
-        <span>Pitch:</span>
-        <span>{pitchId}</span>
+        <span className="type-pitch">{pitchId}</span>
       </span>
       {tabNames.map((tab, i) => {
         return (

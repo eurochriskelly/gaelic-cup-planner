@@ -1,0 +1,119 @@
+@import "src/frontend/shared/css/_colors.scss";
+
+$scw: 2vw;
+$fs: 1.8vw;
+
+.groupStandings {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    * {
+        user-select: none;
+    }
+    h2 {
+        background-color: $bg-light-20;
+    }
+    td {
+        background-color: rgba(255, 255, 255, 0.5); 
+    }
+    th, td {
+        font-size: $fs;
+        &:nth-child(n+2):nth-child(-n+8) {
+            width: $scw * 1.2;
+            text-align: center;
+        }
+        /* Matches played */
+        &:nth-child(2) {
+            width: $scw * 1.5;
+            letter-spacing: 0.2rem;
+        }
+        /* win, lose, draw */
+        &:nth-child(n+3):nth-child(-n+5) {
+            max-width: $scw * 0.8;
+        }
+        &:first-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            max-width: 100px;
+        }
+        
+    }
+    th {
+        // background-color: $sc-light-20;
+        color:white;
+        font-weight: normal;
+        text-transform: uppercase;
+        line-height: 1.3em;
+        border: none;
+    }
+    td {
+        border: 0;
+        border-bottom: 1px solid #ddd;
+        line-height: 3.3em;
+    }
+}
+
+.media-phone .groupStandings {
+    th {
+        background-color: rgba(0, 0, 0, 0.25);
+        font-size: 1.2rem;
+        padding: 0.3rem;
+    }
+    th, td {
+        font-size: $fs;
+        &:nth-child(n+2):nth-child(-n+8) {
+            width: $scw * 2.2;
+        }
+        /* Matches played */
+        &:nth-child(2) {
+            width: $scw * 2.5;
+        }
+        /* win, lose, draw */
+        &:nth-child(n+3):nth-child(-n+5) {
+            max-width: $scw * 1.2;
+        }
+        &:first-child {
+            font-size: 1.5rem;
+            width: 200px;
+        }
+    }
+}
+
+section.MobileLayout td.groupHeader {
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    background:none;
+    padding:0;
+    margin:0;
+    padding-top: 1.4rem;
+    padding-bottom: 1.4rem;
+}
+
+td.finished {
+    color: $pc-dark-20;
+    font-weight: bold;
+}   
+
+.lessRelevant {
+    color: #999;
+}
+
+.noData {
+    color: #555;
+    font-weight: normal;
+}
+
+td > div.total  {
+    color: $sc;
+    // background-color: desaturate(lighten($sc, 20%), 1%);
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 0;
+    margin: 0.2rem;
+}
+
