@@ -15,6 +15,7 @@ module.exports = (app, db, select) => {
 	query = `select category, grp, team from v_group_standings where tournamentId = ${tournament_id}`
 	results = await select(query)
 	tournament.groups = results.data
+    app.get("/api/tournaments/:tournamentId/categories", getCategories);
 
 	query = `select id, pitch, location from pitches where tournamentId = ${tournament_id}`
 	results = await select(query)
@@ -72,4 +73,19 @@ module.exports = (app, db, select) => {
     app.get('/api/tournaments/:tournament_id/groups', getGroups)
     app.get('/api/tournaments/:tournament_id/group/:group_id/teams', getTeams)
 }
+  const getCategories = (req, res) => {
+    const { tournamentId } = req.params;
+    II(`Calling API: /api/tournaments/${tournamentId}/categories ...`);
+    const query = `SELECT * FROM v_categories WHERE tournamentId = '${tournamentId}'`;
+    db.query(query, (err, results) => {
+      if (err) {
+        console.log("Error occured while getting groups", err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ data: results.map(result => ({
+        ...result,
+        brackets: result.brackets.split(',').map(x => x.trim())
+      })) });
+    });
+  };
 

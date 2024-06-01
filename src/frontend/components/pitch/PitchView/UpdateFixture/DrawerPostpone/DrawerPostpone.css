@@ -1,0 +1,73 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.drawerPostpone {
+  margin: 0.5rem 1rem;
+  width: 100%;
+  background-color: white;
+  border-radius: 2rem; }
+
+.drawerPostpone .postponeForm {
+  font-size: 3rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+  width: 90%;
+  box-sizing: border-box; }
+
+.drawerPostpone .postponeForm .drawer-content-row {
+  align-items: center; }
+
+.drawerPostpone .postponeForm .drawer-content-label {
+  margin-right: 1rem;
+  font-size: 2.4rem;
+  margin-top: 3rem; }
+
+.drawerPostpone .postponeForm .drawer-content-value {
+  color: #885ea3; }
+
+.drawerPostpone .postponeForm .drawer-content-value > div > div > div {
+  background: #e7e3ea; }
+
+.drawerPostpone .postponeForm .drawer-content-value > div > div > div > div {
+  padding: 2rem;
+  color: #885ea3; }
+
+.drawerPostpone .postponeForm .radio-section {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  padding: 2rem; }
+
+.drawerPostpone .postponeForm .radio-section input[type="radio"] {
+  margin: 0 1rem 0 0;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: middle; }
+
+.drawerPostpone .postponeForm input[type="text"], .drawerPostpone .postponeForm select {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 2rem;
+  font-size: 2rem;
+  border-radius: 1rem; }
+
+.drawerPostpone .footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+
+.drawerPostpone .footer button {
+  margin: 1rem;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  border-radius: 1rem; }
+
+.drawerPostpone .footer .btn-primary {
+  background-color: #2b7624;
+  color: white;
+  border: none; }
+
+.drawerPostpone .footer .btn-secondary {
+  background-color: #885ea3;
+  color: white;
+  border: none; }
