@@ -2,6 +2,9 @@
 To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
+* {
+  touch-action: manipulation; }
+
 body {
   background: #8193a5;
   font-family: Helvetica, Arial, sans-serif;
