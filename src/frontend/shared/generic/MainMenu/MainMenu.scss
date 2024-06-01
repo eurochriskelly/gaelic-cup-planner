@@ -31,7 +31,7 @@
   > section {
     &.not-visible { display: none; }
     &.visible {
-      position: fixed;
+      position: absolute;
       top: 7rem;
       width: 100%;
       bottom: 0;
