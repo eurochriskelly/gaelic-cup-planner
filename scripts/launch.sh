@@ -1,9 +1,5 @@
 #!/bin/bash
 #
-if [ -z "$GCP_TOURN_NUM" ];then
-  echo "Tournament num is not set. Source env.sh!"
-  exit 1
-fi
 
 trap cleanup SIGINT SIGTERM EXIT
 
@@ -33,7 +29,7 @@ runApp() {
 			relaunch=false
 		else
       echo "Run # ${run_number}"
-			node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" --use-mock=$DEV_MODE
+			node src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE
 			run_number=$((run_number + 1))
 		fi
 	done
@@ -43,7 +39,7 @@ runApp() {
 			echo "Retrying in 5 seconds ..."
 			sleep 5
 		fi
-		if node src/backend/server.js --port="$2" --app="$1" --tournamentId="$3" --use-mock=$DEV_MODE &>/dev/null; then 
+		if node src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE &>/dev/null; then 
 			break
 		fi
 		run_number=$((run_number + 1))
@@ -51,16 +47,13 @@ runApp() {
 }
 
 PORT1=4000
-PORT2=4001
 DEV_MODE=false
 for arg in "$@"; do
     if [ "$arg" = "--dev" ]; then
         PORT1=$(($PORT1 + 1000))
-        PORT2=$(($PORT2 + 1000))
         DEV_MODE=true
     fi
 done
-runApp "groups" $PORT1 $GCP_TOURN_NUM &
-runApp "pitch" $PORT2 $GCP_TOURN_NUM &
+runApp "mobile" $PORT1 &
 
 wait
