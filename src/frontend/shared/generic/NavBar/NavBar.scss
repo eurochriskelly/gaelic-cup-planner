@@ -2,11 +2,12 @@
 
 $b: desaturate(lighten($pc, 32%), 40%);
 $c: lighten(black, 20%);
+$bc: #1a1a1a;
 
 .navBar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: $c;
+  background: $bc;
 
   > span {
     user-select: none;
@@ -19,7 +20,8 @@ $c: lighten(black, 20%);
     text-transform: uppercase;
     padding: 1.6rem 0.8rem;
     background-color: lighten(desaturate($pc-dark-10, 69%), 8%);
-    border-bottom: 0.35rem solid $b;
+    border-color: $bc;
+    border-bottom: 0.35rem solid $bc;
     border-top-right-radius: 1rem;
     border-top-left-radius: 1rem;
   }

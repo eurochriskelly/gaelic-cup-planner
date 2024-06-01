@@ -1,0 +1,67 @@
+@import "src/frontend/shared/css/_colors.scss";
+
+.SelectPitchView {
+    display: grid;
+    grid-template-rows: 3rem 3.4rem 10rem;
+    .play {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      padding: 0.6rem;
+    }
+    .in-progress {
+      background: $sc;
+      color: white;
+    }
+    .next-up {
+      background: desaturate($pc-light-20, 37%);
+    }
+    .details {
+      display: grid;
+      grid-template-columns: auto auto;
+      padding:0.5rem;
+      font-size: 1.4rem;
+      >div:first-child {
+        &::before {
+          content: '\1F554';
+          margin-right:0.5rem;
+        }
+      }
+      >div:nth-child(2) {
+        text-align: right;
+        &::after{
+          content: '\1F3BD';
+          margin-left:0.5rem;
+        }
+      }
+    }
+    .teams {
+      text-align: center;
+      font-size: 1.2rem;
+      .team1, .team2 {
+        padding:0.6rem; 
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+    }
+}
+
+.container {
+    position: relative;
+}
+.container > * {
+    position: absolute;
+    right: 0;
+    left:0;
+}
+.container > h2 {
+    top: 19rem;
+    margin-top: 3rem;
+}
+
+.container > div {
+    top: 14rem;
+}
+.container > div > div {
+    min-height: 15rem;
+}

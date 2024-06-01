@@ -5,20 +5,14 @@ import NavBar from '../NavBar';
 import './MobileLayout.css';
 
 const MobileLayout = ({
-  title = 'Please set',
-  toplevel = false,
   onBack = () => {},
-  sections = [],
-  tabNames = ['ab', 'bc', 'cd'],
+  active=0,
+  tabNames = [],
   children,
 }) => {
   const [selected, setSelected] = useState(tabNames[0]);
   const handle = {
-    hamburger: () => console.log('hamburger handle'),
-    changetab: (tab) => {
-      console.log('changing tab to', tab)
-      setSelected(tab)
-    }
+    changetab: (tab) => { setSelected(tab) }
   };
 
   const childrenArray = React.Children.toArray(children);
@@ -26,7 +20,7 @@ const MobileLayout = ({
   return (
     <section className="MobileLayout mobile">
       <header>
-        <MainMenu sections={sections} />
+        <MainMenu selected={active} />
         <h2 >
           <span onClick={onBack} className='pressable no-select'>&#x21A9;</span>
           <span>{SubHeading}</span>
