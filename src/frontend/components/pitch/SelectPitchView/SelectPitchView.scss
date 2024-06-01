@@ -3,6 +3,11 @@
 .SelectPitchView {
     display: grid;
     grid-template-rows: 3rem 3.4rem 10rem;
+    .no-more-games {
+      padding: 3.5rem;
+      font-size: 2rem;
+      text-align: center;
+    }
     .play {
       text-align: center;
       text-transform: uppercase;
