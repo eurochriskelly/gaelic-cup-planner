@@ -9,7 +9,7 @@ To import, add the following to the top of your scss file:
   user-select: none; }
 
 section.MobileLayout {
-  grid-template-rows: 14rem auto; }
+  grid-template-rows: 18rem auto; }
 
 section.MobileLayout td, section.MobileLayout th {
   font-size: 1.4rem; }
@@ -26,16 +26,23 @@ section.MobileLayout h2 > span:nth-child(2) > div:first-child > span:first-child
   bottom: 0;
   left: 0;
   right: 0;
-  background: #727272; }
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  background: radial-gradient(circle at top center, #7bb294, #374036 50%);
+  border: 1px solid red; }
 
 .mobile * {
   font-family: Arial, Helvetica, sans-serif; }
 
 .mobile .div-shadow {
-  box-shadow: 10px 10px 0.1rem 0.1rem rgba(0, 0, 0, 0.43); }
+  box-shadow: 10px 10px 1rem 0.1rem rgba(0, 0, 0, 0.43); }
 
 .mobile .div-shadow-light {
-  box-shadow: 10px 10px 0.1rem 0.1rem rgba(0, 0, 0, 0.05); }
+  box-shadow: 10px 10px 1rem 0.1rem rgba(0, 0, 0, 0.05); }
+
+.mobile .hamburger {
+  font-size: 3rem; }
 
 .mobile .no-select {
   user-select: none; }
@@ -46,7 +53,7 @@ section.MobileLayout h2 > span:nth-child(2) > div:first-child > span:first-child
   font-size: 3rem; }
 
 .mobile > header:first-child {
-  height: 14rem; }
+  height: 16rem; }
 
 .mobile > section:last-child {
   margin: 1rem; }
@@ -75,27 +82,29 @@ section.MobileLayout h2 > span:nth-child(2) > div:first-child > span:first-child
   border-radius: 5rem; }
 
 .mobile h1 {
-  font-size: 1.87em;
-  background: #537e4f;
-  line-height: 3rem;
+  font-size: 2.2em;
+  background: #2e3a2d;
+  line-height: 4rem;
   padding: 0.2rem;
+  padding-top: 1.4rem;
   border-bottom: 2px inset #010101;
-  color: #4d4d4d; }
+  color: white; }
 
 .mobile h1 > span:nth-child(2) {
   letter-spacing: 0.5rem;
-  color: #1d4f18;
+  color: #82b67d;
   font-weight: bold; }
 
 .mobile h2 {
   background: #1a1a1a;
   padding: 0;
-  line-height: 4rem;
+  line-height: 6rem;
   font-size: 3.0rem; }
 
 .mobile h2 > div {
-  width: 100%;
-  text-align: center; }
+  width: 80%;
+  text-align: center;
+  margin: auto; }
 
 .mobile h2 > div::before {
   font-size: 2rem;
@@ -112,5 +121,7 @@ section.MobileLayout h2 > span:nth-child(2) > div:first-child > span:first-child
 
 .mobile .circled {
   margin: auto;
+  padding-left: 1rem;
   width: auto;
-  text-align: center; }
+  text-align: center;
+  font-size: 2.9rem; }

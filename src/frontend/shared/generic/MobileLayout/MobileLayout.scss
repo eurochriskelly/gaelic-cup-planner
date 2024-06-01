@@ -8,7 +8,7 @@
 }
 
 section.MobileLayout {
-  grid-template-rows: 14rem auto;
+  grid-template-rows: 18rem auto;
   td, th {
     font-size: 1.4rem;
   }
@@ -29,7 +29,11 @@ section.MobileLayout {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #727272;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  background: radial-gradient(circle at top center, #7bb294, $radial2 50%);
+  border: 1px solid red;
 
   * {
     font-family: Arial, Helvetica, sans-serif;
@@ -37,7 +41,7 @@ section.MobileLayout {
 
   $shadow-x-offset: 10px;  // Horizontal offset
   $shadow-y-offset: 10px;  // Vertical offset
-  $shadow-blur-radius: 0.1rem; // Blur radius
+  $shadow-blur-radius: 1rem; // Blur radius
   $shadow-spread-radius: 0.1rem; // Spread radius
   $shadow-color: rgba(0, 0, 0, 0.43); // Shadow color and opacity
   $shadow-color-light: rgba(0, 0, 0, 0.05); // Shadow color and opacity
@@ -50,7 +54,9 @@ section.MobileLayout {
     box-shadow: $shadow-x-offset $shadow-y-offset $shadow-blur-radius $shadow-spread-radius $shadow-color-light;
   }
 
-
+  .hamburger {
+    font-size: 3rem;
+  }
   .no-select { user-select: none; }
   .pressable {
     // background: rgba(255, 0, 0, 0.1);
@@ -59,7 +65,7 @@ section.MobileLayout {
     font-size: 3rem;
   }
   >header:first-child {
-    height: 14rem;
+    height: 16rem;
   }
   > section:last-child {
     margin: 1rem;
@@ -88,22 +94,24 @@ section.MobileLayout {
     }
   }
   h1 {
-    font-size: 1.87em;
-    background: desaturate($pc-light-10, 30%);
-    line-height: 3rem;
+    font-size: 2.2em;
+    background: desaturate($pc-dark-10, 40%);
+    line-height: 4rem;
     padding: 0.2rem;
+    padding-top: 1.4rem;
     border-bottom: 2px inset #010101;
-    color: lighten(black, 30%);
+    color: white;
     >span:nth-child(2) {
       letter-spacing: 0.5rem;
-      color: darken($pc, 10%);
+      color: desaturate(lighten($pc, 30%), 25%);
       font-weight: bold;
     }
   }
   h2 {
     > div {
-      width: 100%;
+      width: 80%;
       text-align: center;
+      margin: auto;
       &::before {
         font-size: 2rem;
         content: '\1F447';
@@ -120,12 +128,14 @@ section.MobileLayout {
     }
     background: lighten(black, 10%);
     padding: 0;
-    line-height: 4rem;
+    line-height: 6rem;
     font-size: 3.0rem;
   }
   .circled {
     margin: auto;
+    padding-left: 1rem;
     width: auto;
     text-align: center;
+    font-size: 2.9rem;
   }
 }

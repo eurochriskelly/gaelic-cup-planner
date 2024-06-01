@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "../../js/Provider";
 import './MainMenu.css';
 
 const MainMenu = ({ 
-  sections = [],
   selected = 0
 }) => {
-  const startTitle = sections.length ? sections[selected].title : '';
+  const { sections } = useContext();
+  const navigate = useNavigate();
+
+  const startTitle = sections.length ? sections[selected].title : ' ... ';
   const [title, setTitle] = useState(startTitle)
   const [visibleMenu, setVisibleMenu] = useState(false);
   const handle = {
@@ -13,17 +17,18 @@ const MainMenu = ({
       setVisibleMenu(!visibleMenu);
     },
     action: (sec) => {
-      setTitle(sec.title);
       if (sec.action) sec.action();
+      navigate(sec.path);
+      setTitle(sec.title);
       setVisibleMenu(false);
     }
   }
   return (
     <header className="MainMenu no-select">
       <h1>
-        <span className="circled">&#x26BD;</span>
+        <span className="circled"></span>
         <span>{title}</span>
-        <span className="no-select" onClick={handle.hamburger}>
+        <span className="hamburger" onClick={handle.hamburger}>
           &#x2630;
         </span>
       </h1>

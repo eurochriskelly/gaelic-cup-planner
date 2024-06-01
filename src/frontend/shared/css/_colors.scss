@@ -22,6 +22,16 @@ $pc-dark-20: darken($pc, 20%);
 $sc-dark-20: darken($sc, 20%);
 $bg-dark-20: darken($bg, 20%);
 
+// darken by 20%
+$pc-dark-30: darken($pc, 30%);
+$sc-dark-30: darken($sc, 30%);
+$bg-dark-30: darken($bg, 30%);
+
+// darken by 20%
+$pc-dark-40: darken($pc, 40%);
+$sc-dark-40: darken($sc, 40%);
+$bg-dark-40: darken($bg, 40%);
+
 // lighten by 10%
 $pc-light-10: lighten($pc, 10%);
 $sc-light-10: lighten($sc, 10%);
@@ -39,3 +49,7 @@ $bg-light-40: lighten($bg, 40%);
 
 $radial1: darken(desaturate($pc, 45%), 0%);
 $radial2: darken(desaturate($pc, 45%), 7%);
+
+//icons
+$utf-icon-category: '\1F3BD';
+$utf-icon-pitch: '\1F6A9';
