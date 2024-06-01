@@ -5,7 +5,7 @@ To import, add the following to the top of your scss file:
 .navBar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: #333333; }
+  background: #1a1a1a; }
   .navBar > span {
     user-select: none;
     font-size: 1.9em;
@@ -17,7 +17,8 @@ To import, add the following to the top of your scss file:
     text-transform: uppercase;
     padding: 1.6rem 0.8rem;
     background-color: #484848;
-    border-bottom: 0.35rem solid #94ab92;
+    border-color: #1a1a1a;
+    border-bottom: 0.35rem solid #1a1a1a;
     border-top-right-radius: 1rem;
     border-top-left-radius: 1rem; }
   .navBar > span.selected {
