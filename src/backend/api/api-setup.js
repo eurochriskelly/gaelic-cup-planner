@@ -3,6 +3,7 @@ const { useMockEndpoints } = require("./mocks");
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const tournaments = require("./tournaments");
 const app = express();
 
 app.use(bodyParser.json());
@@ -48,7 +49,7 @@ module.exports = (db, ARGS) => {
 
     app.get("/api/tournaments/:tournamentId/standings", async (req, res) => {
       const { tournamentId } = req.params;
-      II(`Calling API: /api/group/standings/tournamentId [${tournamentId}]`);
+      II(`Calling API: /api/tournaments/${tournamentId}/group/standings`);
       const groups = await select(
         `SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId}`
       );
