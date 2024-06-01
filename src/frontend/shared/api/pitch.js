@@ -1,62 +1,73 @@
 export default {
-    fetchFixtures: (pitchId) => new Promise((accept, reject) => {
-        fetch(`/api/fixtures/${pitchId}`)
-            .then(response => response.json())
-            .then(data => {
-                accept(data)
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error)
-                reject(error)
-            })
+  fetchFixtures: (tournamentId, pitchId) =>
+    new Promise((accept, reject) => {
+      fetch(makeEndpoint(tournamentId, `${pitchId}`))
+        .then((response) => response.json())
+        .then((data) => {
+          accept(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          reject(error);
+        });
     }),
-    startMatch: (fixtureId) => new Promise((accept, reject) => {
-        fetch(`/api/fixtures/${fixtureId}/start`)
-            .then(response => response.json())
-            .then(async data => {
-                accept(data)
-            })
-            .catch(error => {
-                console.log('Error starting match, ', error)
-                reject(error)
-            })
+  startMatch: (tournamentId, fixtureId) =>
+    new Promise((accept, reject) => {
+      fetch(makeEndpoint(tournamentId, `${fixtureId}/start`))
+        .then((response) => response.json())
+        .then(async (data) => {
+          accept(data);
+        })
+        .catch((error) => {
+          console.log("Error starting match, ", error);
+          reject(error);
+        });
     }),
-    updateScore: (fixtureId, scores) => new Promise((accept, reject) => {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(scores)
-        }
-        fetch(`/api/fixtures/${fixtureId}/score`, request)
-            .then(response => response.json())
-            .then(async data => {
-                accept(data)
-            })
-            .catch(error => {
-                console.log('Error updating score, ', error)
-                reject(error)
-            })
+  updateScore: (tournamentId, fixtureId, scores) =>
+    new Promise((accept, reject) => {
+      fetch(
+        makeEndpoint(tournamentId, `${fixtureId}/score`),
+        makeRequest(scores)
+      )
+        .then((response) => response.json())
+        .then(async (data) => {
+          accept(data);
+        })
+        .catch((error) => {
+          console.log("Error updating score, ", error);
+          reject(error);
+        });
     }),
-    updateCardedPlayers: (fixtureId, players) => new Promise((accept, reject) => {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(players)
-        }
-        fetch(`/api/fixtures/${fixtureId}/carded`, request)
-            .then(response => response.json())
-            .then(async data => {
-                accept(data)
-            })
-            .catch(error => {
-                console.log('Error updating carded players, ', error)
-                reject(error)
-            })
-    })
+  updateCardedPlayers: (tournamentId, fixtureId, players) =>
+    new Promise((accept, reject) => {
+      fetch(
+        makeEndpoint(tournamentId, `${fixtureId}/carded`),
+        makeRequest(players)
+      )
+        .then((response) => response.json())
+        .then(async (data) => {
+          accept(data);
+        })
+        .catch((error) => {
+          console.log("Error updating carded players, ", error);
+          reject(error);
+        });
+    }),
+};
+
+function makeRequest(obj) {
+  return {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(obj),
+  };
 }
 
-
+function makeEndpoint(tournamentId, rest) {
+  if (!tournamentId) throw new Error("No :tournamenId!");
+  const endpoint = `/api/tournaments/${tournamentId}/fixtures/${rest}`;
+  console.log(`API request to endpoint ${endpoint}`);
+  return endpoint;
+}
