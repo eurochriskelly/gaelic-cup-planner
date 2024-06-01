@@ -8,7 +8,7 @@ $card-main: darken(desaturate($pc, 20%), 16%);
 $card-back: lighten(desaturate($pc-light-40, 45%), 10%);
 
 .MobileSelect {
-  grid-template-rows: 8rem auto;
+  grid-template-rows: 14rem auto;
   > section#cardArea {
     margin: 1rem;
     display: grid;
@@ -56,18 +56,18 @@ $card-back: lighten(desaturate($pc-light-40, 45%), 10%);
       min-height: $cheight;
       background: $card-main;
       .category h3::before {
-        content: '\1F447';
+        content: $utf-icon-category;
         margin-right: 1rem;
       }
       .pitch h3::before {
-        content: '\1F447';
+        content: $utf-icon-pitch; 
         margin-right: 1rem;
       }
       > *:first-child {
         > div:first-child {
           border-top-left-radius: $round;
           border-top-right-radius: $round;
-          padding: 0.9rem;
+          padding: 0.4rem 0 0.4rem 0;
           background: $card-main;
           h3 {
             max-width: $cwidth;

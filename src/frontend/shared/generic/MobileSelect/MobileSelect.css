@@ -1,9 +1,10 @@
+@charset "UTF-8";
 /*
 To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
 .MobileSelect {
-  grid-template-rows: 8rem auto; }
+  grid-template-rows: 14rem auto; }
 
 .MobileSelect > section#cardArea {
   margin: 1rem;
@@ -57,17 +58,17 @@ To import, add the following to the top of your scss file:
   border-radius: 0.4rem; }
 
 .MobileSelect > section#cardArea > .card .category h3::before {
-  content: '\1F447';
+  content: "🎽";
   margin-right: 1rem; }
 
 .MobileSelect > section#cardArea > .card .pitch h3::before {
-  content: '\1F447';
+  content: "🚩";
   margin-right: 1rem; }
 
 .MobileSelect > section#cardArea > .card > *:first-child > div:first-child {
   border-top-left-radius: 0.6rem;
   border-top-right-radius: 0.6rem;
-  padding: 0.9rem;
+  padding: 0.4rem 0 0.4rem 0;
   background: #1a3018; }
 
 .MobileSelect > section#cardArea > .card > *:first-child > div:first-child h3 {

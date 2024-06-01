@@ -5,19 +5,17 @@ import "../MobileLayout/MobileLayout.css";
 import "./MobileSelect.css";
 
 const MobileSelect = ({
-  title = "Please set",
   onSelect = () => {},
-  sections = [],
+  active=0,
   children,
 }) => {
   const childrenArray = React.Children.toArray(children);
   const [SubHeading, ...cards] = childrenArray;
   const cardsPadded = cards.concat(Array(8 - cards.length).fill(null));
-  // Output: [1, 2, 3, 4, null, null, null, null]
   return (
     <section className="MobileSelect mobile">
       <header>
-        <MainMenu sections={sections} />
+        <MainMenu selected={active} />
         <h2>{SubHeading}</h2>
       </header>
       <section id="cardArea">{
