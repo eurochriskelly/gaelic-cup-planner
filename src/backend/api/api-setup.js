@@ -24,11 +24,14 @@ module.exports = (db, ARGS) => {
       II("Calling API: /api/tournaments/:tournamentId/pitches");
       // FIXME: We need a tournament selection screen when starting the app
       const { tournamentId } = req.params;
-      const query =
-        "SELECT * FROM v_pitch_events where tournamentId = " + tournamentId;
-      console.log(query);
+      let query = "SELECT * FROM v_pitch_events where tournamentId = " + tournamentId;
       try {
-        const data = await select(query);
+        let data = await select(query);
+        if (!data.data.length) {
+          let query = "SELECT * FROM pitches where tournamentId = " + tournamentId;
+          data = await select(query);
+          return res.json(data);
+        }
         return res.json(data);
       } catch (e) {
         return res.status(500).json({ error: e.message });

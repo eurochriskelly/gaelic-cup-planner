@@ -57,16 +57,22 @@ const SelectPitchView = () => {
             onSelect={handle.select}
           >
             <div className="SelectPitchView">
-              <NextGameTitle match={matchId} started={startedTime} />
-              <div className="details">
-                <div className="time">{scheduledTime}</div>
-                <div className="category">{category}</div>
-              </div>
-              <div className="teams">
-                <TeamNameDisplay number={1} team={team1} />
-                <div>vs</div>
-                <TeamNameDisplay number={2} team={team2} />
-              </div>
+              {team1 && team2 ? (
+                <>
+                  <NextGameTitle match={matchId} started={startedTime} />
+                  <div className="details">
+                    <div className="time">{scheduledTime}</div>
+                    <div className="category">{category}</div>
+                  </div>
+                  <div className="teams">
+                    <TeamNameDisplay number={1} team={team1} />
+                    <div>vs</div>
+                    <TeamNameDisplay number={2} team={team2} />
+                  </div>
+                </>
+              ) : (
+                <div className="no-more-games">No more scheduled matches on this pitch!</div>
+              )}
             </div>
           </MainCard>
         );
@@ -86,7 +92,7 @@ function NextGameTitle({ started, match }) {
     return <i>{matchstr}</i>;
   };
   return (
-    <div className={`play ${started ? 'in-progress' : 'next-up'}`}>
+    <div className={`play ${started ? "in-progress" : "next-up"}`}>
       {started ? (
         <span className="inProgress">In progress {showMatchNumber()}</span>
       ) : (

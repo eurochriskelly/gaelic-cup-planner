@@ -5,6 +5,10 @@ To import, add the following to the top of your scss file:
 .SelectPitchView {
   display: grid;
   grid-template-rows: 3rem 3.4rem 10rem; }
+  .SelectPitchView .no-more-games {
+    padding: 3.5rem;
+    font-size: 2rem;
+    text-align: center; }
   .SelectPitchView .play {
     text-align: center;
     text-transform: uppercase;

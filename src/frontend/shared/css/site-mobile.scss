@@ -1,7 +1,9 @@
 @import "src/frontend/shared/css/_colors.scss";
 
 $bg-rad: lighten($pc-light-20, 20%);
-
+* {
+  touch-action: manipulation;
+}
 body {
   background: $bg-dark-40;
   font-family: Helvetica, Arial, sans-serif;
