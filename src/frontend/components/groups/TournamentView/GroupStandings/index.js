@@ -8,17 +8,17 @@ const GroupStandings = ({ group, standings }) => {
       lastGroup = team.grp;
       return (
         <tr key={team.id}>
-          <td colSpan="9" className='groupHeader'>
+          <td colSpan="9" className="groupHeader">
             Group {team.grp}
           </td>
         </tr>
       );
     }
   };
-  const NoData = () => <span className='noData'>-</span>;
+  const NoData = () => <span className="noData">-</span>;
   return (
     <>
-      <table className='groupStandings'>
+      <table className="groupStandings">
         <colgroup>
           <col width="46%" />
           <col width="12%" />
@@ -37,9 +37,11 @@ const GroupStandings = ({ group, standings }) => {
               return acc;
             }, {})
           ).map((grp, gi) => {
-            const groupStandings = standings.filter((team) => +team.grp === +grp);
+            const groupStandings = standings.filter(
+              (team) => +team.grp === +grp
+            );
             return (
-              <tbody key={`gs-${gi}`} className={gi % 2 === 0 ? 'even' : 'odd'}>
+              <tbody key={`gs-${gi}`} className={gi % 2 === 0 ? "even" : "odd"}>
                 {groupStandings
                   .filter((team) => team.category === group)
                   .map((team, si) => {
@@ -53,33 +55,41 @@ const GroupStandings = ({ group, standings }) => {
                       PointsDifference,
                       TotalPoints,
                     } = team;
+                    
                     const mp = MatchesPlayed;
                     const finished = mp === MatchesPlanned;
                     return (
                       <>
-                        {si ? null : <>
-                          <GroupDivider key={`gd-${gi}`} team={team} />
-                          <tr>
-                            <th>Team</th>
-                            <th>MP</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>PF</th>
-                            <th>PD</th>
-                            <th>Pts</th>
-                          </tr>
-                        </>
-                        }
+                        {si ? null : (
+                          <>
+                            <GroupDivider key={`gd-${gi}`} team={team} />
+                            <tr>
+                              <th>Team</th>
+                              <th>MP</th>
+                              <th>W</th>
+                              <th>D</th>
+                              <th>L</th>
+                              <th>PF</th>
+                              <th>PD</th>
+                              <th>Pts</th>
+                            </tr>
+                          </>
+                        )}
                         <tr key={`standing-row-${si}`}>
-                          <td className='teamName'
+                          <td
+                            className="teamName"
                             style={{
                               fontWeight: finished ? "bold" : "normal",
                               color: finished ? "black" : "#666",
-                            }}>{team.team}</td>
+                            }}
+                          >
+                            {team.team}
+                          </td>
                           <td>
                             <span>{MatchesPlayed}</span>
-                            <span className='lessRelevant'>/{MatchesPlanned}</span>
+                            <span className="lessRelevant">
+                              /{MatchesPlanned}
+                            </span>
                           </td>
                           <td>{mp ? Wins : <NoData />}</td>
                           <td>{mp ? Draws : <NoData />}</td>
@@ -88,7 +98,7 @@ const GroupStandings = ({ group, standings }) => {
                           <td>{mp ? PointsDifference : <NoData />}</td>
                           <td>
                             {mp ? (
-                              <div className='total'>{TotalPoints}</div>
+                              <div className="total">{TotalPoints}</div>
                             ) : (
                               <NoData />
                             )}
@@ -98,7 +108,7 @@ const GroupStandings = ({ group, standings }) => {
                     );
                   })}
               </tbody>
-            )
+            );
           })
         }
       </table>
