@@ -1,0 +1,42 @@
+.categorySelect {
+  background: #11250f;
+  color: #777;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  > span {
+    padding: 0.4rem;
+  }
+
+  /* Assuming the class name for React-Select is "react-select" */
+  .react-select__control {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .react-select-2-placeholder {
+    color: #fff;
+    background-color: #333;
+  }
+
+  /* Optional: Styles for dropdown options */
+  .react-select__menu {
+    background-color: #333;
+    color: #fff;
+  }
+
+  /* Optional: Styles for selected option */
+  .react-select__single-value {
+    color: #fff;
+  }
+
+  &>span:nth-child(2) {
+    *>* {
+      font-size: 3rem;
+    }
+
+    *>*>* {
+      padding-top: 0.3rem;
+    }
+  }
+}
