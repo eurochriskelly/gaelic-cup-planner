@@ -3,6 +3,17 @@ const { II, DD, EE } = require("../../lib/logging");
 
 module.exports = (app, db, select) => {
   return {
+    resetTournament: async (req, res) => {
+      const { tournamentId } = req.params;
+      if (+tournamentId === 1) {
+        II(`Calling API: /api/tournaments/${tournamentId}/reset ...`);
+        const query = `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL WHERE tournamentId = ${tournamentId};`
+        await select(query);
+      } else {
+        II(`Only the sandbox tournament can be rest (id=1). You cannot reset tournament [${tournamentId}]`)
+      }
+    },
+     
     getTournament: async (req, res) => {
       const { tournamentId } = req.params;
       II(`Calling API: /api/tournaments/${tournamentId} ...`);
