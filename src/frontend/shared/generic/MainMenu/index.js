@@ -1,48 +1,31 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext } from "../../js/Provider";
-import './MainMenu.css';
+import "./MainMenu.css";
 
-const MainMenu = ({ 
-  selected = 0
-}) => {
+const MainMenu = ({ selected = 0 }) => {
+  const { tournamentId } = useParams();
   const { sections } = useContext();
   const navigate = useNavigate();
 
-  const startTitle = sections.length ? sections[selected].title : ' ... ';
-  const [title, setTitle] = useState(startTitle)
-  const [visibleMenu, setVisibleMenu] = useState(false);
+  const startTitle = sections.length ? sections[selected].title : " ... ";
+  const [title, setTitle] = useState(startTitle);
   const handle = {
-    hamburger: () => {
-      setVisibleMenu(!visibleMenu);
-    },
+    hamburger: () => navigate(`/tournament/${tournamentId}`),
     action: (sec) => {
       if (sec.action) sec.action();
       navigate(sec.path);
       setTitle(sec.title);
-      setVisibleMenu(false);
-    }
-  }
+    },
+  };
   return (
     <header className="MainMenu no-select">
       <h1>
-        <span className="circled"></span>
+        <span className="hamburger" onClick={handle.hamburger} />
         <span>{title}</span>
-        <span className="hamburger" onClick={handle.hamburger}>
-          &#x2630;
-        </span>
+        <span className="circled"></span>
       </h1>
-      <section className={visibleMenu ? 'visible' : 'not-visible'}>
-        <div>
-          {
-            sections.map((s, i) => {
-              return <div key={`sec_${i}`} onClick={handle.action.bind(null, s)}>{s.name}</div>
-            }) 
-          }
-        </div>
-      </section>
     </header>
   );
 };
-
 export default MainMenu;
