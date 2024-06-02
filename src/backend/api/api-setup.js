@@ -1,9 +1,8 @@
-const { II, DD, EE } = require("../lib/logging");
+
 const { useMockEndpoints } = require("./mocks");
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const tournaments = require("./tournaments");
 const app = express();
 
 app.use(bodyParser.json());
@@ -16,58 +15,25 @@ module.exports = (db, ARGS) => {
     useMockEndpoints(app);
   } else {
     const { select } = require("../lib/db-helper")(db);
-    require("./fixtures")(app, db, select);
-    require("./tournaments")(app, db, select);
 
-    // API endpoint to get data from the database
-    app.get("/api/tournaments/:tournamentId/pitches", async (req, res) => {
-      II("Calling API: /api/tournaments/:tournamentId/pitches");
-      // FIXME: We need a tournament selection screen when starting the app
-      const { tournamentId } = req.params;
-      let query = "SELECT * FROM v_pitch_events where tournamentId = " + tournamentId;
-      try {
-        let data = await select(query);
-        if (!data.data.length) {
-          let query = "SELECT * FROM pitches where tournamentId = " + tournamentId;
-          data = await select(query);
-          return res.json(data);
-        }
-        return res.json(data);
-      } catch (e) {
-        return res.status(500).json({ error: e.message });
-      }
-    });
+    const G = require("./apis/general")(app, db, select);
+    app.get("/api/tournaments", G.listTouraments)
+    app.get("/api/tournaments/:tournamentId/pitches", G.listPitches)
+    app.get("/api/tournaments/:tournamentId/standings", G.listStandings)
 
-    app.get("/api/tournaments", (req, res) => {
-      II("Calling API: /api/tournaments ...");
-      const query = `SELECT * FROM v_tournaments`;
-      db.query(query, (err, results) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        console.log(results);
-        res.json({ data: results });
-      });
-    });
+    const F = require("./apis/fixtures")(app, db, select);
+    app.get("/api/tournaments/:tournamentId/fixtures", F.fixturesByPitch);
+    app.get("/api/tournaments/:tournamentId/fixtures/nextup", F.nextFixtures);
+    app.get("/api/tournaments/:tournamentId/fixtures/:pitch", F.fixturesByPitch);
+    app.get("/api/tournaments/:tournamentId/fixtures/:id/start", F.startFixture);
+    app.post("/api/tournaments/:tournamentId/fixtures/:id/carded", F.cardPlayers);
 
-    app.get("/api/tournaments/:tournamentId/standings", async (req, res) => {
-      const { tournamentId } = req.params;
-      II(`Calling API: /api/tournaments/${tournamentId}/group/standings`);
-      const groups = await select(
-        `SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId}`
-      );
-      const query = `SELECT * FROM v_group_standings where tournamentId = ${tournamentId}`;
-
-      db.query(query, (err, results) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        res.json({
-          groups: groups.data.map((g) => g.category),
-          data: results,
-        });
-      });
-    });
+    const T = require("./apis/tournaments")(app, db, select);
+    //app.get("/api/tournaments", T.getTournaments);
+    app.get("/api/tournaments/:tournamentId", T.getTournament);
+    app.get("/api/tournaments/:tournamentId/groups", T.getGroups);
+    app.get("/api/tournaments/:tournamentId/categories", T.getCategories);
+    app.get("/api/tournaments/:tournamentId/group/:group_id/teams", T.getTeams);
   }
 
   // Catchall handler to serve the React index.html
@@ -81,3 +47,4 @@ module.exports = (db, ARGS) => {
     console.log(`server running on port ${port}`);
   });
 };
+
