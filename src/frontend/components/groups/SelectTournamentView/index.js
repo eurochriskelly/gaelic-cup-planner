@@ -4,10 +4,8 @@ import MobileSelect from "../../../shared/generic/MobileSelect";
 import MainCard from "../../..//shared/generic/MainCard";
 import { sections } from "../../../../../config/config";
 
-// FIXME: remove
-const tournamentId = 9;
-
 const SelectTournamentView = () => {
+  const { tournamentId } = useParams();
   const navigate = useNavigate();
   // const { tournamentId } = useParams();
   const [categories, setCategories] = useState([]);

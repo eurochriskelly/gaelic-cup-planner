@@ -63,3 +63,16 @@ To import, add the following to the top of your scss file:
 
 .LandingPage section .landing-card div p {
   margin: 0 0 15px; }
+
+.LandingPage section.maintenance h2 {
+  color: white;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.8rem; }
+
+.LandingPage section.maintenance button {
+  font-size: 2rem;
+  margin: 2rem;
+  padding: 2rem;
+  margin-top: 0; }
