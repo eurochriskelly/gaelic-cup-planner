@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "../../../shared/js/Provider";
 import "./PinLogin.css";
@@ -10,6 +10,10 @@ const PinLogin = () => {
   const [isThinking, setIsThinking] = useState(false);
   const [message, setMessage] = useState("");
   const inputsRef = useRef([]);
+
+  useEffect(() => {
+    inputsRef.current[0].focus();
+  }, [])
 
   const handleChange = (e, index) => {
     const value = e.target.value.slice(0, 1); // Only allow one digit
@@ -35,7 +39,7 @@ const PinLogin = () => {
     setTimeout(() => {
       setPin(["#", "#", "#", "#"]);
       setTimeout(() => {
-        navigate(`/tournament/${id}/${page}`);
+        navigate(`/tournament/${id}`);
         setIsThinking(false);
       }, 500)
     })
@@ -55,6 +59,7 @@ const PinLogin = () => {
       default:
         setPin(["", "", "", ""]);
         setMessage("Invalid pin! " + joined);
+        inputsRef.current[0].focus();
         setTimeout(() => {
           setMessage("");
         }, 2000);

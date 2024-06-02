@@ -1,0 +1,65 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/frontend/shared/css/_colors.scss";
+*/
+.LandingPage {
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top center, #7bb294, #374036 50%);
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0; }
+
+.LandingPage > * {
+  margin: 4rem; }
+
+.LandingPage h1 {
+  font-size: 4rem;
+  color: #1d4f18;
+  text-align: center; }
+
+.LandingPage header {
+  margin-bottom: 20px;
+  font-size: 2rem; }
+
+.LandingPage header table {
+  width: 100%;
+  border-collapse: collapse; }
+
+.LandingPage header table tbody tr td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1.2em; }
+
+.LandingPage header table tbody tr td:first-child {
+  font-weight: bold;
+  text-transform: capitalize; }
+
+.LandingPage section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 5rem; }
+
+.LandingPage section .landing-card {
+  width: 100%;
+  padding: 25px;
+  background-color: rgba(150, 150, 150, 0.7);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: left;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease;
+  font-size: 1.2em; }
+
+.LandingPage section .landing-card:hover {
+  background-color: #e6e6e6; }
+
+.LandingPage section .landing-card .title {
+  font-size: 2.2em;
+  margin-bottom: 15px;
+  color: #0f280c; }
+
+.LandingPage section .landing-card div p {
+  margin: 0 0 15px; }

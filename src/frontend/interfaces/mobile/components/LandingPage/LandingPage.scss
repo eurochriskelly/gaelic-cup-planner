@@ -1,0 +1,78 @@
+@import "../../../../shared/css/_colors.scss";
+
+.LandingPage {
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top center, #7bb294, $radial2 50%);
+  position: absolute;
+  width:100%;
+  top:0;
+  bottom:0;
+
+  > * {
+    margin: 4rem;
+  }
+
+  h1 {
+    font-size: 4rem;
+    color: $pc-dark-10;
+    text-align: center;
+  }
+  header {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      tbody {
+        tr {
+          td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.2em;
+
+            &:first-child {
+              font-weight: bold;
+              text-transform: capitalize;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 5rem;
+
+    .landing-card {
+      width: 100%;
+      padding: 25px;
+      background-color: rgba(150,150,150, 0.7);
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      text-align: left;
+      text-decoration: none;
+      color: #333;
+      transition: background-color 0.3s ease;
+      font-size: 1.2em;
+
+      &:hover {
+        background-color: #e6e6e6;
+      }
+
+      .title {
+        font-size: 2.2em;
+        margin-bottom: 15px;
+        color: $pc-dark-20;
+      }
+
+      div {
+        p {
+          margin: 0 0 15px;
+        }
+      }
+    }
+  }
+}
