@@ -20,6 +20,12 @@ const LandingPage = () => {
       });
   }, []);
 
+  const handle = {
+    resetTournament: () => {
+      fetch(`/api/tournaments/1/reset`);
+    }
+  }
+
   return (
     <main className={`.mobile LandingPage`}>
       <h1>Tournament information</h1>
@@ -42,6 +48,12 @@ const LandingPage = () => {
           <p>Start matches, set scores, add card players</p>
         </Card>
       </section>
+      {+tournamentId === 1 && (
+        <section className='maintenance'>
+          <h2>Maintenance</h2>
+          <button onClick={handle.resetTournament}>Reset tournament</button>
+        </section>
+      )}
     </main>
   );
 };
@@ -51,10 +63,9 @@ export default LandingPage;
 function Card({ title, action, children }) {
   return (
     <button onClick={action} className="landing-card">
-      <h1>
-      </h1>
+      <h1></h1>
       <div>
-        <div className='title'>{title}</div>
+        <div className="title">{title}</div>
         <div>
           <div>{children}</div>
         </div>
@@ -63,8 +74,11 @@ function Card({ title, action, children }) {
   );
 }
 
-function Row({label, children}) {
+function Row({ label, children }) {
   return (
-    <tr><td>{label}</td><td>{children}</td></tr>
-  )
+    <tr>
+      <td>{label}</td>
+      <td>{children}</td>
+    </tr>
+  );
 }
