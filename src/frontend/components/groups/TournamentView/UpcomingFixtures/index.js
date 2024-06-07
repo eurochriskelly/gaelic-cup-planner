@@ -77,58 +77,114 @@ function Row({ type = "played", children }) {
 
 function MatchLastPlayed({ match }) {
   if (!match) return <Row type="played">No matches finished in group yet.</Row>;
-  const { scheduledTime, team1, team2, goals1, goals2, points1, points2 } =
-    match;
+  const { 
+    scheduledTime, team1, team2, grp, pitch,
+    goals1, goals2, points1, points2 } = match;
+  console.log(match)
+  const pad0 = str => `0${str}`.substring(-2)
   return (
     <Row>
-      <div>
-        <span>{scheduledTime}</span>
-        <span>{team1}</span>
-        <span>vs</span>
-        <span>{team2}</span>
-      </div>
-      {goals1 && goals2 && (
-        <div>
-          <span></span>
-          <span>
-            {goals1}-{points1}
-          </span>
-          <span></span>
-          <span>
-            {goals2}-{points2}
-          </span>
-        </div>
-      )}
+      <table>
+        <colgroup>
+          <col style={{width:'10%'}} />
+          <col style={{width:'auto'}} />
+          <col style={{width:'10%'}} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td>{scheduledTime}</td>
+            <td style={{textAlign:'center'}}>{
+              `Group [${grp}], pitch [${pitch}]`
+            }</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team1}</td>
+            <td>{goals1}-{pad0(points1)}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team2}</td>
+            <td>{goals2}-{pad0(points2)}</td>
+          </tr>
+        </tbody>
+      </table>
     </Row>
   );
 }
 
 function MatchInProgress({ match }) {
   if (!match) return <Row type="inprogress"> No match in progress.</Row>;
-  const { scheduledTime, team1, team2 } = match;
+  const { scheduledTime, team1, team2, grp, pitch } = match;
   return (
     <Row type="inprogres">
-      <div>
-        <span>{scheduledTime}</span>
-        <span>{team1}</span>
-        <span>vs</span>
-        <span>{team2}</span>
-      </div>
+      <table>
+        <colgroup>
+          <col style={{width:'10%'}} />
+          <col style={{width:'auto'}} />
+          <col style={{width:'10%'}} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td>{scheduledTime}</td>
+            <td style={{textAlign:'center'}}>{
+              `Group [${grp}], pitch [${pitch}]`
+            }</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team1}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team2}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </Row>
   );
 }
 
 function MatchUpcoming({ match }) {
   if (!match) return <Row type="nextup">No match in progress.</Row>;
-  const { scheduledTime, team1, team2, umpiringTeam } = match;
+  const { scheduledTime, team1, team2, umpireTeam, grp, pitch } = match;
   return (
     <Row type="nextup">
-      <div>
-        <span>{scheduledTime}</span>
-        <span>{team1}</span>
-        <span>vs</span>
-        <span>{team2}</span>
-      </div>
+      <table>
+        <colgroup>
+          <col style={{width:'10%'}} />
+          <col style={{width:'auto'}} />
+          <col style={{width:'10%'}} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td>{scheduledTime}</td>
+            <td style={{textAlign:'center'}}>{
+              `Group [${grp}], pitch [${pitch}]`
+            }</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team1}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>{team2}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>UMP</td>
+            <td>{umpireTeam}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </Row>
   );
 }
