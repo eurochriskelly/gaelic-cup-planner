@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
-import DrawerGetReady from "./DrawerGetReady";
 
 const UpdateFixture = ({
   fixture,
@@ -49,17 +48,14 @@ const UpdateFixture = ({
       });
       setVisibleDrawers(closedDrawers);
     },
-    start: () => {
+    start: async () => {
       if (enableStates.start === "disabled") return;
+      await startMatch(fixture.id);
       setEnableStates({
         start: "disabled",
         postpone: "disabled",
         cancel: "enabled",
         finish: "enabled",
-      });
-      setVisibleDrawers({
-        ...closedDrawers,
-        start: true,
       });
     },
     reschedule: () => {
@@ -111,13 +107,6 @@ const UpdateFixture = ({
 
       {/* DRAWERS */}
       <div className='drawers' style={drawerStyle}>
-        <DrawerGetReady
-          fixture={fixture}
-          startMatch={startMatch}
-          teamSheetProvided={actions.teamSheetProvided}
-          visible={visibleDrawers.start}
-          onClose={actions.closeDrawer}
-        />
         <DrawerPostpone
           visible={visibleDrawers.postpone}
           onClose={actions.closeDrawer}
@@ -208,7 +197,7 @@ function BtnGetReady({
         className={btnClass}
         onClick={onGetReady}
         disabled={!btnClass}>
-        Start match &nbsp;
+        Start tracking&nbsp;
         <svg width="29" height="29" viewBox="0 0 20 20">
           <polygon points="8,5 16,12 8,19" fill="white"></polygon>
         </svg>
