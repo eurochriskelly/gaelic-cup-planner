@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider} from "../../shared/js/Provider";
 import PinLogin from '../../shared/generic/PinLogin';
+import Cookies from "js-cookie";
 import SelectTournamentView from "../../components/groups/SelectTournamentView";
 import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./components/LandingPage";
@@ -8,7 +9,6 @@ import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
 
 function App() {
-  console.log('Welcome to the App...');
   return (
     <Provider>
       <Routes>
