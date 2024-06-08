@@ -1,5 +1,6 @@
 const e = require("express");
 const { II, DD, EE } = require("../../lib/logging");
+const { jsonToCsv, sendXsls } = require("../../lib/utils");
 
 module.exports = (app, db, select) => {
   return {
@@ -7,13 +8,15 @@ module.exports = (app, db, select) => {
       const { tournamentId } = req.params;
       if (+tournamentId === 1) {
         II(`Calling API: /api/tournaments/${tournamentId}/reset ...`);
-        const query = `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL WHERE tournamentId = ${tournamentId};`
+        const query = `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL WHERE tournamentId = ${tournamentId};`;
         await select(query);
       } else {
-        II(`Only the sandbox tournament can be rest (id=1). You cannot reset tournament [${tournamentId}]`)
+        II(
+          `Only the sandbox tournament can be rest (id=1). You cannot reset tournament [${tournamentId}]`
+        );
       }
     },
-     
+
     getTournament: async (req, res) => {
       const { tournamentId } = req.params;
       II(`Calling API: /api/tournaments/${tournamentId} ...`);
@@ -59,6 +62,39 @@ module.exports = (app, db, select) => {
           return res.status(500).json({ error: err.message });
         }
         res.json({ data: results });
+      });
+    },
+
+    getResults: (req, res) => {
+      const { tournamentId, category } = req.params;
+      const { format = "json" } = req.query;
+      II(
+        `Calling API: /api/tournaments/${tournamentId}/results/${category} ...`
+      );
+      const query = `SELECT * FROM v_match_results where tournamentId = ${tournamentId} and category = '${category}'`;
+      db.query(query, (err, results) => {
+        if (err) {
+          console.log("Error occured while getting groups", err);
+          return res.status(500).json({ error: err.message });
+        }
+        switch (format) {
+          case "csv":
+            const csv = jsonToCsv(results);
+            res.setHeader(
+              "Content-Disposition",
+              'attachment; filename="data.csv"'
+            );
+            res.set("Content-Type", "text/csv; charset=utf-8");
+            res.send(csv);
+            break;
+          case "xlsx":
+          case "xslx":
+            sendXsls(results, res, 'results');
+            break;
+          default:
+            res.json({ data: results });
+            break;
+        }
       });
     },
 
