@@ -1,8 +1,13 @@
 import React, { createContext, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Context = createContext();
 
+const versionInfo = {
+  mobile: "0.2.10",
+  desktop: "0.0.0",
+};
 export const Provider = ({ children }) => {
   const { tournamentId: tid } = useParams();
   const [mediaType, setMediaType] = useState(null);
@@ -11,6 +16,7 @@ export const Provider = ({ children }) => {
 
   const setupTournament = (id) => {
     setTournamentId(id);
+
     setSections([
       {
         title: "live competitation status",
@@ -45,7 +51,7 @@ export const Provider = ({ children }) => {
 
   return (
     <Context.Provider
-      value={{ mediaType, tournamentId, setupTournament, sections }}
+      value={{ mediaType, tournamentId, setupTournament, sections, versionInfo }}
     >
       {children}
     </Context.Provider>
