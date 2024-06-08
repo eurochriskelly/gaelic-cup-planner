@@ -16,7 +16,7 @@ To import, add the following to the top of your scss file:
   border-radius: 0.5rem;
   position: absolute;
   height: 46rem;
-  padding: 1rem 1.5rem;
+  padding: 0 1.5rem;
   top: 0;
   left: 0;
   right: 0;
