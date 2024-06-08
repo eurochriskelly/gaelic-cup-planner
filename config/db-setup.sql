@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS tournaments (
     Lon FLOAT NULL
 );
 
---Create cards
+-- Create cards
 CREATE TABLE IF NOT EXISTS cards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tournament INT,
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS fixtures (
     pitch VARCHAR(255),
     scheduled TIMESTAMP,
     started TIMESTAMP,
+    ended TIMESTAMP,
     team1Id VARCHAR(255),
     goals1 INT DEFAULT NULL,
     points1 INT DEFAULT NULL,
@@ -52,6 +53,8 @@ CREATE TABLE IF NOT EXISTS fixtures (
     goals2 INT DEFAULT NULL,
     points2 INT DEFAULT NULL,
     umpireTeamId VARCHAR(255),
+    outcome ENUM('played', 'not played', 'conceded', 'forfeit') DEFAULT 'played',
+    notes VARCHAR(255),
     FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
     -- Additional foreign keys will be added when the teams table is created
 );
@@ -116,3 +119,4 @@ CREATE TABLE audit_log (
   user_id INT,
   change_date TIMESTAMP
 );
+
