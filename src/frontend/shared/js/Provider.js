@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "0.2.10",
+  mobile: "0.2.11",
   desktop: "0.0.0",
 };
 export const Provider = ({ children }) => {
