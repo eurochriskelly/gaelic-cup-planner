@@ -4,3 +4,5 @@
     margin-left: auto;
     margin-right: auto;
     width: 90%; }
+    .KnockoutTree table td input {
+      background-color: #587864; }

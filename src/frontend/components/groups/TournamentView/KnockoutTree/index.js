@@ -115,9 +115,14 @@ function PlaceholderRow({ startAt, contents, paint = [], color = "white" }) {
                 key={`${row}-${col}`}
                 rowSpan="2"
                 colSpan="4"
+                className="team-name"
                 style={{
                   border: "1px solid black",
-                  backgroundColor: "#f0f0f0",
+                  background: "rgba(255,255,255, 0.3)",
+                  marginLeft: "1rem",
+                  fontSize: "1.8rem",
+                  textTransform: 'uppercase',
+                  color: "white",
                 }}
               >
                 {contents}
