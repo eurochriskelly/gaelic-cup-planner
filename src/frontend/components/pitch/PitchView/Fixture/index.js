@@ -1,7 +1,6 @@
 import React from "react";
-
+import TeamResult from "./TeamResult";
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
-import ScoreDisplay from "../../../../shared/generic/ScoreDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 
 const Fixture = ({ fixture, isFocus }) => {
@@ -83,20 +82,6 @@ const Fixture = ({ fixture, isFocus }) => {
 
 export default Fixture;
 
-function TeamResult({
-  goals, points, played, team, winner
-}) {
-  console.log(winner, team)
-  const isWinner = winner === team
-  return (
-    <div>
-      <div className={(isWinner ? 'winner' : 'loser') + " teamName"}>
-        {formatTeamName(team, isWinner)}
-      </div>
-      <ScoreDisplay goals={goals} points={points} played={played} />
-    </div>
-  )
-}
 
 function ClockDisplay({
   scheduledTime,

@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "../../../shared/js/Provider";
+import Cookies from "js-cookie";
 import "./PinLogin.css";
 
 const PinLogin = () => {
-  const { setupTournament } = useContext();
+  const { setupTournament, versionInfo } = useContext();
   const navigate = useNavigate();
   const [pin, setPin] = useState(["", "", "", ""]);
   const [isThinking, setIsThinking] = useState(false);
@@ -56,6 +57,12 @@ const PinLogin = () => {
       case "5400":
         selectTournament("selectCategory", 9);
         break;
+      case "1010":
+        selectTournament("selectCategory", 10);
+        break;
+      case "9999":
+        selectTournament("selectCategory", 1);
+        break;
       default:
         setPin(["", "", "", ""]);
         setMessage("Invalid pin! " + joined);
@@ -83,6 +90,9 @@ const PinLogin = () => {
         ))}
       </div>
       <div>&nbsp;{message}&nbsp;</div>
+      <div>{
+        `GaelicGale v${versionInfo?.mobile}`
+      }</div>
     </div>
   );
 };

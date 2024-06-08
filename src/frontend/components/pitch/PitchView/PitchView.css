@@ -53,7 +53,7 @@ To import, add the following to the top of your scss file:
       padding: 20px;
       overflow-y: scroll;
       /* Enable vertical scrolling for content */
-      height: calc(100vh - 40px);
+      height: calc(200vh - 40px);
       /* Adjust height based on header's height */ }
     .pitchView > div.fixturesBody .noFixtures {
       margin: 0 auto;

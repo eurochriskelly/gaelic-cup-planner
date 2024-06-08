@@ -22,8 +22,18 @@ const DrawerFinish = ({
   const [currentType, setCurrentType] = useState("");
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [scores, setScores] = useState({
-    team1: { goals: "", points: "", name: fixture.team1, category: fixture.category },
-    team2: { goals: "", points: "", name: fixture.team2, category: fixture.category },
+    team1: {
+      goals: "",
+      points: "",
+      name: fixture.team1,
+      category: fixture.category,
+    },
+    team2: {
+      goals: "",
+      points: "",
+      name: fixture.team2,
+      category: fixture.category,
+    },
   });
   const [scorePicker, setScorePicker] = useState({ visible: false });
 
@@ -31,7 +41,7 @@ const DrawerFinish = ({
     return {
       display: steps[currentStep] === step ? "block" : "none",
     };
-  }
+  };
 
   const actions = {
     saveScore: async () => {
@@ -41,7 +51,7 @@ const DrawerFinish = ({
     },
     notReadyToSaveScore: () => {
       setCurrentStep(0);
-      onClose()
+      onClose();
     },
     cardPlayersUpdated: async (players) => {
       if (players.length) {
@@ -49,7 +59,7 @@ const DrawerFinish = ({
       }
       setCurrentStep(0);
       updateFixtures();
-      onClose()
+      onClose();
     },
     updateScore: (team, type, amount) => {
       setCurrentTeam(team);
@@ -70,41 +80,33 @@ const DrawerFinish = ({
   const { team1, team2 } = fixture;
   const displayScore = (team, type) => {
     const score = scores[team][type];
-    return score || score === 0 ? score : "?";
+    const placeholder = type === 'points' ? '##' : '#';
+    return score || score === 0 ? score : placeholder;
+  };
+  const TeamScore = ({ id, team }) => {
+    return (
+      <div className="teamScore">
+        <h4>{team}</h4>
+        <div>
+          <div onClick={actions.updateScore.bind(null, id, "goals")}>
+            {displayScore(id, "goals")}
+          </div>
+          <div onClick={actions.updateScore.bind(null, id, "points")}>
+            {displayScore(id, "points")}
+          </div>
+        </div>
+      </div>
+    );
   };
   return (
-    <div className='drawerFinish'>
-      <div className='drawerStep' style={drawerStepStyle('score')}>
+    <div className="drawerFinish">
+      <div className="drawerStep" style={drawerStepStyle("score")}>
         <div className="drawer-header">Update match score</div>
         <div className="drawer-container" style={{ position: "relative" }}>
           <div>
-            <div className='teamScore'>
-              <h4>{team1}</h4>
-              <div>
-                <div onClick={actions.updateScore.bind(null, "team1", "goals")}>
-                  {displayScore("team1", "goals")}
-                </div>
-                <div
-                  onClick={actions.updateScore.bind(null, "team1", "points")}
-                >
-                  {displayScore("team1", "points")}
-                </div>
-              </div>
-            </div>
-            <div className='teamScore'>
-              <h4>{team2}</h4>
-              <div>
-                <div onClick={actions.updateScore.bind(null, "team2", "goals")}>
-                  {displayScore("team2", "goals")}
-                </div>
-                <div
-                  onClick={actions.updateScore.bind(null, "team2", "points")}
-                >
-                  {displayScore("team2", "points")}
-                </div>
-              </div>
-            </div>
-            <div className='proceedButtons'>
+            <TeamScore id='team1' team={team1} />
+            <TeamScore id='team2' team={team2} />
+            <div className="proceedButtons">
               <button
                 disabled={scoresNotReady()}
                 className={scoresNotReady() ? "disabled" : "enabled"}
@@ -116,7 +118,7 @@ const DrawerFinish = ({
             </div>
           </div>
           {scorePicker.visible && (
-            <div className='scoreSelector'>
+            <div className="scoreSelector">
               <ScoreSelect
                 scores={scores}
                 currentTeam={currentTeam}
@@ -132,10 +134,14 @@ const DrawerFinish = ({
         </div>
       </div>
 
-      <div className='drawerStep' style={drawerStepStyle('cardedPlayers')}>
+      <div className="drawerStep" style={drawerStepStyle("cardedPlayers")}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-          <ListCardedPlayers team1={fixture.team1} team2={fixture.team2} onProceed={actions.cardPlayersUpdated} />
+          <ListCardedPlayers
+            team1={fixture.team1}
+            team2={fixture.team2}
+            onProceed={actions.cardPlayersUpdated}
+          />
         </div>
       </div>
     </div>

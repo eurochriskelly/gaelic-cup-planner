@@ -35,7 +35,7 @@ const PitchView = () => {
   let displayFixtures = tabNames.map((tab) => {
     return fixtures
       .filter((f) => {
-        const focusFixture = nextFixture && nextFixture.id === f.id 
+        const focusFixture = nextFixture && nextFixture.id === f.id;
         switch (tab.toLowerCase()) {
           case "next":
             return focusFixture;
@@ -47,19 +47,19 @@ const PitchView = () => {
             return true;
         }
       })
-      .map(f => ({...f, tab: tab.toLowerCase()}))
+      .map((f) => ({ ...f, tab: tab.toLowerCase() }));
   });
   displayFixtures = {
     next: displayFixtures[0],
     finished: displayFixtures[1],
-    unplayed: displayFixtures[2]
-  }
+    unplayed: displayFixtures[2],
+  };
   const handle = {
     back: () => {
       const path = `/tournament/${tournamentId}/selectPitch`;
-      navigate(path)
-    }
-  }
+      navigate(path);
+    },
+  };
   return (
     <MobileLayout
       sections={sections}
@@ -72,38 +72,41 @@ const PitchView = () => {
       </span>
       {tabNames.map((tab, i) => {
         return (
-          <div key={`tab-${i}`} className="pitchView">
-            <div className="fixturesBody">
-              <div className="fixturesArea">
-                {displayFixtures[tab.toLowerCase()].length ? (
-                  displayFixtures[tab.toLowerCase()].map((fixture) => {
-                    const focusFixture =
-                      nextFixture && nextFixture.id === fixture.id;
-                    return (
-                      <div
-                        key={fixture.id}
-                        className={focusFixture ? "focusFixture" : ""}
-                      >
-                        <Fixture fixture={fixture} isFocus={focusFixture} />
-                        {nextFixture && nextFixture.id === fixture.id && (
-                          <UpdateFixture
-                            fixture={fixture}
-                            fixtures={fixtures}
-                            updateFixtures={actions.fetchFixtures}
-                            startMatch={actions.startMatch}
-                          />
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="noFixtures">
-                    No <span>{tab}</span> fixtures left to display
-                  </div>
-                )}
+          <>
+            <div key={`tab-${i}`} className="pitchView">
+              <div className="fixturesBody">
+                <div className="fixturesArea">
+                  {displayFixtures[tab.toLowerCase()].length ? (
+                    displayFixtures[tab.toLowerCase()].map((fixture) => {
+                      const focusFixture =
+                        nextFixture && nextFixture.id === fixture.id;
+                      return (
+                        <div
+                          key={fixture.id}
+                          className={focusFixture ? "focusFixture" : ""}
+                        >
+                          <Fixture fixture={fixture} isFocus={focusFixture} />
+                          {nextFixture && nextFixture.id === fixture.id && (
+                            <UpdateFixture
+                              fixture={fixture}
+                              fixtures={fixtures}
+                              updateFixtures={actions.fetchFixtures}
+                              startMatch={actions.startMatch}
+                            />
+                          )}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="noFixtures">
+                      No <span>{tab}</span> fixtures left to display
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+            <div className="large-but-unimportant">ok</div>
+          </>
         );
       })}
     </MobileLayout>
