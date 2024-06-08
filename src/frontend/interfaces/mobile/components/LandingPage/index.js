@@ -28,9 +28,9 @@ const LandingPage = () => {
       fetch(`/api/tournaments/1/reset`);
     },
     disconnect: () => {
-      navigate('/')
-    }
-  }
+      navigate("/");
+    },
+  };
 
   return (
     <main className={`.mobile LandingPage`}>
@@ -45,22 +45,27 @@ const LandingPage = () => {
         </table>
       </header>
       <section>
-        <Card action={jump.scheduling} icon="&#x26A1;" title="Schedule Execution">
-          <p>Start matches, set scores, add card players</p>
+        <Card
+          action={jump.scheduling}
+          icon="&#x26A1;"
+          title="Schedule Execution" >
+          <p>Start matches</p>
+          <p>set scores</p>
+          <p>add card players</p>
         </Card>
-        <Card action={jump.competitions} icon="&#x1F3D0;" title="Competition Status">
+        <Card
+          action={jump.competitions}
+          icon="&#x1F3D0;"
+          title="Competition Status" >
           <p>View recent, ongoing and upcoming fixtures</p>
           <p>View group standings</p>
           <p>Follow progress in standings</p>
         </Card>
       </section>
-      {+tournamentId === 1 && (
-        <section className='maintenance'>
-          <h2>Maintenance</h2>
-          <button onClick={handle.resetTournament}>Reset tournament</button>
-        </section>
-      )}
-      <section className='maintenance'>
+      <section className="maintenance">
+        {+tournamentId === 1 && (
+          <button className='sudo' onClick={handle.resetTournament}>Reset tournament</button>
+        )}
         <button onClick={handle.disconnect}>Disconnect</button>
       </section>
       <footer>GaelicGale Mobile. V{versionInfo.mobile}</footer>
@@ -74,7 +79,9 @@ function Card({ title, icon, action, children }) {
   return (
     <button onClick={action} className="landing-card">
       <div>
-        <div className="title">{icon} {title}</div>
+        <div className="title">
+          {icon} {title}
+        </div>
         <div>
           <div>{children}</div>
         </div>
