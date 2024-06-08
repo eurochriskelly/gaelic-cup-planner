@@ -6,7 +6,7 @@
     border-radius: 2rem;
     width: 100%;
     box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3);
-    min-height: 64rem;
+    min-height: 54rem;
     border: 4px outset #777;
 
     .scoreSelector {
@@ -14,7 +14,7 @@
         border-radius: 0.5rem;
         position: absolute;
         height: 46rem;
-        padding: 1rem 1.5rem;
+        padding: 0 1.5rem;
         top: 0;
         left: 0;
         right: 0;
@@ -37,43 +37,43 @@
     justify-content: center;
     align-items: center;
 }
-.teamScore > h4 {
+.teamScore {
+  > h4 {
     text-align: center;
     font-size: 3rem;
     color: $sc-dark-20;
     letter-spacing: 0.2rem;
     margin: 4rem 0 0 0;
     text-transform: uppercase;
-}
-.teamScore > div {
-    display: grid;
-    grid-template-columns: 0.8fr 0.8fr;
-    grid-gap: 1rem;
-    margin: 1rem 14rem;
-}
-.teamScore > div > div {
-    background-color: red;
-}
-.teamScore > div.proceedButtons {
-    color: $pc-dark-20;
-    width: 100%;
-    margin-left: 100px;
+  }
+  > div {
+      display: grid;
+      grid-template-columns: 0.65fr 0.95fr;
+      grid-gap: 1rem;
+      background-color: $sc-light-40;
+      border: 1px solid #ccc;
+      border-radius: 1rem;
+      margin: 1rem 14rem;
+      .proceedButtons {
+          color: $pc-dark-20;
+          width: 100%;
+          margin-left: 100px;
+      }
+      > div {
+          font-size: 3.0rem;
+          margin-top: 1rem;
+          padding: 2rem 0.5rem ;
+          text-align: center;
+          user-select: none;
+          color: desaturate($sc-dark-20, 25%);
+      }
+    }
 }
 .drawerFinish div.proceedButtons {
     width: 100%;
-    margin: 9rem 0 0;
+    margin: 2rem 0 0;
     display: grid;
     font-size: 4rem;
     grid-template-columns: 0.8fr 0.8fr;
 }
-.teamScore > div > div {
-    font-size: 3.0rem;
-    padding: 3rem 0.5rem ;
-    border-radius: 1rem;
-    background-color: $sc-light-40;
-    border: 1px solid #ccc;
-    text-align: center;
-    user-select: none;
-}
-
 

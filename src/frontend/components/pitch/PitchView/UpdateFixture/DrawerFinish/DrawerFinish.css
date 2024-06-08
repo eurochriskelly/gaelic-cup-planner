@@ -8,21 +8,23 @@ To import, add the following to the top of your scss file:
   border-radius: 2rem;
   width: 100%;
   box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3);
-  min-height: 64rem;
+  min-height: 54rem;
   border: 4px outset #777; }
-  .drawerFinish .scoreSelector {
-    background-color: #d1c9d6;
-    border-radius: 0.5rem;
-    position: absolute;
-    height: 46rem;
-    padding: 1rem 1.5rem;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3); }
-    .drawerFinish .scoreSelector > div {
-      display: grid; }
+
+.drawerFinish .scoreSelector {
+  background-color: #d1c9d6;
+  border-radius: 0.5rem;
+  position: absolute;
+  height: 46rem;
+  padding: 0 1.5rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.3); }
+
+.drawerFinish .scoreSelector > div {
+  display: grid; }
 
 .square {
   width: 100%;
@@ -48,30 +50,29 @@ To import, add the following to the top of your scss file:
 
 .teamScore > div {
   display: grid;
-  grid-template-columns: 0.8fr 0.8fr;
+  grid-template-columns: 0.65fr 0.95fr;
   grid-gap: 1rem;
+  background-color: #e8e0ed;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
   margin: 1rem 14rem; }
 
-.teamScore > div > div {
-  background-color: red; }
-
-.teamScore > div.proceedButtons {
+.teamScore > div .proceedButtons {
   color: #0f280c;
   width: 100%;
   margin-left: 100px; }
 
+.teamScore > div > div {
+  font-size: 3.0rem;
+  margin-top: 1rem;
+  padding: 2rem 0.5rem;
+  text-align: center;
+  user-select: none;
+  color: #4e4c4f; }
+
 .drawerFinish div.proceedButtons {
   width: 100%;
-  margin: 9rem 0 0;
+  margin: 2rem 0 0;
   display: grid;
   font-size: 4rem;
   grid-template-columns: 0.8fr 0.8fr; }
-
-.teamScore > div > div {
-  font-size: 3.0rem;
-  padding: 3rem 0.5rem;
-  border-radius: 1rem;
-  background-color: #e8e0ed;
-  border: 1px solid #ccc;
-  text-align: center;
-  user-select: none; }

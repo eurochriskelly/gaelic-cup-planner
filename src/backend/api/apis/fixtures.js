@@ -18,36 +18,35 @@ module.exports = (app, db, select) => {
           id +
           "/score"
       );
+
       try {
-        console.log("Body contains the following");
-        console.log(req.body);
         const { team1, team2 } = req.body;
         const team1Score = team1.goals * 3 + team1.points;
         const team2Score = team2.goals * 3 + team2.points;
         const updateQuery = [
           "UPDATE fixtures",
           `SET goals1 = '${team1.goals}', points1 = '${team1.points}', `,
-          `    goals2 = '${team2.goals}', points2 = '${team2.points}'`,
+          `    goals2 = '${team2.goals}', points2 = '${team2.points}' `,
           `WHERE id = ${id};`,
         ].join(" ");
         console.log("score update", updateQuery);
         await select(updateQuery);
         // TODO:: These queries can be run in parallel or in a combined statement
-        await processStageCompletion(id);
+        await processStageCompletion(id, select);
         await processAnyMatchDependentFixtures({
           name: team1.name,
           category: team1.category,
           position: team1Score > team2Score ? 1 : 2,
           matchId: id,
           tournamentId,
-        });
+        }, select);
         await processAnyMatchDependentFixtures({
           name: team2.name,
           category: team2.category,
           position: team1Score > team2Score ? 2 : 1,
           matchId: id,
           tournamentId,
-        });
+        }, select);
         res.json({ message: "Score updated successfully." });
       } catch (err) {
         console.log("Error occured", err);
@@ -115,7 +114,8 @@ module.exports = (app, db, select) => {
     fixturesByPitch: (req, res) => {
       const { pitch, tournamentId } = req.params;
       II(`Calling API: /api/tournaments/${tournamentId}/fixtures/:pitch`);
-      let where = pitch ? `WHERE pitch = '${pitch}'` : "";
+      let where = `WHERE tournamentId = ${tournamentId} `
+      where += pitch ? `and pitch = '${pitch}' and tournamentId = ${tournamentId}` : "";
       const query = `SELECT * FROM v_fixture_information ${where}`;
       db.query(query, (err, results) => {
         if (err) {
@@ -127,7 +127,7 @@ module.exports = (app, db, select) => {
   };
 };
 
-async function processAnyMatchDependentFixtures(teamInfo) {
+async function processAnyMatchDependentFixtures(teamInfo, select) {
   // Any time a match is updated attempt to update any teams were dependent on the outcome
   const { name, position, matchId, category, tournamentId } = teamInfo;
   const placeHolder = `~match:${matchId}/p:${position}`;
@@ -153,7 +153,7 @@ async function processAnyMatchDependentFixtures(teamInfo) {
   await select(qAnyMatchWinner("umpireTeam"));
 }
 
-async function processStageCompletion(fixtureId) {
+async function processStageCompletion(fixtureId, select) {
   const selQuery = [
     `SELECT tournamentId, stage, groupNumber, `,
     `  category FROM fixtures WHERE id = ${fixtureId}`,

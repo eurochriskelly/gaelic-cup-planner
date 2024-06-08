@@ -3,13 +3,11 @@ To import, add the following to the top of your scss file:
 @import "src/frontend/shared/css/_colors.scss";
 */
 .ListCardedPlayers {
-  margin-bottom: 2rem;
-  /* TODO: get working in site.css */ }
+  margin-bottom: 2rem; }
   .ListCardedPlayers h3 {
-    text-align: center;
-    text-size: 2.2rem; }
+    text-align: center; }
   .ListCardedPlayers .ready {
-    margin: 5rem 0rem;
+    margin: 0rem 0rem;
     font-size: 2rem; }
     .ListCardedPlayers .ready label {
       padding-left: 1rem; }

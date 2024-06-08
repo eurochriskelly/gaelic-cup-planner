@@ -2,9 +2,11 @@ import { Schema } from "js-yaml"
 
 export const formatTeamName = (team) => {
   let displayTeam = team
+  if (team === '~') return '???'
   if (team?.startsWith('~')) {
     // e.g. "~match:102/p:1"
-    const parts = team.replace('~', '').split('/')
+    const parts = team?.replace('~', '').split('/')
+    
     const dependent = parts[0]
     const position = +(parts[1].replace('p:', ''))
     const [ type, order ] = dependent.split(':')
