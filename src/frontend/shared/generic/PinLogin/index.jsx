@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import Cookies from "js-cookie";
+import LanguageSwitcher from "../LanguageSwitcher";
 import "./PinLogin.scss";
 
 const PinLogin = () => {
+  const { t } = useTranslation();
   const { setupTournament, versionInfo } = useAppContext();
   const navigate = useNavigate();
   const [pin, setPin] = useState(["", "", "", ""]);
@@ -76,7 +79,8 @@ const PinLogin = () => {
 
   return (
     <div className="pinLogin">
-      <div>Enter 4-digit tournament code</div>
+      <LanguageSwitcher />
+      <div>{t('enter_pin')}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input
