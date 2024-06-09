@@ -6,7 +6,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "jest",
+    "dev2": "jest",
+    "build2": "vite build",
+    "serve2": "vite preview",
     "help": "clear;cat docs/developers-guide.md",
     "start": "bash scripts/build-fe.sh --watch",
     "launch": "bash scripts/launch.sh",
@@ -34,8 +36,8 @@
   "devDependencies": {
     "@babel/cli": "^7.23.0",
     "@babel/core": "^7.24.5",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
     "@parcel/transformer-inline-string": "^2.10.1",
     "@parcel/transformer-sass": "^2.10.3",
     "@storybook/addon-actions": "^7.6.12",
@@ -49,6 +51,7 @@
     "@storybook/react-vite": "^7.6.5",
     "@storybook/react-webpack5": "^7.6.5",
     "@storybook/test": "^7.6.5",
+    "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.19",
     "babel-cli": "^6.26.0",
     "babel-loader": "^9.1.3",
@@ -70,7 +73,8 @@
     "storybook": "^7.6.5",
     "stream-browserify": "^3.0.0",
     "string_decoder": "^1.3.0",
-    "style-loader": "^3.3.3"
+    "style-loader": "^3.3.3",
+    "vite": "^4.5.3"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -79,11 +83,15 @@
     "express": "^4.18.2",
     "gather-links": "^1.0.0",
     "googleapis": "^128.0.0",
+    "i18next": "^23.11.5",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "i18next-http-backend": "^2.5.2",
     "js-cookie": "^3.0.5",
     "js-yaml": "^4.1.0",
     "mysql": "^2.18.1",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
+    "react-i18next": "^14.1.2",
     "react-router-dom": "^6.23.1",
     "react-select": "^5.8.0",
     "xlsx": "^0.18.5"
