@@ -6,11 +6,16 @@ To continuously build the front end:
 
 To serve the software (in dev mode), run:
 
-`npm run launch:dev`
+`npm run serve`
 
-To build scss into css:
+To build the software for production, run:
 
-`npm run css:watch`
+`npm run build`
+
+To serve the software (in dev mode), run:
+
+`npm run serve`
+
 
 For storybook development:
 
