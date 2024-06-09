@@ -1,4 +1,5 @@
-const { II, DD, EE } = require("../../lib/logging");
+const { II } = require("../../lib/logging");
+const { mysqlCurrentTime } = require('../../lib/utils');
 
 module.exports = (app, db, select) => {
   return {
@@ -23,10 +24,12 @@ module.exports = (app, db, select) => {
         const { team1, team2 } = req.body;
         const team1Score = team1.goals * 3 + team1.points;
         const team2Score = team2.goals * 3 + team2.points;
+        // fixme: add the time
         const updateQuery = [
           "UPDATE fixtures",
           `SET goals1 = '${team1.goals}', points1 = '${team1.points}', `,
-          `    goals2 = '${team2.goals}', points2 = '${team2.points}' `,
+          `    goals2 = '${team2.goals}', points2 = '${team2.points}', `,
+          `    ended = '${mysqlCurrentTime()}' `
           `WHERE id = ${id};`,
         ].join(" ");
         console.log("score update", updateQuery);

@@ -1,4 +1,5 @@
 const { II, DD, EE } = require("../../lib/logging");
+const { jsonToCsv, sendXsls } = require('../../lib/utils');
 
 module.exports = (app, db, select) => {
   return {
@@ -35,21 +36,45 @@ module.exports = (app, db, select) => {
     },
 
     listStandings: async (req, res) => {
-      const { tournamentId } = req.params;
-      II(`Calling API: /api/tournaments/${tournamentId}/group/standings`);
+      const { tournamentId, category } = req.params;
+      const { format = "json" } = req.query;
+      if (category) {
+        II(`Calling API: /api/tournaments/${tournamentId}/group/standings/${category}`);
+      } else {
+        II(`Calling API: /api/tournaments/${tournamentId}/group/standings`);
+      }
+     
+      let extra = category ? ` and category = '${category}'` : '';
       const groups = await select(
-        `SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId}`
+        `SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId} ${extra}`
       );
-      const query = `SELECT * FROM v_group_standings where tournamentId = ${tournamentId}`;
+      const query = `SELECT * FROM v_group_standings where tournamentId = ${tournamentId} ${extra}`;
 
       db.query(query, (err, results) => {
         if (err) {
           return res.status(500).json({ error: err.message });
         }
-        res.json({
-          groups: groups.data.map((g) => g.category),
-          data: results,
-        });
+        switch (format) {
+          case 'csv':
+            const csv = jsonToCsv(results);
+            res.setHeader(
+              "Content-Disposition",
+              'attachment; filename="data.csv"'
+            );
+            res.set("Content-Type", "text/csv; charset=utf-8");
+            res.send(csv);
+            break
+          case 'xslx':
+          case 'xlsx':
+            sendXsls(results, res, 'standings')
+            break
+          default:
+            res.json({
+              groups: groups.data.map((g) => g.category),
+              data: results,
+            });
+            break
+        }
       });
     },
   };
