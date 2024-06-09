@@ -22,7 +22,7 @@ const processArgs = (args) => {
     if (!ARGS.app) {
         throw new Error('Missing --app argument')
     } else {
-      ARGS.staticPath = `../../../src/frontend/interfaces/${ARGS.app}/watch`
+      ARGS.staticPath = `../../../dist/`
     }
     return ARGS
 }
