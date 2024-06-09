@@ -1,4 +1,5 @@
 import Select from 'react-select';
+import './CategorySelect.scss';
 
 const CategorySelect = ({
   categories = [],

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import MainMenu from '../MainMenu';
 import NavBar from '../NavBar';
 
-import './MobileLayout.css';
+import './MobileLayout.scss';
 
 const MobileLayout = ({
   onBack = () => {},

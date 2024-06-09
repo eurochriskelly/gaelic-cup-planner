@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { argv0 } from "process";
+import './ScoreSelect.scss';
 
 const Header = ({ name, team, pages, setPages, setScores, scores }) => {
   const updateScore = () => {

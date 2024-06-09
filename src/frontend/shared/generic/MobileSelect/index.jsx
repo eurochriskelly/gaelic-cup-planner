@@ -1,8 +1,8 @@
 import { useState } from "react";
 import MainMenu from "../MainMenu";
 
-import "../MobileLayout/MobileLayout.css";
-import "./MobileSelect.css";
+import "../MobileLayout/MobileLayout.scss";
+import "./MobileSelect.scss";
 
 const MobileSelect = ({
   onSelect = () => {},

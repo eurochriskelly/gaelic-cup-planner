@@ -1,6 +1,6 @@
 import { getDivisions } from "../../../../shared/js/styler";
 
-import "./UpcomingFixtures.css";
+import "./UpcomingFixtures.scss";
 
 const UpcomingFixtures = ({ isPhone, groups, nextMatches }) => {
   const liveStyle = isPhone

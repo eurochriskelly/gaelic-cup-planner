@@ -4,6 +4,7 @@ import { useAppContext } from "../../../shared/js/Provider";
 import MobileSelect from "../../../shared/generic/MobileSelect";
 import MainCard from "../../../shared/generic/MainCard";
 import TeamNameDisplay from "../../../shared/generic/TeamNameDisplay/";
+import './SelectPitchView.scss';
 
 const SelectPitchView = () => {
   const navigate = useNavigate();

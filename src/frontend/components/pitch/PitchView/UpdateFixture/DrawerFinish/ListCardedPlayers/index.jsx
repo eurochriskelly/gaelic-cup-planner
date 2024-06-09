@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CardSelector from "./CardSelector";
+import './ListCardedPlayers.scss';
 
 const ListCardedPlayers = ({ team1, team2, onProceed = () => {} }) => {
   const [allowClose, setAllowClose] = useState(false);

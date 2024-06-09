@@ -5,6 +5,7 @@ import API from "../../../shared/api/pitch";
 import MobileLayout from "../../../shared/generic/MobileLayout";
 import Fixture from "./Fixture";
 import UpdateFixture from "./UpdateFixture";
+import './PitchView.scss';
 
 const PitchView = () => {
   const { pitchId, tournamentId } = useParams();

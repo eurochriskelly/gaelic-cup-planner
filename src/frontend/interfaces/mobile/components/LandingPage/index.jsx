@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
-import { disconnect } from "process";
+import './LandingPage.scss';
 
 const LandingPage = () => {
   const { versionInfo } = useAppContext();
@@ -24,12 +24,8 @@ const LandingPage = () => {
   }, []);
 
   const handle = {
-    resetTournament: () => {
-      fetch(`/api/tournaments/1/reset`);
-    },
-    disconnect: () => {
-      navigate("/");
-    },
+    resetTournament: () => fetch(`/api/tournaments/1/reset`),
+    disconnect: () => navigate("/"),
   };
 
   return (

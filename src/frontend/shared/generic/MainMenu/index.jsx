@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../js/Provider";
-import "./MainMenu.css";
+import "./MainMenu.scss";
 
 const MainMenu = ({ selected = 0 }) => {
   const { tournamentId } = useParams();

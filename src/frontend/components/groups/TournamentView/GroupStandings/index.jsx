@@ -1,3 +1,5 @@
+import './GroupStandings.scss';
+
 const GroupStandings = ({ group, standings }) => {
   let lastGroup = "";
 

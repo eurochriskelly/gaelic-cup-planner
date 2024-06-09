@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./CardSelector.css"; // Make sure to create this CSS file
+import "./CardSelector.scss"; // Make sure to create this CSS file
 
 const CardSelector = ({ onCard = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false);

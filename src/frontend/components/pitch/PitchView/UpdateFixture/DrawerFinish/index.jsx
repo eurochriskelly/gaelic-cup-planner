@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import API from "../../../../../shared/api/pitch";
 import ScoreSelect from "./ScoreSelect";
 import ListCardedPlayers from "./ListCardedPlayers";
+import './DrawerFinish.scss';
 
 const DrawerFinish = ({
   fixture,

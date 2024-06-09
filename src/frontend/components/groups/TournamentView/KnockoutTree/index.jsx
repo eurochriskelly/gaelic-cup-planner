@@ -1,3 +1,5 @@
+import './KnockoutTree.scss';
+
 const KnockoutTree = ({
   title = 'cup',
   quarters1,
