@@ -14,3 +14,4 @@ config/secret
 /src/frontend/interfaces/*/dist/
 /src/frontend/interfaces/*/watch/
 
+dist
