@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
+import './UpdateFixture.scss';
 
 const UpdateFixture = ({
   fixture,

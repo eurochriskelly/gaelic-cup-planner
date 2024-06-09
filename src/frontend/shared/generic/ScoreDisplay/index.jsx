@@ -1,3 +1,5 @@
+import './ScoreDisplay.scss';
+
 const ScoreDisplay = ({ header, goals, points, played }) => {
   if (header) return <span>Score</span>;
   let haveGoals = true;

@@ -5,6 +5,7 @@ import MobileLayout from "../../../shared/generic/MobileLayout";
 import GroupStandings from "./GroupStandings";
 import KnockoutTree from "./KnockoutTree";
 import UpcomingFixtures from "./UpcomingFixtures";
+import './TournamentView.scss';
 
 const TournamentView = () => {
   // Application State

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import MobileSelect from "../../../shared/generic/MobileSelect";
 import MainCard from "../../..//shared/generic/MainCard";
 import { useAppContext } from "../../../shared/js/Provider";
-
+import './SelectTournamentView.scss';
 
 const SelectTournamentView = () => {
   const { tournamentId } = useParams();

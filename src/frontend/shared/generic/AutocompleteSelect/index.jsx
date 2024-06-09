@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styles from './AutocompleteSelect.module.scss';
+import styles from './AutocompleteSelect.scss';
 
 const AutocompleteSelect = ({
   options,

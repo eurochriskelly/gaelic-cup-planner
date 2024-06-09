@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Select from 'react-select';
-import './DrawerPostpone.css';
+import './DrawerPostpone.scss';
 
 const DrawerPostpone = ({
   onClose,

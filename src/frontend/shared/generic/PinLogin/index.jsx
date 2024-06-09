@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import Cookies from "js-cookie";
-import "./PinLogin.css";
+import "./PinLogin.scss";
 
 const PinLogin = () => {
   const { setupTournament, versionInfo } = useAppContext();
