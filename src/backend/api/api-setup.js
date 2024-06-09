@@ -19,6 +19,7 @@ module.exports = (db, ARGS) => {
     const G = require("./apis/general")(app, db, select);
     app.get("/api/tournaments", G.listTouraments)
     app.get("/api/tournaments/:tournamentId/pitches", G.listPitches)
+    app.get("/api/tournaments/:tournamentId/standings/:category", G.listStandings)
     app.get("/api/tournaments/:tournamentId/standings", G.listStandings)
 
     const F = require("./apis/fixtures")(app, db, select);
@@ -34,6 +35,7 @@ module.exports = (db, ARGS) => {
     app.get("/api/tournaments/:tournamentId", T.getTournament);
     app.get("/api/tournaments/:tournamentId/reset", T.resetTournament);
     app.get("/api/tournaments/:tournamentId/groups", T.getGroups);
+    app.get("/api/tournaments/:tournamentId/results/:category", T.getResults);
     app.get("/api/tournaments/:tournamentId/categories", T.getCategories);
     app.get("/api/tournaments/:tournamentId/group/:group_id/teams", T.getTeams);
   }
