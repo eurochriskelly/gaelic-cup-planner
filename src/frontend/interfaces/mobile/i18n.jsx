@@ -6,9 +6,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 i18n
   .use(HttpApi)
   .use(LanguageDetector)
-  .use(initReactI19next)
+  .use(initReactI18next)
   .init({
-    supportedLngs: ['en', 'fr', 'de'], // Add your supported languages here
+    supportedLngs: ['en', 'fr'],
     fallbackLng: 'en',
     debug: true,
     detection: {
@@ -19,6 +19,4 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
   });
-
-export default i18n;
 
