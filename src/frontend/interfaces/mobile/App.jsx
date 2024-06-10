@@ -9,14 +9,14 @@ import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
 import '../../shared/css/site-common.scss';
 import '../../shared/css/site-mobile.scss';
-// import './i18n';
+import './i18n';
 
 function App() {
   return (
     <Provider>
       <Routes>
         <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-        <Route path="/tournament/:tournamentIselectCategory" element={<SelectTournamentView />} />
+        <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
         <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
         <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
         <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchView />} />

@@ -1,0 +1,18 @@
+{
+  "pinLogin_enter_pin": "Entrez le code du tournoi à 4 chiffres",
+  "landingPage_heading": "Infos sur le tournoi",
+  "landingPage_sched_exe": "Exécution du calendrier",
+  "landingPage_comp_status": "Statut de la compétition",
+  "landingPage_Landingpage": "Page d'accueil",
+  "landingPage_StartMatches": "Commencer les matchs",
+  "landingPage_SetScores": "Définir les scores",
+  "landingPage_AddCardedPlayers": "Ajouter les joueurs pénalisés",
+  "landingPage_ScheduleExecutions": "Exécution du calendrier",
+  "landingPage_CompetitionStatus": "Statut de la compétition",
+  "landingPage_ViewRecent": "Voir les rencontres récentes, en cours et à venir",
+  "landingPage_ViewGroupStandings": "Voir les classements de groupe",
+  "landingPage_FollowProgressInStandings": "Suivre le progrès dans les classements",
+  "landingPage_ResetTournament": "Réinitialiser le tournoi",
+  "landingPage_Disconnect": "Déconnecter"
+}
+

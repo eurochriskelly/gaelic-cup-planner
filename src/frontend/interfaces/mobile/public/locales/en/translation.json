@@ -1,0 +1,17 @@
+{
+  "pinLogin_enter_pin": "Enter 4-digit tournament code",
+  "landingPage_heading": "Tournament Info",
+  "landingPage_sched_exe": "Schedule Execution",
+  "landingPage_comp_status": "Competition status",
+  "landingPage_Landingpage": "Landing page",
+  "landingPage_StartMatches": "Start matches",
+  "landingPage_SetScores": "Set scores",
+  "landingPage_AddCardedPlayers": "Record carded players",
+  "landingPage_ScheduleExecutions": "Schedule Execution",
+  "landingPage_CompetitionStatus": "Competition Status",
+  "landingPage_ViewRecent": "View recent, ongoing and upcoming fixtures",
+  "landingPage_ViewGroupStandings": "View group standings",
+  "landingPage_FollowProgressInStandings": "Follow progress in standings",
+  "landingPage_ResetTournament": "Reset tournament",
+  "landingPage_Disconnect": "Disconnect"
+}

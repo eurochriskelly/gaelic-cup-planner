@@ -12,13 +12,27 @@ const KnockoutTree = ({
 }) => {
   const TeamIfPresent = (team) => {
     if (team) {
-      return <div className="present">team</div>
+      return <div className="present">
+        <div>Team 1</div>
+        <div>vs</div>
+        <div>Team 2</div>
+      </div>
     }
     return <div className="not-present"></div>
   }
   return (
     <article className="KnockoutTree">
       <table>
+        <colgroup>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+          <col style={{width:"12.5%"}}/>
+        </colgroup>
         <tbody>
           <tr><td colSpan={8} className="groupHeader">{title}</td></tr>
           <PlaceholderRow

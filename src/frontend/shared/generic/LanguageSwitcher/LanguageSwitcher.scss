@@ -1,0 +1,28 @@
+.LanguageSwitcher {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+
+  .language-button {
+    background: #f0f0f057;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 2rem 1rem;
+    font-size: 2.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .language-button:hover {
+    background: #e0e0e0;
+    border-color: #bbb;
+  }
+
+  .language-icon {
+    font-size: 20px;
+  }
+}
