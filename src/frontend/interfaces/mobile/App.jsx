@@ -16,7 +16,7 @@ function App() {
     <Provider>
       <Routes>
         <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-        <Route path="/tournament/:tournamentIselectCategory" element={<SelectTournamentView />} />
+        <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
         <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
         <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
         <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchView />} />
