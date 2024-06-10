@@ -12,9 +12,6 @@
     margin: 4rem;
   }
 
-  button.sudo {
-    border: 10px solid red;
-  }
 
   h1 {
     font-size: 4rem;
@@ -103,6 +100,9 @@
           margin: 0 0 15px; 
         }
       }
+      > div > div:last-child {
+        margin: 0 3rem;
+      }
     }
   }
   section.maintenance {
@@ -121,6 +121,10 @@
       margin-top: 0;
       text-transform: uppercase;
       letter-spacing: 0.3em;
+
+      .sudo {
+        border: 10px solid red;
+      }
     }
   }
 }

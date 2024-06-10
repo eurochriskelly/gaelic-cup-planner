@@ -5,6 +5,7 @@ import { resolve } from 'path';
 export default defineConfig({
   root: resolve(__dirname, 'src/frontend/interfaces/mobile'),
   plugins: [react()],
+  publicDir: resolve(__dirname, 'src/frontend/interfaces/mobile/public'),
   server: {
     proxy: {
       '/api': 'http://localhost:4000',

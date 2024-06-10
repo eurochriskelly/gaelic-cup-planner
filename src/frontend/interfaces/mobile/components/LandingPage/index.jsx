@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
+import { useTranslation } from 'react-i18next';
 import './LandingPage.scss';
 
 const LandingPage = () => {
+  const { t } = useTranslation();
+  const tt = code => t(`landingPage_${code}`);
   const { versionInfo } = useAppContext();
   const navigate = useNavigate();
   const { tournamentId } = useParams();
@@ -30,7 +33,7 @@ const LandingPage = () => {
 
   return (
     <main className={`.mobile LandingPage`}>
-      <h1>Tournament information</h1>
+      <h1>{t('landingPage_heading')}</h1>
       <header>
         <table>
           <tbody>
@@ -44,27 +47,27 @@ const LandingPage = () => {
         <Card
           action={jump.scheduling}
           icon="&#x26A1;"
-          title="Schedule Execution" >
-          <p>Start matches</p>
-          <p>set scores</p>
-          <p>add card players</p>
+          title={tt('sched_exe')} >
+          <p>{tt('StartMatches')}</p>
+          <p>{tt('SetScores')}</p>
+          <p>{tt('AddCardedPlayers')}</p>
         </Card>
         <Card
           action={jump.competitions}
           icon="&#x1F3D0;"
-          title="Competition Status" >
-          <p>View recent, ongoing and upcoming fixtures</p>
-          <p>View group standings</p>
-          <p>Follow progress in standings</p>
+          title={tt('comp_status')} >
+          <p>{tt('ViewRecent')}</p>
+          <p>{tt('ViewGroupStandings')}</p>
+          <p>{tt('FollowProgressInStandings')}</p>
         </Card>
       </section>
       <section className="maintenance">
         {+tournamentId === 1 && (
-          <button className='sudo' onClick={handle.resetTournament}>Reset tournament</button>
+          <button className='sudo' onClick={handle.resetTournament}>{tt('ResetTournament')}</button>
         )}
-        <button onClick={handle.disconnect}>Disconnect</button>
+        <button onClick={handle.disconnect}>{tt('Disconnect')}</button>
       </section>
-      <footer>GaelicGale Mobile. V{versionInfo.mobile}</footer>
+      <footer>Pitch Perfect. V{versionInfo.mobile}</footer>
     </main>
   );
 };

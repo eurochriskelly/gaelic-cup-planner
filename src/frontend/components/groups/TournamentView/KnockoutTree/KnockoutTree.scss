@@ -7,5 +7,18 @@
     td input {
       background-color: rgb(88, 120, 100);
     }
+    // td { border: 1px dotted white; }
+  }
+  .present {
+    padding: 1rem;
+    > div {
+      font-size: 2rem;
+      text-align: center;
+    }
+    >div:nth-child(2) {
+      color: black;
+      font-size: 1.3rem;
+      padding: 0.7rem 0;
+    }
   }
 }
