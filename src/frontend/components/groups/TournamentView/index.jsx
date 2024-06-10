@@ -71,31 +71,9 @@ const TournamentView = () => {
     fetchData();
   };
   return (
-    <LayoutForPhone
-      groups={groups}
-      nextMatches={nextMatches}
-      standings={standings}
-      tabNames={tabNames}
-      category={category}
-      onBack={handle.back}
-    />
-  )
-};
-
-export default TournamentView;
-
-function LayoutForPhone({
-  groups,
-  nextMatches,
-  standings,
-  category,
-  onBack = () => {},
-  tabNames,
-}) {
-  return (
     <MobileLayout
       sections={sections}
-      onBack={onBack}
+      onBack={handle.back}
       active={1}
       tabNames={tabNames}
     >
@@ -116,8 +94,10 @@ function LayoutForPhone({
       </article>
       <div><KnockoutTree /></div>
     </MobileLayout>
-  );
-}
+  )
+};
+
+export default TournamentView;
 
 // FIXME: Find a better view that calculates these for us
 function addMatchesPlannedPerTeam(data) {
