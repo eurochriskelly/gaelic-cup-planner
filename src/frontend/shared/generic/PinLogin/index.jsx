@@ -79,8 +79,7 @@ const PinLogin = () => {
 
   return (
     <div className="pinLogin">
-      <LanguageSwitcher />
-      <div>{t('enter_pin')}</div>
+      <div style={{textAlign: 'center'}}>{t('pinLogin_enter_pin')}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input
@@ -94,8 +93,9 @@ const PinLogin = () => {
         ))}
       </div>
       <div>&nbsp;{message}&nbsp;</div>
+      <LanguageSwitcher />
       <div>{
-        `GaelicGale v${versionInfo?.mobile}`
+        `Pitch Perfect v${versionInfo?.mobile}`
       }</div>
     </div>
   );

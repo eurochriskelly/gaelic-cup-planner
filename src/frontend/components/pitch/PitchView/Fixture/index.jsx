@@ -1,6 +1,7 @@
 import TeamResult from "./TeamResult";
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
+import './Fixture.scss';
 
 const Fixture = ({ fixture, isFocus }) => {
   const {
