@@ -46,14 +46,23 @@ runApp() {
 	done
 }
 
-PORT1=4000
 DEV_MODE=false
 for arg in "$@"; do
+    if [ "$arg" = "--port" ]; then
+        shift
+        PORT=$1
+        shift
+    fi
+    if [ "$arg" = "--app" ]; then
+        shift
+        APP=$1 
+        shift
+    fi
     if [ "$arg" = "--dev" ]; then
-        PORT1=$(($PORT1 + 1000))
+        PORT=$(($PORT + 1000))
         DEV_MODE=true
     fi
 done
-runApp "mobile" $PORT1 &
+runApp "$APP" "$PORT" &
 
 wait
