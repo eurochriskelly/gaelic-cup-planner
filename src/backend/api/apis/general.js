@@ -1,8 +1,10 @@
 const { II, DD, EE } = require("../../lib/logging");
-const { jsonToCsv, sendXsls } = require('../../lib/utils');
+const { jsonToCsv, sendXsls } = require("../../lib/utils");
+const { calculateRankings } = require('./fixtures/queries');
 
 module.exports = (app, db, select) => {
   return {
+
     listPitches: async (req, res) => {
       II("Calling API: /api/tournaments/:tournamentId/pitches");
       // FIXME: We need a tournament selection screen when starting the app
@@ -36,15 +38,17 @@ module.exports = (app, db, select) => {
     },
 
     listStandings: async (req, res) => {
-      const { tournamentId, category } = req.params;
-      const { format = "json" } = req.query;
+      const { tournamentId } = req.params;
+      const { format = "json", category } = req.query;
       if (category) {
-        II(`Calling API: /api/tournaments/${tournamentId}/group/standings/${category}`);
+        II(
+          `Calling API: /api/tournaments/${tournamentId}/group/standings/${category}`
+        );
       } else {
         II(`Calling API: /api/tournaments/${tournamentId}/group/standings`);
       }
-     
-      let extra = category ? ` and category = '${category}'` : '';
+
+      let extra = category ? ` and category = '${category}'` : "";
       const groups = await select(
         `SELECT DISTINCT category FROM v_group_standings where tournamentId = ${tournamentId} ${extra}`
       );
@@ -55,7 +59,7 @@ module.exports = (app, db, select) => {
           return res.status(500).json({ error: err.message });
         }
         switch (format) {
-          case 'csv':
+          case "csv":
             const csv = jsonToCsv(results);
             res.setHeader(
               "Content-Disposition",
@@ -63,20 +67,51 @@ module.exports = (app, db, select) => {
             );
             res.set("Content-Type", "text/csv; charset=utf-8");
             res.send(csv);
-            break
-          case 'xslx':
-          case 'xlsx':
-            sendXsls(results, res, 'standings')
-            break
+            break;
+          case "xslx":
+          case "xlsx":
+            sendXsls(results, res, "standings");
+            break;
           default:
             res.json({
               groups: groups.data.map((g) => g.category),
               data: results,
             });
-            break
+            break;
         }
       });
     },
+
+    listRankings: async (req, res) => {
+      const { tournamentId } = req.params;
+      const { category } = req.query;
+      if (!category) {
+        return res.json({ message: 'Category required!'});
+      }
+      II(`Calling API: /api/tournaments/${tournamentId}/group/rankings`);
+      const results = await calculateRankings(tournamentId, category, select);
+      switch (format) {
+        case "csv":
+          const csv = jsonToCsv(results);
+          res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="rankings-${tournamentId}-${category.replace(/ /g, '')}.csv"`
+          );
+          res.set("Content-Type", "text/csv; charset=utf-8");
+          res.send(csv);
+          break;
+        case "xslx":
+        case "xlsx":
+          sendXsls(results, res, "rankings");
+          break;
+        default:
+          res.json({
+            groups: groups.data.map((g) => g.category),
+            data: results,
+          });
+          break;
+      }
+      res.json({ results });
+    },
   };
 };
-

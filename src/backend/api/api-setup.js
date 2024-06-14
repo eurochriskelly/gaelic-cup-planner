@@ -19,16 +19,18 @@ module.exports = (db, ARGS) => {
     const G = require("./apis/general")(app, db, select);
     app.get("/api/tournaments", G.listTouraments)
     app.get("/api/tournaments/:tournamentId/pitches", G.listPitches)
-    app.get("/api/tournaments/:tournamentId/standings/:category", G.listStandings)
     app.get("/api/tournaments/:tournamentId/standings", G.listStandings)
 
     const F = require("./apis/fixtures")(app, db, select);
     app.get("/api/tournaments/:tournamentId/fixtures", F.fixturesByPitch);
     app.get("/api/tournaments/:tournamentId/fixtures/nextup", F.nextFixtures);
+    app.get("/api/tournaments/:tournamentId/fixtures/rewind", F.rewindFixture);
     app.get("/api/tournaments/:tournamentId/fixtures/:pitch", F.fixturesByPitch);
     app.get("/api/tournaments/:tournamentId/fixtures/:id/start", F.startFixture);
     app.post("/api/tournaments/:tournamentId/fixtures/:id/score", F.updateScore);
     app.post("/api/tournaments/:tournamentId/fixtures/:id/carded", F.cardPlayers);
+
+    app.get("/api/testing", F.testing);
 
     const T = require("./apis/tournaments")(app, db, select);
     //app.get("/api/tournaments", T.getTournaments);
