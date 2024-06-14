@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: resolve(__dirname, 'dist/mobile'),
   },
   esbuild: {
     jsxInject: `import React from 'react'`,

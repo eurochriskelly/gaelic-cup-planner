@@ -25,7 +25,7 @@ function jsonToCsv(jsonData) {
 }
 
 function sendXsls(jsonData, res, sheetname) {
-  console.log('REquest to send data as xsl format')
+  console.log('Request to send data as xsl format: ' + sheetname);
   const workbook = XLSX.utils.book_new();
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetname);

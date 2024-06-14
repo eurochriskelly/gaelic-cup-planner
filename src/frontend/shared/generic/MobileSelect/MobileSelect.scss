@@ -13,6 +13,7 @@ $card-back: lighten(desaturate($pc-light-40, 45%), 10%);
     margin: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    overflow-y: scroll;
     > .card {
       font-size: 1.8em;
       table { width: 100%; }

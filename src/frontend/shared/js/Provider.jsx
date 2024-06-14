@@ -19,7 +19,7 @@ export const Provider = ({ children }) => {
 
     setSections([
       {
-        title: "live competitation status",
+        title: "live competition status",
         name: "competitions",
         path: `/tournament/${id}/selectCategory`,
       },
