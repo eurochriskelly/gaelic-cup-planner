@@ -28,7 +28,7 @@ const TournamentView = () => {
         console.error("Error fetching next fixtures:", error);
       });
 
-    fetch(`/api/tournaments/${tournamentId}/standings`)
+    fetch(`/api/tournaments/${tournamentId}/standings?category=${category}`)
       .then((response) => response.json())
       .then((data) => {
         if (!mediaType) setGroups([]);
@@ -46,7 +46,7 @@ const TournamentView = () => {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 4000);
+    const intervalId = setInterval(fetchData, 20000);
     return () => clearInterval(intervalId);
   }, [tournamentId, mediaType, selectedCategory]);
 

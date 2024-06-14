@@ -50,7 +50,7 @@ export const PickCompetition = {
     ],
     sections: [
       {
-        title: 'live competitation status',
+        title: 'live competition status',
         name: 'competitions',
         action: () => {
           console.log('foo fah')

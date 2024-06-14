@@ -6,12 +6,14 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "jest",
-    "build": "vite build",
-    "serve": "vite preview",
+    "dev:mobile": "vite --config vite.config-mobile.js",
+    "build:mobile": "vite build --config vite.config-mobile.js",
+    "launch:mobile": "bash scripts/launch.sh --port 4000 --app mobile",
+    "dev:desktop": "vite --config vite.config-desktop.js",
+    "build:desktop": "vite build --config vite.config-desktop.js",
+    "launch:desktop": "bash scripts/launch.sh --port 4001 --app desktop",
     "help": "clear;cat docs/developers-guide.md",
     "start": "bash scripts/build-fe.sh --watch",
-    "launch": "bash scripts/launch.sh",
     "launch:dev": "GCP_TOURN_NUM=7 bash scripts/launch.sh --dev",
     "db:setup": "bash scripts/db-setup.sh",
     "storybook": "storybook dev -p 6006",
@@ -73,6 +75,7 @@
     "vite": "^4.5.3"
   },
   "dependencies": {
+    "@silevis/reactgrid": "^4.1.6",
     "body-parser": "^1.20.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

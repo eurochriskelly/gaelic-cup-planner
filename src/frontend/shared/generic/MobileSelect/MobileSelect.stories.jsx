@@ -31,7 +31,7 @@ export const JustAMobileSelect = {
     backToSelection: () => {},
     sections: [
       {
-        title: 'Live competitation status',
+        title: 'Live competition status',
         name: 'Competitions',
         action: () => {
           console.log('foo fah')
