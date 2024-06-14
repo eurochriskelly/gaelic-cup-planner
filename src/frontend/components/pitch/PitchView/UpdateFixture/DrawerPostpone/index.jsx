@@ -25,7 +25,7 @@ const DrawerPostpone = ({
         setPitches(data.data.map(pitch => pitch.pitch));
       })
       .catch((error) => {
-
+        console.error('Error fetching pitches', error)
       });
     fetch(`/api/tournaments/${tournamentId}/fixtures`)
       .then((response) => response.json())

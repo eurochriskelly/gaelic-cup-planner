@@ -63,6 +63,9 @@ const PinLogin = () => {
       case "1010":
         selectTournament("selectCategory", 10);
         break;
+      case "1011":
+        selectTournament("selectPitch", 11);
+        break;
       case "9999":
         selectTournament("selectCategory", 1);
         break;
