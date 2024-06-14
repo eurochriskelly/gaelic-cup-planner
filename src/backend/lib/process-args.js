@@ -22,7 +22,7 @@ const processArgs = (args) => {
     if (!ARGS.app) {
         throw new Error('Missing --app argument')
     } else {
-      ARGS.staticPath = `../../../dist/`
+      ARGS.staticPath = `../../../dist/${ARGS.app}/`
     }
     return ARGS
 }
