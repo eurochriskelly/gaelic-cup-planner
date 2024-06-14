@@ -79,7 +79,6 @@ function MatchLastPlayed({ match }) {
   const { 
     scheduledTime, team1, team2, grp, pitch,
     goals1, goals2, points1, points2 } = match;
-  console.log(match)
   const pad0 = str => `0${str}`.substring(-2)
   return (
     <Row>
