@@ -9,14 +9,18 @@ const versionInfo = {
   desktop: "0.0.0",
 };
 export const Provider = ({ children }) => {
-  const { tournamentId: tid } = useParams();
+  let tid = null;
+  const params = useParams();
+  if (params.tournamentId) tid = params.tournamentId;
+  if (!tid) tid = Cookies.get(tid);
+  
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
 
   const setupTournament = (id) => {
     setTournamentId(id);
-
+    Cookies.set('tournamentId', id, { expires: 1/24, path: '/'});
     setSections([
       {
         title: "live competition status",
