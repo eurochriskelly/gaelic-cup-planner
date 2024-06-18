@@ -24,12 +24,10 @@ const PinLogin = () => {
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
-
     // Auto-tab to the next input
     if (value && index < 3) {
       inputsRef.current[index + 1].focus();
     }
-
     // Check if all inputs have values
     if (newPin.every((num) => num !== "")) {
       const joined = newPin.join("");
@@ -37,7 +35,7 @@ const PinLogin = () => {
     }
   };
 
-  const selectTournament = (page, id) => {
+  const selectTournament = (id) => {
     setupTournament(id);
     setIsThinking(true);
     setTimeout(() => {
@@ -53,21 +51,22 @@ const PinLogin = () => {
       case "XGG7":
       case "1975":
       case "1091":
-        selectTournament("selectPitch", 9);
+        selectTournament(9);
         break;
       case "A1JN":
       case "1976":
       case "5400":
-        selectTournament("selectCategory", 9);
+        selectTournament(9);
         break;
       case "1010":
-        selectTournament("selectCategory", 10);
+        selectTournament(10);
         break;
       case "1011":
-        selectTournament("selectPitch", 11);
+        selectTournament(11);
         break;
       case "9999":
-        selectTournament("selectCategory", 1);
+        console.log('se lslslsl ')
+        selectTournament(1);
         break;
       default:
         setPin(["", "", "", ""]);
