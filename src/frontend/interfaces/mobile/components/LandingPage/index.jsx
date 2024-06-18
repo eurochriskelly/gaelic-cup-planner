@@ -25,10 +25,12 @@ const LandingPage = () => {
         console.error("Error fetching tournament info:", error);
       });
   }, []);
-
   const handle = {
     resetTournament: () => fetch(`/api/tournaments/1/reset`),
-    disconnect: () => navigate("/"),
+    disconnect: () => {
+      Cookies.remove('tournamentId');
+      navigate("/")
+    }
   };
 
   return (
