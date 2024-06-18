@@ -20,7 +20,9 @@ export const Provider = ({ children }) => {
 
   const setupTournament = (id) => {
     setTournamentId(id);
-    Cookies.set('tournamentId', id, { expires: 1/24, path: '/'});
+    if (id){
+      Cookies.set('tournamentId', id, { expires: 1/24, path: '/'});
+    }
     setSections([
       {
         title: "live competition status",

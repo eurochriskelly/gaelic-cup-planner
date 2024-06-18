@@ -10,9 +10,9 @@ const LandingPage = () => {
   let { tournamentId } = useParams();
   if (!tournamentId) tournamentId = Cookies.get('tournamentId');
   if (!tournamentId || tournamentId === 'undefined') {
-    console.log('Time to ask for a login page')
     return <PinLogin />
   } 
+  const base = `/tournament/${tournamentId}`;
   const { tournInfo }  = useFetchTournament(tournamentId);
   const { t } = useTranslation();
   const tt = code => t(`landingPage_${code}`);
@@ -26,7 +26,7 @@ const LandingPage = () => {
   const handle = {
     resetTournament: () => fetch(`/api/tournaments/1/reset`),
     disconnect: () => {
-      Cookies.remove('tournamentId');
+      Cookies.remove('tournamentId')
       navigate("/")
     }
   };
