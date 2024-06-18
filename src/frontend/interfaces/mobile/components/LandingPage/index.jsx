@@ -1,34 +1,34 @@
-import { useEffect, useState, useTransition } from "react";
+import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
+import { useFetchTournament } from './LandingPage.hooks';
+import PinLogin from '../../../../shared/generic/PinLogin';
 import './LandingPage.scss';
 
 const LandingPage = () => {
+  let { tournamentId } = useParams();
+  if (!tournamentId) tournamentId = Cookies.get('tournamentId');
+  if (!tournamentId || tournamentId === 'undefined') {
+    console.log('Time to ask for a login page')
+    return <PinLogin />
+  } 
+  const { tournInfo }  = useFetchTournament(tournamentId);
   const { t } = useTranslation();
   const tt = code => t(`landingPage_${code}`);
   const { versionInfo } = useAppContext();
   const navigate = useNavigate();
-  const { tournamentId } = useParams();
-  const [tournInfo, setTournInfo] = useState({});
-  const base = `/tournament/${tournamentId}`;
   const jump = {
     competitions: () => navigate(`${base}/selectCategory`),
     scheduling: () => navigate(`${base}/selectPitch`),
   };
 
-  useEffect(() => {
-    fetch(`/api/tournaments/${tournamentId}`)
-      .then((response) => response.json())
-      .then((data) => setTournInfo(data.data))
-      .catch((error) => {
-        console.error("Error fetching tournament info:", error);
-      });
-  }, []);
-
   const handle = {
     resetTournament: () => fetch(`/api/tournaments/1/reset`),
-    disconnect: () => navigate("/"),
+    disconnect: () => {
+      Cookies.remove('tournamentId');
+      navigate("/")
+    }
   };
 
   return (
