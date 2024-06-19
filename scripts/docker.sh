@@ -1,16 +1,7 @@
 #!/bin/bash 
 
 run () {
-  docker run -d \
-    -p 1234:1234 \
-    -p 1235:1235 \
-    -p 1236:1236 \
-    -p 4000:4000 \
-    -p 4001:4001 \
-    -p 4002:4002 \
-    -p 5000:5000 \
-    -p 5001:5001 \
-    --name gge-instance gge-app
+  docker-compose -f docker-compose.dev.yml up --build
 }
 
 build() {

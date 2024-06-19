@@ -6,7 +6,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev:mobile": "vite --config vite.config-mobile.js",
+    "dev:mobile": "vite --config vite.config-mobile.js --host",
     "build:mobile": "vite build --config vite.config-mobile.js",
     "launch:mobile": "bash scripts/launch.sh --port 4000 --app mobile",
     "dev:desktop": "vite --config vite.config-desktop.js",
