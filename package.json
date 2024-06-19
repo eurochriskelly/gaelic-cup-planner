@@ -14,7 +14,6 @@
     "launch:desktop": "bash scripts/launch.sh --port 4001 --app desktop",
     "help": "clear;cat docs/developers-guide.md",
     "start": "bash scripts/build-fe.sh --watch",
-    "launch:dev": "GCP_TOURN_NUM=7 bash scripts/launch.sh --port 4000 --app mobile --dev",
     "db:setup": "bash scripts/db-setup.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

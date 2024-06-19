@@ -45,7 +45,7 @@ ENV npm_config_platform=linux
 # Set the working directory
 WORKDIR /root/app
 COPY package*.json ./
-RUN npm install
+RUN npm install && npm install -g nodemon
 
 # Expose multiple ports
 EXPOSE 3000 4000 4001 5173 5174

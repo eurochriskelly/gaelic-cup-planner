@@ -20,30 +20,23 @@ cleanup() {
 runApp() {
 	local run_number=0
 	local pid=$2
+  local CMD=node
+  if [ "$DEV_MODE" = true ]; then
+    CMD=nodemon
+  fi
 
 	local relaunch=true
-
 	while "$relaunch"; do
 		stopFile=/tmp/STOP_${pid}
 		if [ -f "$stopFile" ]; then
 			relaunch=false
 		else
       echo "Run # ${run_number}"
-			node src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE
+			$CMD src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE
 			run_number=$((run_number + 1))
 		fi
 	done
   return
-	while [[ $run_number -lt 5 ]]; do
-		if [[ $run_number -gt 0 ]]; then
-			echo "Retrying in 5 seconds ..."
-			sleep 5
-		fi
-		if node src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE &>/dev/null; then 
-			break
-		fi
-		run_number=$((run_number + 1))
-	done
 }
 
 DEV_MODE=false

@@ -9,6 +9,6 @@ module.exports = {
   "/api/tournaments/:tournamentId/groups": "groups",
   "/api/tournaments": "tournaments",
   // fixtures/index.js
-  "/api/fixtures": "fixtures",
+  "/api/tournaments/:tournamentId/fixtures": "fixtures",
   "/api/fixtures/:pitch": "fixturesByPitchA",
 };
