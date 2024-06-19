@@ -8,8 +8,9 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'src/frontend/interfaces/desktop/public'),
   server: {
     proxy: {
-      '/api': 'http://localhost:4001',
+      '/api': 'http://localhost:4000',
     },
+    port: 5174
   },
   build: {
     outDir: resolve(__dirname, 'dist/desktop'),

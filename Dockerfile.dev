@@ -48,7 +48,7 @@ COPY package*.json ./
 RUN npm install
 
 # Expose multiple ports
-EXPOSE 3000 4000 4001 5173
+EXPOSE 3000 4000 4001 5173 5174
 
 # Command to keep the container running
-CMD ["npm", "run", "dev:mobile"]
+CMD ["npm", "run", "dev"]
