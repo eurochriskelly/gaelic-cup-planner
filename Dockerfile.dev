@@ -2,9 +2,7 @@
 FROM node:20-bullseye-slim
 
 # Set up working directories
-RUN mkdir -p /root/app /root/repos /root/scripts
-
-COPY ./scripts/setup/* /root/scripts/
+RUN mkdir -p /root/app /root/repos
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -39,26 +37,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && echo "npm_config_arch=arm64" >> ~/.npmrc \
     && echo "npm_config_platform=linux" >> ~/.npmrc
-# Install Parcel globally using npm
-RUN npm install -g parcel
 
 # for parcel
 ENV npm_config_arch=arm64
 ENV npm_config_platform=linux
 
 # Set the working directory
-WORKDIR /root/app 
-
-# Reinstall node modules
+WORKDIR /root/app
 COPY package*.json ./
 RUN npm install
-# Copy your application source code (assumes you have a local directory with your source)
-COPY . /root/app/
 
 # Expose multiple ports
-EXPOSE 1234 1235 1236 4000 4001 4002 5000 5001 5002
+EXPOSE 3000 4000 4001 5173
 
 # Command to keep the container running
-CMD ["tail", "-f", "/dev/null"]
-
-
+CMD ["npm", "run", "dev:mobile"]
