@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { ReactGrid, Column, Row } from "@silevis/reactgrid";
+import { ReactGrid } from "@silevis/reactgrid";
 import "@silevis/reactgrid/styles.scss";
 import './BigView.scss';
 
