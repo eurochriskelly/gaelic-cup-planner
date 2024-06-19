@@ -59,7 +59,6 @@ for arg in "$@"; do
         shift
     fi
     if [ "$arg" = "--dev" ]; then
-        PORT=$(($PORT + 1000))
         DEV_MODE=true
     fi
 done
