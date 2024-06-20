@@ -1,54 +1,60 @@
-import { useEffect, useState, useTransition } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
-import { useTranslation } from 'react-i18next';
 import BigView from '../BigView';
+import TournamentInfo from "./TournamentInfo";
+import { TabView, TabPanel } from 'primereact/tabview';
+import { Dropdown } from 'primereact/dropdown';
 import './LandingPage.scss';
 
-const LandingPage = () => {
-  console.log('Landing page ...')
-  const { t } = useTranslation();
-  const tt = code => t(`landingPage_${code}`);
-  const navigate = useNavigate();
+export default LandingPage;
+
+function LandingPage () {
   const { tournamentId } = useAppContext();
-
-  console.log('llll', tournamentId)
-  const [tournInfo, setTournInfo] = useState({});
-  const base = `/tournament/${tournamentId}`;
-
-  useEffect(() => {
-    fetch(base)
-      .then((response) => response.json())
-      .then((data) => setTournInfo(data.data))
-      .catch((error) => console.error("Error fetching tournament info:", error));
-  }, [tournamentId]);
-
   return (
     <main className={`.desktop LandingPage`}>
       <header>
-        <h1 onClick={() => console.log(tournInfo)}>Pitch perfect desktop version</h1>
-        <table>
-          <tbody>
-            <Row label="date">{tournInfo.Date?.substring(0, 10)}</Row>
-            <Row label="title">{tournInfo.Title}</Row>
-            <Row label="location">{tournInfo.Location}</Row>
-          </tbody>
-        </table>
+        <TournamentInfo tournamentId={tournamentId} />
       </header>
       <section>
-        <BigView />
+        <TabView>
+          <TabPanel header="By competition">
+            <ByCompetition />
+          </TabPanel>
+          <ByPitch />
+          <TabPanel header="By pitch">
+            <ByPitch />
+          </TabPanel>
+        </TabView>
       </section>
     </main>
   );
 };
 
-export default LandingPage;
-
-function Row({ label, children }) {
+function ByCompetition() {
+  const [selectedCompetition, setSelectedCompetition] = useState('Mens');
+  const [competitions, setCompetitions] = useState([
+    { name: "Mens", code: "Mens" },
+    { name:"Womens", code: "Womens" },
+    { name:"Youth", code: "Youth"},
+  ]);
   return (
-    <tr>
-      <td>{label}</td>
-      <td>{children}</td>
-    </tr>
+    <>
+      <Dropdown 
+        value={selectedCompetition} 
+        onChange={(e) => setSelectedCity(e.value)}
+        options={competitions} 
+        optionLabel="name" 
+        placeholder="Select a competition" 
+        className="w-full md:w-14rem" />
+      <BigView />
+    </>
+  );
+}
+
+function ByPitch () {
+  return (
+    <>
+      <div>ok</div>
+    </>
   );
 }
