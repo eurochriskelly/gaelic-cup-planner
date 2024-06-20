@@ -4,6 +4,7 @@ module.exports = {
   "/api/tournaments/:tournamentId/pitches": "pitches",
   // fixme: supersede this  and keep next
   "/api/group/standings/:tournamentId": "standings",
+  "/api/tournaments/:tournamentId": "tournamentInfo",
   "/api/tournaments/:tournamentId/standings": "standings",
   "/api/tournaments/:tournamentId/categories": "categories",
   "/api/tournaments/:tournamentId/groups": "groups",
