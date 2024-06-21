@@ -14,10 +14,15 @@ module.exports = (db, ARGS) => {
   if (ARGS.mock) {
     useMockEndpoints(app);
   } else {
-    const { select } = require("../lib/db-helper")(db);
+    const { select, wrapGET } = require("../lib/db-helper")(db);
+
+    const O = require("./apis/organziation")(db, select);
+    app.get("/api/regions", O.listRegions);
+    app.get("/api/regions/:region/clubs", O.listRegionClubs);
+    // app.get("/api/regions/:region/teams", O.listRegionTeams);
 
     const G = require("./apis/general")(app, db, select);
-    app.get("/api/tournaments", G.listTouraments)
+    app.get("/api/tournaments", G.listTournaments)
     app.get("/api/tournaments/:tournamentId/pitches", G.listPitches)
     app.get("/api/tournaments/:tournamentId/standings", G.listStandings)
 
@@ -29,8 +34,6 @@ module.exports = (db, ARGS) => {
     app.get("/api/tournaments/:tournamentId/fixtures/:id/start", F.startFixture);
     app.post("/api/tournaments/:tournamentId/fixtures/:id/score", F.updateScore);
     app.post("/api/tournaments/:tournamentId/fixtures/:id/carded", F.cardPlayers);
-
-    app.get("/api/testing", F.testing);
 
     const T = require("./apis/tournaments")(app, db, select);
     //app.get("/api/tournaments", T.getTournaments);
