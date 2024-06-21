@@ -1,10 +1,10 @@
 #!/bin/bash
-#
 
 trap cleanup SIGINT SIGTERM EXIT
 
 cleanup() {
 	echo "Cleaning up ..."
+  for pid in $(ps ax | grep 'port 4000' | awk '{print $1}');do kill -9 $pid;done
 	if [[ -f /tmp/run-app.pids ]]; then
 		while read -r pid; do
 			if ps -p $pid >/dev/null; then
@@ -25,6 +25,10 @@ runApp() {
     CMD=nodemon
   fi
 
+  if [ "$WATCH_MODE" = true ]; then
+    CMD=nodemon
+  fi
+
 	local relaunch=true
 	while "$relaunch"; do
 		stopFile=/tmp/STOP_${pid}
@@ -38,6 +42,11 @@ runApp() {
 	done
   return
 }
+
+if [ ! -f gg_env.sh ];then
+  echo "Error: enviroment file not found [gg_env.sh]"
+  exit 1
+fi
 
 DEV_MODE=false
 for arg in "$@"; do
@@ -53,6 +62,9 @@ for arg in "$@"; do
     fi
     if [ "$arg" = "--dev" ]; then
         DEV_MODE=true
+    fi
+    if [ "$arg" = "--watch" ]; then
+        WATCH_MODE=true
     fi
 done
 runApp "$APP" "$PORT" &
