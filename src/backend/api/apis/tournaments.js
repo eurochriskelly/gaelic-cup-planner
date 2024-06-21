@@ -1,5 +1,5 @@
 const e = require("express");
-const { II, DD, EE } = require("../../lib/logging");
+const { II } = require("../../lib/logging");
 const { jsonToCsv, sendXsls } = require("../../lib/utils");
 
 module.exports = (app, db, select) => {
