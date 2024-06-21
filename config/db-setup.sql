@@ -23,6 +23,26 @@ CREATE TABLE IF NOT EXISTS cards (
     playerName VARCHAR(255),
     cardColor ENUM('yellow', 'red', 'black'),
     FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+
+
+CREATE TABLE IF NOT EXISTS clubs (
+    clubId INT AUTO_INCREMENT PRIMARY KEY,
+    isStudent VARCHAR(3),
+    clubName VARCHAR(100),
+    clubLogo BLOB,
+    founded YEAR,
+    affiliated YEAR,
+    deactivated YEAR,
+    street_address VARCHAR(255),
+    post_code VARCHAR(20),
+    country CHAR(2),
+    city VARCHAR(50),
+    latitude DECIMAL(9,6),
+    longitude DECIMAL(9,6),
+    region VARCHAR(50),
+    subregion VARCHAR(50),
+    status CHAR(1),
+    domain VARCHAR(100)
 );
 
 -- Create the groupings table
