@@ -23,7 +23,21 @@ CREATE TABLE IF NOT EXISTS cards (
     playerName VARCHAR(255),
     cardColor ENUM('yellow', 'red', 'black'),
     FOREIGN KEY (tournamentId) REFERENCES tournaments(id)
+);
 
+CREATE TABLE IF NOT EXISTS clubTeams (
+    teamId INT AUTO_INCREMENT PRIMARY KEY,
+    clubId INT,
+    teamName VARCHAR(255),
+    category ENUM('gaa', 'lgfa', 'hurling', 'camogie', 'handball', 'rounders', 'youthfootball', 'youthhurling'),
+    foundedYear YEAR(4),
+    status ENUM('active', 'inactive', 'unknown'),
+    headCoach VARCHAR(255),
+    contactEmail VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (clubId) REFERaENCES clubs(clubId)
+);
 
 CREATE TABLE IF NOT EXISTS clubs (
     clubId INT AUTO_INCREMENT PRIMARY KEY,
