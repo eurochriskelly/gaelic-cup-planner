@@ -4,6 +4,7 @@ import BigView from '../BigView';
 import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Dropdown } from 'primereact/dropdown';
+import TeamsTabView from './TeamsTabView';
 import './LandingPage.scss';
 
 export default LandingPage;
@@ -13,22 +14,49 @@ function LandingPage () {
   return (
     <main className={`.desktop LandingPage`}>
       <header>
-        <TournamentInfo tournamentId={tournamentId} />
+        <h1>Pitch Perfect</h1>
       </header>
       <section>
         <TabView>
-          <TabPanel header="By competition">
-            <ByCompetition />
+          <TabPanel header="Tournament Info">
+            <TournamentInfo tournamentId={tournamentId} />
           </TabPanel>
-          <ByPitch />
-          <TabPanel header="By pitch">
-            <ByPitch />
+          <TabPanel header="Teams">
+            <TeamsTabView />
+          </TabPanel>
+          <TabPanel header="Competitions">
+            <CompetitionsTabView />
+          </TabPanel>
+          <TabPanel header="Fixtures">
+            <FixturesTabView />
+          </TabPanel>
+          <TabPanel header="Pitches">
+            <PitchTabView />
           </TabPanel>
         </TabView>
       </section>
     </main>
   );
 };
+
+function PitchTabView() {
+  return (
+    <div>foo</div> 
+  );
+}
+
+function FixturesTabView() {
+  return (
+    <TabView>
+      <TabPanel header="By Competition">
+        <ByCompetition />
+      </TabPanel>
+      <TabPanel header="By Pitch">
+        <ByPitch />
+      </TabPanel>
+    </TabView>
+  );
+}
 
 function ByCompetition() {
   const [selectedCompetition, setSelectedCompetition] = useState('Mens');
@@ -56,5 +84,11 @@ function ByPitch () {
     <>
       <div>ok</div>
     </>
+  );
+}
+
+function CompetitionsTabView() {
+  return (
+    <div>foo</div> 
   );
 }

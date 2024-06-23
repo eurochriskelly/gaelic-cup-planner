@@ -6,7 +6,7 @@ const Context = createContext();
 
 const versionInfo = {
   mobile: "0.2.11",
-  desktop: "0.0.0",
+  desktop: "0.0.1",
 };
 export const Provider = ({ children }) => {
   let tid = null;
@@ -51,7 +51,6 @@ export const Provider = ({ children }) => {
     mediaQuery.addListener(handleMediaQueryChange);
     setupTournament(tid);
     return () => {
-      mediaQuery.removeListener(handleMediaQueryChange);
     };
   }, []);
 
