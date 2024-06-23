@@ -1,21 +1,12 @@
 #!/bin/bash
 
-trap cleanup SIGINT SIGTERM EXIT
-
 cleanup() {
 	echo "Cleaning up ..."
-  for pid in $(ps ax | grep 'port 4000' | awk '{print $1}');do kill -9 $pid;done
-	if [[ -f /tmp/run-app.pids ]]; then
-		while read -r pid; do
-			if ps -p $pid >/dev/null; then
-				echo "Killing $pid"
-				kill $pid
-			fi
-		done </tmp/run-app.pids
-		rm -f /tmp/run-app.pids
-	fi
-	cd "$TOP_DIR" || exit
+  pkill -P $$ 
 }
+
+trap cleanup EXIT TERM INT
+
 
 runApp() {
 	local run_number=0

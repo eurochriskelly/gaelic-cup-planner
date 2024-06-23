@@ -17,7 +17,6 @@ module.exports = {
       title: "field coordination",
       name: "pitches",
       action: () => {
-        console.log("fee faw");
       },
     },
   ],
