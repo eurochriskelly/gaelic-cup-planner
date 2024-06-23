@@ -16,9 +16,9 @@ module.exports = (db, ARGS) => {
   } else {
     const { select, wrapGET } = require("../lib/db-helper")(db);
 
-    const O = require("./apis/organziation")(db, select);
-    app.get("/api/regions", O.listRegions);
-    app.get("/api/regions/:region/clubs", O.listRegionClubs);
+    const R = require("./apis/regions")(db, select);
+    app.get("/api/regions", R.listRegions);
+    app.get("/api/regions/:region", R.listRegionInfo);
     // app.get("/api/regions/:region/teams", O.listRegionTeams);
 
     const G = require("./apis/general")(app, db, select);
