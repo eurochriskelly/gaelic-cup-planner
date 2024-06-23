@@ -1,4 +1,4 @@
-const { II, DD, EE } = require("../../lib/logging");
+const { II } = require("../../lib/logging");
 const { jsonToCsv, sendXsls } = require("../../lib/utils");
 const { calculateRankings } = require('./fixtures/queries');
 
@@ -25,7 +25,7 @@ module.exports = (app, db, select) => {
       }
     },
 
-    listTouraments: (req, res) => {
+    listTournaments: (req, res) => {
       II("Calling API: /api/tournaments ...");
       const query = `SELECT * FROM v_tournaments`;
       db.query(query, (err, results) => {
