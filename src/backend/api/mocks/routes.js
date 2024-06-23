@@ -12,4 +12,7 @@ module.exports = {
   // fixtures/index.js
   "/api/tournaments/:tournamentId/fixtures": "fixtures",
   "/api/fixtures/:pitch": "fixturesByPitchA",
+  // fixtures/regions
+  "/api/regions": "regions",
+  "/api/regions/:region": "regions%Benelux",
 };
