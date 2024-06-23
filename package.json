@@ -9,6 +9,7 @@
     "dev": "bash scripts/start-dev.sh",
     "build:mobile": "vite build --config vite.config-mobile.js",
     "launch:mobile": "bash scripts/launch.sh --port 4000 --app mobile",
+    "launch:devel": "bash scripts/launch.sh --port 4000 --app mobile --watch",
     "dev:desktop": "vite --config vite.config-desktop.js",
     "build:desktop": "vite build --config vite.config-desktop.js",
     "launch:desktop": "bash scripts/launch.sh --port 4001 --app desktop",
