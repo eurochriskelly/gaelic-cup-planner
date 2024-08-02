@@ -6,20 +6,25 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "bash scripts/run.sh",
+    "docker:run": "bash scripts/docker.sh --run",
+    "docker:login": "bash scripts/docker.sh --login",
+
+    "dev2": "bash scripts/run.sh --dev",
     "dev": "bash scripts/start-dev.sh",
+
     "build:mobile": "vite build --config vite.config-mobile.js",
     "launch:mobile": "bash scripts/launch.sh --port 4000 --app mobile",
-    "launch:devel": "bash scripts/launch.sh --port 4000 --app mobile --watch",
-    "dev:desktop": "vite --config vite.config-desktop.js",
+    "watch:mobile": "bash scripts/launch.sh --port 4000 --app mobile --watch",
+
     "build:desktop": "vite build --config vite.config-desktop.js",
+    "watch:desktop": "vite --config vite.config-desktop.js",
     "launch:desktop": "bash scripts/launch.sh --port 4001 --app desktop",
+
     "help": "clear;cat docs/developers-guide.md",
-    "start": "bash scripts/build-fe.sh --watch",
     "db:setup": "bash scripts/db-setup.sh",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "docker:run": "bash scripts/docker.sh --run",
-    "docker:login": "bash scripts/docker.sh --login"
+    "build-storybook": "storybook build"
   },
   "parcel": {
     "aliases": {
