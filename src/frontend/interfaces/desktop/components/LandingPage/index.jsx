@@ -1,20 +1,48 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
 import BigView from '../BigView';
 import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
+import { FileUpload } from 'primereact/fileupload';
+import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import TeamsTabView from './TeamsTabView';
+
 import './LandingPage.scss';
 
 export default LandingPage;
 
 function LandingPage () {
   const { tournamentId } = useAppContext();
+  const toast= useRef(null);
+
+  ////////////
+  const uploadHandler = ({ files }) => {
+    console.log('Uploading files:', files);
+    // Process files here
+    uploadFile(files);
+  };
+
+  const uploadFile = (files) => {
+    // Your logic to handle files
+    // For example, reading file data and processing it
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      console.log('File content:', event.target.result);
+      // Further processing of file content
+    };
+    reader.readAsText(files[0]);
+  };
+  /////////
   return (
     <main className={`.desktop LandingPage`}>
-      <header>
-        <h1>Pitch Perfect</h1>
+      <header className='flex flex-column md:flex-row justify-content-between my-5'>
+        <h1 className='mr-3'>Pitch Perfect</h1>
+        <button className='btn btn-primary' onClick={() => console.log('fee')}>Save</button>
+        <div>
+          <Toast ref={toast} />
+          <UploadCsv />
+        </div>
       </header>
       <section>
         <TabView>
@@ -92,3 +120,25 @@ function CompetitionsTabView() {
     <div>foo</div> 
   );
 }
+
+
+function UploadCsv() {
+    const onUpload = (e) => {
+        console.log('File uploaded:', e.files);
+    };
+
+    return (
+        <div>
+            <h2>Upload CSV</h2>
+            <FileUpload
+                name="file"
+                url="/api/upload"
+                onUpload={onUpload}
+                accept=".csv"
+                maxFileSize={1000000} // 1MB
+                chooseLabel="Select CSV"
+                uploadLabel="Upload"
+            />
+        </div>
+    );
+};
