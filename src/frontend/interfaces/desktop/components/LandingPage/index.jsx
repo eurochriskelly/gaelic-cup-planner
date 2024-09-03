@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
+
 import BigView from '../BigView';
 import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
@@ -7,6 +8,8 @@ import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import TeamsTabView from './TeamsTabView';
+import VenuesTabView from './VenuesTabView';
+import CompetitionsTabView from './CompetitionsTabView';
 
 import './LandingPage.scss';
 
@@ -16,10 +19,8 @@ function LandingPage () {
   const { tournamentId } = useAppContext();
   const toast= useRef(null);
 
-  ////////////
   const uploadHandler = ({ files }) => {
     console.log('Uploading files:', files);
-    // Process files here
     uploadFile(files);
   };
 
@@ -33,12 +34,10 @@ function LandingPage () {
     };
     reader.readAsText(files[0]);
   };
-  /////////
   return (
     <main className={`.desktop LandingPage`}>
       <header className='flex flex-column md:flex-row justify-content-between my-5'>
-        <h1 className='mr-3'>Pitch Perfect</h1>
-        <button className='btn btn-primary' onClick={() => console.log('fee')}>Save</button>
+        <h1 className='mr-5' style={{marginRight: '10px'}}>Pitch Perfect</h1>
         <div>
           <Toast ref={toast} />
           <UploadCsv />
@@ -49,17 +48,14 @@ function LandingPage () {
           <TabPanel header="Tournament Info">
             <TournamentInfo tournamentId={tournamentId} />
           </TabPanel>
-          <TabPanel header="Teams">
+          <TabPanel header="Venues">
+            <VenuesTabView />
+          </TabPanel>
+          <TabPanel header="Team Management">
             <TeamsTabView />
           </TabPanel>
           <TabPanel header="Competitions">
             <CompetitionsTabView />
-          </TabPanel>
-          <TabPanel header="Fixtures">
-            <FixturesTabView />
-          </TabPanel>
-          <TabPanel header="Pitches">
-            <PitchTabView />
           </TabPanel>
         </TabView>
       </section>
@@ -67,78 +63,33 @@ function LandingPage () {
   );
 };
 
-function PitchTabView() {
-  return (
-    <div>foo</div> 
-  );
-}
-
-function FixturesTabView() {
-  return (
-    <TabView>
-      <TabPanel header="By Competition">
-        <ByCompetition />
-      </TabPanel>
-      <TabPanel header="By Pitch">
-        <ByPitch />
-      </TabPanel>
-    </TabView>
-  );
-}
-
-function ByCompetition() {
-  const [selectedCompetition, setSelectedCompetition] = useState('Mens');
-  const [competitions, setCompetitions] = useState([
-    { name: "Mens", code: "Mens" },
-    { name:"Womens", code: "Womens" },
-    { name:"Youth", code: "Youth"},
-  ]);
-  return (
-    <>
-      <Dropdown 
-        value={selectedCompetition} 
-        onChange={(e) => setSelectedCity(e.value)}
-        options={competitions} 
-        optionLabel="name" 
-        placeholder="Select a competition" 
-        className="w-full md:w-14rem" />
-      <BigView />
-    </>
-  );
-}
-
-function ByPitch () {
-  return (
-    <>
-      <div>ok</div>
-    </>
-  );
-}
-
-function CompetitionsTabView() {
-  return (
-    <div>foo</div> 
-  );
-}
-
-
 function UploadCsv() {
-    const onUpload = (e) => {
-        console.log('File uploaded:', e.files);
-    };
-
-    return (
-        <div>
-            <h2>Upload CSV</h2>
-            <FileUpload
-                name="file"
-                url="/api/upload"
-                onUpload={onUpload}
-                accept=".csv"
-                maxFileSize={1000000} // 1MB
-                chooseLabel="Select CSV"
-                uploadLabel="Upload"
-            />
-        </div>
-    );
+  const onUpload = ({ files }) => {
+    // Assuming the first file is the one you want to read
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      // Define the onload event handler
+      reader.onload = (event) => {
+        const fileContent = event.target.result;
+        console.table(fileContent.split('\n').map(line => line.split(';')));
+      };
+      // Read the file as text
+      reader.readAsText(file);
+    }
+  };
+  return (
+    <div>
+      <FileUpload
+        name="schedule"
+        customUpload={true}
+        uploadHandler={onUpload}
+        mode="basic"
+        accept=".csv"
+        auto={true}
+        maxFileSize={1000000} // 1MB
+        chooseLabel="Select CSV"
+      />
+    </div>
+  );
 };
