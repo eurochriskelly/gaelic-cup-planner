@@ -4,6 +4,8 @@ import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
+import './TournamentInfo.scss';
+
 function TournamentInfo({ tournamentId }) {
   const [tournInfo, setTournInfo] = useState({ title: '', location: '' });
   const [originalInfo, setOriginalInfo] = useState({});
@@ -79,16 +81,20 @@ function TournamentInfo({ tournamentId }) {
     <div className='TournamentInfo'>
       <table>
         <tbody>
-          <Row label="Date">
-            <Calendar value={date} dateFormat='yy-mm-dd' onChange={(e) => setDate(e.value)} className={isDirty('date') ? 'dirty' : ''} />
-          </Row>
-          <Row label="Title">
+          <Row label="Title" spans={[3]}>
             <InputText value={tournInfo.title} onChange={(e) => setTournInfo({ ...tournInfo, title: e.target.value })} className={isDirty('title') ? 'dirty' : ''} />
           </Row>
-          <Row label="Location">
-            <InputText value={tournInfo.location} onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })} className={isDirty('location') ? 'dirty' : ''} />
+          <Row label="Date">
+            <Calendar value={date} dateFormat='yy-mm-dd' onChange={(e) => setDate(e.value)} className={isDirty('date') ? 'dirty' : ''} />
+            <Calendar value={date} dateFormat='yy-mm-dd' onChange={(e) => setDate(e.value)} className={isDirty('date') ? 'dirty' : ''} />
           </Row>
-          <Row label="Region">
+          <Row>
+            <label>Region</label>
+            <label>Country</label>
+            <label>City</label>
+          </Row>
+
+          <Row label="Location">
             <AutoComplete 
               value={region} 
               suggestions={filteredRegions} 
@@ -97,19 +103,22 @@ function TournamentInfo({ tournamentId }) {
               dropdown 
               onChange={(e) => setRegion(e.value)}
             />
+            <InputText value={tournInfo.location} onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })} className={isDirty('location') ? 'dirty' : ''} />
+            <InputText value={tournInfo.location} onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })} className={isDirty('location') ? 'dirty' : ''} />
           </Row>
         </tbody>
       </table>
-      <Button label="Submit" onClick={handleSubmit} />
     </div>
   );
 }
 
-function Row({ label, children }) {
+function Row({ label, children, spans = [] }) {
   return (
     <tr>
       <td>{label}</td>
-      <td>{children}</td>
+      {React.Children.map(children, (child, index) => (
+        <td colSpan={spans[index] || 1}>{child}</td>
+      ))}
     </tr>
   );
 }
