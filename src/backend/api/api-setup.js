@@ -10,21 +10,19 @@ module.exports = (db, ARGS) => {
   console.log("Setting up API endpoints ...");
   app.use(express.static(path.join(__dirname, ARGS.staticPath)));
   // Endpoint to handle file upload
-  //
-  // Endpoint to handle file upload
-  app.post('/api/upload', (req, res) => {
-      parseFormData(req, res, (filePath) => {
-          fs.readFile(filePath, 'utf8', (err, data) => {
-              if (err) {
-                  console.error('Error reading file:', err);
-                  return res.status(500).send('Error reading file');
-              }
-              // Log the contents of the file
-              console.log('File contents:', data);
-              // Send a response back to the client
-              res.send('File received and contents logged.');
-          });
+  app.post("/api/upload", (req, res) => {
+    parseFormData(req, res, (filePath) => {
+      fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+          console.error("Error reading file:", err);
+          return res.status(500).send("Error reading file");
+        }
+        // Log the contents of the file
+        console.log("File contents:", data);
+        // Send a response back to the client
+        res.send("File received and contents logged.");
       });
+    });
   });
 
   if (ARGS.mock) {
