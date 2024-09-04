@@ -5,7 +5,9 @@ import "./VenuesTabView.scss";
 function VenuesTabView() {
   return (
     <section className="VenuesTabView">
+      <p>Add venues and pitches</p>
       <table>
+        <Rows />
         <Rows />
       </table>
     </section>
@@ -22,28 +24,36 @@ function Rows() {
     setPitchValues(newPitchValues);
   };
 
-  return (
+  return <section>
+    <h1>Venue</h1>
     <tbody>
       {/* First Row: Main Headers */}
       <tr className='head'>
-        <td colSpan={3}>Venue</td>
+        <td colSpan={4}>Enter name for this venue</td>
         <td>Longitude</td>
+        <td>Latitude</td>
+      </tr>
+      
+      <tr> 
+        <td colSpan={4}>
+          <InputText value={venueName} onChange={(e) => setVenueName(e.target.value)} className={'ok'} />
+        </td>
+        <td>
+          <InputText value={venueName} onChange={(e) => setVenueName(e.target.value)} className={'ok'} />
+        </td>
+        <td>
+          <InputText value={venueName} onChange={(e) => setVenueName(e.target.value)} className={'ok'} />
+        </td>
+      </tr>
+      <tr className='head'>
         <td>Pitch 1</td>
         <td>Pitch 2</td>
         <td>Pitch 3</td>
+        <td>Pitch 4</td>
+        <td>Pitch 5</td>
+        <td>Pitch 6</td>
       </tr>
-      
-      {/* Second Row: Partially Header, partially data */}
       <tr>
-        <td colSpan={3} rowSpan={3}>
-          <div>
-            <div>Enter a name for this venue</div>
-            <InputText value={venueName} onChange={(e) => setVenueName(e.target.value)} className={'ok'} />
-          </div>
-        </td>
-        <td>
-          <InputText value={'23.81'} onChange={(e) => 'xx'} className={'ok'} />
-        </td>
         <PitchIfPrevious
           show={!!venueName}
           value={pitchValues[0]}
@@ -59,21 +69,6 @@ function Rows() {
           value={pitchValues[2]}
           onChange={(value) => handlePitchChange(2, value)}
         />
-      </tr>
-      
-      {/* Third Row: Headers for the coordinates */}
-      <tr className='head'>
-        <td>Longitude</td>
-        <td>Pitch 4</td>
-        <td>Pitch 5</td>
-        <td>Pitch 6</td>
-      </tr>
-      
-      {/* Fourth Row: Data */}
-      <tr>
-        <td>
-          <InputText value={'23.21'} onChange={(e) => 'xx'} className={'ok'} />
-        </td>
         <PitchIfPrevious
           show={!!pitchValues[2]}
           value={pitchValues[3]}
@@ -91,19 +86,18 @@ function Rows() {
         />
       </tr>
     </tbody>
-  );
+  </section>;
 }
 
 function PitchIfPrevious({ show, value, onChange }) {
   return (
     <td>
-      {show && (
         <InputText
           value={value}
+          disabled={!show}
           onChange={(e) => onChange(e.target.value)}
           className={'ok'}
         />
-      )}
     </td>
   );
 }
