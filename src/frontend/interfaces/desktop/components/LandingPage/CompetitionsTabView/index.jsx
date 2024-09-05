@@ -1,46 +1,50 @@
-
+import { useState } from 'react';
+import BigView from '../../BigView';
+import { TabView, TabPanel } from 'primereact/tabview';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
 
 function CompetitionsTabView() {
-  return (
-    <TabView>
-      <TabPanel header="By Competition">
-        <ByCompetition />
-      </TabPanel>
-      <TabPanel header="By Pitch">
-        <ByPitch />
-      </TabPanel>
-    </TabView>
-  );
-}
-
-function ByCompetition() {
-  const [selectedCompetition, setSelectedCompetition] = useState('Mens');
   const [competitions, setCompetitions] = useState([
-    { name: "Mens", code: "Mens" },
-    { name:"Womens", code: "Womens" },
-    { name:"Youth", code: "Youth"},
+    { name: "Setup competition ...", code: "Mens", ready: false },
   ]);
-  return (
-    <>
-      <Dropdown 
-        value={selectedCompetition} 
-        mode="basic"
-        onChange={(e) => setSelectedCity(e.value)}
-        options={competitions}
-        optionLabel="name" 
-        placeholder="Select a competition" 
-        className="w-full md:w-14rem" />
-      <BigView />
-    </>
-  );
-}
+  const [newCompetitionName, setNewCompetitionName] = useState('');
 
-function ByPitch () {
-  return (
-    <>
-      <div>ok</div>
-    </>
-  );
+  const addNewCompetition = () => {
+    if (newCompetitionName.trim()) {
+      setCompetitions([
+        ...competitions.slice(0, -1),
+        { name: newCompetitionName.toUpperCase(), code: '', ready: true },
+        { name: "Setup another ...", code: "Mens", ready: false }
+      ]);
+      setNewCompetitionName(''); // Clear the input field after adding
+    }
+  };
+
+  return <TabView>{
+    competitions.map((competition, index) => (
+      <TabPanel key={index} header={competition.name}>
+        {
+          competitions.length === 1 && !competition.ready && (
+            <p>No competitions added yet</p>
+          )
+        }
+        {
+          competition.ready
+          ? <BigView competition={competition} />
+          : <>
+            <InputText 
+              placeholder="Enter name of competition" 
+              value={newCompetitionName}
+              onChange={(e) => setNewCompetitionName(e.target.value)}
+            />
+            <Button onClick={addNewCompetition}>Add a competition</Button>
+          </> 
+        }
+      </TabPanel>
+    ))
+  }</TabView>
 }
 
 export default CompetitionsTabView;
+

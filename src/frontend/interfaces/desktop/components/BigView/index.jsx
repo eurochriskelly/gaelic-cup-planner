@@ -2,12 +2,17 @@ import { useEffect, useState, useTransition } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { ReactGrid } from "@silevis/reactgrid";
+import { TabView, TabPanel } from 'primereact/tabview';
+import { DataTable } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import { Column } from 'primereact/column';
 import "@silevis/reactgrid/styles.scss";
 import './BigView.scss';
 
-const BigView = () => {
+const BigView = ({
+  competition,
+}) => {
   const { t } = useTranslation();
-  const tt = code => t(`landingPage_${code}`);
   const navigate = useNavigate();
   const { tournamentId, category } = useParams();
   const [fixtures, setFixtures] = useState([]);
@@ -19,13 +24,44 @@ const BigView = () => {
   useEffect(() => {
     fetch(`/api/tournaments/${tournamentId}/fixtures`)
       .then((response) => response.json())
-      .then((data) => setFixtures(data.data.filter(x => x.category === 'Ladies')))
+      .then((data) => {
+        console.log(`Fetched fixtures for ${competition.name}:`)
+        setFixtures(data.data.filter(x => x.category.toLowerCase() === competition.name.toLowerCase()))
+      })
       .catch((error) => {
         console.error("Error fetching tournament info:", error);
       });
   }, []);
 
+  return (
+    <section>
+      <h1>Competitions</h1>
+      <div>
+        <h2>Groups</h2>
+        <TeamGroups />
+      </div>
+      <div>
+        <h2>Fixtures</h2>
+        <TabView>
+          <TabPanel key={1} header="ALL">
+            <FixtureTable fixtures={fixtures} />
+          </TabPanel>
+          <TabPanel key={2} header="Groups">
+            <FixtureTable fixtures={fixtures} />
+          </TabPanel>
+          <TabPanel key={2} header="Playoffs">
+            <FixtureTable fixtures={fixtures} />
+          </TabPanel>
+          <TabPanel key={2} header="Playoffs">
+            <FixtureTable fixtures={fixtures} />
+          </TabPanel>
+        </TabView>
+      </div>
+    </section>
+  );
+};
 
+function FixtureTable({ fixtures }) {
   const getColumns = () => [
     { columnId: "id", width: 50 },
     { columnId: "time", width: 50 },
@@ -67,7 +103,6 @@ const BigView = () => {
     headerRow,
     ...fixtures.map((fixture, idx) => {
       const { id, pitch, groupNumber, scheduledTime, team1, goals1, points1, stage, goals2, points2, team2, umpireTeam } = fixture;
-      console.log(team1)
       const teamOptions = [
         {
           label: 'Foo',
@@ -103,17 +138,85 @@ const BigView = () => {
       }
     })
   ];
-
-
   const rows = getRows(fixtures);
   const columns = getColumns();
+  return <ReactGrid rows={rows} columns={columns} />
+}
 
+function TeamGroups() {
+  const [mostTeams, setMostTeams] = useState(1);
+  const [groups, setGroups] = useState([
+    { key: "A", teams: [], ready: false },
+    { key: "B", teams: [], ready: false },
+    { key: "C", teams: [], ready: false },
+    { key: "D", teams: [], ready: false },
+    { key: "E", teams: [], ready: false },
+    { key: "F", teams: [], ready: false },
+    { key: "G", teams: [], ready: false },
+  ]);
+  const getColumns = () => [
+    { columnId: "group", width: 100 },
+    { columnId: "team1", width: 190 },
+    { columnId: "team2", width: 190 },
+    { columnId: "team3", width: 190 },
+    { columnId: "team4", width: 190 },
+    { columnId: "team5", width: 190 },
+    { columnId: "team6", width: 190 },
+  ];
+  const getRows = () => [
+    ...groups 
+      .filter((x, i, lst) => {
+        if (i) console.log(lst[i - 1])
+        return i ? lst[i-1].teams.length : true
+      })
+      .map((group, id) => {
+        return { 
+          id, 
+          group: group.key,
+          team1: group.teams[0],
+          team2: group.teams[1],
+          team3: group.teams[2],
+          team4: group.teams[3],
+          team5: group.teams[4],
+          team6: group.teams[5],
+        }
+      })
+  ]
+  const textEditor = (options) => {
+    return <InputText
+      type="text" value={options.value}
+      onChange={(e) => options.editorCallback(e.target.value)} onKeyDown={(e) => e.stopPropagation()} />;
+  };
+  const cellEditor = (options) => {
+    if (options.field === 'price') return priceEditor(options);
+    else return textEditor(options);
+  }
+  const onCellEditComplete = (e) => {
+    console.log(e)
+    const newgroups = groups.map((group) => {
+      if (group.key === e.data?.group) {
+        group.teams = e.data;
+      }
+      return group;
+    });
+    setGroups(newgroups);
+  }
+  const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   return (
-    <section>
-      <ReactGrid rows={rows} columns={columns} />
-    </section>
-  );
-};
+    <DataTable value={getRows()} size={'large'} editMode={'cell'} tableStyle={{ minWidth: '50rem' }}>
+      {
+        getColumns().map((col) => {
+          return <Column 
+            key={col.columnId} field={col.columnId} 
+            header={capitalize(col.columnId)}
+            editor={(options) => cellEditor(options)} 
+            onCellEditComplete={onCellEditComplete} 
+            style={{ width: `${col.width}px` }} />
+        })
+      }
+    </DataTable>
+  )
+}
 
 export default BigView;
 
