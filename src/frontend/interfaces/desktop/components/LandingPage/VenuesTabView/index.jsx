@@ -26,6 +26,7 @@ function Rows() {
 
   return <section>
     <h1>Venue</h1>
+
     <tbody>
       {/* First Row: Main Headers */}
       <tr className='head'>

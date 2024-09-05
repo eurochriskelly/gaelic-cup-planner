@@ -6,7 +6,6 @@ import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
-import { Dropdown } from 'primereact/dropdown';
 import TeamsTabView from './TeamsTabView';
 import VenuesTabView from './VenuesTabView';
 import CompetitionsTabView from './CompetitionsTabView';
@@ -51,11 +50,11 @@ function LandingPage () {
           <TabPanel header="Venues">
             <VenuesTabView />
           </TabPanel>
-          <TabPanel header="Team Management">
-            <TeamsTabView />
-          </TabPanel>
           <TabPanel header="Competitions">
             <CompetitionsTabView />
+          </TabPanel>
+          <TabPanel header="Team Management">
+            <TeamsTabView />
           </TabPanel>
         </TabView>
       </section>
