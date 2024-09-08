@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
 
-import BigView from '../BigView';
 import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { FileUpload } from 'primereact/fileupload';
