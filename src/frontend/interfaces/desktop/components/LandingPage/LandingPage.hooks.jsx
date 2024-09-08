@@ -6,7 +6,6 @@ import { useAppContext } from '../../../../shared/js/Provider';
 
 export const useFetchTournament = () => {
   const { tournamentId } = useAppContext();
-  console.log('llll', tournamentId)
   const [tournInfo, setTournInfo] = useState({});
   const base = `/tournament/${tournamentId}`;
 

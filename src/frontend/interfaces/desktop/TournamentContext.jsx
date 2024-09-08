@@ -7,7 +7,7 @@ export const TournamentProvider = ({ children }) => {
   const [tournament] = useState(new Tournament());
   useEffect(() => {
     const { tournaments } = testdata.default
-    tournament.load(tournaments.t1)
+    tournament.load(tournaments.t2)
   }, []);
 
   return (
