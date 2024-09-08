@@ -1,5 +1,6 @@
 #!/bin/bash 
 
+instance=$(docker ps --filter ancestor=gaelic-cup-planner-react-app --format "{{.Names}}")
 run () {
   docker-compose -f docker-compose.dev.yml up --build
 }
@@ -24,13 +25,13 @@ while [ "$#" -gt 0 ]; do
       build
       ;;
     --stop)
-      docker stop gge-instance
+      docker stop $instance
       ;;
     --rm)
-      docker rm gge-instance
+      docker rm $instance
       ;;
     --login)
-      docker exec -it gge-instance /bin/bash
+      docker exec -it $instance /bin/bash
       ;;
     *)
       echo "Invalid argument: $1"
