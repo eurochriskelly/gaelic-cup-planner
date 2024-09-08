@@ -3,10 +3,12 @@ import { InputText } from 'primereact/inputtext';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
+import { useTournament } from '../../../TournamentContext';
 
 import './TournamentInfo.scss';
 
 function TournamentInfo({ tournamentId }) {
+  const tournament = useTournament();
   const [tournInfo, setTournInfo] = useState({ title: '', location: '' });
   const [originalInfo, setOriginalInfo] = useState({});
   const [date, setDate] = useState(null);

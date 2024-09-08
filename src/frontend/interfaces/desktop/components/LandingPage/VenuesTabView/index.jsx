@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import "./VenuesTabView.scss";
+import { useTournament } from '../../../TournamentContext';
 
 function VenuesTabView() {
+  const tournament = useTournament();
   return (
     <section className="VenuesTabView">
       <p>Add venues and pitches</p>
@@ -24,10 +26,7 @@ function Rows() {
     setPitchValues(newPitchValues);
   };
 
-  return <section>
-    <h1>Venue</h1>
-
-    <tbody>
+  return <tbody>
       {/* First Row: Main Headers */}
       <tr className='head'>
         <td colSpan={4}>Enter name for this venue</td>
@@ -87,7 +86,6 @@ function Rows() {
         />
       </tr>
     </tbody>
-  </section>;
 }
 
 function PitchIfPrevious({ show, value, onChange }) {

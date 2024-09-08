@@ -21,29 +21,32 @@ function CompetitionsTabView() {
     }
   };
 
-  return <TabView>{
-    competitions.map((competition, index) => (
-      <TabPanel key={index} header={competition.name}>
-        {
-          competitions.length === 1 && !competition.ready && (
-            <p>No competitions added yet</p>
-          )
-        }
-        {
-          competition.ready
-          ? <BigView competition={competition} />
-          : <>
-            <InputText 
-              placeholder="Enter name of competition" 
-              value={newCompetitionName}
-              onChange={(e) => setNewCompetitionName(e.target.value)}
-            />
-            <Button onClick={addNewCompetition}>Add a competition</Button>
-          </> 
-        }
-      </TabPanel>
-    ))
-  }</TabView>
+  return <>
+    <h1>Competitions</h1>
+    <TabView>{
+      competitions.map((competition, index) => (
+        <TabPanel key={index} header={competition.name}>
+          {
+            competitions.length === 1 && !competition.ready && (
+              <p>No competitions added yet</p>
+            )
+          }
+          {
+            competition.ready
+            ? <BigView competition={competition} />
+            : <>
+              <InputText 
+                placeholder="Enter name of competition" 
+                value={newCompetitionName}
+                onChange={(e) => setNewCompetitionName(e.target.value)}
+              />
+              <Button onClick={addNewCompetition}>Add a competition</Button>
+            </> 
+          }
+        </TabPanel>
+      ))
+    }</TabView>
+  </>
 }
 
 export default CompetitionsTabView;
