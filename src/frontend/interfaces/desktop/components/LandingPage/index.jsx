@@ -35,7 +35,7 @@ function LandingPage () {
   return (
     <main className={`.desktop LandingPage`}>
       <header className='flex flex-column md:flex-row justify-content-between my-5'>
-        <h1 className='mr-5' style={{marginRight: '10px'}}>Pitch Perfect</h1>
+        <h1 className='mr-1' style={{marginRight: '10px'}}>Pitch Perfect</h1>
         <div>
           <Toast ref={toast} />
           <UploadCsv />
