@@ -1,0 +1,26 @@
+.CompetitionsTabView {
+  h1 {
+    padding: 0;
+    line-height: 3rem;
+  }
+  >div:first-child {
+    margin-bottom: 0px;
+    display: inline-block;
+    width: 100%;
+    &>* {
+      margin: 0.2rem;
+      padding: 0;
+      margin-right: 20px;
+      display: inline-block;
+      &:last-child {
+        padding: 0.2rem;
+        >*:first-child {
+          margin-right: 1rem;
+          width: 400px;
+        }
+        float: right;
+        margin-left: 2rem;
+      }
+    }
+  }
+}
