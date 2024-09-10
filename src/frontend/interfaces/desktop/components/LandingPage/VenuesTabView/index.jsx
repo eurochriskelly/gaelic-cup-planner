@@ -28,7 +28,6 @@ function Rows({
   venue,
   pitches
 }) {
-  console.log(pitches)
   const [venueName, setVenueName] = useState('A nice place');
   const [pitchValues, setPitchValues] = useState(['', '', '', '', '', '']);
 
