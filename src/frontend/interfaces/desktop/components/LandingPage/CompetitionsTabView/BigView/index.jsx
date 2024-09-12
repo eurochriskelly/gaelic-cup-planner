@@ -12,6 +12,7 @@ const BigView = ({
   pitches,
   venues
 }) => {
+  const { groups = [] } = competition?.data
   const navigate = useNavigate();
   const { tournamentId, category } = useParams();
   const [fixtures, setFixtures] = useState([]);
@@ -47,14 +48,30 @@ const BigView = ({
           <TabPanel key={1} header="ALL">
             <FixtureTable fixtures={fixtures} />
           </TabPanel>
-          <TabPanel key={2} header="Groups">
-            <FixtureTable fixtures={fixtures} />
-          </TabPanel>
+          <TabPanel key={2} header="Groups">{
+              groups?.map((group, index) => {
+                const filtered = fixtures
+                      .filter(f => f.groupNumber === (index + 1))
+                      .filter(f => f.stage.toLowerCase() === 'group');
+                return <>
+                  <h3>Group {index + 1}</h3>
+                  <FixtureTable
+                    fixtures={filtered}
+                    removeFields={['groupNumber', 'stage']}
+                    teams={groups[index]}
+                    umpires={groups.reduce((p, n) => [...p, ...n], [])}
+                    group={group}
+                  />
+                </>
+            })
+          }</TabPanel>
           <TabPanel key={2} header="Playoffs">
             <FixtureTable fixtures={fixtures} />
           </TabPanel>
-          <TabPanel key={2} header="Playoffs">
-            <FixtureTable fixtures={fixtures} />
+          <TabPanel key={2} header="Knockouts">
+            <FixtureTable fixtures={
+              fixtures.filter(f => f.stage.toLowerCase() !== 'group')
+            } />
           </TabPanel>
         </TabView>
       </div>

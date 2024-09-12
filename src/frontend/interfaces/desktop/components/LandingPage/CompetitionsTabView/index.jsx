@@ -36,7 +36,7 @@ function CompetitionsTabView()
 
   return <section className='CompetitionsTabView'>
     <div>
-      <h1>Competitions {competitions.length}</h1>
+      <h1>Competitions</h1>
       <AddCompetition 
         newCompetitionName={newCompetitionName}
         setNewCompetitionName={setNewCompetitionName}

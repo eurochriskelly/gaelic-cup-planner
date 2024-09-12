@@ -10,7 +10,7 @@ function TeamGroupings({
   venues
 }) {
   console.log('TeamGroupings:', competition, "xx", pitches, "yy", venues);
-  const { name, code, teams, data, ready } = competition;
+  const { name, code, teams = [], data, ready } = competition;
 
   const [groups, setGroups] = useState([
     { key: "G1", teams: [], ready: false },
@@ -30,21 +30,24 @@ function TeamGroupings({
     { columnId: "E", width: 190 },
     { columnId: "F", width: 190 },
   ];
-  const getRows = () => [
-    ...teams 
-      .map((group, id) => {
-        return { 
-          id, 
-          group: `G${id+1}`, 
-          A: group[0] || "",
-          B: group[1] || "",
-          C: group[2] || "",
-          D: group[3] || "",
-          E: group[4] || "",
-          F: group[5] || "",
-        }
-      })
-  ]
+  const getRows = () => {
+    if (!teams || teams.length === 0) return []
+    return [
+      ...teams
+        .map((group, id) => {
+          return { 
+            id, 
+            group: `G${id+1}`, 
+            A: group[0] || "",
+            B: group[1] || "",
+            C: group[2] || "",
+            D: group[3] || "",
+            E: group[4] || "",
+            F: group[5] || "",
+          }
+        })
+    ]
+  }
   const textEditor = (options) => {
     return <InputText
       type="text" value={options.value}
