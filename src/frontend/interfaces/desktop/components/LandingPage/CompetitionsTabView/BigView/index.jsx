@@ -45,9 +45,6 @@ const BigView = ({
       <div>
         <h2>Organize Fixtures</h2>
         <TabView>
-          <TabPanel key={1} header="ALL">
-            <FixtureTable fixtures={fixtures} />
-          </TabPanel>
           <TabPanel key={2} header="Groups">{
               groups?.map((group, index) => {
                 const filtered = fixtures
@@ -72,6 +69,9 @@ const BigView = ({
             <FixtureTable fixtures={
               fixtures.filter(f => f.stage.toLowerCase() !== 'group')
             } />
+          </TabPanel>
+          <TabPanel key={1} header="ALL">
+            <FixtureTable fixtures={fixtures} />
           </TabPanel>
         </TabView>
       </div>
