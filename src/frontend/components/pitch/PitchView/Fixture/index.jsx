@@ -9,7 +9,6 @@ const Fixture = ({ fixture, isFocus }) => {
     startedTime = "",
     scheduledTime = "",
     stage,
-    group,
     category,
     team1,
     goals1,
@@ -52,7 +51,7 @@ const Fixture = ({ fixture, isFocus }) => {
       <div
         className={rowClasses()}
         style={{ backgroundColor: scoreUpToDate ? "#bcc6bc" : "" }}>
-        <ClockDisplay
+        <FixtureInfo
           scheduledTime={scheduledTime}
           startedTime={startedTime}
           delayMinutes={militaryTimeDiffMins(scheduledTime, startedTime)}
@@ -82,8 +81,7 @@ const Fixture = ({ fixture, isFocus }) => {
 
 export default Fixture;
 
-
-function ClockDisplay({
+function FixtureInfo({
   scheduledTime,
   startedTime,
   delayMinutes = 0,
@@ -94,21 +92,26 @@ function ClockDisplay({
 }) {
   const categoryLabel = () => group?.replace(/[^A-Z0-9]/g, "");
   return (
-    <div className="ClockDisplay">
-      <ClockIcon
-        scheduled={scheduledTime}
-        started={startedTime}
-        delay={delayMinutes}
-        focus={focus}
-        played={scoreUpToDate}
-      />
-      <span>
+    <div className="FixtureInfo">
+      <div>
+        <span className="type-category">{group}</span>
+      </div>
+      <div>
+        <ClockIcon
+          scheduled={scheduledTime}
+          started={startedTime}
+          delay={delayMinutes}
+          focus={focus}
+          played={scoreUpToDate}
+        />
         <span>
-          <label>STAGE:</label>
-          {stage}
+          <span>
+            <label>STAGE:</label>
+            {stage}
+          </span>
+          <span className="type-category">{categoryLabel()}</span>
         </span>
-        <span class="type-category">{categoryLabel()}</span>
-      </span>
+      </div>
     </div>
   )
 }

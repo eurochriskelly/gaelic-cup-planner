@@ -1,28 +1,59 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
-import BigView from '../BigView';
+
 import TournamentInfo from "./TournamentInfo";
 import { TabView, TabPanel } from 'primereact/tabview';
-import { Dropdown } from 'primereact/dropdown';
+import { FileUpload } from 'primereact/fileupload';
+import { Toast } from 'primereact/toast';
+import TeamsTabView from './TeamsTabView';
+import VenuesTabView from './VenuesTabView';
+import CompetitionsTabView from './CompetitionsTabView';
+
 import './LandingPage.scss';
 
 export default LandingPage;
 
 function LandingPage () {
   const { tournamentId } = useAppContext();
+  const toast= useRef(null);
+
+  const uploadHandler = ({ files }) => {
+    console.log('Uploading files:', files);
+    uploadFile(files);
+  };
+
+  const uploadFile = (files) => {
+    // Your logic to handle files
+    // For example, reading file data and processing it
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      console.log('File content:', event.target.result);
+      // Further processing of file content
+    };
+    reader.readAsText(files[0]);
+  };
   return (
     <main className={`.desktop LandingPage`}>
-      <header>
-        <TournamentInfo tournamentId={tournamentId} />
+      <header className='flex flex-column md:flex-row justify-content-between my-5'>
+        <h1 className='mr-1' style={{marginRight: '10px'}}>Pitch Perfect</h1>
+        <div>
+          <Toast ref={toast} />
+          <UploadCsv />
+        </div>
       </header>
       <section>
         <TabView>
-          <TabPanel header="By competition">
-            <ByCompetition />
+          <TabPanel header="Tournament Info">
+            <TournamentInfo tournamentId={tournamentId} />
           </TabPanel>
-          <ByPitch />
-          <TabPanel header="By pitch">
-            <ByPitch />
+          <TabPanel header="Venues">
+            <VenuesTabView />
+          </TabPanel>
+          <TabPanel header="Competitions">
+            <CompetitionsTabView />
+          </TabPanel>
+          <TabPanel header="Team Management">
+            <TeamsTabView />
           </TabPanel>
         </TabView>
       </section>
@@ -30,31 +61,33 @@ function LandingPage () {
   );
 };
 
-function ByCompetition() {
-  const [selectedCompetition, setSelectedCompetition] = useState('Mens');
-  const [competitions, setCompetitions] = useState([
-    { name: "Mens", code: "Mens" },
-    { name:"Womens", code: "Womens" },
-    { name:"Youth", code: "Youth"},
-  ]);
+function UploadCsv() {
+  const onUpload = ({ files }) => {
+    // Assuming the first file is the one you want to read
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      // Define the onload event handler
+      reader.onload = (event) => {
+        const fileContent = event.target.result;
+        console.table(fileContent.split('\n').map(line => line.split(';')));
+      };
+      // Read the file as text
+      reader.readAsText(file);
+    }
+  };
   return (
-    <>
-      <Dropdown 
-        value={selectedCompetition} 
-        onChange={(e) => setSelectedCity(e.value)}
-        options={competitions} 
-        optionLabel="name" 
-        placeholder="Select a competition" 
-        className="w-full md:w-14rem" />
-      <BigView />
-    </>
+    <div>
+      <FileUpload
+        name="schedule"
+        customUpload={true}
+        uploadHandler={onUpload}
+        mode="basic"
+        accept=".csv"
+        auto={true}
+        maxFileSize={1000000} // 1MB
+        chooseLabel="Select CSV"
+      />
+    </div>
   );
-}
-
-function ByPitch () {
-  return (
-    <>
-      <div>ok</div>
-    </>
-  );
-}
+};
