@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'; import BigView from './BigView';
+import { useEffect, useState } from 'react';
 import { useTournament } from "../../../TournamentContext";
 
+import BigView from './BigView';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
