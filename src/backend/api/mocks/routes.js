@@ -11,7 +11,7 @@ module.exports = {
   "/api/tournaments": "tournaments",
   // fixtures/index.js
   "/api/tournaments/:tournamentId/fixtures": "fixtures",
-  "/api/fixtures/:pitch": "fixturesByPitchA",
+  "/api/tournaments/:tournamentId/fixtures/:pitch": "fixturesByPitchA",
   // fixtures/regions
   "/api/regions": "regions",
   "/api/regions/:region": "regions%Benelux",
