@@ -7,6 +7,10 @@
     td.p-editable-column {
       padding: 0;
     }
+    td .empty-team {
+      background-color: 'red';
+      padding: 0.5rem;
+    }
   } 
  
   /* Remove all padding from team-related <td> elements */

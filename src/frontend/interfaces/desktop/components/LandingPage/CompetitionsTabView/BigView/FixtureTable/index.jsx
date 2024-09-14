@@ -9,7 +9,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './FixtureTable.scss'; // Import the custom CSS
 
-// Utility function to determine text color based on background brightness
+// Utility function to determine text color?.based on background brightness
 const getTextColor = (bgColor) => {
   const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
   const r = parseInt(color.substring(0, 2), 16);
@@ -57,8 +57,7 @@ function FixtureTable({
       dropdownOptions.push({ label: currentValue, value: currentValue });
     }
 
-    // Get the background color based on the current value
-    const bgColor = participants[currentValue] || '#f44';
+    const bgColor = participants[currentValue]?.base || '#ddd';
     const textColor = getTextColor(bgColor);
 
     return (
@@ -72,7 +71,7 @@ function FixtureTable({
           backgroundColor: bgColor, 
           color: textColor, 
           width: '100%' 
-        }} // Inherit background and text color
+        }}
       />
     );
   };
@@ -95,21 +94,58 @@ function FixtureTable({
     const g = data[`goals${teamNr}`];
     const p = data[`points${teamNr}`];
     const score = (g && p) ? (3 * g) + p : '##'
-    return <div className={``}>{[
+    const strs = [
       g || '#',
       '-',
       p ? ('0' + data[`points${teamNr}`]).substr(-2) : '##',
-      `/`,
+      ` / `,
       score
-    ].join('')}</div>;
+    ]
+    return <div className={``}>{strs.join('')}</div>;
   }
 
+  const bodyTeamDisplay = (teamName, data) => {
+    const bgColor = participants[data[teamName]]?.light || 'white';
+    const fgColor = participants[data[teamName]]?.vdark || 'black';
+    if (!data[teamName]) {
+      const lightGrey = '#c3c3c3';
+      const darkGrey = '#a9a9a9';
+      const stripeSize = '20px';
+      const style = {
+        backgroundImage: `linear-gradient(45deg, ${lightGrey} 25%, transparent 25%, transparent 50%, ${lightGrey} 50%, ${lightGrey} 75%, transparent 75%, transparent),
+              linear-gradient(45deg, ${darkGrey} 25%, transparent 25%, transparent 50%, ${darkGrey} 50%, ${darkGrey} 75%, transparent 75%, transparent)`,
+        backgroundSize: `${stripeSize} ${stripeSize}`,
+        textAlign: 'center',
+        color: '#aaa',
+        letterSpacing: '0.2em',
+        fontWeight: 'bold',
+        padding: '15px',
+      }
+      return <div className={'empty-team'} style={style}>EMPTY</div>
+    } else {
+      return (
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <div 
+            className="team-cell-content" // Apply content class to inner <div>
+            style={{ 
+              backgroundColor: bgColor, 
+              color: fgColor,
+              fontWeight: 'bold',
+              textAlign: 'left',
+            }}
+          >
+            {data[teamName].toUpperCase()}
+          </div>
+        </a>
+      );
+    }
+  }
   // Define columns with sorting and editors
   const fixw = w => ({ width: w, minWidth: w, maxWidth: w });
   const columns = [
     { 
       field: "id", 
-      header: "M#", 
+      header: "#", 
       style: { ...fixw('40px') }, 
       sortable: true, 
       body: (data) => `${data.id}`.substring(2) 
@@ -118,7 +154,72 @@ function FixtureTable({
       field: "scheduledTime", 
       header: "Time", 
       style: { ...fixw('70px') }, 
+      headerStyle: 'group', 
       sortable: true 
+    },
+    { 
+      field: "team1", 
+      header: "Team 1", 
+      style: { ...fixw('200px'), textAlign: 'right' },
+      headerStyle: 'group', 
+      sortable: true, 
+      className: 'team-cell', // Assign custom class to <td>
+      editor: (options) => dropdownEditor(options, 'team1', teams),
+      body: bodyTeamDisplay.bind(null, 'team1'),
+    },
+    { 
+      field: "score1", 
+      header: "Score", 
+      headerStyle: 'group', 
+      style: { ...fixw('75px'), backgroundColor: '#eee', padding: '0', textAlign: 'center' },
+      body: (data) => showScore(data, 1) 
+    },
+    { 
+      field: "score2", 
+      header: "Score", 
+      headerStyle: 'group', 
+      style: { ...fixw('75px'), backgroundColor: '#eee', padding: '0', textAlign: 'center' },
+      body: (data) => showScore(data, 2)
+    },
+    { 
+      field: "team2", 
+      header: "Team 2", 
+      headerStyle: 'group', 
+      style: { ...fixw('200px'), textAlign: 'left' },
+      sortable: true, 
+      className: 'team-cell', // Assign custom class to <td>
+      editor: (options) => dropdownEditor(options, 'team2', teams),
+      body: bodyTeamDisplay.bind(null, 'team2'),
+    },
+    { 
+      field: "umpireTeam", 
+      header: "Umpiring Team", 
+      headerStyle: 'group',
+      style: { ...fixw('150px') }, 
+      sortable: true, 
+      className: 'team-cell', // Assign custom class to <td>
+      editor: (options) => dropdownEditor(options, 'umpireTeam', umpires),
+      body: (data) => {
+        const textColor = participants[data.umpireTeam]?.dark || 'white';
+        return (
+          <a href="#" onClick={(e) => e.preventDefault()}>
+            <div 
+              className="team-cell-content" // Apply content class to inner <div>
+              style={{ 
+                color: textColor, 
+                fontWeight: 'bold',
+              }}
+            >{data.umpireTeam}</div>
+          </a>
+        )
+      }
+    },
+    { 
+      field: "pitch", 
+      header: "Pitch", 
+      style: { ...fixw('70px') }, 
+      sortable: true, 
+      editor: textEditor 
     },
     { 
       field: "stage", 
@@ -134,102 +235,6 @@ function FixtureTable({
       sortable: true 
     },
     { 
-      field: "team1", 
-      header: "Team 1", 
-      style: { width: '150px' }, 
-      sortable: true, 
-      className: 'team-cell', // Assign custom class to <td>
-      editor: (options) => dropdownEditor(options, 'team1', teams),
-      body: (data) => {
-        const bgColor = participants[data.team1] || 'white';
-        const textColor = getTextColor(bgColor);
-        return (
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            <div 
-              className="team-cell-content" // Apply content class to inner <div>
-              style={{ 
-                backgroundColor: bgColor, 
-                color: bgColor === 'white' ? 'red' : textColor
-              }}
-            >
-              {data.team1}
-            </div>
-          </a>
-        );
-      }
-    },
-    { 
-      field: "score1", 
-      header: "Score", 
-      style: { width: '70px', minWidth: '70px', maxWidth: '70px', backgroundColor: '#eee', padding: '0', textAlign: 'center' },
-      headerStyle: { width: '70px', minWidth: '70px', maxWidth: '70px', backgroundColor: 'white' },
-      body: (data) => showScore(data, 1) 
-    },
-    { 
-      field: "team2", 
-      header: "Team 2", 
-      style: { width: '150px' }, 
-      sortable: true, 
-      className: 'team-cell', // Assign custom class to <td>
-      editor: (options) => dropdownEditor(options, 'team2', teams),
-      body: (data) => {
-        const bgColor = participants[data.team2] || 'white';
-        const textColor = getTextColor(bgColor);
-        return (
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            <div 
-              className="team-cell-content" // Apply content class to inner <div>
-              style={{ 
-                backgroundColor: bgColor, 
-                color: bgColor === 'white' ? 'red' : textColor 
-              }}
-            >
-              {data.team2}
-            </div>
-          </a>
-        );
-      }
-    },
-    { 
-      field: "score2", 
-      header: "Score", 
-      style: { width: '70px', minWidth: '70px', maxWidth: '70px', backgroundColor: '#eee', padding: '0', textAlign: 'center' },
-      headerStyle: { width: '70px', minWidth: '70px', maxWidth: '70px', backgroundColor: 'white' },
-      body: (data) => showScore(data, 2)
-    },
-    { 
-      field: "pitch", 
-      header: "Pitch", 
-      style: { ...fixw('70px') }, 
-      sortable: true, 
-      editor: textEditor 
-    },
-    { 
-      field: "umpireTeam", 
-      header: "Umpiring Team", 
-      style: { width: '150px' }, 
-      sortable: true, 
-      className: 'team-cell', // Assign custom class to <td>
-      editor: (options) => dropdownEditor(options, 'umpireTeam', umpires),
-      body: (data) => {
-        const bgColor = participants[data.umpireTeam] || 'white';
-        const textColor = getTextColor(bgColor);
-        return (
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            <div 
-              className="team-cell-content" // Apply content class to inner <div>
-              style={{ 
-                backgroundColor: bgColor, 
-                color: bgColor === 'white' ? 'red' : textColor 
-              }}
-            >
-              {data.umpireTeam}
-            </div>
-          </a>
-        );
-      }
-    },
-    { 
       field: "referee", 
       header: "Referee", 
       style: { width: '150px' }, 
@@ -237,16 +242,11 @@ function FixtureTable({
       className: 'team-cell', // Assign custom class to <td>
       editor: (options) => dropdownEditor(options, 'referee', referees),
       body: (data) => {
-        const bgColor = participants[data.referee] || 'white';
-        const textColor = getTextColor(bgColor);
         return (
           <a href="#" onClick={(e) => e.preventDefault()}>
             <div 
               className="team-cell-content" // Apply content class to inner <div>
-              style={{ 
-                backgroundColor: bgColor, 
-                color: bgColor === 'white' ? 'red' : textColor 
-              }}
+              style={{ backgroundColor: '#eee' }}
             >
               {data.referee}
             </div>
@@ -257,8 +257,22 @@ function FixtureTable({
   ]
     .filter(col => !removeFields.includes(col.field))
     .map(x => {
-      if (!x.headerStyle) x.headerStyle = x.style;
-      return x;
+      if (!x.headerStyle) x.headerStyle = x.style
+      if (x.headerStyle === 'group') x.headerStyle = {
+        ...x.style,
+        backgroundColor: '#666',
+        textAlign: 'center',
+        borderRight: '1px solid #999',
+        color: 'white'
+      };
+      return {
+        ...x,
+        headerStyle: { 
+          ...x.headerStyle, 
+          borderBottom: '4px solid black', 
+          textAlign: 'center',
+        }
+      };
     });
 
   return (
@@ -266,11 +280,9 @@ function FixtureTable({
       <DataTable 
         value={fixtures} 
         dataKey="id"
-        responsiveLayout="scroll" 
+        responsiveLayout="scroll"
         editMode="cell" 
         onCellEditComplete={onCellEditComplete}
-        paginator 
-        rows={10}
         sortMode="multiple"
       >
         {columns.map((col, index) => (
