@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useAppContext } from "../../../../shared/js/Provider";
 
 import TournamentInfo from "./TournamentInfo";
@@ -33,7 +33,7 @@ function LandingPage () {
     reader.readAsText(files[0]);
   };
   return (
-    <main className={`.desktop LandingPage`}>
+    <main className={`desktop LandingPage`}>
       <header className='flex flex-column md:flex-row justify-content-between my-5'>
         <h1 className='mr-1' style={{marginRight: '10px'}}>Pitch Perfect</h1>
         <div>
@@ -49,11 +49,11 @@ function LandingPage () {
           <TabPanel header="Venues">
             <VenuesTabView />
           </TabPanel>
-          <TabPanel header="Competitions">
-            <CompetitionsTabView />
-          </TabPanel>
           <TabPanel header="Team Management">
             <TeamsTabView />
+          </TabPanel>
+          <TabPanel header="Competitions">
+            <CompetitionsTabView />
           </TabPanel>
         </TabView>
       </section>
