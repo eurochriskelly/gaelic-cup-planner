@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TabView, TabPanel } from 'primereact/tabview';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 import TeamGroupings from "./TeamGroupings";
 import FixtureTable from "./FixtureTable";
 import StageSelector from "./StageSelector"
@@ -31,30 +32,33 @@ const BigView = ({
   }, []);
 
   return <>
-    <section>
-      <div>
-        <h2>
+    <Accordion activeIndex={[0]}>
+      <AccordionTab header={
+        <span>
           <i className="pi pi-tags"></i>
           Select Stages
-        </h2>
+        </span>
+      }>
         <StageSelector />
-      </div>
-      <div>
-        <h2>
+      </AccordionTab>
+      <AccordionTab header={
+        <span>
           <i className="pi pi-users"></i>
-          <span>Define competition groups</span>
-        </h2>
+          Groups and teams
+        </span>
+      }>
         <TeamGroupings
           competition={competition}
           participants={participantLookup(groups)}
           pitches={pitches}
           venues={venues} />
-      </div>
-      <div>
-        <h2>
+      </AccordionTab>
+      <AccordionTab header={
+        <span>
           <i className="pi pi-calendar"></i>
           <span>Organize Fixtures</span>
-        </h2>
+        </span>
+      }>
         <TabView>
           <TabPanel key={2} header="Groups">{
               groups?.map((group, index) => {
@@ -65,7 +69,7 @@ const BigView = ({
                   <h3>Group {index + 1}</h3>
                   <FixtureTable
                     fixtures={filtered}
-                    removeFields={['groupNumber', 'stage']}
+                    removeFields={['groupNumber', 'stage', 'score1', 'score2']}
                     participants={participantLookup(groups)}
                     teams={groups[index]}
                     umpires={groups.reduce((p, n) => [...p, ...n], [])}
@@ -79,6 +83,7 @@ const BigView = ({
           </TabPanel>
           <TabPanel key={2} header="Knockouts">
             <FixtureTable
+              removeFields={['groupNumber', 'stage', 'score1', 'score2']}
               participants={participantLookup(groups)}
               fixtures={fixtures.filter(f => f.stage.toLowerCase() !== 'group')}
             />
@@ -89,8 +94,8 @@ const BigView = ({
               fixtures={fixtures} />
           </TabPanel>
         </TabView>
-      </div>
-    </section>
+      </AccordionTab>
+    </Accordion>
   </>
 };
 
