@@ -35,7 +35,7 @@ const BigView = ({
       <div>
         <h2>
           <i className="pi pi-tags"></i>
-          Stages
+          Select Stages
         </h2>
         <StageSelector />
       </div>

@@ -2,17 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #ddd;
-  margin: 0;
-}
 
-h1 {
-  font-size: 2rem;
+/* Alternatively, adjust Tailwind's config to exclude certain paths */
+@layer base {
+  input[type="checkbox"] {
+    @apply appearance-none;
+  }
+  h1 {
+    @apply text-2xl font-bold mb-4;
+  }
+  h2 {
+    @apply text-xl font-semibold mb-3;
+  }
+  h3 {
+    @apply text-lg font-medium mb-2;
+  }
 }
-.p-inputtext {
-  background: #fafafa;
-}
-td {
-  border: 1px solid #ddd;
+body {
+  background: #eee;
 }
