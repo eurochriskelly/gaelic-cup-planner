@@ -47,7 +47,12 @@ function CompetitionsTabView()
       competitions.length > 0 && (
         <TabView>{
           competitions.map((competition, index) => (
-            <TabPanel key={`tp-${index}`} header={competition.name}>
+            <TabPanel key={`tp-${index}`} header={
+              <span>
+                <i className="pi pi-trophy"></i>
+                <span>{competition.name}</span>
+              </span>
+            }>
               <BigView key={`bv-${index}`} competition={competition} pitches={pitches} venues={venues} />
             </TabPanel>
           ))
