@@ -48,7 +48,7 @@ function CompetitionsTabView()
         <TabView>{
           competitions.map((competition, index) => (
             <TabPanel key={`tp-${index}`} header={competition.name}>
-              <BigView competition={competition} pitches={pitches} venues={venues} />
+              <BigView key={`bv-${index}`} competition={competition} pitches={pitches} venues={venues} />
             </TabPanel>
           ))
         }</TabView>

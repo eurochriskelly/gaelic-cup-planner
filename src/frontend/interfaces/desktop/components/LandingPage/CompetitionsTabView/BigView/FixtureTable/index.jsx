@@ -4,9 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
-import 'primereact/resources/themes/saga-blue/theme.css';  // Adjust theme as needed
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
+
 import './FixtureTable.scss'; // Import the custom CSS
 
 // Utility function to determine text color?.based on background brightness

@@ -24,7 +24,6 @@ function TournamentInfo({ tournamentId }) {
     tournInfo, setTournInfo, originalInfo, 
     date, setDate, originalDate, region
   } = useTournamentInfo(tournamentId);
-  console.log('tournament', tournament);
   const { filteredRegions, searchRegion } = useRegions();
 
   const isDirty = (field) => {
@@ -38,11 +37,6 @@ function TournamentInfo({ tournamentId }) {
       default:
         return false;
     }
-  };
-
-  const handleSubmit = () => {
-    // Implement your submission logic here
-    console.log('Submitting:', tournInfo, date);
   };
 
   return (
@@ -76,11 +70,11 @@ function TournamentInfo({ tournamentId }) {
               onChange={(e) => setRegion(e.value)}
             />
             <InputText
-              value={tournament.location.country}
+              //value={tournament.location.country}
               onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })}
               className={isDirty('location') ? 'dirty' : ''} />
             <InputText
-              value={tournament.location.city}
+              //value={tournament.location.city}
               onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })}
               className={isDirty('location') ? 'dirty' : ''} />
           </Row>

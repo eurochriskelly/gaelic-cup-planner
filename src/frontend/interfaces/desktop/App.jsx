@@ -7,7 +7,8 @@ import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import "./App.scss";
+
+import "./App.scss"; // Ensure Tailwind directives are here
 
 function App() {
   return (
@@ -24,4 +25,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
