@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { Column } from 'primereact/column';
@@ -6,10 +6,11 @@ import './TeamGroupings.scss';
 
 function TeamGroupings({
   competition,
+  participants,
   pitches,
   venues
 }) {
-  console.log('TeamGroupings:', competition, "xx", pitches, "yy", venues);
+  console.log('participants', participants);
   const { name, code, teams = [], data, ready } = competition;
 
   const [groups, setGroups] = useState([
@@ -23,7 +24,7 @@ function TeamGroupings({
   ]);
   const getColumns = () => [
     { columnId: "group", width: 100 },
-    { columnId: "A", width: 190 },
+    { columnId: "A", width: 190},
     { columnId: "B", width: 190 },
     { columnId: "C", width: 190 },
     { columnId: "D", width: 190 },
@@ -82,7 +83,17 @@ function TeamGroupings({
             header={capitalize(col.columnId)}
             editor={(options) => textEditor(options)} 
             onCellEditComplete={onCellEditComplete} 
-            style={{ width: `${col.width}px` }} />
+            style={{ width: `${col.width}px` }}
+            body={(data) => {
+              return (
+                <div className='groupTeam' style={{
+                      background: participants[data[col.columnId]]?.light,
+                      color: 'black',
+                      fontWeight: 'bold',
+                }}>{data[col.columnId].toUpperCase()}</div>
+              )
+            }}
+          />
         })
       }</DataTable>
     </section>
