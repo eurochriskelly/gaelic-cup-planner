@@ -38,6 +38,8 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    padding: 2px;
+    border: 1px solid #7a989d;
   }
 
   /* Optional: Add padding inside the inner <div> for better readability */
