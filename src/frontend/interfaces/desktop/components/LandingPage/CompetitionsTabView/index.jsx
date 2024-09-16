@@ -9,6 +9,7 @@ import './CompetitionsTabView.scss';
 
 function CompetitionsTabView()
 {
+  const X= useTournament();
   const { categories, pitches, venues }  = useTournament();
   const [competitions, setCompetitions] = useState([]);
   const [newCompetitionName, setNewCompetitionName] = useState('');
@@ -53,7 +54,7 @@ function CompetitionsTabView()
                 <span>{competition.name}</span>
               </span>
             }>
-              <BigView key={`bv-${index}`} competition={competition} pitches={pitches} venues={venues} />
+              <BigView key={`bv-${index}`} competition={competition} pitches={pitches} venues={venues} rules={competition?.data?.rules} />
             </TabPanel>
           ))
         }</TabView>

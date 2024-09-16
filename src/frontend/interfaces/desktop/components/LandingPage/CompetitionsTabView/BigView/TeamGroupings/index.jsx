@@ -10,7 +10,6 @@ function TeamGroupings({
   pitches,
   venues
 }) {
-  console.log('participants', participants);
   const { name, code, teams = [], data, ready } = competition;
 
   const [groups, setGroups] = useState([

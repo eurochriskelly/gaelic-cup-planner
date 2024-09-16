@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
+import chroma from "chroma-js";
 
 import './FixtureTable.scss'; // Import the custom CSS
 
@@ -258,16 +259,18 @@ function FixtureTable({
       if (!x.headerStyle) x.headerStyle = x.style
       if (x.headerStyle === 'group') x.headerStyle = {
         ...x.style,
-        backgroundColor: '#666',
+        backgroundColor: '#7a989d',
         textAlign: 'center',
-        borderRight: '1px solid #999',
+        padding: '0.4rem',
+        borderRight: '1px solid #ccc',
         color: 'white'
       };
+      const col = chroma('#00b6d4').darken(1.5).hex();
       return {
         ...x,
         headerStyle: { 
-          ...x.headerStyle, 
-          borderBottom: '4px solid black', 
+          ...x.headerStyle,
+          borderBottom: `4px solid ${col}`,
           textAlign: 'center',
         }
       };
