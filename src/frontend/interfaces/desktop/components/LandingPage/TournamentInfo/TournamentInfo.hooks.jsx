@@ -43,7 +43,7 @@ export function useRegions() {
     fetch(`/api/regions`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if (data?.foo) console.log(data);
         // Handle region data if needed
       })
       .catch((error) => console.error("Error fetching regions:", error));
