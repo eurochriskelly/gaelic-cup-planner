@@ -274,16 +274,22 @@ function FixtureTable({
           textAlign: 'center',
         }
       };
-    });
+    })
+
+  console.log('columns:', columns);
 
   return (
     <section className="FixtureTable">
       <DataTable
-        value={fixtures} 
+        value={fixtures.map(x => ({
+          ...x, 
+          team1: parseCode(x.team1)?.friendly || x.team1,
+          team2: parseCode(x.team2)?.friendly || x.team2,
+        }))}
         dataKey="id"
         rowGroupMode='subheader'
         groupRowsBy={groupField}
-        rowGroupHeaderTemplate={(data) => <div>{`${groupField.toUpperCase()} ${data[groupField]}`}</div>}
+        rowGroupHeaderTemplate={(data) => <div className='rowhead'>{`${groupField.toUpperCase()} ${data[groupField]}`}</div>}
         editMode="cell" 
         onCellEditComplete={onCellEditComplete}
         sortMode="multiple"
@@ -306,3 +312,34 @@ function FixtureTable({
 }
 
 export default FixtureTable;
+
+function parseCode(
+  code
+) {
+  const result = {
+    friendly: code,
+  };
+
+  if (code?.startsWith('~group')) {
+      const [groupPart, placePart] = code.split('/p:');
+      const groupNumber = parseInt(groupPart.split(':')[1], 10);
+      const placeNumber = parseInt(placePart, 10);
+
+      result.type = 'group';
+      result.group = groupNumber;
+      result.place = placeNumber;
+      result.friendly = `${placeNumber}${placeNumber === 1 ? 'st' : placeNumber === 2 ? 'nd' : placeNumber === 3 ? 'rd' : 'th'} place in group ${groupNumber}`;
+  } else if (code?.startsWith('~match')) {
+      const [matchPart, placePart] = code.split('/p:');
+      const matchNumber = parseInt(matchPart.split(':')[1], 10);
+      const placeNumber = parseInt(placePart, 10);
+
+      result.type = 'match';
+      result.match = matchNumber;
+      result.place = placeNumber;
+      result.friendly = `${placeNumber === 1 ? 'winner' : 'loser'} of match ${matchNumber}`;
+  }
+
+  return result;
+}
+

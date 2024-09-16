@@ -12,6 +12,21 @@
       text-align: center;
       padding: 0.5rem;
     }
+    tbody.p-datatable-tbody > tr.p-rowgroup-header > td {
+      padding: 0;
+      background: #cae4e8;
+      > .p-rowgroup-header-name {
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+        .rowhead {
+          color: #888;
+          padding: 1rem;
+          margin: 0;
+          text-align: center;
+        }
+      }
+    }
   } 
  
   /* Remove all padding from team-related <td> elements */
