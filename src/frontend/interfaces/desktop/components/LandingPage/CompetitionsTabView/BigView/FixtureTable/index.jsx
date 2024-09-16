@@ -24,10 +24,10 @@ function FixtureTable({
   participants = {},
   teams = [],
   umpires = [],
-  referees = []
+  referees = [],
+  groupField = null
 }) {
   const [fixtures, setFixtures] = useState(initialFixtures);
-
   // Synchronize fixtures state with initialFixtures prop
   useEffect(() => {
     setFixtures(initialFixtures);
@@ -278,10 +278,12 @@ function FixtureTable({
 
   return (
     <section className="FixtureTable">
-      <DataTable 
+      <DataTable
         value={fixtures} 
         dataKey="id"
-        responsiveLayout="scroll"
+        rowGroupMode='subheader'
+        groupRowsBy={groupField}
+        rowGroupHeaderTemplate={(data) => <div>{`${groupField.toUpperCase()} ${data[groupField]}`}</div>}
         editMode="cell" 
         onCellEditComplete={onCellEditComplete}
         sortMode="multiple"
@@ -291,7 +293,6 @@ function FixtureTable({
             key={index}
             field={col.field}
             header={col.header}
-            sortable={col.sortable}
             editor={col.editor}
             className={col.className}
             headerStyle={col.headerStyle}

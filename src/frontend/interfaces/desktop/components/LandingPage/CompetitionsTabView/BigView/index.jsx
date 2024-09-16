@@ -29,7 +29,13 @@ const BigView = ({
     fetch(`/api/tournaments/${tournamentId}/fixtures`)
       .then((response) => response.json())
       .then((data) => {
-        setFixtures(data.data.filter(x => x.category.toLowerCase() === competition.name.toLowerCase()))
+        setFixtures(data.data
+          .filter(x => x.category.toLowerCase() === competition.name.toLowerCase())
+          .map(x => ({
+            ...x,
+            stageName: x.stage.split('_').shift(),
+          }))
+        )
       })
       .catch((error) => {
         console.error("Error fetching tournament info:", error);
@@ -47,7 +53,7 @@ const BigView = ({
   }, []);
 
   const hname = (title, tag = 'users') => <span><i className={`pi pi-${tag}`}></i><span>{title}</span> </span>
-  console.log('preliminaryStages:', preliminaryStages)
+  const order = ['cup', 'shd', 'plt', 'spn'];
   return <>
     <Accordion activeIndex={[0]}>
       <AccordionTab header={hname('Select Stages', 'tags')}>
@@ -61,29 +67,20 @@ const BigView = ({
           venues={venues} />
       </AccordionTab>
       <AccordionTab header={hname('Fixtures', 'calendar')}>
-          <TabView>
-          {
-            preliminaryStages.includes('Group') && (
-                <TabPanel key={2} header="Groups">{
-                    groups?.map((group, index) => {
-                      const filtered = fixtures
-                            .filter(f => f.groupNumber === (index + 1))
-                            .filter(f => f.stage.toLowerCase() === 'group');
-                      return <>
-                        <h3>Group {index + 1}</h3>
-                        <FixtureTable
-                          fixtures={filtered}
-                          removeFields={['groupNumber', 'stage', 'score1', 'score2']}
-                          participants={participantLookup(groups)}
-                          teams={groups[index]}
-                          umpires={groups.reduce((p, n) => [...p, ...n], [])}
-                          group={group}
-                        />
-                      </>
-                  })
-                }</TabPanel>
-            )
-          }
+        <TabView>
+          <TabPanel key={2} header="Groups">
+            <FixtureTable
+              fixtures={fixtures
+                .filter(f => f.stage.toLowerCase() === 'group')
+                .sort((a, b) => a.groupNumber - b.groupNumber)
+              }
+              groupField='groupNumber'
+              removeFields={['groupNumber','stage', 'score1', 'score2']}
+              participants={participantLookup(groups)}
+              teams={groups.reduce((p, n) => [...p, ...n], [])}
+              umpires={groups.reduce((p, n) => [...p, ...n], [])}
+            />
+          </TabPanel>
           {
             preliminaryStages.includes('Playoffs') && (
               <TabPanel key={2} header="Playoffs">
@@ -93,9 +90,18 @@ const BigView = ({
           }
           <TabPanel key={2} header="Knockouts">
             <FixtureTable
+              fixtures={fixtures
+                .filter(f => f.stage.toLowerCase() !== 'group')
+                .sort((a, b) => {
+                  const aPrefix = a.stage.split('_')[0];
+                  const bPrefix = b.stage.split('_')[0];
+                  return order.indexOf(aPrefix) - order.indexOf(bPrefix);
+                })
+              }
+              groupField='stageName'
               removeFields={['groupNumber', 'stage', 'score1', 'score2']}
               participants={participantLookup(groups)}
-              fixtures={fixtures.filter(f => f.stage.toLowerCase() !== 'group')}
+              teams={groups.reduce((p, n) => [...p, ...n], [])}
             />
           </TabPanel>
           <TabPanel key={1} header="ALL">
