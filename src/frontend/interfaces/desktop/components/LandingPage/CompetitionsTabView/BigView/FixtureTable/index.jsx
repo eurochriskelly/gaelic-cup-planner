@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import chroma from "chroma-js";
 
 import './FixtureTable.scss'; // Import the custom CSS
+import { init } from 'i18next';
 
 // Utility function to determine text color?.based on background brightness
 const getTextColor = (bgColor) => {
@@ -28,6 +29,9 @@ function FixtureTable({
   groupField = null
 }) {
   const [fixtures, setFixtures] = useState(initialFixtures);
+  const [expandedRows, setExpandedRows] = useState([]);
+  console.log('FixtureTable:', initialFixtures);
+
   // Synchronize fixtures state with initialFixtures prop
   useEffect(() => {
     setFixtures(initialFixtures);
@@ -199,18 +203,18 @@ function FixtureTable({
       className: 'team-cell', // Assign custom class to <td>
       editor: (options) => dropdownEditor(options, 'umpireTeam', umpires),
       body: (data) => {
-        const textColor = participants[data.umpireTeam]?.dark || 'white';
-        return (
+        const textColor = participants[data.umpireTeam]?.dark || 'black';
+        return <> 
           <a href="#" onClick={(e) => e.preventDefault()}>
             <div 
               className="team-cell-content" // Apply content class to inner <div>
-              style={{ 
-                color: textColor, 
+              style={{
+                color: textColor,
                 fontWeight: 'bold',
               }}
-            >{data.umpireTeam}</div>
+            >{data.umpireTeam.toUpperCase()}</div>
           </a>
-        )
+        </> 
       }
     },
     { 
@@ -276,16 +280,32 @@ function FixtureTable({
       };
     })
 
-  console.log('columns:', columns);
+    const allowExpansion = (rowData) => {
+        return fixtures.orders.length > 0;
+    };
 
+    const rowExpansionTemplate = (data) => {
+        return (
+            <div className="p-3">
+                <h5>Orders for </h5>
+            </div>
+        );
+    };
   return (
     <section className="FixtureTable">
       <DataTable
-        value={fixtures.map(x => ({
-          ...x, 
-          team1: parseCode(x.team1)?.friendly || x.team1,
-          team2: parseCode(x.team2)?.friendly || x.team2,
-        }))}
+        value={fixtures
+          .map(x => ({
+            ...x, 
+            team1: parseCode(x.team1)?.friendly,
+            team2: parseCode(x.team2)?.friendly,
+            umpireTeam: parseCode(x.umpireTeam)?.friendly,
+          }))
+          .filter(x => console.log('x:', x) || true)
+        }
+        expandedRows={expandedRows}
+        onRowToggle={e => setExpandedRows(e.data)}
+        rowExpansionTemplate={rowExpansionTemplate}
         dataKey="id"
         rowGroupMode='subheader'
         groupRowsBy={groupField}
@@ -294,9 +314,10 @@ function FixtureTable({
         onCellEditComplete={onCellEditComplete}
         sortMode="multiple"
       >
+        <Column key={0} expander style={{ width: '0.4em' }} />
         {columns.map((col, index) => (
           <Column
-            key={index}
+            key={index + 1}
             field={col.field}
             header={col.header}
             editor={col.editor}
@@ -339,7 +360,6 @@ function parseCode(
       result.place = placeNumber;
       result.friendly = `${placeNumber === 1 ? 'winner' : 'loser'} of match ${matchNumber}`;
   }
-
   return result;
 }
 
