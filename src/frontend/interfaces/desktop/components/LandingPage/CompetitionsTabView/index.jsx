@@ -9,7 +9,7 @@ import './CompetitionsTabView.scss';
 
 function CompetitionsTabView()
 {
-  const X= useTournament();
+  const X = useTournament();
   const { categories, pitches, venues }  = useTournament();
   const [competitions, setCompetitions] = useState([]);
   const [newCompetitionName, setNewCompetitionName] = useState('');
@@ -32,7 +32,6 @@ function CompetitionsTabView()
         ready: false,
       }
     });
-    console.log('CompetitionsTabView:', comp);
     setCompetitions(comp);
   }, []);
 
