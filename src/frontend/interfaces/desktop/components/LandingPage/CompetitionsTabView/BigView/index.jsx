@@ -77,7 +77,10 @@ const BigView = ({
               groupField='groupNumber'
               removeFields={['groupNumber','stage', 'score1', 'score2']}
               participants={participantLookup(groups)}
+              groups={groups}
               teams={groups.reduce((p, n) => [...p, ...n], [])}
+              // todo: umpire teams should come from all tournaments
+              //       but should be ordered by group/competition/venue/tournament
               umpires={groups.reduce((p, n) => [...p, ...n], [])}
             />
           </TabPanel>
