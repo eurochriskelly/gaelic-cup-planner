@@ -1,0 +1,29 @@
+.placement-round-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #c0f0f0;
+
+    .section {
+        flex: 1;
+
+        h3 {
+            margin-bottom: 1rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+
+            label {
+                margin-left: 0.5rem;
+            }
+
+            .small-input {
+                width: 2rem;
+                margin-left: 0.5rem;
+            }
+        }
+    }
+}
