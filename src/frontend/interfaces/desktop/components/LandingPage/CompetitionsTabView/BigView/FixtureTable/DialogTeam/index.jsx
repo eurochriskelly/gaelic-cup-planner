@@ -41,65 +41,69 @@ export function DialogPickTeam({
         }
     }, [fixtureId]);
 
-    const handleEditClick = (field) => {
-        setActiveField(field);
-        setShowDrawer(true);
+    const handleEditClick = (field, doShow = true) => {
+        setActiveField(doShow ? field : null);
+        setShowDrawer(doShow);
     };
 
     const handleSave = () => {
-        console.log('Saved fixture:', fixtureState);
         setShowDrawer(false);
         setActiveField(null);
     };
 
-    return (
-        <Splitter className={`DialogPickTeam`} style={{ width: '1000px' }}>
-            <SplitterPanel>
-                <div className='ml-4 mt-4 mb-4 '>
-                    <Display>
-                        <DisplayRow label="Match #" editable={false}>
-                            <div className='font-bold ml-4 mb-2 text-lg'>
-                                {fixtureState.match}
-                            </div>
-                        </DisplayRow>
-                        <DisplayRow label="Stage">
-                            <Info>{fixtureState.stage}</Info>
-                            <Label>Group</Label>
-                            <Info>{fixtureState.group}</Info>
-                        </DisplayRow>
-                        <DisplayRow label="startTime">
-                            <Info>{fixtureState.startTime}</Info>
-                            <Label>pitch</Label>
-                            <Info>{fixtureState.pitch}</Info>
-                        </DisplayRow>
-                        <DisplayRow label="Team 1">
-                            <Info width={3}>{fixtureState.team1}</Info>
-                        </DisplayRow>
-                        <DisplayRow label="Team 2">
-                            <Info width={3}>{fixtureState.team2}</Info>
-                        </DisplayRow>
-                        <DisplayRow label="Umpiring Team">
-                            <Info width={3}>{fixtureState.umpiringTeam}</Info>
-                        </DisplayRow>
-                        <DisplayRow label="Referee">
-                            <Info width={2}>{fixtureState.referee}</Info>
-                        </DisplayRow>
-                    </Display>
-                    <Button className={'ml-40 w-60'} label="Save & Close" onClick={handleSave} />
-                </div>
-            </SplitterPanel>
+    const commonProps = { handleEditClick, fixtureState, handleSave, showDrawer, activeField };
 
-            {/* Drawer for editing */}
-            <SplitterPanel size={75} onHide={() => setShowDrawer(false)}>
-                <div className='m-4 w-full'>
-                    <h2>Edit {activeField}</h2>
-                    <div className='mb-2'>
-                        <Skeleton width="100%" height="h-full" />
+    return (
+        <div>
+            <Splitter className={`DialogPickTeam`} style={{ width: '1000px' }}>
+                <SplitterPanel>
+                    <div className='ml-4 mt-4 mb-4 '>
+                        <Display>
+                            <DisplayRow label="Match #" editable={false} {...commonProps}>
+                                <div className='font-bold ml-4 mb-2 text-lg'>
+                                    {fixtureState.match}
+                                </div>
+                            </DisplayRow>
+                            <DisplayRow label="Stage" {...commonProps}>
+                                <Info>{fixtureState.stage}</Info>
+                                <Label>Group</Label>
+                                <Info>{fixtureState.group}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="startTime" {...commonProps}>
+                                <Info>{fixtureState.startTime}</Info>
+                                <Label>pitch</Label>
+                                <Info>{fixtureState.pitch}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Team 1" {...commonProps}>
+                                <Info width={3}>{fixtureState.team1}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Team 2" {...commonProps}>
+                                <Info width={3}>{fixtureState.team2}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Umpiring Team" {...commonProps}>
+                                <Info width={3}>{fixtureState.umpiringTeam}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Referee" {...commonProps}>
+                                <Info width={2}>{fixtureState.referee}</Info>
+                            </DisplayRow>
+                        </Display>
                     </div>
-                    <Button className={`w-full`} label="Save" onClick={handleSave} />
-                </div>
-            </SplitterPanel>
-        </Splitter>
+                </SplitterPanel>
+
+                {/* Drawer for editing */}
+                <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'}`}>
+                    <div className='m-4 w-96'>
+                        <h2>Edit: <i>{activeField}</i></h2>
+                        <div className='mb-2'>{
+                            showDrawer
+                                ? <DialogCalcTeam />
+                                : <Skeleton width="96%" height="520px" className='m-2' />
+                        }</div>
+                    </div>
+                </SplitterPanel>
+            </Splitter>
+            <Button className={'float-right mt-4 mr-6 w-96'} disabled={showDrawer} label="Save & Close" onClick={handleSave} />
+        </div>
     );
 }
 
@@ -138,23 +142,23 @@ function Display({ children }) {
         </div>
     );
 }
-function DisplayRow({ label, children, editable = true, handleEditClick }) {
+function DisplayRow({ label, children, editable = true, ...rest }) {
+    const { handleEditClick, fixtureState, handleSave, showDrawer, activeField } = rest
+    const isOpen = activeField === label;
     return (
-        <tr className={`p-field ${editable && 'editable'}`}>
+        <tr className={`p-field ${editable && 'editable'} ${isOpen && 'open'}`}>
             <td className='text-right'><Label>{label}</Label></td>
             <td className="p-inputgroup"><div>{children}</div></td>
             <td>{editable && (
                 <Button
-                    className='p-button-rounded p-button-text bg-blue'
-                    icon="pi pi-pencil"
-                    onClick={() => handleEditClick(row.label)}
+                    className={`p-button-rounded p-button-text bg-blue ${isOpen && 'open'}`}
+                    icon={isOpen ? 'pi pi-check' : 'pi pi-pencil'}
+                    onClick={() => handleEditClick(label, !isOpen)}
                 />
             )}</td>
         </tr>
     );
 }
-
-
 
 export function DialogCalcTeam() {
     const [placement, setPlacement] = useState('winner');
