@@ -3,6 +3,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { Chip } from 'primereact/chip';
 import { Skeleton } from 'primereact/skeleton';
 import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
+import { ListBox } from 'primereact/listbox';
 import { Splitter, SplitterPanel } from 'primereact/splitter';
 import { RadioButton } from 'primereact/radiobutton';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -64,15 +66,15 @@ export function DialogPickTeam({
                                     {fixtureState.match}
                                 </div>
                             </DisplayRow>
+                            <DisplayRow label="Start time" {...commonProps}>
+                                <Info>{fixtureState.startTime}</Info>
+                                <Label>pitch</Label>
+                                <Info>{fixtureState.pitch}</Info>
+                            </DisplayRow>
                             <DisplayRow label="Stage" {...commonProps}>
                                 <Info>{fixtureState.stage}</Info>
                                 <Label>Group</Label>
                                 <Info>{fixtureState.group}</Info>
-                            </DisplayRow>
-                            <DisplayRow label="startTime" {...commonProps}>
-                                <Info>{fixtureState.startTime}</Info>
-                                <Label>pitch</Label>
-                                <Info>{fixtureState.pitch}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 1" {...commonProps}>
                                 <Info width={3}>{fixtureState.team1}</Info>
@@ -96,7 +98,7 @@ export function DialogPickTeam({
                         <h2>Edit: <i>{activeField}</i></h2>
                         <div className='mb-2'>{
                             showDrawer
-                                ? <DialogCalcTeam />
+                                ? <CustomEditDrawer {...commonProps} />
                                 : <Skeleton width="96%" height="520px" className='m-2' />
                         }</div>
                     </div>
@@ -107,6 +109,43 @@ export function DialogPickTeam({
     );
 }
 
+function CustomEditDrawer({
+    fixtureState,
+    activeField
+}) {
+    const [selectedTime, setSelectedTime] = useState(new Date());
+    const [selectedCity, setSelectedCity] = useState(null);
+    const cities = [
+        { name: 'New York', code: 'NY' },
+        { name: 'Rome', code: 'RM' },
+        { name: 'London', code: 'LDN' },
+        { name: 'Istanbul', code: 'IST' },
+        { name: 'Paris', code: 'PRS' }
+    ];
+
+    switch (activeField) {
+        case 'Start time':
+            return (
+                <div>
+                    <h3>Start time</h3>
+                    <Calendar
+                        value={selectedTime}
+                        onChange={(e) => setSelectedTime(e.value)}
+                        timeOnly
+                        hourFormat="24"
+                        showTime
+                        dateFormat="HH:mm"
+                    />
+                    <h3>Location</h3>
+                    <ListBox value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full md:w-14rem" />
+                </div>
+            );
+        default:
+            return (
+                <DialogCalcTeam />
+            );
+    }
+}
 function Label({ children }) {
     return <span className='text-slate-400 text-right'>{children.toUpperCase()}:</span>;
 }

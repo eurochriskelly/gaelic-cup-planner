@@ -43,8 +43,9 @@ $btn-color: #0056b3;
     .open {
         background-color: #f1f1f1;
         .p-button-rounded {
-            background-color: desaturate(lighten($btn-color, 46%), 30%);
-            color: black;
+            background-color: desaturate(lighten(green, 30%), 50%); //desaturate(lighten($btn-color, 46%), 30%);
+            color: white;
+            font-weight: bold;
         }
     }
 }
