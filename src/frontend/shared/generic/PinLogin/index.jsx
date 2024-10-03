@@ -61,11 +61,10 @@ const PinLogin = () => {
       case "1010":
         selectTournament(10);
         break;
-      case "1011":
-        selectTournament(11);
+      case "7465":
+        selectTournament(13);
         break;
       case "9999":
-        console.log('se lslslsl ')
         selectTournament(1);
         break;
       default:
