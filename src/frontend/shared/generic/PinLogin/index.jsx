@@ -61,10 +61,13 @@ const PinLogin = () => {
       case "1010":
         selectTournament(10);
         break;
-      case "7465":
+      case "7333":
         selectTournament(13);
         break;
-      case "9999":
+      case "7475":
+        selectTournament(2);
+        break;
+      case "9191":
         selectTournament(1);
         break;
       default:
