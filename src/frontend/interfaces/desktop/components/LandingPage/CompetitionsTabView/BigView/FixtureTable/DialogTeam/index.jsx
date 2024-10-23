@@ -3,13 +3,12 @@ import { Dropdown } from 'primereact/dropdown';
 import { Chip } from 'primereact/chip';
 import { Skeleton } from 'primereact/skeleton';
 import { Button } from 'primereact/button';
-import { Calendar } from 'primereact/calendar';
-import { ListBox } from 'primereact/listbox';
 import { Splitter, SplitterPanel } from 'primereact/splitter';
 import { RadioButton } from 'primereact/radiobutton';
 import { Accordion, AccordionTab } from 'primereact/accordion';
-// import { ListBox } from 'primereact/listbox';
-// import { InputText } from 'primereact/inputtext';
+import EditTimeAndPlace from './EditTimeAndPlace';
+import EditFixtureStage from './EditFixtureStage';
+import EditReferee from './EditReferee';
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -54,7 +53,6 @@ export function DialogPickTeam({
     };
 
     const commonProps = { handleEditClick, fixtureState, handleSave, showDrawer, activeField };
-
     return (
         <div>
             <Splitter className={`DialogPickTeam`} style={{ width: '1000px' }}>
@@ -95,6 +93,18 @@ export function DialogPickTeam({
                 {/* Drawer for editing */}
                 <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'}`}>
                     <div className='m-4 w-96'>
+                        <div className='m-2 bg-blue w-full '>
+                            <div className='float-right'>
+                                <Button
+                                    className={`p-button-rounded p-button-text bg-blue mr-1`}
+                                    icon={'pi pi-check'}
+                                />
+                                <Button
+                                    className={`p-button-rounded p-button-text bg-blue`}
+                                    icon={'pi pi-cancel'}
+                                />
+                            </div>
+                        </div>
                         <h2>Edit: <i>{activeField}</i></h2>
                         <div className='mb-2'>{
                             showDrawer
@@ -111,39 +121,24 @@ export function DialogPickTeam({
 
 function CustomEditDrawer({
     fixtureState,
-    activeField
+    activeField,
+    selectedPitch = 'Pitch 1',
+    availablePitches = ['Pitch 1', 'Pitch 2', 'Pitch 3', 'Pitch 4'],
+    ref = 'J.D. Vance',
+    referees = ['J.D. Vance', 'J.K. Rowling', 'J.R.R. Tolkien', 'J.R. Smith', 'J.R. Ewing'],
 }) {
-    const [selectedTime, setSelectedTime] = useState(new Date());
-    const [selectedCity, setSelectedCity] = useState(null);
-    const cities = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
-    ];
-
     switch (activeField) {
         case 'Start time':
-            return (
-                <div>
-                    <h3>Start time</h3>
-                    <Calendar
-                        value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.value)}
-                        timeOnly
-                        hourFormat="24"
-                        showTime
-                        dateFormat="HH:mm"
-                    />
-                    <h3>Location</h3>
-                    <ListBox value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full md:w-14rem" />
-                </div>
-            );
+            return <EditTimeAndPlace fixtureState={fixtureState} />;
+        case 'Stage':
+            return <EditFixtureStage fixtureState={fixtureState} />;
+        case 'Referee':
+            return <EditReferee
+                fixtureState={fixtureState}
+                referee={ref} referees={referees}
+            />;
         default:
-            return (
-                <DialogCalcTeam />
-            );
+            return <DialogCalcTeam fixtureState={fixtureState} />;
     }
 }
 function Label({ children }) {
@@ -188,10 +183,10 @@ function DisplayRow({ label, children, editable = true, ...rest }) {
         <tr className={`p-field ${editable && 'editable'} ${isOpen && 'open'}`}>
             <td className='text-right'><Label>{label}</Label></td>
             <td className="p-inputgroup"><div>{children}</div></td>
-            <td>{editable && (
+            <td>{editable && !isOpen && (
                 <Button
                     className={`p-button-rounded p-button-text bg-blue ${isOpen && 'open'}`}
-                    icon={isOpen ? 'pi pi-check' : 'pi pi-pencil'}
+                    icon='pi pi-pencil'
                     onClick={() => handleEditClick(label, !isOpen)}
                 />
             )}</td>
@@ -254,7 +249,6 @@ export function DialogCalcTeam() {
     return (
         <div className="placement-round-container">
             <Accordion>
-
                 <AccordionTab header={'Select Round'}>
                     <div className="option">
                         <RadioButton
