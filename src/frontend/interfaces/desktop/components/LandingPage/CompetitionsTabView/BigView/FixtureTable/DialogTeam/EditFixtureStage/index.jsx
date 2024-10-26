@@ -1,22 +1,71 @@
 import { useState } from 'react';
-import { Calendar } from 'primereact/calendar';
 import { ListBox } from 'primereact/listbox';
+import { Dropdown } from 'primereact/dropdown';
 
-function EditFixtureStage() {
+function EditFixtureStage({
+    stage = 'group',
+    stageOrder = 1,
+    teams = [
+        { name: 'Team 1', group: 1 },
+        { name: 'Team 2', group: 1 },
+        { name: 'Team 3', group: 2 },
+        { name: 'Team 4', group: 2 },
+        { name: 'Team 5', group: 2 },
+        { name: 'Team 6', group: 2 }
+    ],
+    setStage = () => { }
+}) {
+    const stages = ['group', 'playoffs', 'knockout'];
+    const [selectedStage, setSelectedStage] = useState({ name: stage, code: stage });
+    const [selectedNumber, setSelectedNumber] = useState(stageOrder);
+
+    const numbers = [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 }
+    ];
     return (
         <div>
             <h3>Stage</h3>
-            The fixture stage will go here
+            <ListBox
+                onChange={(e) => {
+                    console.log(`this is the value: ${JSON.stringify(e.value)}`);
+                    setSelectedStage(e.value);
+                }}
+                value={selectedStage}
+                options={stages.map(s => ({ name: s, code: s }))}
+                optionLabel="name"
+                className="w-full md:w-14rem" />
+
+            {selectedStage.code === 'group' && (
+                <div>
+                    <h3>Group</h3>
+                    <div className='grid grid-cols-2'>
+                        <div className='w-1'>
+                            <Dropdown
+                                value={selectedNumber}
+                                options={numbers}
+                                onChange={(e) => setSelectedNumber(e.value)} // Remove .name
+                                placeholder="Select a number"
+                            />
+                        </div>
+                        <div className='w-full'>
+                            <h3>Teams in group</h3>
+                            {teams
+                                .filter(t => +t.group === +selectedNumber)
+                                .map(t => {
+                                    return <div className='p-2 m-2 w-96'>{t.name}</div>;
+                                })
+                            }
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
 
 export default EditFixtureStage;
-
-
-/*
-
-I see there is quite some cross-over between the ref app and mine. 
-
-One of my biggest hurdles has been getting the fixtures accurately into the system with the secondary goal of being able to do so right up until the last second. I've done some stuff like using AI agents to parse the fixtures and format it into my input format, but it still requires some manual work. Over the summer, I created a google spreadsheet that makes setting up competitions and fixtures easier. Now, i'm converting that to a web app to give me more control and flexibility. The goals is to have something very flexible and easy to use. It can create sane defaults and allow for easy overrides.
-*/
