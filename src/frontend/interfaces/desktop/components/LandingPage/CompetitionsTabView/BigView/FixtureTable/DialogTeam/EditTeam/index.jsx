@@ -1,9 +1,43 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { Dropdown } from 'primereact/dropdown';
+import { ListBox } from 'primereact/listbox';
 import { RadioButton } from 'primereact/radiobutton';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 
-export function EditTeam() {
+export function EditTeam({
+    fixtureState,
+    groupTeams = [],
+    whichTeam = 'team1'
+}) {
+    console.log('fixtureState', fixtureState);
+    const isGroupStage = fixtureState.stage === 'group';
+    return (
+        isGroupStage 
+        ? <GroupTeamSelect currentTeam={fixtureState[whichTeam]} />
+        : <KnockoutTeamSelect />
+    );
+};
+
+export default EditTeam;
+
+function GroupTeamSelect({
+    teamsInGroup = [],
+    teamsInTournament = [],
+    currentTeam = ''
+}) {
+    const [selectedTeam, setSelectedTeam] = useState({ name: currentTeam, code: currentTeam });
+    return (
+        <ListBox
+            value={selectedTeam}
+            onChange={(e) => setSelectedTeam(e.value)}
+            options={teamsInGroup.map(t => ({ name: t, code: t }))}
+            optionLabel="name"
+            className="w-full md:w-14rem"
+        />
+    )
+}
+
+function KnockoutTeamSelect() {
     const [placement, setPlacement] = useState('winner');
     const [round, setRound] = useState('group');
 
@@ -54,11 +88,68 @@ export function EditTeam() {
     ];
 
     const cupNumberOptions = [1, 2, 3, 4, 5, 6, 7, 8].map((num) => ({ label: num.toString(), value: num }));
-
     return (
         <div className="placement-round-container">
             <Accordion>
-                <AccordionTab header={'Select Round'}>
+                <AccordionTab header={`Placement`}>
+                    <h3>Placement</h3>
+                    <div className="option">
+                        <RadioButton
+                            inputId="winner"
+                            value="winner"
+                            name="placement"
+                            onChange={(e) => setPlacement(e.value)}
+                            checked={placement === 'winner'}
+                        />
+                        <label htmlFor="winner">Winner</label>
+                    </div>
+                    <div className="option">
+                        <RadioButton
+                            inputId="loser"
+                            value="loser"
+                            name="placement"
+                            onChange={(e) => setPlacement(e.value)}
+                            checked={placement === 'loser'}
+                        />
+                        <label htmlFor="loser">Loser</label>
+                    </div>
+                    <div className="option">
+                        <RadioButton
+                            inputId="place"
+                            value="place"
+                            name="placement"
+                            onChange={(e) => setPlacement(e.value)}
+                            checked={placement === 'place'}
+                        />
+                        <Dropdown
+                            value={placeOption}
+                            options={placeOptions}
+                            onChange={(e) => setPlaceOption(e.value)}
+                            placeholder="Select Place"
+                            className="small-dropdown"
+                            disabled={placement !== 'place'}
+                        />
+                        <span> Place</span>
+                    </div>
+                    <div className="option">
+                        <RadioButton
+                            inputId="bestOf"
+                            value="bestOf"
+                            name="placement"
+                            onChange={(e) => setPlacement(e.value)}
+                            checked={placement === 'bestOf'}
+                        />
+                        <Dropdown
+                            value={bestOfOption}
+                            options={bestOfOptions}
+                            onChange={(e) => setBestOfOption(e.value)}
+                            placeholder="Select Option"
+                            className="large-dropdown"
+                            disabled={placement !== 'bestOf'}
+                        />
+                    </div>
+                </AccordionTab>
+                <AccordionTab header={`Round`}>
                     <div className="option">
                         <RadioButton
                             inputId="group"
@@ -131,67 +222,7 @@ export function EditTeam() {
                         <label htmlFor="match">Match</label>
                     </div>
                 </AccordionTab>
-                <AccordionTab header={'Select Placement'}>
-                    <h3>Placement</h3>
-                    <div className="option">
-                        <RadioButton
-                            inputId="winner"
-                            value="winner"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'winner'}
-                        />
-                        <label htmlFor="winner">Winner</label>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="loser"
-                            value="loser"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'loser'}
-                        />
-                        <label htmlFor="loser">Loser</label>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="place"
-                            value="place"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'place'}
-                        />
-                        <Dropdown
-                            value={placeOption}
-                            options={placeOptions}
-                            onChange={(e) => setPlaceOption(e.value)}
-                            placeholder="Select Place"
-                            className="small-dropdown"
-                            disabled={placement !== 'place'}
-                        />
-                        <span> Place</span>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="bestOf"
-                            value="bestOf"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'bestOf'}
-                        />
-                        <Dropdown
-                            value={bestOfOption}
-                            options={bestOfOptions}
-                            onChange={(e) => setBestOfOption(e.value)}
-                            placeholder="Select Option"
-                            className="large-dropdown"
-                            disabled={placement !== 'bestOf'}
-                        />
-                    </div>
-                </AccordionTab>
             </Accordion>
         </div>
-    );
-};
-
-export default EditTeam;
+    )
+}
