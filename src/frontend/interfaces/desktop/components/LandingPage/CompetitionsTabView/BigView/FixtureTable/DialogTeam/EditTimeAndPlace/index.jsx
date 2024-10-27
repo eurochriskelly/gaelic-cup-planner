@@ -26,10 +26,25 @@ function EditTimeAndPlace(props) {
         'Move after fixture',
         'Swap with fixture'
     ];
-    const [selectedTime, setSelectedTime] = useState(new Date());
-    const [selectedPitch, setSelectedPitch] = useState(currPitch);
-    const [selectedAction, setSelectedAction] = useState(actions[0]);
-    const [selectedFixture, setSelectedFixture] = useState(null);
+    const [isDirty, setIsDirty] = useState(false);
+    const cleanValues = {
+        selectedTime: new Date(),
+        selectedAction: actions[0],
+        selectedFixture: null,
+        selectedPitch: currPitch,
+    };
+    const dirtyCheck = (action, value) => {
+        if (value === cleanValues[action]) {
+            setIsDirty(false);
+            return value;
+        }  
+        setIsDirty(true);
+        return value;
+    }
+    const [selectedTime, setSelectedTime] = useState(cleanValues.selectedTime);
+    const [selectedPitch, setSelectedPitch] = useState(cleanValues.selectedPitch);
+    const [selectedAction, setSelectedAction] = useState(cleanValues.selectedAction);
+    const [selectedFixture, setSelectedFixture] = useState(cleanValues.selectedFixture);
     return (
         <div>
             <h3>Start time</h3>
@@ -49,7 +64,7 @@ function EditTimeAndPlace(props) {
                         className='w-full md:w-14rem'
                         placeholder='Select action'
                         value={selectedAction}
-                        onChange={(e) => setSelectedAction(e?.value)}
+                        onChange={(e) => dirtyCheck('action', e?.value)}
                         options={actions.map(a => ({ label: a, value: a }))}
                     />
                 </div>
