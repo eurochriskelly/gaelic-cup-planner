@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, act } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { Chip } from 'primereact/chip';
 import { Skeleton } from 'primereact/skeleton';
@@ -65,26 +65,36 @@ export function DialogPickTeam({
                                 </div>
                             </DisplayRow>
                             <DisplayRow label="Stage" {...commonProps}>
-                                <Info>{fixtureState.stage}</Info>
-                                <Label>Group</Label>
-                                <Info>{fixtureState.group}</Info>
+                                <Info width={2}>{fixtureState.stage}</Info>
+                                {fixtureState.stage === 'group' ?
+                                    <>
+                                        <Label>Group</Label>
+                                        <Info width={1}>{fixtureState.group}</Info>
+                                    </>
+                                    : <>
+                                        <Label>round</Label>
+                                        <Info width={3}>{fixtureState.group}</Info>
+                                        <Label>#</Label>
+                                        <Info width={1}>{fixtureState.group}</Info>
+                                    </>
+                                }
                             </DisplayRow>
                             <DisplayRow label="Start time" {...commonProps}>
-                                <Info>{fixtureState.startTime}</Info>
+                                <Info width={2}>{fixtureState.startTime}</Info>
                                 <Label>pitch</Label>
-                                <Info>{fixtureState.pitch}</Info>
+                                <Info width={2}>{fixtureState.pitch}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 1" {...commonProps}>
-                                <Info width={3}>{fixtureState.team1}</Info>
+                                <Info width={4}>{fixtureState.team1}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 2" {...commonProps}>
-                                <Info width={3}>{fixtureState.team2}</Info>
+                                <Info width={4}>{fixtureState.team2}</Info>
                             </DisplayRow>
                             <DisplayRow label="Umpiring Team" {...commonProps}>
-                                <Info width={3}>{fixtureState.umpiringTeam}</Info>
+                                <Info width={4}>{fixtureState.umpiringTeam}</Info>
                             </DisplayRow>
                             <DisplayRow label="Referee" {...commonProps}>
-                                <Info width={2}>{fixtureState.referee}</Info>
+                                <Info width={3}>{fixtureState.referee}</Info>
                             </DisplayRow>
                         </Display>
                     </div>
@@ -93,26 +103,6 @@ export function DialogPickTeam({
                 {/* Drawer for editing */}
                 <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'} bg-slate-200 m-0`}>
                     <div className='m-0 w-96'>
-                        {activeField &&
-                            <div className='p-0 m-2 bg-slate-100 w-full'>
-                                <h2 className='bg-slate-500 color-white text-white m-0 p-5'>
-                                    <span>Edit:</span>
-                                    <i>{activeField}</i>
-                                    <span className='float-right p-0'>
-                                        <Button
-                                            className={`p-button-rounded p-button-text bg-blue mr-1`}
-                                            onClick={() => handleSave(true)}
-                                            icon={'pi pi-check'}
-                                        />
-                                        <Button
-                                            className={`p-button-rounded p-button-text bg-blue`}
-                                            onClick={() => handleSave(false)}
-                                            icon={'pi pi-times'}
-                                        />
-                                    </span >
-                                </h2>
-                            </div>
-                        }
                         <div className='mb-2 m-5'>{
                             showDrawer
                                 ? <CustomEditDrawer {...commonProps} />
@@ -126,18 +116,21 @@ export function DialogPickTeam({
     );
 }
 function Label({ children }) {
-    return <span className='text-slate-400 text-right'>{children.toUpperCase()}:</span>;
+    return <label className='text-slate-400 text-right'>{children.toUpperCase()}:</label>;
 }
 function Info({ children, width = 1 }) {
     let w = '';
     switch (width) {
         case 1:
-            w = 'w-24';
+            w = 'w-12';
             break
         case 2:
-            w = 'w-48';
+            w = 'w-24';
             break
         case 3:
+            w = 'w-48';
+            break
+        case 4:
             w = 'w-72';
             break
         default:
@@ -153,9 +146,11 @@ function Display({ children }) {
                 <colgroup>
                     <col style={{ width: '140px' }} />
                     <col style={{ width: 'auto' }} />
-                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '100px' }} />
                 </colgroup>
+                <tbody>
                 {children}
+                </tbody>
             </table>
         </div>
     );
@@ -164,16 +159,33 @@ function DisplayRow({ label, children, editable = true, ...rest }) {
     const { handleEditClick, fixtureState, handleSave, showDrawer, activeField } = rest
     const isOpen = activeField === label;
     return (
-        <tr className={`p-field ${editable && 'editable'} ${isOpen && 'open'}`}>
+        <tr className={`p-field ${editable && 'editable'} ${isOpen ? 'open' : activeField ? 'locked' : 'unlocked'}`}>
             <td className='text-right'><Label>{label}</Label></td>
             <td className="p-inputgroup"><div>{children}</div></td>
-            <td>{editable && !isOpen && (
-                <Button
-                    className={`p-button-rounded p-button-text bg-blue ${isOpen && 'open'}`}
-                    icon='pi pi-pencil'
-                    onClick={() => handleEditClick(label, !isOpen)}
-                />
-            )}</td>
+            <td className=''>
+                {editable && !isOpen && !activeField && <span className='inline-block w-full float-right'>
+                    <span>&nbsp;</span>
+                    <Button
+                        className={`p-button-rounded p-button-text ${isOpen && 'open'} float-right`}
+                        icon='pi pi-pencil'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                </span>
+                }
+                {editable && isOpen && <span className='inline-block w-full'>
+                    <Button
+                        className={`p-button-rounded p-button-text p-cancel text-white ${isOpen && 'open'} float-right`}
+                        icon='pi pi-times'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                    <Button
+                        className={`p-button-rounded p-button-text p-save bg-green-500 text-white ${isOpen && 'open'} float-right`}
+                        icon='pi pi-check'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                </span>
+                }
+            </td>
         </tr>
     );
 }
