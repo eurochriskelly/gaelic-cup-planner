@@ -16,14 +16,8 @@ import EditTeam from './EditTeam';
 
 export function DialogPickTeam({
     fixtureId = null,
-    fixtures = {},
-    competition = 'C1',
-}) {
-    const initialFixture = fixtureId !== null ? fixtures[fixtureId] : {};
-    const [showDrawer, setShowDrawer] = useState(false);
-    const [activeField, setActiveField] = useState(null);
-    const [fixtureState, setFixtureState] = useState({
-        match: competition + '/001',
+    initFixture = {
+        match: 'C1' + '/001',
         stage: 'group',
         group: 1,
         startTime: '10:15',
@@ -33,7 +27,13 @@ export function DialogPickTeam({
         umpiringTeam: 'teambury hearts fc',
         referee: 'J. Malone',
         duration: 60,
-    });
+    },
+    fixtures = {},
+}) {
+    const initialFixture = fixtureId !== null ? fixtures[fixtureId] : {};
+    const [showDrawer, setShowDrawer] = useState(false);
+    const [activeField, setActiveField] = useState(null);
+    const [fixtureState, setFixtureState] = useState(initFixture);
 
     // Populate fields if fixtureId is provided
     useEffect(() => {
@@ -52,7 +52,7 @@ export function DialogPickTeam({
         setActiveField(null);
     };
 
-    const commonProps = { handleEditClick, fixtureState, handleSave, showDrawer, activeField };
+    const commonProps = { handleEditClick, setFixtureState, fixtureState, handleSave, showDrawer, activeField };
     return (
         <div>
             <Splitter className={`DialogPickTeam`} style={{ width: '1000px' }}>
@@ -121,13 +121,18 @@ export function DialogPickTeam({
 
 function CustomEditDrawer({
     fixtureState,
+    setFixtureState,
     activeField,
     selectedPitch = 'Pitch 1',
     availablePitches = ['Pitch 1', 'Pitch 2', 'Pitch 3', 'Pitch 4'],
     ref = 'J.D. Vance',
     referees = ['J.D. Vance', 'J.K. Rowling', 'J.R.R. Tolkien', 'J.R. Smith', 'J.R. Ewing'],
 }) {
-    const commonProps = { fixtureState, activeField };
+    const updateFixture = (newFixtureInfo) => {
+        console.log('updateFixture', newFixtureInfo);
+
+    }
+    const commonProps = { fixtureState, activeField, updateFixture };
     switch (activeField.toUpperCase()) {
         case 'STAGE':
             return <EditFixtureStage {...commonProps} />;
