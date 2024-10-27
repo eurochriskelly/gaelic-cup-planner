@@ -79,15 +79,17 @@ function EditTimeAndPlace(props) {
                 placeholder="Select a pitch"
                 className="w-full md:w-14rem"
             />
-            <pre>
-                selected time: {selectedTime.toString()}
-                <br />
-                selected pitch: {selectedPitch}
-                <br />
-                selected action: {selectedAction}
-            </pre>
         </div>
     );
 }
 
 export default EditTimeAndPlace;
+/*
+    <pre>
+        selected time: {selectedTime.toString()}
+        <br />
+        selected pitch: {selectedPitch}
+        <br />
+        selected action: {selectedAction}
+    </pre>
+*/
