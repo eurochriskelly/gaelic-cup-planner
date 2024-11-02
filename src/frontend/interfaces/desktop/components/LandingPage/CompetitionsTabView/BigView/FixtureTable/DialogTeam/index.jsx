@@ -81,8 +81,11 @@ export function DialogPickTeam({
                             </DisplayRow>
                             <DisplayRow label="Start time" {...commonProps}>
                                 <Info width={2}>{fixtureState.startTime}</Info>
-                                <Label>pitch</Label>
-                                <Info width={2}>{fixtureState.pitch}</Info>
+                                <Label>Duration</Label>
+                                <Info width={1}>{fixtureState?.duration || '0 m'}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Location" {...commonProps}>
+                                <Info width={4}>Venue X / {fixtureState.pitch}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 1" {...commonProps}>
                                 <Info width={4}>{fixtureState.team1}</Info>
@@ -96,16 +99,13 @@ export function DialogPickTeam({
                             <DisplayRow label="Referee" {...commonProps}>
                                 <Info width={3}>{fixtureState.referee}</Info>
                             </DisplayRow>
-                            <DisplayRow label="Duration" {...commonProps}>
-                                <Info width={2}>{fixtureState?.duration || '0 m'}</Info>
-                            </DisplayRow>
                         </Display>
                     </div>
                 </SplitterPanel>
 
                 {/* Drawer for editing */}
-                <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'} bg-slate-200 m-0`}>
-                    <div className='m-0 w-96'>
+                <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'} bg-slate-100 m-0`}>
+                    <div className='m-0 w-auto'>
                         <div className='mb-2 m-5'>{
                             showDrawer
                                 ? <CustomEditDrawer {...commonProps} />
@@ -126,11 +126,10 @@ function CustomEditDrawer({
     selectedPitch = 'Pitch 1',
     availablePitches = ['Pitch 1', 'Pitch 2', 'Pitch 3', 'Pitch 4'],
     ref = 'J.D. Vance',
-    referees = ['J.D. Vance', 'J.K. Rowling', 'J.R.R. Tolkien', 'J.R. Smith', 'J.R. Ewing'],
+    referees = ['J.D. Vance', 'J.K. Rowling', 'J.R.R. Tolkien', 'J. Malone', 'J.R. Ewing'],
 }) {
     const updateFixture = (newFixtureInfo) => {
         console.log('updateFixture', newFixtureInfo);
-
     }
     const commonProps = { fixtureState, activeField, updateFixture };
     switch (activeField.toUpperCase()) {
@@ -138,6 +137,8 @@ function CustomEditDrawer({
             return <EditFixtureStage {...commonProps} />;
         case 'START TIME':
             return <EditTimeAndPlace {...commonProps} />;
+        case 'LOCATION':
+            return <EditLocation {...commonProps} />;
         case 'REFEREE':
             return <EditReferee {...commonProps} referee={ref} referees={referees} />;
         case 'TEAM 1':
@@ -146,8 +147,6 @@ function CustomEditDrawer({
             return <EditTeam {...commonProps} team={'team2'} />;
         case 'UMPIRING TEAM':
             return <EditTeam {...commonProps} team={'umpiringTeam'} />;
-        case 'DURATION':
-            return <EditDuration {...commonProps} />;
         default:
             return <div>Unknown section</div>
     }
@@ -175,7 +174,8 @@ function Info({ children, width = 1 }) {
             w = 'w-24';
             break
     }
-    return <Chip label={children} className={`font-bold bg-blue-100 m-2 p-1 pl-3 ${w}`} />;
+    const cls = `font-bold bg-blue-500 uppercase rounded-md text-white m-2 p-1 pl-3 ${w}`
+    return <Chip label={children} className={cls} />;
 }
 function Display({ children }) {
     return (
@@ -197,14 +197,14 @@ function DisplayRow({ label, children, editable = true, ...rest }) {
     const { handleEditClick, fixtureState, handleSave, showDrawer, activeField } = rest
     const isOpen = activeField === label;
     return (
-        <tr className={`p-field ${editable && 'editable'} ${isOpen ? 'open' : activeField ? 'locked' : 'unlocked'}`}>
+        <tr className={`p-field ${editable ? 'editable' : 'uneditable' } ${isOpen ? 'open' : activeField ? 'locked' : 'unlocked'}`}>
             <td className='text-right'><Label>{label}</Label></td>
             <td className="p-inputgroup"><div>{children}</div></td>
             <td className=''>
                 {editable && !isOpen && !activeField && <span className='inline-block w-full float-right'>
                     <span>&nbsp;</span>
                     <Button
-                        className={`p-button-rounded p-button-text ${isOpen && 'open'} float-right`}
+                        className={`p-button-rounded p-button-text text-white ${isOpen && 'open'} float-right`}
                         icon='pi pi-pencil'
                         onClick={() => handleEditClick(label, !isOpen)}
                     />

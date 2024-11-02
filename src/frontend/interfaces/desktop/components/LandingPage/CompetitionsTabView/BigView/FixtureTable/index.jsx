@@ -269,7 +269,7 @@ function FixtureTable({
       ))}</DataTable>
 
       {/* Dialog Component */}
-      <Dialog header={dialogData?.isCalcField ? 'Team selection rule' : 'Choose team'} visible={visibleDialog} onHide={() => setVisibleDialog(false)}>{
+      <Dialog header={dialogData?.isCalcField ? 'Team selection rule' : 'Modify fixture'} visible={visibleDialog} onHide={() => setVisibleDialog(false)}>{
         <DialogPickTeam data={dialogData} current={'Luxembourg A'} onHide={() => setVisibleDialog(false)} />
       }</Dialog>
     </section>
