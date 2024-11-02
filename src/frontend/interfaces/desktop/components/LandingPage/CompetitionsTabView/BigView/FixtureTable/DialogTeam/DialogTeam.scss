@@ -74,18 +74,25 @@ $btn-color: #0056b3;
         text-align: center;
 
         &:hover {
-            background-color: darken($btn-color, 15%);
+            //background-color: darken($btn-color, 15%);
             border-color: darken($btn-color, 15%);
             border-width: 0.2rem;
         }
     }
-
+        table tr {
+            &.uneditable {
+                td {
+                    background-color: #eee;
+                    padding: 1rem;
+                }
+            }
+        }
     table tr.unlocked {
         &.editable:hover {
-            background-color: #ddd;
-
+                // background-color: #ddd;
             td .p-button-rounded {
-                background-color: lighten($btn-color, 20%);
+                // background-color: lighten($btn-color, 20%); 
+                    color: black;
             }
         }
     }
@@ -102,9 +109,7 @@ $btn-color: #0056b3;
     }
 
     table>tbody>tr.open>td {
-        background-color: #aaa;
-        color: #fff;
-
+        background-color: lighten(desaturate($color: $btn-color, $amount: 50), 35%);
         label {
             color: #fff;
         }

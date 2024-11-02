@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ListBox } from 'primereact/listbox';
 
-function EditDuration({
+function EditLocation({
     duration,
 }) {
 
@@ -13,4 +13,4 @@ function EditDuration({
     );
 }
 
-export default EditDuration;
+export default EditLocation;
