@@ -1,43 +1,19 @@
-import { useEffect, useState } from "react";
+import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
 import './UpdateFixture.scss';
 
-const UpdateFixture = ({
+export default UpdateFixture;
+
+function UpdateFixture ({
   fixture,
-  fixtures,
   updateFixtures,
   startMatch,
-}) => {
+}) {
   const { startedTime } = fixture;
-  const started = !!startedTime;
-  const [enableStates, setEnableStates] = useState({
-    start: "enabled",
-    postpone: "enabled",
-    cancel: "enabled",
-    finish: "disabled",
-  });
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const closedDrawers = {
-    start: false,
-    cancel: false,
-    postpone: false,
-    finish: false,
-  };
-  const [visibleDrawers, setVisibleDrawers] = useState(closedDrawers);
-
-  useEffect(() => {
-    setDrawerOpen(Object.values(visibleDrawers).some((f) => f));
-    if (started) {
-      setEnableStates({
-        start: "disabled",
-        postpone: "disabled",
-        cancel: "enabled",
-        finish: "enabled",
-      });
-    }
-  }, [visibleDrawers, setDrawerOpen, drawerOpen]);
+  const [enableStates, setEnableStates] = useFixtureStates(startedTime);
+  const [visibleDrawers, setVisibleDrawers, drawerOpen] = useVisibleDrawers();
 
   const actions = {
     closeDrawer: (from) => {
@@ -47,7 +23,12 @@ const UpdateFixture = ({
         cancel: "start",
         finish: from === "finish" ? "disabled" : "enabled",
       });
-      setVisibleDrawers(closedDrawers);
+      setVisibleDrawers({
+        start: false,
+        cancel: false,
+        postpone: false,
+        finish: false,
+      });
     },
     start: async () => {
       if (enableStates.start === "disabled") return;
@@ -82,11 +63,17 @@ const UpdateFixture = ({
         cancel: "disabled",
         finish: "disabled",
       });
-      setVisibleDrawers({ ...closedDrawers, finish: true });
+      setVisibleDrawers({
+        start: false,
+        cancel: false,
+        postpone: false,
+        finish: true,
+      });
     },
     teamSheetProvided: () => {},
     rescheduleMatch: () => {},
   };
+
   const drawerStyle = {
     display: drawerOpen ? "flex" : "none",
   };
@@ -132,7 +119,7 @@ const UpdateFixture = ({
     </div>
   );
 };
-export default UpdateFixture;
+
 
 // Hoist infrequently changed child components
 function BtnPostpone({
@@ -140,7 +127,7 @@ function BtnPostpone({
   btnClass
 }) {
   return (
-    <button className={'space-button disabled'} onClick={onPostpone}>
+    <button className={'space-button'} onClick={onPostpone}>
       <span>Re-schedule</span>
       <span>&nbsp;</span>
       <svg width="22" height="22" viewBox="0 0 20 20">
@@ -219,3 +206,4 @@ function BtnUpdateResult({
     </button>
   )
 }
+

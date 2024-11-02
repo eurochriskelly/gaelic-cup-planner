@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - .:/root/app
+      - ../:/root/repos
       - /root/app/node_modules
     ports:
       - "3000:3000"

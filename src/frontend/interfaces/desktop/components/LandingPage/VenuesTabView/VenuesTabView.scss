@@ -1,0 +1,21 @@
+.VenuesTabView {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    th, td {
+      border: none;
+    }
+    th {
+      text-align: left;
+      padding: 10px;
+      color: #666;
+      font-style: italic;
+    }
+    td {
+      padding: 10px;
+    }
+    tr.head {
+      background-color: none;
+    }
+  }
+}
