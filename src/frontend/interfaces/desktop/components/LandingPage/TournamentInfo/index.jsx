@@ -1,42 +1,87 @@
-import { useEffect, useState } from "react";
+import { InputText } from 'primereact/inputtext';
+import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
+import { Button } from 'primereact/button';
+import { useTournament } from '../../../TournamentContext';
+import { useTournamentInfo, useRegions } from './TournamentInfo.hooks'; // Update the import path if necessary
 
-export default TournamentInfo;
+import './TournamentInfo.scss';
 
-function TournamentInfo({ 
-  tournamentId 
-}) {
-  const [tournInfo, setTournInfo] = useState({});
-  const [date, setDate] = useState(null);
-  const base = `/tournament/${tournamentId}`;
-
-  useEffect(() => {
-    fetch(`/api/tournaments/${tournamentId}`)
-      .then((response) => response.json())
-      .then((data) => setTournInfo(data.data))
-      .catch((error) => console.error("Error fetching tournament info:", error));
-  }, [tournamentId]);
-  return (
-    <>
-      <h1 onClick={() => console.log(tournInfo)}>Pitch perfect</h1>
-      <table>
-        <tbody>
-          <Row label="date">
-              <Calendar value={tournInfo.Date?.substring(0, 10)} dateFormat='yy-mm-dd' onChange={(e) => setDate(e.value)} />
-          </Row>
-          <Row label="title">{tournInfo.Title}</Row>
-          <Row label="location">{tournInfo.Location}</Row>
-        </tbody>
-      </table>
-    </>
-  );
-}
-
-function Row({ label, children }) {
+function Row({ label, children, spans = [] }) {
   return (
     <tr>
       <td>{label}</td>
-      <td>{children}</td>
+      {React.Children.map(children, (child, index) => (
+        <td colSpan={spans[index] || 1}>{child}</td>
+      ))}
     </tr>
   );
 }
+
+function TournamentInfo({ tournamentId }) {
+  const tournament = useTournament();
+  const {
+    tournInfo, setTournInfo, originalInfo, 
+    date, setDate, originalDate, region
+  } = useTournamentInfo(tournamentId);
+  const { filteredRegions, searchRegion } = useRegions();
+
+  const isDirty = (field) => {
+    switch (field) {
+      case 'title':
+        return tournInfo.title !== originalInfo.title;
+      case 'location':
+        return tournInfo.location !== originalInfo.location;
+      case 'date':
+        return date !== originalDate;
+      default:
+        return false;
+    }
+  };
+
+  return (
+    <div className='TournamentInfo'>
+      <table>
+        <tbody>
+          <Row label="Title" spans={[3]}>
+            <InputText
+              value={tournament.description}
+              onChange={(e) => console.log(e)}
+              className={isDirty('title') ? 'dirty' : ''} />
+          </Row>
+          <Row label="Date">
+            <Calendar
+              value={tournament.startDate} dateFormat='yy-mm-dd'
+              onChange={(e) => setDate(e.value)}
+              className={isDirty('date') ? 'dirty' : ''} />
+          </Row>
+          <Row>
+            <label>Region</label>
+            <label>Country</label>
+            <label>City</label>
+          </Row>
+          <Row label="Location">
+            <AutoComplete
+              value={tournament.location.region}
+              suggestions={filteredRegions} 
+              completeMethod={searchRegion} 
+              field="name" 
+              dropdown 
+              onChange={(e) => setRegion(e.value)}
+            />
+            <InputText
+              //value={tournament.location.country}
+              onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })}
+              className={isDirty('location') ? 'dirty' : ''} />
+            <InputText
+              //value={tournament.location.city}
+              onChange={(e) => setTournInfo({ ...tournInfo, location: e.target.value })}
+              className={isDirty('location') ? 'dirty' : ''} />
+          </Row>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default TournamentInfo;

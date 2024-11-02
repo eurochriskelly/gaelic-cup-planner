@@ -1,21 +1,30 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider} from "../../shared/js/Provider";
 import LandingPage from "./components/LandingPage";
+import Story from "./story-lite";
+import { TournamentProvider } from "./TournamentContext";
 import { PrimeReactProvider } from 'primereact/api';
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
+import "./App.scss"; // Ensure Tailwind directives are here
 
 function App() {
   return (
     <PrimeReactProvider>
       <Provider>
-        <Routes>
-          <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-          <Route path="*" element={<LandingPage />} />
-        </Routes>
+        <TournamentProvider>
+          <Routes>
+            <Route path="/tournament/:tournamentId" element={<LandingPage />} />
+            <Route path="/story" element={<Story />} />
+            <Route path="*" element={<LandingPage />} />
+          </Routes>
+        </TournamentProvider>
       </Provider>
     </PrimeReactProvider>
   );
 }
 
-export default App; 
+export default App;

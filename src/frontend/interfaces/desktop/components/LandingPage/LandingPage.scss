@@ -1,0 +1,32 @@
+.LandingPage {
+    background-color: #eee;
+    width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    .dirty {
+        color: red;
+    }
+    header:first-child {
+        position: fixed;
+        height: 5rem;
+        z-index: 997;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0 2rem;
+        background-color: var(--surface-card);
+        transition: left .2s;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, .02), 0 0 2px rgba(0, 0, 0, .05), 0 1px 4px rgba(0, 0, 0, .08);
+    }
+
+    >section {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: space-between;
+        padding: 7rem 1rem 2rem 1rem;
+        transition: margin-left .2s;
+    }
+}
