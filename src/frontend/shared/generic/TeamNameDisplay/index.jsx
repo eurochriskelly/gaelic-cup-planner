@@ -25,7 +25,7 @@ export const formatTeamName = (team) => {
         break
     }
   }
-  return displayTeam;
+  return displayTeam.toUpperCase();
 }
 
 export const militaryTimeDiffMins = (startTime, endTime) => {

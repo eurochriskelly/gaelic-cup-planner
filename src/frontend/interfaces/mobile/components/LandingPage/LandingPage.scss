@@ -14,9 +14,11 @@
 
 
   h1 {
-    font-size: 4rem;
-    color: $pc-dark-10;
+    font-size: 3rem;
+    color: lighten($pc-dark-10, 5%);
+    text-transform: uppercase;
     text-align: center;
+    margin: 1rem;
   }
   header {
     margin-bottom: 20px;

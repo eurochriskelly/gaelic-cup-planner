@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
-import Cookies from "js-cookie";
 import LanguageSwitcher from "../LanguageSwitcher";
 import "./PinLogin.scss";
 
@@ -15,9 +14,7 @@ const PinLogin = () => {
   const [message, setMessage] = useState("");
   const inputsRef = useRef([]);
 
-  useEffect(() => {
-    inputsRef.current[0].focus();
-  }, [])
+  useEffect(() => inputsRef.current[0].focus(), [])
 
   const handleChange = (e, index) => {
     const value = e.target.value.slice(0, 1); // Only allow one digit
@@ -46,26 +43,19 @@ const PinLogin = () => {
       }, 500)
     })
   };
+
   const onPinEntered = (joined) => {
     switch (joined) {
-      case "XGG7":
-      case "1975":
-      case "1091":
-        selectTournament(9);
+      case "2400":
+        selectTournament(15);
         break;
-      case "A1JN":
-      case "1976":
-      case "5400":
-        selectTournament(9);
+      case "2211":
+        selectTournament(15);
         break;
-      case "1010":
-        selectTournament(10);
+      case "7475":
+        selectTournament(2);
         break;
-      case "1011":
-        selectTournament(11);
-        break;
-      case "9999":
-        console.log('se lslslsl ')
+      case "9191":
         selectTournament(1);
         break;
       default:
@@ -81,7 +71,7 @@ const PinLogin = () => {
 
   return (
     <div className="pinLogin">
-      <div style={{textAlign: 'center'}}>{t('pinLogin_enter_pin')}</div>
+      <div style={{ textAlign: 'center' }}>{t('pinLogin_enter_pin')}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input

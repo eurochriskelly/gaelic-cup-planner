@@ -30,6 +30,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {} }) => {
     <div className="ListCardedPlayers">
       <div className="ready">
         <input
+          style={{ border: '1px solid black' }}
           type="checkbox"
           id="allowClose"
           onChange={() => setAllowClose(!allowClose)}

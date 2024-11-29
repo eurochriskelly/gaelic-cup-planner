@@ -11,7 +11,6 @@ const useMockEndpoints = (app) => {
     app.get(route, async (req, res) => {
       console.log('Requested route: ', route);
       const data = refresh(`./data/${value}.js`);
-      console.log(data);
       console.log('Route', route);
       res.json(data);
       routes = refresh('./routes');
