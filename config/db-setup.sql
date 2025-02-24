@@ -154,3 +154,19 @@ CREATE TABLE audit_log (
   change_date TIMESTAMP
 );
 
+-- Create the users table
+CREATE TABLE IF NOT EXISTS sec_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    DateAdded DATE,
+    Email VARCHAR(100),
+    Name VARCHAR(255),
+    IsActive BOOLEAN,
+    LastAuthenticated DATE
+);
+
+-- Create a role table for granular access to functionality
+CREATE TABLE IF NOT EXISTS sec_roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT,
+    RoleName VARCHAR(20)
+);

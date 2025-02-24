@@ -5,8 +5,14 @@ import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./components/LandingPage";
 import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
+
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 import '../../shared/css/site-common.scss';
 import '../../shared/css/site-mobile.scss';
+import './App.scss';
 import './i18n';
 
 function App() {

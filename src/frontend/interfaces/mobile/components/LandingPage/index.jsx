@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
@@ -7,6 +8,9 @@ import PinLogin from '../../../../shared/generic/PinLogin';
 import './LandingPage.scss';
 
 const LandingPage = () => {
+  console.log('do we have what we need?');
+
+  const [isResetClicked, setIsResetClicked] = useState(false);
   let { tournamentId } = useParams();
   if (!tournamentId) tournamentId = Cookies.get('tournamentId');
   if (!tournamentId || tournamentId === 'undefined') {
@@ -24,11 +28,24 @@ const LandingPage = () => {
   };
 
   const handle = {
-    resetTournament: () => fetch(`/api/tournaments/1/reset`),
+    resetTournament: async () => {
+      const button = document.querySelector('.sudo');
+      button.classList.add('active'); // Add active class for animation
+    button.classList.remove('active'); // Remove active class after fetch
+      await fetch(`/api/tournaments/1/reset`);
+    },
     disconnect: () => {
-      Cookies.remove('tournamentId')
-      navigate("/")
+      Cookies.remove('tournamentId');
+      navigate("/");
     }
+  };
+
+  const handleResetClick = async () => {
+     setIsResetClicked(true);
+     await handle.resetTournament();
+     setTimeout(() => {
+       setIsResetClicked(false);
+     }, 200); // Matches transition duration
   };
 
   return (
@@ -63,7 +80,7 @@ const LandingPage = () => {
       </section>
       <section className="maintenance">
         {+tournamentId === 1 && (
-          <button className='sudo' onClick={handle.resetTournament}>{tt('ResetTournament')}</button>
+             <button className='sudo' onClick={handleResetClick}>{tt('ResetTournament')}</button>
         )}
         <button onClick={handle.disconnect}>{tt('Disconnect')}</button>
       </section>
@@ -97,3 +114,5 @@ function Row({ label, children }) {
     </tr>
   );
 }
+
+

@@ -109,7 +109,6 @@ function FixtureInfo({
             <label>STAGE:</label>
             {stage}
           </span>
-          <span className="type-category">{categoryLabel()}</span>
         </span>
       </div>
     </div>

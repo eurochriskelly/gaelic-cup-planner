@@ -12,7 +12,7 @@ const ScoreDisplay = ({ header, goals, points, played }) => {
     havePoints = false;
   }
   const style = {
-    backgroundColor: "#efefef",
+    backgroundColor: "#94a59a",
     border: "0.2rem dotted #ddd",
     borderRadius: "0.2rem",
     padding: "0.8rem 0.5rem",
