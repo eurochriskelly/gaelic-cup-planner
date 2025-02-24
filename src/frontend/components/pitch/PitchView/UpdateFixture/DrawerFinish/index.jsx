@@ -79,10 +79,30 @@ const DrawerFinish = ({
   };
 
   const { team1, team2 } = fixture;
-  const displayScore = (team, type) => {
-    const score = scores[team][type];
-    const placeholder = type === 'points' ? '##' : '#';
-    return score || score === 0 ? score : placeholder;
+  const displayScore = (team, type = 'total') => {
+    let score = scores[team][type];
+    const ozp = n => `##${n}`.slice(-2)
+    let showScore = 0
+    let placeholder = '##'
+    switch (type) {
+      case 'points':
+        showScore = ozp(score)
+        break
+      case 'goals':
+        placeholder = '##'
+        showScore = `${score}`
+        break
+      case 'total':
+        placeholder = '++'
+        score = 1
+        showScore = ozp((+scores[team].goals * 3) + +scores[team].points)
+        break
+      default:
+        showScore = '-1'
+        placeholder = '?!'
+        break
+    }
+    return score || score === 0 ? showScore : placeholder
   };
   const TeamScore = ({ id, team }) => {
     return (
@@ -92,8 +112,14 @@ const DrawerFinish = ({
           <div onClick={actions.updateScore.bind(null, id, "goals")}>
             {displayScore(id, "goals")}
           </div>
+          <div>&nbsp;-&nbsp;</div>
           <div onClick={actions.updateScore.bind(null, id, "points")}>
             {displayScore(id, "points")}
+          </div>
+          <div>
+            <span>(</span>
+            <span>{displayScore(id, 'total')}</span>
+            <span>)</span>
           </div>
         </div>
       </div>
