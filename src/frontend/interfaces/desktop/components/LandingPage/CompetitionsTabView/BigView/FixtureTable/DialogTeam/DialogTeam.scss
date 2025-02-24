@@ -5,33 +5,33 @@ $btn-color: #0056b3;
 
     div.gap {
         width: 5rem;
-        }
-        
+
         .p-accordion-tab {
             margin-bottom: 1rem;
             width: 40rem;
         }
 
         section {
-        flex: 1;
-        margin: 1rem 1rem;
+            flex: 1;
+            margin: 1rem 1rem;
 
-        h3 {
-            margin-bottom: 1rem;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-
-            label {
-                margin-left: 0.5rem;
+            h3 {
+                margin-bottom: 1rem;
             }
 
-            .small-input {
-                width: 2rem;
-                margin-left: 0.5rem;
+            .option {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+
+                label {
+                    margin-left: 0.5rem;
+                }
+
+                .small-input {
+                    width: 2rem;
+                    margin-left: 0.5rem;
+                }
             }
         }
     }
@@ -42,17 +42,26 @@ $btn-color: #0056b3;
 
     .open {
         background-color: #f1f1f1;
+
         .p-button-rounded {
-            background-color: desaturate(lighten(green, 30%), 50%); //desaturate(lighten($btn-color, 46%), 30%);
             color: white;
             font-weight: bold;
+            margin-right: 0.1rem;
+        }
+
+        .p-cancel {
+            background-color: desaturate(lighten(red, 10%), 32%);
+        }
+
+        .p-save {
+            background-color: desaturate(lighten(green, 10%), 32%);
         }
     }
 }
 
 .Display {
     td {
-        padding: 0.5rem;
+        padding: 0.1rem 0;
         // border: 1px solid #ccc;
         border-width: 0;
     }
@@ -60,26 +69,49 @@ $btn-color: #0056b3;
     .p-button-icon {
         margin-left: 0.5rem;
     }
+
     .p-button-rounded {
-        background-color: white;
-            color: desaturate(lighten($btn-color, 46%), 30%);
         text-align: center;
 
         &:hover {
-            background-color: darken($btn-color, 15%);
+            //background-color: darken($btn-color, 15%);
             border-color: darken($btn-color, 15%);
             border-width: 0.2rem;
         }
     }
-
-    table tr {
-        &.editable:hover {
-            background-color: #ddd;
-
-            td .p-button-rounded {
-                background-color: lighten($btn-color, 20%);
+        table tr {
+            &.uneditable {
+                td {
+                    background-color: #eee;
+                    padding: 1rem;
+                }
             }
         }
+    table tr.unlocked {
+        &.editable:hover {
+                // background-color: #ddd;
+            td .p-button-rounded {
+                // background-color: lighten($btn-color, 20%); 
+                    color: black;
+            }
+        }
+    }
 
+    table tr.locked {
+        &.editable {
+            td.p-inputgroup {
+                & div>div {
+                    background-color: #f1f1f1;
+                    color: #999;
+                }
+            }
+        }
+    }
+
+    table>tbody>tr.open>td {
+        background-color: lighten(desaturate($color: $btn-color, $amount: 50), 35%);
+        label {
+            color: #fff;
+        }
     }
 }

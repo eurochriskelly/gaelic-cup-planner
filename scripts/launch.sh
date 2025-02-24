@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f './gg_env.sh' ];then
+  source ./gg_env.sh
+fi
+
 cleanup() {
   echo "Cleaning up ..."
   pkill -P $$
