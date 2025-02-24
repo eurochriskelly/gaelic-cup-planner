@@ -1,40 +1,39 @@
-import { useState, useEffect } from 'react';
-import { Dropdown } from 'primereact/dropdown';
+import { useState, useEffect, act } from 'react';
 import { Chip } from 'primereact/chip';
 import { Skeleton } from 'primereact/skeleton';
 import { Button } from 'primereact/button';
-import { Calendar } from 'primereact/calendar';
-import { ListBox } from 'primereact/listbox';
 import { Splitter, SplitterPanel } from 'primereact/splitter';
-import { RadioButton } from 'primereact/radiobutton';
-import { Accordion, AccordionTab } from 'primereact/accordion';
-// import { ListBox } from 'primereact/listbox';
-// import { InputText } from 'primereact/inputtext';
-
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './DialogTeam.scss';
 
+// sub-components
+import EditTimeAndPlace from './EditTimeAndPlace';
+import EditFixtureStage from './EditFixtureStage';
+import EditReferee from './EditReferee';
+import EditTeam from './EditTeam';
+
 export function DialogPickTeam({
     fixtureId = null,
-    fixtures = {},
-    competition = 'C1',
-}) {
-    const initialFixture = fixtureId !== null ? fixtures[fixtureId] : {};
-    const [showDrawer, setShowDrawer] = useState(false);
-    const [activeField, setActiveField] = useState(null);
-    const [fixtureState, setFixtureState] = useState({
-        match: competition + '/001',
+    initFixture = {
+        match: 'C1' + '/001',
         stage: 'group',
-        group: '1',
+        group: 1,
         startTime: '10:15',
         pitch: 'pitch 1',
         team1: 'team abc',
         team2: 'team def',
         umpiringTeam: 'teambury hearts fc',
-        referee: 'J.D. Vance'
-    });
+        referee: 'J. Malone',
+        duration: 60,
+    },
+    fixtures = {},
+}) {
+    const initialFixture = fixtureId !== null ? fixtures[fixtureId] : {};
+    const [showDrawer, setShowDrawer] = useState(false);
+    const [activeField, setActiveField] = useState(null);
+    const [fixtureState, setFixtureState] = useState(initFixture);
 
     // Populate fields if fixtureId is provided
     useEffect(() => {
@@ -48,13 +47,12 @@ export function DialogPickTeam({
         setShowDrawer(doShow);
     };
 
-    const handleSave = () => {
+    const handleSave = (newFixtureState) => {
         setShowDrawer(false);
         setActiveField(null);
     };
 
-    const commonProps = { handleEditClick, fixtureState, handleSave, showDrawer, activeField };
-
+    const commonProps = { handleEditClick, setFixtureState, fixtureState, handleSave, showDrawer, activeField };
     return (
         <div>
             <Splitter className={`DialogPickTeam`} style={{ width: '1000px' }}>
@@ -66,37 +64,49 @@ export function DialogPickTeam({
                                     {fixtureState.match}
                                 </div>
                             </DisplayRow>
-                            <DisplayRow label="Start time" {...commonProps}>
-                                <Info>{fixtureState.startTime}</Info>
-                                <Label>pitch</Label>
-                                <Info>{fixtureState.pitch}</Info>
-                            </DisplayRow>
                             <DisplayRow label="Stage" {...commonProps}>
-                                <Info>{fixtureState.stage}</Info>
-                                <Label>Group</Label>
-                                <Info>{fixtureState.group}</Info>
+                                <Info width={2}>{fixtureState.stage}</Info>
+                                {fixtureState.stage === 'group' ?
+                                    <>
+                                        <Label>Group</Label>
+                                        <Info width={1}>{fixtureState.group}</Info>
+                                    </>
+                                    : <>
+                                        <Label>round</Label>
+                                        <Info width={3}>{fixtureState.group}</Info>
+                                        <Label>#</Label>
+                                        <Info width={1}>{fixtureState.group}</Info>
+                                    </>
+                                }
+                            </DisplayRow>
+                            <DisplayRow label="Start time" {...commonProps}>
+                                <Info width={2}>{fixtureState.startTime}</Info>
+                                <Label>Duration</Label>
+                                <Info width={1}>{fixtureState?.duration || '0 m'}</Info>
+                            </DisplayRow>
+                            <DisplayRow label="Location" {...commonProps}>
+                                <Info width={4}>Venue X / {fixtureState.pitch}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 1" {...commonProps}>
-                                <Info width={3}>{fixtureState.team1}</Info>
+                                <Info width={4}>{fixtureState.team1}</Info>
                             </DisplayRow>
                             <DisplayRow label="Team 2" {...commonProps}>
-                                <Info width={3}>{fixtureState.team2}</Info>
+                                <Info width={4}>{fixtureState.team2}</Info>
                             </DisplayRow>
                             <DisplayRow label="Umpiring Team" {...commonProps}>
-                                <Info width={3}>{fixtureState.umpiringTeam}</Info>
+                                <Info width={4}>{fixtureState.umpiringTeam}</Info>
                             </DisplayRow>
                             <DisplayRow label="Referee" {...commonProps}>
-                                <Info width={2}>{fixtureState.referee}</Info>
+                                <Info width={3}>{fixtureState.referee}</Info>
                             </DisplayRow>
                         </Display>
                     </div>
                 </SplitterPanel>
 
                 {/* Drawer for editing */}
-                <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'}`}>
-                    <div className='m-4 w-96'>
-                        <h2>Edit: <i>{activeField}</i></h2>
-                        <div className='mb-2'>{
+                <SplitterPanel size={75} onHide={() => setShowDrawer(false)} className={`${showDrawer && 'open'} bg-slate-100 m-0`}>
+                    <div className='m-0 w-auto'>
+                        <div className='mb-2 m-5'>{
                             showDrawer
                                 ? <CustomEditDrawer {...commonProps} />
                                 : <Skeleton width="96%" height="520px" className='m-2' />
@@ -111,61 +121,61 @@ export function DialogPickTeam({
 
 function CustomEditDrawer({
     fixtureState,
-    activeField
+    setFixtureState,
+    activeField,
+    selectedPitch = 'Pitch 1',
+    availablePitches = ['Pitch 1', 'Pitch 2', 'Pitch 3', 'Pitch 4'],
+    ref = 'J.D. Vance',
+    referees = ['J.D. Vance', 'J.K. Rowling', 'J.R.R. Tolkien', 'J. Malone', 'J.R. Ewing'],
 }) {
-    const [selectedTime, setSelectedTime] = useState(new Date());
-    const [selectedCity, setSelectedCity] = useState(null);
-    const cities = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
-    ];
-
-    switch (activeField) {
-        case 'Start time':
-            return (
-                <div>
-                    <h3>Start time</h3>
-                    <Calendar
-                        value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.value)}
-                        timeOnly
-                        hourFormat="24"
-                        showTime
-                        dateFormat="HH:mm"
-                    />
-                    <h3>Location</h3>
-                    <ListBox value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" className="w-full md:w-14rem" />
-                </div>
-            );
+    const updateFixture = (newFixtureInfo) => {
+        console.log('updateFixture', newFixtureInfo);
+    }
+    const commonProps = { fixtureState, activeField, updateFixture };
+    switch (activeField.toUpperCase()) {
+        case 'STAGE':
+            return <EditFixtureStage {...commonProps} />;
+        case 'START TIME':
+            return <EditTimeAndPlace {...commonProps} />;
+        case 'LOCATION':
+            return <EditLocation {...commonProps} />;
+        case 'REFEREE':
+            return <EditReferee {...commonProps} referee={ref} referees={referees} />;
+        case 'TEAM 1':
+            return <EditTeam {...commonProps} team={'team1'} />;
+        case 'TEAM 2':
+            return <EditTeam {...commonProps} team={'team2'} />;
+        case 'UMPIRING TEAM':
+            return <EditTeam {...commonProps} team={'umpiringTeam'} />;
         default:
-            return (
-                <DialogCalcTeam />
-            );
+            return <div>Unknown section</div>
     }
 }
+
 function Label({ children }) {
-    return <span className='text-slate-400 text-right'>{children.toUpperCase()}:</span>;
+    return <label className='text-slate-400 text-right'>{children.toUpperCase()}:</label>;
 }
 function Info({ children, width = 1 }) {
     let w = '';
     switch (width) {
         case 1:
-            w = 'w-24';
+            w = 'w-12';
             break
         case 2:
-            w = 'w-48';
+            w = 'w-24';
             break
         case 3:
+            w = 'w-48';
+            break
+        case 4:
             w = 'w-72';
             break
         default:
             w = 'w-24';
             break
     }
-    return <Chip label={children} className={`font-bold bg-blue-100 m-2 p-1 pl-3 ${w}`} />;
+    const cls = `font-bold bg-blue-500 uppercase rounded-md text-white m-2 p-1 pl-3 ${w}`
+    return <Chip label={children} className={cls} />;
 }
 function Display({ children }) {
     return (
@@ -174,9 +184,11 @@ function Display({ children }) {
                 <colgroup>
                     <col style={{ width: '140px' }} />
                     <col style={{ width: 'auto' }} />
-                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '100px' }} />
                 </colgroup>
-                {children}
+                <tbody>
+                    {children}
+                </tbody>
             </table>
         </div>
     );
@@ -185,208 +197,33 @@ function DisplayRow({ label, children, editable = true, ...rest }) {
     const { handleEditClick, fixtureState, handleSave, showDrawer, activeField } = rest
     const isOpen = activeField === label;
     return (
-        <tr className={`p-field ${editable && 'editable'} ${isOpen && 'open'}`}>
+        <tr className={`p-field ${editable ? 'editable' : 'uneditable' } ${isOpen ? 'open' : activeField ? 'locked' : 'unlocked'}`}>
             <td className='text-right'><Label>{label}</Label></td>
             <td className="p-inputgroup"><div>{children}</div></td>
-            <td>{editable && (
-                <Button
-                    className={`p-button-rounded p-button-text bg-blue ${isOpen && 'open'}`}
-                    icon={isOpen ? 'pi pi-check' : 'pi pi-pencil'}
-                    onClick={() => handleEditClick(label, !isOpen)}
-                />
-            )}</td>
+            <td className=''>
+                {editable && !isOpen && !activeField && <span className='inline-block w-full float-right'>
+                    <span>&nbsp;</span>
+                    <Button
+                        className={`p-button-rounded p-button-text text-white ${isOpen && 'open'} float-right`}
+                        icon='pi pi-pencil'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                </span>
+                }
+                {editable && isOpen && <span className='inline-block w-full'>
+                    <Button
+                        className={`p-button-rounded p-button-text p-cancel text-white ${isOpen && 'open'} float-right`}
+                        icon='pi pi-times'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                    <Button
+                        className={`p-button-rounded p-button-text p-save bg-green-500 text-white ${isOpen && 'open'} float-right`}
+                        icon='pi pi-check'
+                        onClick={() => handleEditClick(label, !isOpen)}
+                    />
+                </span>
+                }
+            </td>
         </tr>
     );
 }
-
-export function DialogCalcTeam() {
-    const [placement, setPlacement] = useState('winner');
-    const [round, setRound] = useState('group');
-
-    // State variables for dropdown selections
-    const [bestOfOption, setBestOfOption] = useState('best of');
-    const [placeOption, setPlaceOption] = useState('1st');
-    const [groupOption, setGroupOption] = useState(3);
-    const [cupTypeOption, setCupTypeOption] = useState('Cup');
-    const [cupStageOption, setCupStageOption] = useState('Semis');
-    const [cupNumberOption, setCupNumberOption] = useState(1);
-
-    // Options for dropdowns
-    const bestOfOptions = [
-        { label: 'Best Of', value: 'best of' },
-        { label: '2nd Of', value: '2nd of' },
-        { label: '3rd Of', value: '3rd of' },
-        { label: '3rd Last Of', value: '3rd last of' },
-        { label: '2nd Last Of', value: '2nd last of' },
-        { label: 'Last Of', value: 'last of' },
-    ];
-
-    const placeOptions = [
-        { label: '1st', value: '1st' },
-        { label: '2nd', value: '2nd' },
-        { label: '3rd', value: '3rd' },
-        { label: '4th', value: '4th' },
-        { label: '5th', value: '5th' },
-        { label: '6th', value: '6th' },
-    ];
-
-    const groupOptions = [1, 2, 3, 4, 5, 6].map((num) => ({ label: num.toString(), value: num }));
-
-    const cupTypeOptions = [
-        { label: 'Cup', value: 'Cup' },
-        { label: 'Plate', value: 'Plate' },
-        { label: 'Shield', value: 'Shield' },
-        { label: 'Spoon', value: 'Spoon' },
-    ];
-
-    const cupStageOptions = [
-        { label: '16s', value: '16s' },
-        { label: 'Quarters', value: 'Quarters' },
-        { label: 'Semis', value: 'Semis' },
-        { label: 'Finals', value: 'Finals' },
-        { label: '7th8ths', value: '7th8ths' },
-        { label: '5th6ths', value: '5th6ths' },
-        { label: '3rd4ths', value: '3rd4ths' },
-    ];
-
-    const cupNumberOptions = [1, 2, 3, 4, 5, 6, 7, 8].map((num) => ({ label: num.toString(), value: num }));
-
-    return (
-        <div className="placement-round-container">
-            <Accordion>
-
-                <AccordionTab header={'Select Round'}>
-                    <div className="option">
-                        <RadioButton
-                            inputId="group"
-                            value="group"
-                            name="round"
-                            onChange={(e) => setRound(e.value)}
-                            checked={round === 'group'}
-                        />
-                        <label htmlFor="group">Group</label>
-                        <Dropdown
-                            value={groupOption}
-                            options={groupOptions}
-                            onChange={(e) => setGroupOption(e.value)}
-                            placeholder="Select Group"
-                            className="small-dropdown"
-                            disabled={round !== 'group'}
-                        />
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="allGroups"
-                            value="allGroups"
-                            name="round"
-                            onChange={(e) => setRound(e.value)}
-                            checked={round === 'allGroups'}
-                        />
-                        <label htmlFor="allGroups">All Groups</label>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="cupSemis"
-                            value="cupSemis"
-                            name="round"
-                            onChange={(e) => setRound(e.value)}
-                            checked={round === 'cupSemis'}
-                        />
-                        <Dropdown
-                            value={cupTypeOption}
-                            options={cupTypeOptions}
-                            onChange={(e) => setCupTypeOption(e.value)}
-                            placeholder="Select Type"
-                            className="small-dropdown"
-                            disabled={round !== 'cupSemis'}
-                        />
-                        <Dropdown
-                            value={cupStageOption}
-                            options={cupStageOptions}
-                            onChange={(e) => setCupStageOption(e.value)}
-                            placeholder="Select Stage"
-                            className="medium-dropdown"
-                            disabled={round !== 'cupSemis'}
-                        />
-                        <Dropdown
-                            value={cupNumberOption}
-                            options={cupNumberOptions}
-                            onChange={(e) => setCupNumberOption(e.value)}
-                            placeholder="#"
-                            className="tiny-dropdown"
-                            disabled={round !== 'cupSemis'}
-                        />
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="match"
-                            value="match"
-                            name="round"
-                            onChange={(e) => setRound(e.value)}
-                            checked={round === 'match'}
-                        />
-                        <label htmlFor="match">Match</label>
-                    </div>
-                </AccordionTab>
-                <AccordionTab header={'Select Placement'}>
-                    <h3>Placement</h3>
-                    <div className="option">
-                        <RadioButton
-                            inputId="winner"
-                            value="winner"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'winner'}
-                        />
-                        <label htmlFor="winner">Winner</label>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="loser"
-                            value="loser"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'loser'}
-                        />
-                        <label htmlFor="loser">Loser</label>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="place"
-                            value="place"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'place'}
-                        />
-                        <Dropdown
-                            value={placeOption}
-                            options={placeOptions}
-                            onChange={(e) => setPlaceOption(e.value)}
-                            placeholder="Select Place"
-                            className="small-dropdown"
-                            disabled={placement !== 'place'}
-                        />
-                        <span> Place</span>
-                    </div>
-                    <div className="option">
-                        <RadioButton
-                            inputId="bestOf"
-                            value="bestOf"
-                            name="placement"
-                            onChange={(e) => setPlacement(e.value)}
-                            checked={placement === 'bestOf'}
-                        />
-                        <Dropdown
-                            value={bestOfOption}
-                            options={bestOfOptions}
-                            onChange={(e) => setBestOfOption(e.value)}
-                            placeholder="Select Option"
-                            className="large-dropdown"
-                            disabled={placement !== 'bestOf'}
-                        />
-                    </div>
-                </AccordionTab>
-            </Accordion>
-        </div>
-    );
-};

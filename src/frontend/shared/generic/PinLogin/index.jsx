@@ -49,7 +49,7 @@ const PinLogin = () => {
       case "2025":
         selectTournament(17);
         break;
-      case "9193":
+      case "9191":
         selectTournament(1);
         break;
       default:

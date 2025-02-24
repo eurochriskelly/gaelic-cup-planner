@@ -6,7 +6,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import chroma from "chroma-js";
 import TeamSelect, { parseCode } from './TeamSelect';
-import { DialogCalcTeam, DialogPickTeam } from './DialogTeam';
+import { DialogPickTeam } from './DialogTeam';
 import './FixtureTable.scss';
 
 function FixtureTable({ 
@@ -269,10 +269,8 @@ function FixtureTable({
       ))}</DataTable>
 
       {/* Dialog Component */}
-      <Dialog header={dialogData?.isCalcField ? 'Team selection rule' : 'Choose team'} visible={visibleDialog} onHide={() => setVisibleDialog(false)}>{
-        dialogData?.isCalcField 
-          ? <DialogCalcTeam data={dialogData} onHide={() => setVisibleDialog(false)} />
-          : <DialogPickTeam data={dialogData} current={'Luxembourg A'} onHide={() => setVisibleDialog(false)} />
+      <Dialog header={dialogData?.isCalcField ? 'Team selection rule' : 'Modify fixture'} visible={visibleDialog} onHide={() => setVisibleDialog(false)}>{
+        <DialogPickTeam data={dialogData} current={'Luxembourg A'} onHide={() => setVisibleDialog(false)} />
       }</Dialog>
     </section>
   );
