@@ -14,9 +14,11 @@
 
 
   h1 {
-    font-size: 4rem;
-    color: $pc-dark-10;
+    font-size: 3rem;
+    color: lighten($pc-dark-10, 5%);
+    text-transform: uppercase;
     text-align: center;
+    margin: 1rem;
   }
   header {
     margin-bottom: 20px;
@@ -121,10 +123,15 @@
       margin-top: 0;
       text-transform: uppercase;
       letter-spacing: 0.3em;
-
+      transition: transform 0.2s ease, background-color 0.2s ease;
+       &:active {
+         transform: scale(0.95);
+         background-color: rgba(200, 200, 200, 0.7);
+       }
       .sudo {
         border: 10px solid red;
       }
     }
   }
 }
+
