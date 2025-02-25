@@ -1,7 +1,7 @@
 # editor files
 *~
 \#*
-
+dump/
 # hidden config files
 .clasp.json
 node_modules
