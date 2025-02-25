@@ -1,20 +1,26 @@
 # Project directory structure
 
-project/
-├── server.js               # Sets up DB connection and hands off to api/api-setup.js
-├── api/
-│   ├── api-setup.js       # Defines endpoints, delegates to apis/ modules
-│   ├── apis/
-│   │   ├── fixtures/      # Fixture-related endpoints
-│   │   │   ├── index.js
-│   │   │   ├── queries.js
-│   │   │   └── updateScore.js
-│   │   ├── general.js     # General tournament endpoints
-│   │   ├── regions.js     # Region endpoints
-│   │   ├── tournaments.js # Tournament-specific endpoints
-│   └── mocks/             # Mock data (not used unless ARGS.mock is true)
-├── lib/
-│   ├── db-helper.js       # DB query wrapper (select function)
-│   └── logging.js         # Logging utilities (II, DD, EE)
+backend/
+├── server.js              # Entry point (minimal, unchanged)
 ├── config/
-│   └── config.js          # Contains dbConf (not shared, but referenced)
+│   └── config.js          # dbConf (unchanged)
+├── api/
+│   ├── index.js           # New: Replaces api-setup.js, handles app setup and mounts routes
+│   ├── routes/            # New: Route definitions
+│   │   ├── tournaments.js # Tournament-specific routes
+│   │   ├── fixtures.js    # Fixture-specific routes
+│   │   ├── regions.js     # Region routes
+│   │   ├── general.js     # General routes
+│   │   └── auth.js        # Auth routes
+│   ├── controllers/       # New: Business logic
+│   │   ├── tournaments.js
+│   │   ├── fixtures.js
+│   │   ├── regions.js
+│   │   ├── general.js
+│   │   └── auth.js
+│   ├── services/          # New: DB access and reusable logic
+│   │   └── dbService.js   # DB helpers
+│   └── mocks/             # Mock data (unchanged)
+├── lib/
+│   ├── logging.js         # Unchanged
+│   └── utils.js           # Unchanged (jsonToCsv, sendXsls, etc.)

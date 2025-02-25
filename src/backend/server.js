@@ -1,13 +1,11 @@
 const mysql = require("mysql");
-
 const { processArgs } = require("./lib/process-args");
 const { dbConf } = require("../../config/config");
-const apiSetup = require("./api/api-setup");
+const apiSetup = require("./api/index"); // Updated
 const ARGS = processArgs(process.argv);
 
 const run = async () => {
-  let db = null
-  // Set up MySQL connection
+  let db = null;
   if (!ARGS.mock) {
     db = mysql.createConnection(dbConf);
     db.connect((err) => {
@@ -17,8 +15,7 @@ const run = async () => {
       }
       console.log("Connected to the MySQL server.");
     });
-  } 
-
+  }
   apiSetup(db, ARGS);
 };
 
