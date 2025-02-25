@@ -2,11 +2,9 @@ const express = require("express");
 const tournamentController = require("../controllers/tournaments");
 
 module.exports = (db) => {
-  const router = express.Router();
+  const router = express.Router({mergeParams: true});
   const ctrl = tournamentController(db);
-  console.log('ever and ever and ever')
-console.log(ctrl.createTournament)
-  console.log('ever and ever and ever')
+
   router.post("/", ctrl.createTournament);
   router.get("/", ctrl.getTournaments);
   router.get("/:id", ctrl.getTournament);

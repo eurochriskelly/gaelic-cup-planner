@@ -9,7 +9,6 @@ module.exports = (db) => {
     // Tournament CRUD
     createTournament: async (req, res) => {
       const { title, date, location, lat, lon } = req.body;
-      II(`Calling API: POST /api/tournaments`);
       try {
         const id = await dbSvc.createTournament({ title, date, location, lat, lon });
         const tournament = await dbSvc.getTournament(id);
@@ -20,7 +19,6 @@ module.exports = (db) => {
     },
 
     getTournaments: async (req, res) => {
-      II("Calling API: GET /api/tournaments");
       try {
         const tournaments = await dbSvc.getTournaments();
         res.json({ data: tournaments });
@@ -31,7 +29,6 @@ module.exports = (db) => {
 
     getTournament: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}`);
       try {
         const tournament = await dbSvc.getTournament(id);
         res.json({ data: tournament });
@@ -43,7 +40,6 @@ module.exports = (db) => {
     updateTournament: async (req, res) => {
       const { id } = req.params;
       const { title, date, location, lat, lon } = req.body;
-      II(`Calling API: PUT /api/tournaments/${id}`);
       try {
         await dbSvc.updateTournament(id, { title, date, location, lat, lon });
         const tournament = await dbSvc.getTournament(id);
@@ -55,7 +51,6 @@ module.exports = (db) => {
 
     deleteTournament: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: DELETE /api/tournaments/${id}`);
       try {
         await dbSvc.deleteTournament(id);
         res.json({ message: "Tournament deleted" });
@@ -66,7 +61,6 @@ module.exports = (db) => {
 
     resetTournament: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: POST /api/tournaments/${id}/reset`);
       try {
         if (+id === 1) {  // Assuming sandbox restriction still applies
           await dbSvc.resetTournament(id);
@@ -82,7 +76,6 @@ module.exports = (db) => {
     // Existing tournament endpoints
     getRecentMatches: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/recent-matches`);
       try {
         const [count, matches] = await Promise.all([
           dbSvc.getStartedMatchCount(id),
@@ -96,7 +89,6 @@ module.exports = (db) => {
 
     getGroupFixtures: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/group-fixtures`);
       try {
         const fixtures = await dbSvc.getGroupFixtures(id);
         res.json(fixtures);
@@ -107,7 +99,6 @@ module.exports = (db) => {
 
     getGroupStandings: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/group-standings`);
       try {
         const standings = await dbSvc.getGroupStandings(id);
         res.json(standings);
@@ -118,7 +109,6 @@ module.exports = (db) => {
 
     getKnockoutFixtures: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/knockout-fixtures`);
       try {
         const fixtures = await dbSvc.getKnockoutFixtures(id);
         res.json(fixtures);
@@ -129,7 +119,6 @@ module.exports = (db) => {
 
     getFinalsResults: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/finals-results`);
       try {
         const results = await dbSvc.getFinalsResults(id);
         res.json(results);
@@ -140,7 +129,6 @@ module.exports = (db) => {
 
     getAllMatches: async (req, res) => {
       const { id } = req.params;
-      II(`Calling API: GET /api/tournaments/${id}/all-matches`);
       try {
         const matches = await dbSvc.getAllMatches(id);
         res.json(matches);
@@ -151,7 +139,6 @@ module.exports = (db) => {
 
     getCardedPlayers: async (req, res) => {
       const { tournamentId } = req.params;
-      II(`Calling API: GET /api/tournaments/${tournamentId}/carded-players`);
       try {
         const players = await dbSvc.getCardedPlayers(tournamentId);
         res.json(players);
@@ -164,7 +151,6 @@ module.exports = (db) => {
     createSquad: async (req, res) => {
       const { tournamentId } = req.params;
       const { teamName, groupLetter, category, teamSheetSubmitted, notes } = req.body;
-      II(`Calling API: POST /api/tournaments/${tournamentId}/squads`);
       try {
         const id = await dbSvc.createSquad(tournamentId, { teamName, groupLetter, category, teamSheetSubmitted, notes });
         const squad = await dbSvc.getSquad(tournamentId, id);
@@ -176,7 +162,6 @@ module.exports = (db) => {
 
     getSquads: async (req, res) => {
       const { tournamentId } = req.params;
-      II(`Calling API: GET /api/tournaments/${tournamentId}/squads`);
       try {
         const squads = await dbSvc.getSquads(tournamentId);
         res.json({ data: squads });
@@ -187,7 +172,6 @@ module.exports = (db) => {
 
     getSquad: async (req, res) => {
       const { tournamentId, id } = req.params;
-      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${id}`);
       try {
         const squad = await dbSvc.getSquad(tournamentId, id);
         res.json({ data: squad });
@@ -199,7 +183,6 @@ module.exports = (db) => {
     updateSquad: async (req, res) => {
       const { tournamentId, id } = req.params;
       const { teamName, groupLetter, category, teamSheetSubmitted, notes } = req.body;
-      II(`Calling API: PUT /api/tournaments/${tournamentId}/squads/${id}`);
       try {
         await dbSvc.updateSquad(id, { teamName, groupLetter, category, teamSheetSubmitted, notes });
         const squad = await dbSvc.getSquad(tournamentId, id);
@@ -211,7 +194,6 @@ module.exports = (db) => {
 
     deleteSquad: async (req, res) => {
       const { tournamentId, id } = req.params;
-      II(`Calling API: DELETE /api/tournaments/${tournamentId}/squads/${id}`);
       try {
         await dbSvc.deleteSquad(id);
         res.json({ message: "Squad deleted" });
@@ -224,7 +206,6 @@ module.exports = (db) => {
     createPlayer: async (req, res) => {
       const { tournamentId, squadId } = req.params;
       const { firstName, secondName, dateOfBirth, foirreannId } = req.body;
-      II(`Calling API: POST /api/tournaments/${tournamentId}/squads/${squadId}/players`);
       try {
         const id = await dbSvc.createPlayer(squadId, { firstName, secondName, dateOfBirth, foirreannId });
         const player = await dbSvc.getPlayer(id);
@@ -236,7 +217,6 @@ module.exports = (db) => {
 
     getPlayers: async (req, res) => {
       const { tournamentId, squadId } = req.params;
-      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${squadId}/players`);
       try {
         const players = await dbSvc.getPlayers(squadId);
         res.json({ data: players });
@@ -247,7 +227,6 @@ module.exports = (db) => {
 
     getPlayer: async (req, res) => {
       const { tournamentId, squadId, id } = req.params;
-      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
       try {
         const player = await dbSvc.getPlayer(id);
         res.json({ data: player });
@@ -259,7 +238,6 @@ module.exports = (db) => {
     updatePlayer: async (req, res) => {
       const { tournamentId, squadId, id } = req.params;
       const { firstName, secondName, dateOfBirth, foirreannId } = req.body;
-      II(`Calling API: PUT /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
       try {
         await dbSvc.updatePlayer(id, { firstName, secondName, dateOfBirth, foirreannId });
         const player = await dbSvc.getPlayer(id);
@@ -271,7 +249,6 @@ module.exports = (db) => {
 
     deletePlayer: async (req, res) => {
       const { tournamentId, squadId, id } = req.params;
-      II(`Calling API: DELETE /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
       try {
         await dbSvc.deletePlayer(id);
         res.json({ message: "Player deleted" });

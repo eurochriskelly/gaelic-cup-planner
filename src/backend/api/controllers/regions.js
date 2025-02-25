@@ -6,7 +6,6 @@ module.exports = (db) => {
 
   return {
     listRegions: async (req, res) => {
-      II(`Calling API: /api/regions ...`);
       try {
         const regions = await dbSvc.listRegions();
         res.json({ data: regions });
@@ -16,7 +15,6 @@ module.exports = (db) => {
     },
 
     listRegionInfo: async (req, res) => {
-      II(`Calling API: /api/regions/${req.params.region} ...`);
       try {
         const info = await dbSvc.listRegionInfo(req.params.region, req.query);
         res.json(info);
