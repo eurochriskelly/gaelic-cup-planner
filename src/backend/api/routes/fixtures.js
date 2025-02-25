@@ -3,7 +3,8 @@ const { II } = require("../../lib/logging");
 const fixtureController = require("../controllers/fixtures");
 
 module.exports = (db) => {
-  const router = express.Router();
+  console.log('fixtures router')
+  const router = express.Router({mergeParams: true});
   const ctrl = fixtureController(db);
 
   router.get("/", ctrl.fixturesByPitch);

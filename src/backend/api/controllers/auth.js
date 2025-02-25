@@ -7,7 +7,6 @@ module.exports = (db) => {
   return {
     login: async (req, res) => {
       const { email, password } = req.body;
-      II(`Calling API: /api/auth/login`);
       try {
         const user = await dbSvc.login(email, password);
         res.json(user);

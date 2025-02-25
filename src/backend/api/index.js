@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
+const morgan = require("morgan")
 const { useMockEndpoints } = require("./mocks");
 const tournamentRoutes = require("./routes/tournaments");
 const fixtureRoutes = require("./routes/fixtures");
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 module.exports = (db, ARGS) => {
   console.log("Setting up API endpoints ...");
+  app.use(morgan('dev'));
   app.use(express.static(path.join(__dirname, ARGS.staticPath)));
 
   // Direct endpoint (unchanged)
@@ -41,7 +43,6 @@ module.exports = (db, ARGS) => {
   }
 
   app.get("*", (req, res) => {
-    console.log(`Serving [${ARGS.staticPath}]`);
     res.sendFile(path.join(__dirname, ARGS.staticPath + "/index.html"));
   });
 
