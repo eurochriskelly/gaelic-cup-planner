@@ -1,0 +1,283 @@
+const { II } = require("../../lib/logging");
+const { jsonToCsv, sendXsls } = require("../../lib/utils");
+const dbService = require("../services/dbService");
+
+module.exports = (db) => {
+  const dbSvc = dbService(db);
+
+  return {
+    // Tournament CRUD
+    createTournament: async (req, res) => {
+      const { title, date, location, lat, lon } = req.body;
+      II(`Calling API: POST /api/tournaments`);
+      try {
+        const id = await dbSvc.createTournament({ title, date, location, lat, lon });
+        const tournament = await dbSvc.getTournament(id);
+        res.status(201).json(tournament);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getTournaments: async (req, res) => {
+      II("Calling API: GET /api/tournaments");
+      try {
+        const tournaments = await dbSvc.getTournaments();
+        res.json({ data: tournaments });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getTournament: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}`);
+      try {
+        const tournament = await dbSvc.getTournament(id);
+        res.json({ data: tournament });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    updateTournament: async (req, res) => {
+      const { id } = req.params;
+      const { title, date, location, lat, lon } = req.body;
+      II(`Calling API: PUT /api/tournaments/${id}`);
+      try {
+        await dbSvc.updateTournament(id, { title, date, location, lat, lon });
+        const tournament = await dbSvc.getTournament(id);
+        res.json(tournament);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    deleteTournament: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: DELETE /api/tournaments/${id}`);
+      try {
+        await dbSvc.deleteTournament(id);
+        res.json({ message: "Tournament deleted" });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    resetTournament: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: POST /api/tournaments/${id}/reset`);
+      try {
+        if (+id === 1) {  // Assuming sandbox restriction still applies
+          await dbSvc.resetTournament(id);
+          res.json({ message: "Tournament reset successfully" });
+        } else {
+          res.status(403).json({ message: "Only sandbox tournament (id=1) can be reset" });
+        }
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    // Existing tournament endpoints
+    getRecentMatches: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/recent-matches`);
+      try {
+        const [count, matches] = await Promise.all([
+          dbSvc.getStartedMatchCount(id),
+          dbSvc.getRecentMatches(id),
+        ]);
+        res.json({ matchCount: count, matches });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getGroupFixtures: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/group-fixtures`);
+      try {
+        const fixtures = await dbSvc.getGroupFixtures(id);
+        res.json(fixtures);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getGroupStandings: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/group-standings`);
+      try {
+        const standings = await dbSvc.getGroupStandings(id);
+        res.json(standings);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getKnockoutFixtures: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/knockout-fixtures`);
+      try {
+        const fixtures = await dbSvc.getKnockoutFixtures(id);
+        res.json(fixtures);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getFinalsResults: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/finals-results`);
+      try {
+        const results = await dbSvc.getFinalsResults(id);
+        res.json(results);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getAllMatches: async (req, res) => {
+      const { id } = req.params;
+      II(`Calling API: GET /api/tournaments/${id}/all-matches`);
+      try {
+        const matches = await dbSvc.getAllMatches(id);
+        res.json(matches);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getCardedPlayers: async (req, res) => {
+      const { tournamentId } = req.params;
+      II(`Calling API: GET /api/tournaments/${tournamentId}/carded-players`);
+      try {
+        const players = await dbSvc.getCardedPlayers(tournamentId);
+        res.json(players);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    // Squads CRUD
+    createSquad: async (req, res) => {
+      const { tournamentId } = req.params;
+      const { teamName, groupLetter, category, teamSheetSubmitted, notes } = req.body;
+      II(`Calling API: POST /api/tournaments/${tournamentId}/squads`);
+      try {
+        const id = await dbSvc.createSquad(tournamentId, { teamName, groupLetter, category, teamSheetSubmitted, notes });
+        const squad = await dbSvc.getSquad(tournamentId, id);
+        res.status(201).json(squad);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getSquads: async (req, res) => {
+      const { tournamentId } = req.params;
+      II(`Calling API: GET /api/tournaments/${tournamentId}/squads`);
+      try {
+        const squads = await dbSvc.getSquads(tournamentId);
+        res.json({ data: squads });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getSquad: async (req, res) => {
+      const { tournamentId, id } = req.params;
+      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${id}`);
+      try {
+        const squad = await dbSvc.getSquad(tournamentId, id);
+        res.json({ data: squad });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    updateSquad: async (req, res) => {
+      const { tournamentId, id } = req.params;
+      const { teamName, groupLetter, category, teamSheetSubmitted, notes } = req.body;
+      II(`Calling API: PUT /api/tournaments/${tournamentId}/squads/${id}`);
+      try {
+        await dbSvc.updateSquad(id, { teamName, groupLetter, category, teamSheetSubmitted, notes });
+        const squad = await dbSvc.getSquad(tournamentId, id);
+        res.json(squad);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    deleteSquad: async (req, res) => {
+      const { tournamentId, id } = req.params;
+      II(`Calling API: DELETE /api/tournaments/${tournamentId}/squads/${id}`);
+      try {
+        await dbSvc.deleteSquad(id);
+        res.json({ message: "Squad deleted" });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    // Players CRUD
+    createPlayer: async (req, res) => {
+      const { tournamentId, squadId } = req.params;
+      const { firstName, secondName, dateOfBirth, foirreannId } = req.body;
+      II(`Calling API: POST /api/tournaments/${tournamentId}/squads/${squadId}/players`);
+      try {
+        const id = await dbSvc.createPlayer(squadId, { firstName, secondName, dateOfBirth, foirreannId });
+        const player = await dbSvc.getPlayer(id);
+        res.status(201).json(player);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getPlayers: async (req, res) => {
+      const { tournamentId, squadId } = req.params;
+      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${squadId}/players`);
+      try {
+        const players = await dbSvc.getPlayers(squadId);
+        res.json({ data: players });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    getPlayer: async (req, res) => {
+      const { tournamentId, squadId, id } = req.params;
+      II(`Calling API: GET /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
+      try {
+        const player = await dbSvc.getPlayer(id);
+        res.json({ data: player });
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    updatePlayer: async (req, res) => {
+      const { tournamentId, squadId, id } = req.params;
+      const { firstName, secondName, dateOfBirth, foirreannId } = req.body;
+      II(`Calling API: PUT /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
+      try {
+        await dbSvc.updatePlayer(id, { firstName, secondName, dateOfBirth, foirreannId });
+        const player = await dbSvc.getPlayer(id);
+        res.json(player);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    deletePlayer: async (req, res) => {
+      const { tournamentId, squadId, id } = req.params;
+      II(`Calling API: DELETE /api/tournaments/${tournamentId}/squads/${squadId}/players/${id}`);
+      try {
+        await dbSvc.deletePlayer(id);
+        res.json({ message: "Player deleted" });
+      } catch (err) {
+        throw err;
+      }
+    }
+  };
+};

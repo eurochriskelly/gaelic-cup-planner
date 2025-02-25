@@ -5,7 +5,15 @@ module.exports = (db) => {
   const query = promisify(db.query).bind(db);
 
   return {
-    // Tournaments
+    // Tournament CRUD (New)
+    createTournament: async ({ title, date, location, lat, lon }) => {
+      const result = await query(
+        `INSERT INTO tournaments (Title, Date, Location, Lat, Lon) VALUES (?, ?, ?, ?, ?)`,
+        [title, date, location, lat, lon]
+      );
+      return result.insertId;
+    },
+
     getTournaments: async () => {
       return await query(`SELECT Id, Date, Title, Location FROM tournaments`);
     },
@@ -23,6 +31,17 @@ module.exports = (db) => {
       return tournament;
     },
 
+    updateTournament: async (id, { title, date, location, lat, lon }) => {
+      await query(
+        `UPDATE tournaments SET Title = ?, Date = ?, Location = ?, Lat = ?, Lon = ? WHERE id = ?`,
+        [title, date, location, lat, lon, id]
+      );
+    },
+
+    deleteTournament: async (id) => {
+      await query(`DELETE FROM tournaments WHERE id = ?`, [id]);
+    },
+
     resetTournament: async (id) => {
       await query(
         `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL WHERE tournamentId = ?`,
@@ -30,6 +49,7 @@ module.exports = (db) => {
       );
     },
 
+    // Tournament Methods (Original + Updates)
     getTournamentGroups: async (id) => {
       return await query(`SELECT DISTINCT category FROM fixtures WHERE tournamentId = ?`, [id]);
     },
@@ -42,19 +62,16 @@ module.exports = (db) => {
     },
 
     getTournamentCategories: async (id) => {
-      return await query(`SELECT * FROM v_categories WHERE tournamentId = ?`, [id]);
-    },
-
-    getTournamentTeams: async (id, category) => {
-      return await query(
-        `SELECT id, teamName, category, groupLetter FROM teams WHERE tournamentId = ? AND category = ?`,
-        [id, category]
-      );
+      const rows = await query(`SELECT * FROM v_categories WHERE tournamentId = ?`, [id]);
+      return rows.map(row => ({
+        ...row,
+        brackets: row.brackets.split(",").map(x => x.trim())
+      }));
     },
 
     getStartedMatchCount: async (id) => {
       const result = await query(
-        `SELECT COUNT(*) as count FROM EuroTourno.v_fixture_information WHERE tournamentId = ? AND goals1 IS NOT NULL`,
+        `SELECT COUNT(*) as count FROM v_fixture_information WHERE tournamentId = ? AND goals1 IS NOT NULL`,
         [id]
       );
       return result[0].count;
@@ -62,34 +79,40 @@ module.exports = (db) => {
 
     getRecentMatches: async (id) => {
       return await query(
-        `SELECT id, DATE_FORMAT(DATE_ADD(started, INTERVAL 2 HOUR), '%H:%i') as start, pitch, groupNumber as grp, stage, category as competition, team1, 
-         CONCAT(goals1, '-', LPAD(points1, 2, '0'), ' (', LPAD(IF(goals1 IS NOT NULL AND points1 IS NOT NULL, goals1 * 3 + points1, 'N/A'), 2, '0'), ')') AS score1, 
-         team2, CONCAT(goals2, '-', LPAD(points2, 2, '0'), ' (', LPAD(IF(goals2 IS NOT NULL AND points2 IS NOT NULL, goals2 * 3 + points2, 'N/A'), 2, '0'), ')') AS score2, 
-         umpireTeam 
-         FROM EuroTourno.v_fixture_information WHERE tournamentId = ? AND started IS NOT NULL ORDER BY started DESC LIMIT 12`,
+        `SELECT id, DATE_FORMAT(DATE_ADD(started, INTERVAL 2 HOUR), '%H:%i') as start, pitch, groupNumber as grp, stage, category as competition, 
+                team1Id as team1, CONCAT(goals1, '-', LPAD(points1, 2, '0'), ' (', LPAD(IF(goals1 IS NOT NULL AND points1 IS NOT NULL, goals1 * 3 + points1, 'N/A'), 2, '0'), ')') AS score1, 
+                team2Id as team2, CONCAT(goals2, '-', LPAD(points2, 2, '0'), ' (', LPAD(IF(goals2 IS NOT NULL AND points2 IS NOT NULL, goals2 * 3 + points2, 'N/A'), 2, '0'), ')') AS score2, 
+                umpireTeamId as umpireTeam 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? AND started IS NOT NULL 
+         ORDER BY started DESC 
+         LIMIT 12`,
         [id]
       );
     },
 
     getGroupFixtures: async (id) => {
       return await query(
-        `SELECT id, category, groupNumber AS g, pitch, scheduledTime, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
-         IF(started IS NULL, 'false', 'true') AS started 
-         FROM EuroTourno.v_fixture_information WHERE tournamentId = ? AND stage = 'group' ORDER BY category, scheduledTime`,
+        `SELECT id, category, groupNumber AS g, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+                IF(started IS NULL, 'false', 'true') AS started 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? AND stage = 'group' 
+         ORDER BY category, scheduledTime`,
         [id]
       );
     },
 
     getGroupStandings: async (id) => {
       const groups = await query(
-        `SELECT DISTINCT grp as gnum, category FROM EuroTourno.v_group_standings WHERE tournamentId = ?`,
+        `SELECT DISTINCT grp as gnum, category FROM v_group_standings WHERE tournamentId = ?`,
         [id]
       );
       const standings = {};
       for (const { gnum, category } of groups) {
         const rows = await query(
           `SELECT category, grp, team, tournamentId, MatchesPlayed, Wins, Draws, Losses, PointsFrom, PointsDifference, TotalPoints 
-           FROM EuroTourno.v_group_standings WHERE tournamentId = ? AND category = ? AND grp LIKE ? 
+           FROM v_group_standings 
+           WHERE tournamentId = ? AND category = ? AND grp LIKE ? 
            ORDER BY TotalPoints DESC, PointsDifference DESC, PointsFrom DESC`,
           [id, category, gnum]
         );
@@ -101,34 +124,100 @@ module.exports = (db) => {
 
     getKnockoutFixtures: async (id) => {
       return await query(
-        `SELECT id, category, stage, pitch, scheduledTime, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
-         IF(started IS NULL, 'false', 'true') AS started 
-         FROM EuroTourno.v_fixture_information WHERE tournamentId = ? AND stage != 'group' ORDER BY category, scheduledTime`,
+        `SELECT id, category, stage, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+                IF(started IS NULL, 'false', 'true') AS started 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? AND stage != 'group' 
+         ORDER BY category, scheduledTime`,
         [id]
       );
     },
 
     getFinalsResults: async (id) => {
       return await query(
-        `SELECT category, REPLACE(stage, '_finals', '') AS division, team1, goals1, points1, team2, goals2, points2, 
-         CASE WHEN (goals1 * 3 + points1) > (goals2 * 3 + points2) THEN team1 
-              WHEN (goals1 * 3 + points1) < (goals2 * 3 + points2) THEN team2 
-              ELSE 'Draw' END AS winner 
-         FROM v_fixture_information WHERE tournamentId = ? AND stage LIKE '%finals' ORDER BY category`,
+        `SELECT category, REPLACE(stage, '_finals', '') AS division, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, 
+                CASE WHEN (goals1 * 3 + points1) > (goals2 * 3 + points2) THEN team1Id 
+                     WHEN (goals1 * 3 + points1) < (goals2 * 3 + points2) THEN team2Id 
+                     ELSE 'Draw' END AS winner 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? AND stage LIKE '%finals' 
+         ORDER BY category`,
         [id]
       );
     },
 
     getAllMatches: async (id) => {
       return await query(
-        `SELECT id, category, groupNumber AS grp, stage, pitch, scheduledTime, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
-         IF(started IS NULL, 'false', 'true') AS started 
-         FROM EuroTourno.v_fixture_information WHERE tournamentId = ? ORDER BY scheduledTime`,
+        `SELECT id, category, groupNumber AS grp, stage, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+                IF(started IS NULL, 'false', 'true') AS started 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? 
+         ORDER BY scheduledTime`,
         [id]
       );
     },
 
-    // Fixtures
+    // Squads CRUD (Updated from teams)
+    createSquad: async (tournamentId, { teamName, groupLetter, category, teamSheetSubmitted, notes }) => {
+      const result = await query(
+        `INSERT INTO squads (teamName, groupLetter, category, teamSheetSubmitted, notes, tournamentId) 
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [teamName, groupLetter, category, teamSheetSubmitted || false, notes, tournamentId]
+      );
+      return result.insertId;
+    },
+
+    getSquads: async (tournamentId) => {
+      return await query(`SELECT * FROM squads WHERE tournamentId = ?`, [tournamentId]);
+    },
+
+    getSquad: async (tournamentId, id) => {
+      const rows = await query(`SELECT * FROM squads WHERE tournamentId = ? AND id = ?`, [tournamentId, id]);
+      return rows[0] || null;
+    },
+
+    updateSquad: async (id, { teamName, groupLetter, category, teamSheetSubmitted, notes }) => {
+      await query(
+        `UPDATE squads SET teamName = ?, groupLetter = ?, category = ?, teamSheetSubmitted = ?, notes = ? WHERE id = ?`,
+        [teamName, groupLetter, category, teamSheetSubmitted || false, notes, id]
+      );
+    },
+
+    deleteSquad: async (id) => {
+      await query(`DELETE FROM squads WHERE id = ?`, [id]);
+    },
+
+    // Players CRUD (New)
+    createPlayer: async (squadId, { firstName, secondName, dateOfBirth, foirreannId }) => {
+      const result = await query(
+        `INSERT INTO players (firstName, secondName, dateOfBirth, foirreannId, teamId) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [firstName, secondName, dateOfBirth, foirreannId, squadId]
+      );
+      return result.insertId;
+    },
+
+    getPlayers: async (squadId) => {
+      return await query(`SELECT * FROM players WHERE teamId = ?`, [squadId]);
+    },
+
+    getPlayer: async (id) => {
+      const rows = await query(`SELECT * FROM players WHERE id = ?`, [id]);
+      return rows[0] || null;
+    },
+
+    updatePlayer: async (id, { firstName, secondName, dateOfBirth, foirreannId }) => {
+      await query(
+        `UPDATE players SET firstName = ?, secondName = ?, dateOfBirth = ?, foirreannId = ? WHERE id = ?`,
+        [firstName, secondName, dateOfBirth, foirreannId, id]
+      );
+    },
+
+    deletePlayer: async (id) => {
+      await query(`DELETE FROM players WHERE id = ?`, [id]);
+    },
+
+    // Fixtures (Original + Schema Updates)
     getFixturesByPitch: async (tournamentId, pitch) => {
       let where = `WHERE tournamentId = ?`;
       if (pitch) where += ` AND pitch = ?`;
@@ -147,6 +236,7 @@ module.exports = (db) => {
         `SELECT id, category, stage FROM fixtures WHERE tournamentId = ? AND started IS NOT NULL ORDER BY started DESC LIMIT 1`,
         [tournamentId]
       );
+      if (!latest.length) return null;
       const { id } = latest[0];
       await query(
         `UPDATE fixtures SET goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL, started = NULL WHERE id = ?`,
@@ -169,35 +259,41 @@ module.exports = (db) => {
         `UPDATE fixtures SET goals1 = ?, points1 = ?, goals2 = ?, points2 = ?, ended = ? WHERE id = ?`,
         [team1.goals, team1.points, team2.goals, team2.points, t, id]
       );
-      // Simplified: Add processStageCompletion, processSameRankOnGroupCompletion, etc., as needed
+      // Add processStageCompletion, etc., if needed from your original logic
     },
 
-    cardPlayers: async (tournamentId, fixtureId, players) => {
-      const values = players.map(p => 
-        `(${tournamentId}, ${fixtureId}, ${p.playerNumber}, '${p.playerName}', '${p.playerCard}', '${p.team}')`
+    cardPlayers: async (tournamentId, fixtureId, cards) => {
+      const values = cards.map(c => 
+        `(${tournamentId}, ${fixtureId}, ${c.playerId}, '${c.cardColor}')`
       ).join(",");
       return await query(
-        `INSERT INTO cards (tournament, fixture, playerNumber, playerName, cardColor, team) VALUES ${values}`
+        `INSERT INTO cards (tournamentId, fixtureId, playerId, cardColor) VALUES ${values}`
       );
     },
 
     getCardedPlayers: async (tournamentId) => {
       return await query(
-        `SELECT playerNumber, playerName, team, cardColor FROM cards WHERE tournament = ? ORDER BY team, playerName`,
+        `SELECT c.playerId, p.firstName, p.secondName, c.team, c.cardColor 
+         FROM cards c 
+         JOIN players p ON c.playerId = p.id 
+         WHERE c.tournamentId = ? 
+         ORDER BY c.team, p.firstName`,
         [tournamentId]
       );
     },
 
     getMatchesByPitch: async (tournamentId) => {
       return await query(
-        `SELECT id, pitch, stage, scheduledTime, category, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
-         IF(started IS NULL, 'false', 'true') AS started 
-         FROM EuroTourno.v_fixture_information WHERE tournamentId = ? ORDER BY pitch, scheduledTime`,
+        `SELECT id, pitch, stage, scheduledTime, category, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+                IF(started IS NULL, 'false', 'true') AS started 
+         FROM v_fixture_information 
+         WHERE tournamentId = ? 
+         ORDER BY pitch, scheduledTime`,
         [tournamentId]
       );
     },
 
-    // General
+    // General (Original)
     listPitches: async (tournamentId) => {
       const pitchEvents = await query(
         `SELECT * FROM v_pitch_events WHERE tournamentId = ?`,
@@ -212,16 +308,17 @@ module.exports = (db) => {
       const params = category ? [tournamentId, category] : [tournamentId];
       const [groups, standings] = await Promise.all([
         query(`SELECT DISTINCT category FROM v_group_standings WHERE tournamentId = ? ${extra}`, params),
-        query(`SELECT * FROM v_group_standings WHERE tournamentId = ? ${extra}`, params),
+        query(`SELECT * FROM v_group_standings WHERE tournamentId = ? ${extra}`, params)
       ]);
       return { groups: groups.map(g => g.category), data: standings };
     },
 
-    // Regions
+    // Regions (Original)
     listRegions: async () => {
       const rows = await query(
         `SELECT DISTINCT CASE WHEN subregion IS NOT NULL AND subregion <> '' 
-         THEN CONCAT(region, '%', subregion) ELSE region END AS formatted_region FROM clubs`
+         THEN CONCAT(region, '%', subregion) ELSE region END AS formatted_region 
+         FROM clubs`
       );
       return rows.map(x => x.formatted_region);
     },
@@ -252,7 +349,7 @@ module.exports = (db) => {
       return { header: { count: rows.length, region: reg, subregion }, data: rows };
     },
 
-    // Auth
+    // Auth (Original)
     login: async (email, password) => {
       const users = await query(
         `SELECT * FROM sec_users WHERE Email = ? AND Pass = ? AND IsActive = 1`,
