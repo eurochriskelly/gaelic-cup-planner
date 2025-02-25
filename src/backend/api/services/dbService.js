@@ -19,7 +19,7 @@ module.exports = (db) => {
     },
 
     getTournament: async (id) => {
-      const tournamentRows = await query(`SELECT * FROM tournaments WHERE id = ?`, [id]);
+      const tournamentRows = await query(`SELECT id, Date, Title, Location FROM tournaments WHERE Id = ?`, [id]);
       if (!tournamentRows.length) return null;
       const tournament = tournamentRows[0];
       const [groups, pitches] = await Promise.all([
@@ -69,6 +69,16 @@ module.exports = (db) => {
       }));
     },
 
+    getFixture: async (fixtureId) => {
+      const query = `SELECT * FROM fixtures WHERE id = ${db.escape(fixtureId)}`;
+      return new Promise((resolve, reject) => {
+        db.query(query, (err, results) => {
+          if (err) return reject(err);
+          resolve(results[0]);
+        });
+      });
+    },
+
     getStartedMatchCount: async (id) => {
       const result = await query(
         `SELECT COUNT(*) as count FROM v_fixture_information WHERE tournamentId = ? AND goals1 IS NOT NULL`,
@@ -79,10 +89,10 @@ module.exports = (db) => {
 
     getRecentMatches: async (id) => {
       return await query(
-        `SELECT id, DATE_FORMAT(DATE_ADD(started, INTERVAL 2 HOUR), '%H:%i') as start, pitch, groupNumber as grp, stage, category as competition, 
-                team1Id as team1, CONCAT(goals1, '-', LPAD(points1, 2, '0'), ' (', LPAD(IF(goals1 IS NOT NULL AND points1 IS NOT NULL, goals1 * 3 + points1, 'N/A'), 2, '0'), ')') AS score1, 
-                team2Id as team2, CONCAT(goals2, '-', LPAD(points2, 2, '0'), ' (', LPAD(IF(goals2 IS NOT NULL AND points2 IS NOT NULL, goals2 * 3 + points2, 'N/A'), 2, '0'), ')') AS score2, 
-                umpireTeamId as umpireTeam 
+        `SELECT id, DATE_FORMAT(DATE_ADD(started, INTERVAL 2 HOUR), '%H:%i') as start, pitch, 
+          groupNumber as grp, stage, category as competition, team1, 
+          CONCAT(goals1, '-', LPAD(points1, 2, '0'), ' (', LPAD(IF(goals1 IS NOT NULL AND points1 IS NOT NULL, goals1 * 3 + points1, 'N/A'), 2, '0'), ')') AS score1, 
+                team2, CONCAT(goals2, '-', LPAD(points2, 2, '0'), ' (', LPAD(IF(goals2 IS NOT NULL AND points2 IS NOT NULL, goals2 * 3 + points2, 'N/A'), 2, '0'), ')') AS score2, umpireTeam 
          FROM v_fixture_information 
          WHERE tournamentId = ? AND started IS NOT NULL 
          ORDER BY started DESC 
@@ -93,7 +103,7 @@ module.exports = (db) => {
 
     getGroupFixtures: async (id) => {
       return await query(
-        `SELECT id, category, groupNumber AS g, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+        `SELECT id, category, groupNumber AS g, pitch, scheduledTime, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
                 IF(started IS NULL, 'false', 'true') AS started 
          FROM v_fixture_information 
          WHERE tournamentId = ? AND stage = 'group' 
@@ -124,7 +134,7 @@ module.exports = (db) => {
 
     getKnockoutFixtures: async (id) => {
       return await query(
-        `SELECT id, category, stage, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+        `SELECT id, category, stage, pitch, scheduledTime, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
                 IF(started IS NULL, 'false', 'true') AS started 
          FROM v_fixture_information 
          WHERE tournamentId = ? AND stage != 'group' 
@@ -135,9 +145,9 @@ module.exports = (db) => {
 
     getFinalsResults: async (id) => {
       return await query(
-        `SELECT category, REPLACE(stage, '_finals', '') AS division, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, 
-                CASE WHEN (goals1 * 3 + points1) > (goals2 * 3 + points2) THEN team1Id 
-                     WHEN (goals1 * 3 + points1) < (goals2 * 3 + points2) THEN team2Id 
+        `SELECT category, REPLACE(stage, '_finals', '') AS division, team1, goals1, points1, team2, goals2, points2, 
+                CASE WHEN (goals1 * 3 + points1) > (goals2 * 3 + points2) THEN team1 
+                     WHEN (goals1 * 3 + points1) < (goals2 * 3 + points2) THEN team2 
                      ELSE 'Draw' END AS winner 
          FROM v_fixture_information 
          WHERE tournamentId = ? AND stage LIKE '%finals' 
@@ -148,7 +158,8 @@ module.exports = (db) => {
 
     getAllMatches: async (id) => {
       return await query(
-        `SELECT id, category, groupNumber AS grp, stage, pitch, scheduledTime, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+        `SELECT id, category, groupNumber AS grp, stage, pitch, scheduledTime, 
+                team1, goals1, points1, team2, goals2, points2, umpireTeam as umpireTeam, 
                 IF(started IS NULL, 'false', 'true') AS started 
          FROM v_fixture_information 
          WHERE tournamentId = ? 
@@ -284,7 +295,7 @@ module.exports = (db) => {
 
     getMatchesByPitch: async (tournamentId) => {
       return await query(
-        `SELECT id, pitch, stage, scheduledTime, category, team1Id as team1, goals1, points1, team2Id as team2, goals2, points2, umpireTeamId as umpireTeam, 
+        `SELECT id, pitch, stage, scheduledTime, category, team1, goals1, points1, team2, goals2, points2, umpireTeam, 
                 IF(started IS NULL, 'false', 'true') AS started 
          FROM v_fixture_information 
          WHERE tournamentId = ? 

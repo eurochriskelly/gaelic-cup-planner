@@ -18,6 +18,10 @@ module.exports = (db) => {
   router.get("/:id/finals-results", ctrl.getFinalsResults);
   router.get("/:id/all-matches", ctrl.getAllMatches);
 
+
+  router.get("/:tournamentId/matches-by-pitch", ctrl.getMatchesByPitch);
+  router.get("/:tournamentId/carded-players", ctrl.getCardedPlayers);
+
   // Squads sub-resource (replaces teams)
   router.post("/:tournamentId/squads", ctrl.createSquad);
   router.get("/:tournamentId/squads", ctrl.getSquads);
