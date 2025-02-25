@@ -87,6 +87,17 @@ module.exports = (db) => {
       }
     },
 
+    getMatchesByPitch: async (req, res) => {
+      console.log('ok', req.params)
+      const { tournamentId } = req.params;
+      try {
+        const matches = await dbSvc.getMatchesByPitch(tournamentId);
+        res.json(matches);
+      } catch (err) {
+        throw err;
+      }
+    },
+
     getGroupFixtures: async (req, res) => {
       const { id } = req.params;
       try {

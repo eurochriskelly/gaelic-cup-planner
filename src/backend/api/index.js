@@ -43,6 +43,8 @@ module.exports = (db, ARGS) => {
   }
 
   app.get("*", (req, res) => {
+    console.log(`Catch-all triggered: Requested path -> ${req.path}`);
+    console.log(`Serving [${ARGS.staticPath}]`);  
     res.sendFile(path.join(__dirname, ARGS.staticPath + "/index.html"));
   });
 

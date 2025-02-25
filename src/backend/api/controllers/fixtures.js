@@ -5,6 +5,10 @@ module.exports = (db) => {
   const dbSvc = dbService(db);
 
   return {
+    test: async(req, res) => {
+      res.json({foo:'fight'})
+    },
+
     fixturesByPitch: async (req, res) => {
       const { tournamentId, pitch } = req.params;
       console.log(req.params)
@@ -13,6 +17,18 @@ module.exports = (db) => {
         res.json({ data: fixtures });
       } catch (err) {
         throw err;
+      }
+    },
+
+    getFixture: async (req, res) => {
+      console.log('ok now here we go- ---------------')
+      const fixtureId = req.params.id;
+      try {
+        const fixture = await dbSvc.getFixture(fixtureId);
+        res.json({ data: fixture });
+      } catch (err) {
+        console.error("Error in getFixture:", err);
+        res.status(500).json({ error: "Internal server error" });
       }
     },
 
@@ -72,23 +88,19 @@ module.exports = (db) => {
     },
 
     getCardedPlayers: async (req, res) => {
-      const { tournamentId } = req.params;
+      console.log('carded player params are : ', req.params)
+      const { id: tournamentId } = req.params;
       try {
+        if (!tournamentId) {
+          return res.status(400).json({ error: "Tournament ID is required" });
+        }
         const players = await dbSvc.getCardedPlayers(tournamentId);
         res.json(players);
       } catch (err) {
-        throw err;
+        console.error("Error in getCardedPlayers:", err);
+        res.status(500).json({ error: "Internal server error" });
       }
     },
 
-    getMatchesByPitch: async (req, res) => {
-      const { tournamentId } = req.params;
-      try {
-        const matches = await dbSvc.getMatchesByPitch(tournamentId);
-        res.json(matches);
-      } catch (err) {
-        throw err;
-      }
-    },
   };
 };
