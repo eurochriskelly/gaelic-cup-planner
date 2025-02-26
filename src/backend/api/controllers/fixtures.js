@@ -11,7 +11,6 @@ module.exports = (db) => {
 
     fixturesByPitch: async (req, res) => {
       const { tournamentId, pitch } = req.params;
-      console.log(req.params)
       try {
         const fixtures = await dbSvc.getFixturesByPitch(tournamentId, pitch);
         res.json({ data: fixtures });
@@ -21,7 +20,6 @@ module.exports = (db) => {
     },
 
     getFixture: async (req, res) => {
-      console.log('ok now here we go- ---------------')
       const fixtureId = req.params.id;
       try {
         const fixture = await dbSvc.getFixture(fixtureId);
@@ -53,12 +51,14 @@ module.exports = (db) => {
     },
 
     startFixture: async (req, res) => {
+      
       const { tournamentId, id } = req.params;
       try {
         const result = await dbSvc.startFixture(id);
         res.json({ data: result });
       } catch (err) {
-        throw err;
+        console.error("Error in startFixture:", err);
+        res.status(500).json({ error: "Internal server error" });
       }
     },
 
@@ -88,7 +88,6 @@ module.exports = (db) => {
     },
 
     getCardedPlayers: async (req, res) => {
-      console.log('carded player params are : ', req.params)
       const { id: tournamentId } = req.params;
       try {
         if (!tournamentId) {
