@@ -62,14 +62,11 @@ module.exports = (db) => {
     resetTournament: async (req, res) => {
       const { id } = req.params;
       try {
-        if (+id === 1) {  // Assuming sandbox restriction still applies
-          await dbSvc.resetTournament(id);
-          res.json({ message: "Tournament reset successfully" });
-        } else {
-          res.status(403).json({ message: "Only sandbox tournament (id=1) can be reset" });
-        }
+        await dbSvc.resetTournament(id);
+        res.json({ message: "Tournament reset successfully" });
       } catch (err) {
-        throw err;
+        console.log(err);
+        res.status(403).json({ message: "Only sandbox tournament (id=1) can be reset. See log for more info." });
       }
     },
 
@@ -254,7 +251,7 @@ module.exports = (db) => {
         const player = await dbSvc.getPlayer(id);
         res.json(player);
       } catch (err) {
-        throw err;
+        res.status(500).json({ error: err.message || 'Internal server error' });
       }
     },
 
@@ -266,6 +263,59 @@ module.exports = (db) => {
       } catch (err) {
         throw err;
       }
-    }
+    },
+
+    deleteCards: async (req, res) => {
+      const { id } = req.params;
+      try {
+        await dbSvc.deleteCards(id);
+        res.status(200).json({ message: `Cards for tournament ${id} deleted` });
+      } catch (err) {
+        res.status(500).json({ error: err.message || 'Internal server error. (deleteCards)' });
+      }
+    }, 
+
+    deleteFixtures: async (req, res) => {
+      const { id } = req.params;
+      try {
+        await dbSvc.deleteFixtures(id); // Assume this deletes all fixtures for tournamentId
+        res.status(200).json({ message: `Fixtures for tournament ${id} deleted` });
+      } catch (err) {
+        res.status(500).json({ error: err.message || 'Internal server error. (deleteFixtures)' });
+      }
+    },
+
+    deletePitches: async (req, res) => {
+      const { id } = req.params;
+      try {
+        await dbSvc.deletePitches(id);
+        res.status(200).json({ message: `Pitches for tournament ${id} deleted` });
+      } catch (err) {
+        res.status(500).json({ error: err.message || 'Internal server error. (deletePitches)' });
+      }
+    },
+
+    createPitches: async (req, res) => {
+      const { id } = req.params;
+      const pitches = req.body; // Array of { pitch, location, type, tournamentId }
+      try {
+        const createdPitches = await dbSvc.createPitches(id, pitches);
+        res.status(201).json(createdPitches); // Return created pitches
+      } catch (err) {
+        res.status(500).json({ error: err.message || 'Internal server error' });
+      }
+    },
+
+    createFixtures: async (req, res) => {
+      const { id } = req.params;
+      const fixtures = req.body; // Array of fixture objects
+      try {
+        const createdFixtures = await dbSvc.createFixtures(id, fixtures);
+        res.status(201).json(createdFixtures); // Return created fixtures
+      } catch (err) {
+        res.status(500).json({ error: err.message || 'Internal server error' });
+      }
+    },
+
   };
 };

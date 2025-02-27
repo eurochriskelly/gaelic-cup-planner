@@ -371,7 +371,115 @@ module.exports = (db) => {
       await query(`UPDATE sec_users SET LastAuthenticated = CURDATE() WHERE id = ?`, [user.id]);
       return { id: user.id, email: user.Email };
     },
-  };
+    deleteFixtures: async (tournamentId) => {
+      try {
+        const result = await query(
+          `DELETE FROM fixtures WHERE tournamentId = ?`,
+          [tournamentId]
+        );
+        return { affectedRows: result.affectedRows }; // Return count of deleted rows
+      } catch (err) {
+        throw new Error(`Failed to delete fixtures for tournament ${tournamentId}: ${err.message}`);
+      }
+    },
+
+    // Delete all pitches for a tournament
+    deletePitches: async (tournamentId) => {
+      try {
+        const result = await query(
+          `DELETE FROM pitches WHERE tournamentId = ?`,
+          [tournamentId]
+        );
+        return { affectedRows: result.affectedRows };
+      } catch (err) {
+        throw new Error(`Failed to delete pitches for tournament ${tournamentId}: ${err.message}`);
+      }
+    },
+
+    // Delete all cards for a tournament
+    deleteCards: async (tournamentId) => {
+      console.log('this is failing ...')
+      try {
+        const result = await query(
+          `DELETE FROM cards WHERE tournamentId = ?`,
+          [tournamentId]
+        );
+        console.log('res', result)
+        return { affectedRows: result.affectedRows };
+      } catch (err) {
+        throw new Error(`Failed to delete cards for tournament ${tournamentId}: ${err.message}`);
+      }
+    },
+
+    // Create multiple pitches for a tournament
+    createPitches: async (tournamentId, pitches) => {
+      try {
+        const values = pitches.map(pitch => [
+          pitch.pitch,
+          pitch.location,
+          pitch.type,
+          tournamentId
+        ]);
+        const result = await query(
+          `INSERT INTO pitches (pitch, location, type, tournamentId) VALUES ?`,
+          [values] // Bulk insert with array of arrays
+        );
+        const insertedPitches = pitches.map((pitch, index) => ({
+          id: result.insertId + index, // Assuming auto-increment ID
+          pitch: pitch.pitch,
+          location: pitch.location,
+          type: pitch.type,
+          tournamentId
+        }));
+        return insertedPitches; // Return created pitch objects
+      } catch (err) {
+        throw new Error(`Failed to create pitches for tournament ${tournamentId}: ${err.message}`);
+      }
+    },
+
+    // Create multiple fixtures for a tournament
+    createFixtures: async (tournamentId, fixtures) => {
+      console.log(JSON.stringify(fixtures, null, 2))
+      try {
+        const values = fixtures.map(fixture => {
+          const schedTimestamp = new Date(fixture.scheduled).toISOString().slice(0, 19).replace("T", " ");
+          return [
+            fixture.id,
+            fixture.tournamentId,
+            fixture.category,
+            fixture.groupNumber,
+            fixture.stage,
+            fixture.pitch,
+            schedTimestamp,
+            fixture.started,
+            fixture.team1Planned,
+            fixture.team1Id,
+            fixture.goals1,
+            fixture.points1,
+            fixture.team2Planned,
+            fixture.team2Id,
+            fixture.goals2,
+            fixture.points2,
+            fixture.umpireTeamPlanned,
+            fixture.umpireTeamId
+          ]
+        });
+        const result = await query(
+          `INSERT INTO fixtures (id, tournamentId, category, groupNumber, stage, pitch, scheduled, started, team1Planned, team1Id, goals1, points1, team2Planned, team2Id, goals2, points2, umpireTeamPlanned, umpireTeamId) VALUES ?`,
+          [values]
+        );
+        const insertedFixtures = fixtures.map((fixture, index) => ({
+          ...fixture,
+          id: fixture.id
+        }));
+        return insertedFixtures;
+      } catch (err) {
+        console.log(err)
+        throw new Error(`Failed to create fixtures for tournament ${tournamentId}: ${err.message}`);
+      }
+    },
+  }
+
 };
 
 function splitRegion(rIn) {
