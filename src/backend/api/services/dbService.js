@@ -1,8 +1,162 @@
 const { promisify } = require("util");
 const { mysqlCurrentTime } = require("../../lib/utils");
+const { calculateRankings } = require('../../lib/queries');
 
 module.exports = (db) => {
   const query = promisify(db.query).bind(db);
+
+
+  async function processStageCompletion(fixtureId) {
+    console.log(`Processing stage completion for grouo [${fixtureId}]`);
+    const selQuery = `SELECT tournamentId, stage, groupNumber, category FROM fixtures WHERE id = ?`;
+    const data = await query(selQuery, [fixtureId]);
+    if (!data.length) return false;
+    const { tournamentId, stage, groupNumber, category } = data[0];
+    const completedQuery = `
+      SELECT count(*) as remaining FROM fixtures WHERE 
+        tournamentId = ? and 
+        stage = ? and 
+        groupNumber = ? and 
+        category = ? and 
+        goals1 is null
+    `;
+    const completedData = await query(completedQuery, [tournamentId, stage, groupNumber, category]);
+    console.log(completedData);
+    const remainingMatchesInStage = +completedData[0].remaining;
+    if (!remainingMatchesInStage) {
+      console.log(`Stage [${stage}] has been completed ... Updating calculated teams`);
+      const qGroupStandings = `
+         SELECT * FROM v_group_standings WHERE 
+         tournamentId = ? and 
+         grp = ? and 
+         category = ?
+      `;
+      const groupStandings = await query(qGroupStandings, [tournamentId, groupNumber, category]);
+      let numPositions;
+      if (stage === "group") {
+          const qNumPositions = `
+            SELECT count(*) as numPositions FROM v_fixture_information WHERE 
+              tournamentId = ? and 
+              stage = ? and 
+              groupNumber = ? and 
+              category = ?
+          `;
+          const numData = await query(qNumPositions, [tournamentId, stage, groupNumber, category]);
+          numPositions = numData[0].numPositions || 0;
+      } else {
+          numPositions = 2;
+      }
+      const range = [...Array(numPositions).keys()];
+      let totalUpdated = 0;
+      for (const position of range) {
+          const placeHolder = `~${stage}:${groupNumber}/p:${position + 1}`;
+          const newValue = groupStandings[position]?.team;
+          const updateFixture = async (t) => {
+              const parts = placeHolder.split('&');
+              let cat = category, ph = placeHolder;
+              if (parts.length === 2) {
+                  ph = parts[0];
+                  cat = parts[1];
+              }
+              const sql = `
+                UPDATE fixtures SET ${t}Id = ? 
+                WHERE ${t}Planned = ? and tournamentId = ? and category = ?
+              `;
+               const res = await query(sql, [newValue, ph, tournamentId, cat]);
+               return res.affectedRows || 0;
+          };
+          const team1Updated = await updateFixture("team1");
+          const team2Updated = await updateFixture("team2");
+          const umpireUpdated = await updateFixture("umpireTeam");
+          totalUpdated += team1Updated + team2Updated + umpireUpdated;
+      }
+      console.log(`Stage [${stage}] has been completed for Group [${groupNumber}] in category [${category}]. Total fixtures updated: ${totalUpdated}.`);
+      return true;
+    }
+    console.log(`Stage [${stage}/${groupNumber}] for [${category}] has [${remainingMatchesInStage}] remaining matches.`);
+    return false;
+  }
+
+  async function processSameRankOnGroupCompletion(tournamentId, category) {
+    console.log(`Processing same rank in category [${category}] for tournament [${tournamentId}]`);
+    let q = `
+        SELECT count(*) as count FROM fixtures 
+        WHERE tournamentId = ? and 
+          category = ? and started is null and ( 
+          team1Id like '~rankgrp:%' or 
+          team2Id like '~rankgrp:%' or 
+          umpireTeamId like '~rankgrp:%'
+        )
+    `;
+    const rankData = await query(q, [tournamentId, category]);
+    const rankgrpRemaining = +(rankData[0].count) > 0;
+    q = `
+      SELECT count(*) as count FROM fixtures
+      WHERE tournamentId = ? and 
+        category = ? and stage = 'group' and
+        goals1 is null
+    `;
+    const groupData = await query(q, [tournamentId, category]);
+    const groupGamesFinished = +(groupData[0].count) === 0;
+    if (rankgrpRemaining && groupGamesFinished) {
+      const rankings = await calculateRankings(tournamentId, category, query);
+      q = `
+        SELECT distinct team1Id FROM (
+          SELECT team1Id FROM fixtures WHERE tournamentId = ? and category = ? and team1Id like '~rankgrp:%'
+          UNION
+          SELECT team2Id FROM fixtures WHERE tournamentId = ? and category = ? and team2Id like '~rankgrp:%'
+          UNION
+          SELECT umpireTeamId FROM fixtures WHERE tournamentId = ? and category = ? and umpireTeamId like '~rankgrp:%'
+        ) x
+      `;
+      const replaceData = await query(q, [tournamentId, category, tournamentId, category, tournamentId, category]);
+      const replaceList = replaceData.map(x => x.team1Id);
+      for (const r of replaceList) {
+          const parts = r.split("/");
+          const place = +parts[0].split(":").pop();
+          const position = +parts[1].split(":").pop();
+          const item = rankings.filter((x) => x.place === place)[position - 1];
+          const updateQueryFn = async (t, placeHolder, team) => {
+            const sql = `
+                  UPDATE fixtures
+                  SET ${t}Id = ?
+                  WHERE ${t}Planned = ? and tournamentId = ? and category = ?
+              `;
+            return await query(sql, [team, placeHolder, tournamentId, category]);
+          };
+          const res1 = await updateQueryFn("team1", r, item.team);
+          const res2 = await updateQueryFn("team2", r, item.team);
+          const res3 = await updateQueryFn("umpireTeam", r, item.team);
+          totalUpdated += (res1.affectedRows || 0) + (res2.affectedRows || 0) + (res3.affectedRows || 0);
+      }
+      console.log(`Same rank group update complete for category [${category}]. Total placeholders updated: ${totalUpdated}.`);
+    }
+    return { rankgrpRemaining, groupGamesFinished };
+  }
+
+  async function processAnyMatchDependentFixtures(teamInfo) {
+    const { name, position, matchId, category, tournamentId } = teamInfo;
+    const placeHolder = `~match:${matchId}/p:${position}`;
+    const qAnyMatchWinner = (t) => {
+        const parts = placeHolder.split('&');
+        let cat = category, ph = placeHolder;
+        if (parts.length === 2) {
+            ph = parts[0];
+            cat = parts[1];
+        }
+        return `
+          UPDATE fixtures 
+          SET ${t}Id = ?
+          WHERE ${t}Planned = ? and tournamentId = ? and category = ?
+        `;
+    }
+    const res1 = await query(qAnyMatchWinner("team1"), [name, placeHolder, tournamentId, category]);
+    const res2 = await query(qAnyMatchWinner("team2"), [name, placeHolder, tournamentId, category]);
+    const res3 = await query(qAnyMatchWinner("umpireTeam"), [name, placeHolder, tournamentId, category]);
+    const totalUpdated = (res1.affectedRows || 0) + (res2.affectedRows || 0) + (res3.affectedRows || 0);
+    console.log(`Updated match dependent fixtures for team [${name}] in match [${matchId}]. Total records updated: ${totalUpdated}.`);
+
+  }
 
   return {
     // Tournament CRUD (New)
@@ -265,12 +419,30 @@ module.exports = (db) => {
     },
 
     updateScore: async (id, team1, team2, tournamentId) => {
+      console.log(`Settings score for fixture [${id}], Team1 [${team1.name}] vs Team2 [${team2.name}] with scores ${team1.goals}-${team1.points} and ${team2.goals}-${team2.points}`);
       const t = mysqlCurrentTime();
       await query(
         `UPDATE fixtures SET goals1 = ?, points1 = ?, goals2 = ?, points2 = ?, ended = ? WHERE id = ?`,
         [team1.goals, team1.points, team2.goals, team2.points, t, id]
       );
-      // Add processStageCompletion, etc., if needed from your original logic
+      const team1Score = team1.goals * 3 + team1.points;
+      const team2Score = team2.goals * 3 + team2.points;
+      await processStageCompletion(id);
+      await processSameRankOnGroupCompletion(tournamentId, team1.category);
+      await processAnyMatchDependentFixtures({
+        name: team1.name,
+        category: team1.category,
+        position: team1Score > team2Score ? 1 : 2,
+        matchId: id,
+        tournamentId,
+      });
+      await processAnyMatchDependentFixtures({
+        name: team2.name,
+        category: team2.category,
+        position: team1Score > team2Score ? 2 : 1,
+        matchId: id,
+        tournamentId,
+      });
     },
 
     cardPlayers: async (tournamentId, fixtureId, cards) => {
