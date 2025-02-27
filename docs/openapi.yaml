@@ -143,6 +143,97 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+    paths:
+      /tournaments/{id}/fixtures:
+        delete:
+          summary: "Delete all fixtures for a tournament"
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema: { type: integer }
+          responses:
+            "200": { content: { "application/json": { schema: { type: object, properties: { message: { type: string } } } } } }
+            "500": { content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } }
+        post:
+          summary: "Create multiple fixtures for a tournament"
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema: { type: integer }
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      tournamentId: { type: integer }
+                      category: { type: string }
+                      groupNumber: { type: integer }
+                      stage: { type: string }
+                      pitch: { type: string }
+                      scheduled: { type: string }
+                      started: { type: string, nullable: true }
+                      team1Planned: { type: string }
+                      team1Id: { type: string }
+                      goals1: { type: integer, nullable: true }
+                      points1: { type: integer, nullable: true }
+                      team2Planned: { type: string }
+                      team2Id: { type: string }
+                      goals2: { type: integer, nullable: true }
+                      points2: { type: integer, nullable: true }
+                      umpireTeamPlanned: { type: string }
+                      umpireTeamId: { type: string }
+          responses:
+            "201": { content: { "application/json": { schema: { type: array, items: { $ref: "#/components/schemas/Fixture" } } } } }
+            "500": { content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } }
+      /tournaments/{id}/pitches:
+        delete:
+          summary: "Delete all pitches for a tournament"
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema: { type: integer }
+          responses:
+            "200": { content: { "application/json": { schema: { type: object, properties: { message: { type: string } } } } } }
+            "500": { content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } }
+        post:
+          summary: "Create multiple pitches for a tournament"
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema: { type: integer }
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Pitch"
+          responses:
+            "201": { content: { "application/json": { schema: { type: array, items: { $ref: "#/components/schemas/Pitch" } } } } }
+            "500": { content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } }
+
+  /tournaments/{id}/cards:
+    delete:
+      summary: "Delete all cards for a tournament"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200": { content: { "application/json": { schema: { type: object, properties: { message: { type: string } } } } } }
+        "500": { content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } }
+                
   /tournaments/{id}/reset:
     post:
       summary: Reset a tournament (sandbox only)
