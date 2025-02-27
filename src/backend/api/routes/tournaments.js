@@ -18,7 +18,6 @@ module.exports = (db) => {
   router.get("/:id/finals-results", ctrl.getFinalsResults);
   router.get("/:id/all-matches", ctrl.getAllMatches);
 
-
   router.get("/:tournamentId/matches-by-pitch", ctrl.getMatchesByPitch);
   router.get("/:tournamentId/carded-players", ctrl.getCardedPlayers);
 
@@ -35,6 +34,13 @@ module.exports = (db) => {
   router.get("/:tournamentId/squads/:squadId/players/:id", ctrl.getPlayer);
   router.put("/:tournamentId/squads/:squadId/players/:id", ctrl.updatePlayer);
   router.delete("/:tournamentId/squads/:squadId/players/:id", ctrl.deletePlayer);
+
+  // new routes to support import
+  router.delete("/:id/fixtures", ctrl.deleteFixtures);
+  router.delete("/:id/pitches", ctrl.deletePitches);
+  router.delete("/:id/cards", ctrl.deleteCards);
+  router.post("/:id/pitches", ctrl.createPitches);
+  router.post("/:id/fixtures", ctrl.createFixtures);
 
   return router;
 };
