@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../js/Provider";
+
 import "./MainMenu.scss";
 
-const MainMenu = ({ selected = 0 }) => {
+const MainMenu = ({ selected = 0, height = '7rem' }) => {
   const { tournamentId } = useParams();
   const { sections } = useAppContext();
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ const MainMenu = ({ selected = 0 }) => {
     },
   };
   return (
-    <header className="MainMenu no-select">
-      <h1>
+    <header className="MainMenu no-select" style={{ height }}>
+      <h1 style={{ height }}>
         <span className="hamburger" onClick={handle.hamburger} />
         <span>{title}</span>
         <span className="circled"></span>
@@ -28,4 +29,5 @@ const MainMenu = ({ selected = 0 }) => {
     </header>
   );
 };
+
 export default MainMenu;
