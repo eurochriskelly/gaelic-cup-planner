@@ -5,9 +5,6 @@ module.exports = (db) => {
   const dbSvc = dbService(db);
 
   return {
-    test: async(req, res) => {
-      res.json({foo:'fight'})
-    },
 
     fixturesByPitch: async (req, res) => {
       const { tournamentId, pitch } = req.params;

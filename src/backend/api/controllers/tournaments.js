@@ -145,6 +145,16 @@ module.exports = (db) => {
       }
     },
 
+    getTournamentCategories: async (req, res) => {
+      const { id } = req.params;
+      try {
+        const categories = await dbSvc.getTournamentCategories(id);
+        res.json(categories);
+      } catch (err) {
+        throw err;
+      }
+    },
+
     getCardedPlayers: async (req, res) => {
       const { tournamentId } = req.params;
       try {
