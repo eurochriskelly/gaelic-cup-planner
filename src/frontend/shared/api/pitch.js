@@ -13,13 +13,12 @@ export default {
     }),
   startMatch: (tournamentId, fixtureId) =>
     new Promise((accept, reject) => {
-      fetch(makeEndpoint(tournamentId, `${fixtureId}/start`))
-        .then((response) => response.json())
+      fetch(makeEndpoint(tournamentId, `${fixtureId}/start`), { method: 'POST' })
+        .then((response) => console.log('we got the reponse') || response.json())
         .then(async (data) => {
           accept(data);
         })
         .catch((error) => {
-          console.log("Error starting match, ", error);
           reject(error);
         });
     }),
