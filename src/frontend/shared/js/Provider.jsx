@@ -2,26 +2,23 @@ import { createContext, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 
+
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "0.2.13",
+  mobile: "0.2.14",
   desktop: "0.0.1",
 };
+
 export const Provider = ({ children }) => {
-  let tid = null;
-  const params = useParams();
-  if (params.tournamentId) tid = params.tournamentId;
-  if (!tid) tid = Cookies.get(tid);
-  
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
 
   const setupTournament = (id) => {
     setTournamentId(id);
-    if (id){
-      Cookies.set('tournamentId', id, { expires: 1/24, path: '/'});
+    if (id) {
+      Cookies.set("tournamentId", id, { expires: 1 / 24, path: "/" });
     }
     setSections([
       {
@@ -49,9 +46,9 @@ export const Provider = ({ children }) => {
     };
     handleMediaQueryChange(mediaQuery);
     mediaQuery.addListener(handleMediaQueryChange);
-    setupTournament(tid);
-    return () => {
-    };
+    const tid = Cookies.get("tournamentId"); // Check cookie on mount
+    if (tid) setupTournament(tid);
+    return () => {};
   }, []);
 
   return (
