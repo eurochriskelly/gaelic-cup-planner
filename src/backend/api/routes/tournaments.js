@@ -12,6 +12,7 @@ module.exports = (db) => {
   router.delete("/:id", ctrl.deleteTournament);
   router.post("/:id/reset", ctrl.resetTournament);
   router.get("/:id/recent-matches", ctrl.getRecentMatches);
+  router.get("/:id/categories", ctrl.getTournamentCategories);
   router.get("/:id/group-fixtures", ctrl.getGroupFixtures);
   router.get("/:id/group-standings", ctrl.getGroupStandings);
   router.get("/:id/knockout-fixtures", ctrl.getKnockoutFixtures);

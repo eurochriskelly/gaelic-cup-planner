@@ -8,7 +8,6 @@ module.exports = (db) => {
 
   router.get("/", ctrl.fixturesByPitch);
   router.get("/nextup", ctrl.nextFixtures);
-  router.get("/:id", ctrl.getFixture);
   router.get("/:fixtureId/rewind", ctrl.rewindFixture);
   router.get("/:fixtureId/carded-players", ctrl.getCardedPlayers);
   router.post("/:id/start", ctrl.startFixture);

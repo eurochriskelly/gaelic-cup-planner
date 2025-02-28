@@ -198,7 +198,7 @@ module.exports = (db) => {
 
     resetTournament: async (id) => {
       await query(
-        `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL WHERE tournamentId = ?`,
+        `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL, outcome = 'not played' WHERE tournamentId = ?`,
         [id]
       );
     },
