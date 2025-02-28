@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import LanguageSwitcher from "../LanguageSwitcher";
+import Cookies from "js-cookie";
 import "./PinLogin.scss";
 
 const PinLogin = () => {
@@ -14,18 +15,22 @@ const PinLogin = () => {
   const [message, setMessage] = useState("");
   const inputsRef = useRef([]);
 
-  useEffect(() => inputsRef.current[0].focus(), [])
+  useEffect(() => {
+    inputsRef.current[0].focus();
+    const tid = Cookies.get("tournamentId");
+    if (tid && tid !== "undefined") {
+      navigate(`/tournament/${tid}`, { replace: true });
+    }
+  }, [navigate]);
 
   const handleChange = (e, index) => {
-    const value = e.target.value.slice(0, 1); // Only allow one digit
+    const value = e.target.value.slice(0, 1);
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
-    // Auto-tab to the next input
     if (value && index < 3) {
       inputsRef.current[index + 1].focus();
     }
-    // Check if all inputs have values
     if (newPin.every((num) => num !== "")) {
       const joined = newPin.join("");
       onPinEntered(joined);
@@ -34,19 +39,17 @@ const PinLogin = () => {
 
   const selectTournament = (id) => {
     setupTournament(id);
+    Cookies.set("tournamentId", id, { expires: 1 / 24, path: "/" });
     setIsThinking(true);
     setTimeout(() => {
-      setPin(["#", "#", "#", "#"]);
-      setTimeout(() => {
-        navigate(`/tournament/${id}`);
-        setIsThinking(false);
-      }, 500)
-    })
+      navigate(`/tournament/${id}`, { replace: true });
+      setIsThinking(false);
+    }, 500);
   };
 
   const onPinEntered = (joined) => {
     switch (joined) {
-      case "2025":
+      case "4884":
         selectTournament(17);
         break;
       case "9191":
@@ -65,11 +68,11 @@ const PinLogin = () => {
 
   return (
     <div className="pinLogin">
-      <div style={{ textAlign: 'center' }}>{t('pinLogin_enter_pin')}</div>
+      <div style={{ textAlign: "center" }}>{t("pinLogin_enter_pin")}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input
-            className={isThinking ? 'thinking' : ''}
+            className={isThinking ? "thinking" : ""}
             key={index}
             ref={(el) => (inputsRef.current[index] = el)}
             value={num}
@@ -80,9 +83,7 @@ const PinLogin = () => {
       </div>
       <div>&nbsp;{message}&nbsp;</div>
       <LanguageSwitcher />
-      <div>{
-        `Pitch Perfect v${versionInfo?.mobile}`
-      }</div>
+      <div>{`Pitch Perfect v${versionInfo?.mobile}`}</div>
     </div>
   );
 };
