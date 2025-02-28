@@ -1,27 +1,33 @@
 import Cookies from "js-cookie";
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Add useEffect
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
 import { useFetchTournament } from './LandingPage.hooks';
-import PinLogin from '../../../../shared/generic/PinLogin';
 import './LandingPage.scss';
 
 const LandingPage = () => {
-  console.log('do we have what we need?');
-
   const [isResetClicked, setIsResetClicked] = useState(false);
-  let { tournamentId } = useParams();
-  if (!tournamentId) tournamentId = Cookies.get('tournamentId');
-  if (!tournamentId || tournamentId === 'undefined') {
-    return <PinLogin />
-  } 
+  const [isScrolled, setIsScrolled] = useState(false); // New: Track scroll state
+  const { tournamentId } = useParams();
   const base = `/tournament/${tournamentId}`;
-  const { tournInfo }  = useFetchTournament(tournamentId);
+  const { tournInfo } = useFetchTournament(tournamentId);
   const { t } = useTranslation();
   const tt = code => t(`landingPage_${code}`);
   const { versionInfo } = useAppContext();
   const navigate = useNavigate();
+
+  // New: Add scroll listener to toggle shrink class
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolled(scrollTop > 50); // Shrink after scrolling 50px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const jump = {
     competitions: () => navigate(`${base}/selectCategory`),
     scheduling: () => navigate(`${base}/selectPitch`),
@@ -30,27 +36,31 @@ const LandingPage = () => {
   const handle = {
     resetTournament: async () => {
       const button = document.querySelector('.sudo');
-      button.classList.add('active'); // Add active class for animation
-    button.classList.remove('active'); // Remove active class after fetch
+      button.classList.add('active');
+      button.classList.remove('active');
       await fetch(`/api/tournaments/1/reset`);
     },
     disconnect: () => {
-      Cookies.remove('tournamentId');
-      navigate("/");
+      Cookies.remove("tournamentId");
+      navigate("/", { replace: true });
     }
   };
 
   const handleResetClick = async () => {
-     setIsResetClicked(true);
-     await handle.resetTournament();
-     setTimeout(() => {
-       setIsResetClicked(false);
-     }, 200); // Matches transition duration
+    setIsResetClicked(true);
+    await handle.resetTournament();
+    setTimeout(() => {
+      setIsResetClicked(false);
+    }, 200);
   };
 
   return (
-    <main className={`.mobile LandingPage`}>
-      <h1>{t('landingPage_heading')}</h1>
+    <main className={`.mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
+      {/* New: Add banner container */}
+      <div className="banner-container">
+        <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
+        <h1>{t('landingPage_heading')}</h1> {/* Moved inside banner-container */}
+      </div>
       <header>
         <table>
           <tbody>
@@ -61,18 +71,12 @@ const LandingPage = () => {
         </table>
       </header>
       <section>
-        <Card
-          action={jump.scheduling}
-          icon="&#x26A1;"
-          title={tt('sched_exe')} >
+        <Card action={jump.scheduling} icon="⚡" title={tt('sched_exe')}>
           <p>{tt('StartMatches')}</p>
           <p>{tt('SetScores')}</p>
           <p>{tt('AddCardedPlayers')}</p>
         </Card>
-        <Card
-          action={jump.competitions}
-          icon="&#x1F3D0;"
-          title={tt('comp_status')} >
+        <Card action={jump.competitions} icon="🏐" title={tt('comp_status')}>
           <p>{tt('ViewRecent')}</p>
           <p>{tt('ViewGroupStandings')}</p>
           <p>{tt('FollowProgressInStandings')}</p>
@@ -80,7 +84,7 @@ const LandingPage = () => {
       </section>
       <section className="maintenance">
         {+tournamentId === 1 && (
-             <button className='sudo' onClick={handleResetClick}>{tt('ResetTournament')}</button>
+          <button className='sudo' onClick={handleResetClick}>{tt('ResetTournament')}</button>
         )}
         <button onClick={handle.disconnect}>{tt('Disconnect')}</button>
       </section>
@@ -89,7 +93,6 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
 
 function Card({ title, icon, action, children }) {
   return (
@@ -115,4 +118,4 @@ function Row({ label, children }) {
   );
 }
 
-
+export default LandingPage;

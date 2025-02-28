@@ -12,10 +12,11 @@ const SelectTournamentView = () => {
   // const { tournamentId } = useParams();
   const [categories, setCategories] = useState([]);
   useEffect(() => {
+    console.log('Fetching categories for tournament', tournamentId)
     fetch(`/api/tournaments/${tournamentId}/categories`)
       .then((response) => response.json())
       .then((data) => {
-        setCategories(data.data);
+        setCategories(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -35,7 +36,7 @@ const SelectTournamentView = () => {
   return (
     <MobileSelect sections={sections} active={0}>
       <div>Select competition</div>
-      {categories.map(
+      {categories?.map(
         ({ category, latestStage, totalGames, currentGame, brackets }) => (
           <MainCard
             id={category}
