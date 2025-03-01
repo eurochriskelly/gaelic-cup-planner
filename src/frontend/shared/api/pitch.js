@@ -52,6 +52,23 @@ export default {
           reject(error);
         });
     }),
+  rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, newFixtureId, placement) =>
+    new Promise((accept, reject) => {
+      fetch(
+        makeEndpoint(tournamentId, `${currentFixtureId}/reschedule`),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fixtureId: newFixtureId, targetPitch, placement })
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => accept(data))
+        .catch((error) => {
+          console.log("Error rescheduling match: ", error);
+          reject(error);
+        });
+    }),
 };
 
 function makeRequest(obj) {

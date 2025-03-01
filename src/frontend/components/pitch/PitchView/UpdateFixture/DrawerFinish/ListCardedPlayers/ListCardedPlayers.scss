@@ -5,96 +5,96 @@
    flex-direction: column;
    justify-content: center;
    min-height: 100%;  
-  .card-question {
-    h3 {
-      text-align: center;
-      font-size: 2rem;
-      margin: 1rem 0;
+   .card-question {
+   h3 {
+     text-align: center;
+     font-size: 2rem;
+     margin: 1rem 0;
     }
     .toggle {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 1rem 0;
-      button {
-        padding: 1rem 2rem;
-        font-size: 1.8rem;
-        border-radius: 5px;
-        border: 1px solid $pc;
-        &.yes.active, &.no.active { background-color: $sc; color: white; }
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 1rem 0;
+        button {
+          padding: 1rem 2rem;
+          font-size: 1.8rem;
+          border-radius: 5px;
+          border: 1px solid $pc;
+          &.yes.active, &.no.active { background-color: $sc; color: white; }
+        }
       }
     }
-  }
-  .card-table {
-    width: 100%;
-    border-collapse: collapse;
-    th, td {
-      padding: 1rem;
-      border-bottom: 1px solid #ddd;
-    }
-    th:first-child, td:first-child {
-      width: 70%; /* More space for team name */
-      font-size: 2rem;
-      font-weight: bold;
-    }
-    th:last-child, td:last-child {
-      width: 30%; /* Less space for card type */
-      text-align: center;
-    }
-    .card-sub-table {
+    .card-table {
       width: 100%;
-      margin: 0.5rem 0;
-      align-items: center;
-      td {
-        padding: 0.5rem;
-        .card-color {
-          width: 100px; /* Doubled */
-          height: 100px; /* Doubled */
-        border-radius: 5px;
-        &.red { background-color: red; }
-        &.yellow { background-color: yellow; }
-        &.black { background-color: black; }
+      border-collapse: collapse;
+      th, td {
+        padding: 0rem;
+        border-bottom: 1px solid #ddd;
       }
-      input[type="number"] {
-        width: 100px; /* Doubled */
-        height: 100px; /* Doubled */
-        padding: 0.5rem;
-        font-size: 1.6rem;
+      th:first-child, td:first-child {
+        width: 70%; /* More space for team name */
+        font-size: 2rem;
+        font-weight: bold;
+      }
+      th:last-child, td:last-child {
+        width: 30%; /* Less space for card type */
         text-align: center;
       }
-      input[type="text"] {
-        height: 100px; /* Doubled */
-        padding: 0.5rem 1rem;
-        width: 100%; /* Full column width */
-        font-size: 1.6rem;
-        text-transform: uppercase;
+      .card-sub-table {
+        width: 100%;
+        margin: 0.5rem 0;
+        align-items: center;
+        td {
+          padding: 0.5rem;
+          .card-color {
+            width: 100px; /* Doubled */
+            height: 100px; /* Doubled */
+          border-radius: 5px;
+          &.red { background-color: red; }
+          &.yellow { background-color: yellow; }
+          &.black { background-color: black; }
+        }
+        input[type="number"] {
+          width: 100px; /* Doubled */
+          height: 100px; /* Doubled */
+          padding: 0.5rem;
+          font-size: 1.6rem;
+          text-align: center;
+        }
+        input[type="text"] {
+          height: 100px; /* Doubled */
+          padding: 0.5rem 1rem;
+          width: 100%; /* Full column width */
+          font-size: 1.6rem;
+          text-transform: uppercase;
+        }
+        button {
+          height: 100px; /* Doubled */
+          padding: 0 1rem;
+          font-size: 1.4rem;
+          background-color: #ff4444;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
       }
+    }
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      margin: 2rem 0;
       button {
-        height: 100px; /* Doubled */
-        padding: 0 1rem;
-        font-size: 1.4rem;
-        background-color: #ff4444;
-        color: white;
-        border: none;
+        padding: 1.5rem 0;
+        font-size: 2rem;
         border-radius: 5px;
-        cursor: pointer;
+        border: 1px solid $pc;
+        width: 50%; // 50% each, 100% total
+        &.ok { background-color: $pc; color: white; }
+        &.cancel { background-color: #ddd; }
       }
     }
   }
-  .card-actions {
-    display: flex;
-    justify-content: space-between;
-    margin: 2rem 0;
-    button {
-      padding: 1.5rem 0;
-      font-size: 2rem;
-      border-radius: 5px;
-      border: 1px solid $pc;
-      width: 50%; // 50% each, 100% total
-      &.ok { background-color: $pc; color: white; }
-      &.cancel { background-color: #ddd; }
-    }
-  }
-}
 }
 

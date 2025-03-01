@@ -136,4 +136,15 @@
 }
 
 .space-button {
+  &.primary {
+    cursor: pointer;
+    background-color: $primary-color; // Primary color when not started
+    border: 1px solid $sc-light-20;
+    color: white;
+  }
+  &.grey {
+    cursor: not-allowed;
+    background-color: #888; // Grey when started
+    color: #444;
+  }
 }
