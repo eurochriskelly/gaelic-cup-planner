@@ -11,12 +11,25 @@ const SelectPitchView = () => {
   const { tournamentId } = useParams();
   const { sections } = useAppContext();
   const [pitchData, setPitchData] = useState([]);
+  const [pitchFixtures, setPitchFixtures] = useState({});
 
   async function fetchData() {
-    fetch(`/api/tournaments/${tournamentId}/pitches`)
+    await fetch(`/api/tournaments/${tournamentId}/pitches`)
       .then((response) => response.json())
       .then((data) => {
         setPitchData(data.data);
+        // Fetch all fixtures for the tournament
+        fetch(`/api/tournaments/${tournamentId}/fixtures`)
+          .then(res => res.json())
+          .then(fixtureData => {
+            const fixturesMap = fixtureData.data.reduce((acc, fixture) => {
+              if (!acc[fixture.pitch]) acc[fixture.pitch] = [];
+              acc[fixture.pitch].push(fixture);
+              return acc;
+            }, {});
+            setPitchFixtures(fixturesMap);
+          })
+          .catch(error => console.error("Error fetching fixtures:", error));
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -35,6 +48,13 @@ const SelectPitchView = () => {
     },
   };
 
+  const getMatchProgress = (pitchInfo) => {
+    const fixtures = pitchFixtures[pitchInfo.pitch] || [];
+    const totalMatches = fixtures.length || 1; // Minimum 1 to avoid N/A
+    const currentMatch = fixtures.findIndex(f => f.matchId === pitchInfo.matchId) + 1 || 1; // Default to 1 if not found
+    return `(${currentMatch}/${totalMatches})`; // Always N/Y format
+  };
+
   return (
     <MobileSelect sections={sections} active={1}>
       <div>Select pitch</div>
@@ -50,6 +70,8 @@ const SelectPitchView = () => {
           scheduledTime,
           type,
         } = pitchInfo;
+        console.log('pi', pitchInfo)
+        const midStr = `${matchId}`
         return (
           <MainCard
             id={pitch}
@@ -61,9 +83,11 @@ const SelectPitchView = () => {
             <div className="SelectPitchView">
               {team1 && team2 ? (
                 <>
-                  <NextGameTitle match={matchId} started={startedTime} />
+                  <NextGameTitle match={matchId} started={startedTime} progress={getMatchProgress(pitchInfo)} />
                   <div className="details">
-                    <div className="time">{scheduledTime}</div>
+                    <div className="time">
+                      <span className="clock-icon">🕒</span> {scheduledTime}
+                    </div>
                     <div className="category">{category}</div>
                   </div>
                   <div className="teams">
@@ -85,21 +109,17 @@ const SelectPitchView = () => {
 
 export default SelectPitchView;
 
-function NextGameTitle({ started, match }) {
-  const showMatchNumber = () => {
-    let matchstr = "";
-    if (match) {
-      matchstr = `: fixture#${match}`;
-    }
-    return <i>{matchstr}</i>;
-  };
+function NextGameTitle({ started, match, progress }) {
+  const midStr = `${match}`
   return (
     <div className={`play ${started ? "in-progress" : "next-up"}`}>
-      {started ? (
-        <span className="inProgress">In progress {showMatchNumber()}</span>
-      ) : (
-        <span className="nextUp">Next up {showMatchNumber()}</span>
-      )}
+      <span className={`nxt-match ${started ? "inProgress" : "nextUp"}`}>
+        <span>
+          {started ? "In progress" : "Next up"}&nbsp;
+          <b>{`#${midStr.slice(-3)}`}</b>
+        </span>
+        <span>{progress}</span>
+      </span>
     </div>
   );
 }
