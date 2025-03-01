@@ -59,7 +59,10 @@ const LandingPage = () => {
       {/* New: Add banner container */}
       <div className="banner-container">
         <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
-        <h1>{t('landingPage_heading')}</h1> {/* Moved inside banner-container */}
+        <h1>
+          <div className='version-info'>Pitch Perfect. V{versionInfo.mobile}</div>
+          <div>{t('landingPage_heading')}</div>
+        </h1>
       </div>
       <header>
         <table>
@@ -88,7 +91,7 @@ const LandingPage = () => {
         )}
         <button onClick={handle.disconnect}>{tt('Disconnect')}</button>
       </section>
-      <footer>Pitch Perfect. V{versionInfo.mobile}</footer>
+      <footer></footer>
     </main>
   );
 };

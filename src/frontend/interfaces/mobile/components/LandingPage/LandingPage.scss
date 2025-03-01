@@ -39,18 +39,25 @@
   .banner-container h1 {
     position: absolute;
     margin: 0;
-    bottom: 40px; /* Place at bottom with some padding */
+    bottom: 30px; /* Place at bottom with some padding */
+    line-height: 3.8rem;
     left: 50%;
     transform: translateX(-50%);
     color: white; /* Make text white */
-    opacity: 87%;
+    opacity: 100%;
     font-size: 4.5rem;
     text-transform: uppercase;
     white-space:nowrap;
     text-align: center;
     margin: 0; /* Override default margin */
     z-index: 11; /* Above image */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Improve readability */
+    text-shadow: 0 6px 7px rgba(0, 0, 0, 0.5); /* Improve readability */
+    &>div:first-child {
+      color:white;
+      font-size: 2.5rem;
+      opacity: 100%;
+      text-shadow: 0 6px 4px rgba(0, 0, 0, 0.9); /* Improve readability */
+    }
   }
 
   header {
