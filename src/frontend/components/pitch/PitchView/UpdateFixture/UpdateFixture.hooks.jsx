@@ -13,7 +13,7 @@ export const useFixtureStates = (startedTime) => {
     if (started) {
       setEnableStates({
         start: "disabled",
-        postpone: "disabled",
+        postpone: "enabled",
         cancel: "enabled",
         finish: "enabled",
       });

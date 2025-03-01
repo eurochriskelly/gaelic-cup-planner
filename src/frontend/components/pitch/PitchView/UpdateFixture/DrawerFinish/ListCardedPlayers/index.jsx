@@ -43,7 +43,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
   return (
     <div className="ListCardedPlayers">
       {!recordCards && (
-        <div className="card-question">
+        <div className="card-question" style={{marginTop:'150px'}}>
           <h3>Do you want to record any carded players?</h3>
           <div className="toggle">
             <button className={recordCards ? "no" : "yes active"} onClick={() => { setRecordCards(false); onClose(); onProceed([]); }}>No</button>

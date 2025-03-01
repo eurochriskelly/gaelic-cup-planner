@@ -2,6 +2,7 @@ import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
+import API from "../../../../shared/api/pitch";
 import './UpdateFixture.scss';
 
 export default UpdateFixture;
@@ -17,12 +18,7 @@ function UpdateFixture ({
 
   const actions = {
     closeDrawer: (from) => {
-      setEnableStates({
-        start: from === "start" ? "disabled" : "enabled",
-        postpone: "disabled",
-        cancel: "start",
-        finish: from === "finish" ? "disabled" : "enabled",
-      });
+      // Reset only visibility, preserve enableStates unless explicitly changed
       setVisibleDrawers({
         start: false,
         cancel: false,
@@ -33,21 +29,11 @@ function UpdateFixture ({
     start: async () => {
       if (enableStates.start === "disabled") return;
       await startMatch(fixture.id);
-      setEnableStates({
-        start: "disabled",
-        postpone: "disabled",
-        cancel: "enabled",
-        finish: "enabled",
-      });
+      setEnableStates(prev => ({ ...prev, start: "disabled", postpone: "disabled", finish: "enabled" }));
     },
     reschedule: () => {
-      if (enableStates.postpone === "disabled") return;
-      setEnableStates({
-        start: "disabled",
-        postpone: "disabled",
-        cancel: "enabled",
-        finish: "disabled",
-      });
+     if (startedTime || enableStates.postpone === "disabled") return;
+      console.log('sss', startedTime)
       setVisibleDrawers({
         start: false,
         postpone: true,
@@ -57,12 +43,6 @@ function UpdateFixture ({
     },
     finish: () => {
       if (enableStates.finish === "disabled") return;
-      setEnableStates({
-        start: "disabled",
-        postpone: "disabled",
-        cancel: "disabled",
-        finish: "disabled",
-      });
       setVisibleDrawers({
         start: false,
         cancel: false,
@@ -70,8 +50,11 @@ function UpdateFixture ({
         finish: true,
       });
     },
-    teamSheetProvided: () => {},
-    rescheduleMatch: () => {},
+    rescheduleMatch: async (fixtureId, targetPitch, placement) => {
+      await API.rescheduleMatch(fixture.tournamentId, targetPitch, fixture.id, fixtureId, placement);
+      updateFixtures();
+      actions.closeDrawer('postpone');
+    },
   };
 
   const drawerStyle = {
@@ -85,11 +68,10 @@ function UpdateFixture ({
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
       </div>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
-        {/*
-          * FIXME: re-instate
-          * <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.reschedule}/>
-          */}
-        <BtnPostpone btnClass={'disabled'} onPostpone={() => {}}/>
+        <BtnPostpone 
+          btnClass={enableStates.postpone === "enabled" ? "enabled primary" : "disabled grey"} 
+          onPostpone={actions.reschedule}
+        />
         <BtnCancel btnClass={enableStates.cancel} onCancel={actions.cancel} />
       </div>
 
@@ -99,6 +81,7 @@ function UpdateFixture ({
           visible={visibleDrawers.postpone}
           onClose={actions.closeDrawer}
           onSubmit={actions.rescheduleMatch}
+          pitch={fixture.pitch}
         />
         <div
           className="cancel"
@@ -127,7 +110,7 @@ function BtnPostpone({
   btnClass
 }) {
   return (
-    <button className={'space-button'} onClick={onPostpone}>
+    <button className={`space-button ${btnClass}`} onClick={onPostpone}>
       <span>Re-schedule</span>
       <span>&nbsp;</span>
       <svg width="22" height="22" viewBox="0 0 20 20">

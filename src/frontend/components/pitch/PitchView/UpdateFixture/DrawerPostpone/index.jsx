@@ -7,10 +7,10 @@ const DrawerPostpone = ({
   onClose,
   onSubmit,
   visible,
+  pitch
 }) => {
   const { tournamentId } = useParams();
-
-  const [selPitch, setSelPitch] = useState('Pitch 4');
+  const [selPitch, setSelPitch] = useState(pitch||'');
   const [selFixture, setSelFixture] = useState(null);
   const [placement, setPlacement] = useState("after");
   const [fixtures, setFixtures] = useState([]);
@@ -42,9 +42,9 @@ const DrawerPostpone = ({
   const handleFixtureChange = ({value}) => {
     setSelFixture(value);
   };
-  const tryToSubmit = (e) => {
-    if (!readyToSubmit()) return false;
-    //onSubmit(selFixture, placement);
+  const tryToSubmit = () => {
+    if (!readyToSubmit()) return;
+    onSubmit(selFixture, selPitch, placement);
   };
   const handlePlacementChange = (event) => {
     console.log('placement', event)
@@ -65,17 +65,22 @@ const DrawerPostpone = ({
         <div className="drawer-container">
           <div className="postponeForm">
             <div className="drawer-content-row">
-              <div className="drawer-content-label">Select Pitch</div>
+              <div className="drawer-content-label">Select Pitch (if different)</div>
               <div className="drawer-content-value">
                 <Select
                   options={pitches.map(pitch => ({ value: pitch, label: pitch }))}
                   onChange={handlePitchChange}
                   placeholder="Select pitch"
+                  value={pitches
+                    .map(p => ({ value: p, label: p }))
+                    .find(option => option.value === selPitch) || null
+                  }
                 />
               </div>
             </div>
+            <Placement placement={placement} handlePlacementChange={handlePlacementChange} />
             <div className="drawer-content-row">
-              <div className="drawer-content-label">Fixture</div>
+              <div className="drawer-content-label">Relative to Fixture</div>
               <div className="drawer-content-value">
               <Select
                 options={fixtures
@@ -93,12 +98,12 @@ const DrawerPostpone = ({
               />
               </div>
             </div>
-            <Placement placement={placement} handlePlacementChange={handlePlacementChange} />
           </div>
           <div className="footer">
             <button
               className={`btn btn-primary ${readyToSubmit() ? 'enabled' : 'disabled'}`}
-              onClick={tryToSubmit}>
+              onClick={tryToSubmit}
+            >
                Apply 
             </button>
             <button className="btn btn-secondary" onClick={onClose}>
