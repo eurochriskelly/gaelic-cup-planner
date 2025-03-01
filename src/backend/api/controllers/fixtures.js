@@ -48,17 +48,34 @@ module.exports = (db) => {
     },
 
     startFixture: async (req, res) => {
-      
       const { tournamentId, id } = req.params;
       try {
         const result = await dbSvc.startFixture(id);
         res.json({ data: result });
       } catch (err) {
-        console.error("Error in startFixture:", err);
         res.status(500).json({ error: "Internal server error" });
       }
     },
 
+    reschedule: async (req, res) => {
+      const { tournamentId, id } = req.params;
+      const { fixtureId, placement, targetPitch } = req.body;
+      const data = { 
+        operation: 'reschedule',
+        targetPitch,
+        tournamentId, 
+        fixtureId: id,
+        relativeFixtureId:  fixtureId,
+        placement,
+      }
+      try {
+        const result = await dbSvc.reschedule(data);
+        res.json({ data: result });
+      } catch (err) {
+        console.error("Error in reschedule:", err);
+        res.status(500).json({ error: "Internal server error in reschedule" });
+      }
+    },
     updateScore: async (req, res) => {
       const { tournamentId, id } = req.params;
       const { team1, team2 } = req.body;
