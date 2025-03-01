@@ -155,30 +155,38 @@ module.exports = (db) => {
     const res3 = await query(qAnyMatchWinner("umpireTeam"), [name, placeHolder, tournamentId, category]);
     const totalUpdated = (res1.affectedRows || 0) + (res2.affectedRows || 0) + (res3.affectedRows || 0);
     console.log(`Updated match dependent fixtures for team [${name}] in match [${matchId}]. Total records updated: ${totalUpdated}.`);
-
   }
 
   return {
     // Tournament CRUD (New)
-    createTournament: async ({ title, date, location, lat, lon }) => {
+    createTournament: async ({ title, date, location, lat, lon, eventUuid}) => {
       const result = await query(
-        `INSERT INTO tournaments (Title, Date, Location, Lat, Lon) VALUES (?, ?, ?, ?, ?)`,
-        [title, date, location, lat, lon]
+        `INSERT INTO tournaments (Title, Date, Location, Lat, Lon, eventUuid) VALUES (?, ?, ?, ?, ?, ?)`,
+        [title, date, location, lat, lon, eventUuid]
       );
       return result.insertId;
     },
 
     getTournaments: async () => {
-      return await query(`SELECT Id, Date, Title, Location FROM tournaments`);
+      console.log('geting tournaments')
+      return await query(`SELECT Id, Date, Title, Location, eventUuid FROM tournaments`);
     },
 
-    getTournament: async (id) => {
-      const tournamentRows = await query(`SELECT id, Date, Title, Location FROM tournaments WHERE Id = ?`, [id]);
-      if (!tournamentRows.length) return null;
-      const tournament = tournamentRows[0];
+    getTournament: async (id, uuid) => {
+      let tournamentRows;
+      if (uuid) {
+        console.log(`Getting tournaments by uuid [${uuid}]`);
+        tournamentRows = await query(`SELECT id, Date, Title, Location, eventUuid, code FROM tournaments WHERE eventUuid = ?`, [uuid]);
+      } else {
+        tournamentRows = await query(`SELECT id, Date, Title, Location, eventUuid, code FROM tournaments WHERE Id = ?`, [id]);
+      }
+      if (!tournamentRows) return null
+      if (!tournamentRows?.length) return null;
+      const tournament = tournamentRows.shift();
+      const tId = id || tournament.id; // if we had to get the tournament from it's uuid, use this instead
       const [groups, pitches] = await Promise.all([
-        query(`SELECT category, grp, team FROM v_group_standings WHERE tournamentId = ?`, [id]),
-        query(`SELECT id, pitch, location FROM pitches WHERE tournamentId = ?`, [id]),
+        query(`SELECT category, grp, team FROM v_group_standings WHERE tournamentId = ?`, [tId]),
+        query(`SELECT id, pitch, location FROM pitches WHERE tournamentId = ?`, [tId]),
       ]);
       tournament.groups = groups;
       tournament.pitches = pitches;
