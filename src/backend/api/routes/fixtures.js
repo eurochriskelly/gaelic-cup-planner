@@ -11,6 +11,7 @@ module.exports = (db) => {
   router.get("/:fixtureId/rewind", ctrl.rewindFixture);
   router.get("/:fixtureId/carded-players", ctrl.getCardedPlayers);
   router.post("/:id/start", ctrl.startFixture);
+  router.post("/:id/reschedule", ctrl.reschedule);
   router.post("/:id/score", ctrl.updateScore);
   router.post("/:id/carded", ctrl.cardPlayers)
   router.get("/:pitch", ctrl.fixturesByPitch);

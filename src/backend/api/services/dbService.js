@@ -4,7 +4,7 @@ const { calculateRankings } = require('../../lib/queries');
 
 module.exports = (db) => {
   const query = promisify(db.query).bind(db);
-
+ 
 
   async function processStageCompletion(fixtureId) {
     console.log(`Processing stage completion for grouo [${fixtureId}]`);
@@ -650,6 +650,37 @@ module.exports = (db) => {
         throw new Error(`Failed to create fixtures for tournament ${tournamentId}: ${err.message}`);
       }
     },
+
+    reschedule: async ({ tournamentId, fixtureId, relativeFixtureId, placement = 'before' }) => {
+      console.log('Now running reschedule...', { tournamentId, fixtureId, relativeFixtureId, placement });
+      
+      // Fetch the relative fixture's scheduled time and pitch
+      const relQuery = "SELECT scheduled, pitch FROM fixtures WHERE id = ? AND tournamentId = ?";
+      const relData = await query(relQuery, [relativeFixtureId, tournamentId]);
+      if (!relData.length) {
+        throw new Error(`Relative fixture ${relativeFixtureId} not found`);
+      }
+      const { scheduled, pitch } = relData[0];
+      
+      // Calculate new scheduled time: 5 minutes before or after the relative fixture
+      const relDate = new Date(scheduled);
+      if (placement === 'before') {
+        relDate.setMinutes(relDate.getMinutes() - 5);
+      } else if (placement === 'after') {
+        relDate.setMinutes(relDate.getMinutes() + 5);
+      } else {
+        throw new Error(`Invalid placement value: ${placement}`);
+      }
+      const newScheduled = relDate.toISOString().slice(0, 19).replace("T", " ");
+      
+      // Update only the fixture being modified
+      const updateQuery = "UPDATE fixtures SET scheduled = ?, pitch = ? WHERE id = ? AND tournamentId = ?";
+      console.log('running', updateQuery)
+      console.log*('values', newScheduled, pitch, fixtureId, tournamentId);
+      await query(updateQuery, [newScheduled, pitch, fixtureId, tournamentId]);
+      
+      return { fixtureId, newScheduled, pitch };
+    }
   }
 
 };
