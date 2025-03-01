@@ -8,9 +8,9 @@ module.exports = (db) => {
   return {
     // Tournament CRUD
     createTournament: async (req, res) => {
-      const { title, date, location, lat, lon } = req.body;
+      const { title, date, location, lat, lon, uuid } = req.body;
       try {
-        const id = await dbSvc.createTournament({ title, date, location, lat, lon });
+        const id = await dbSvc.createTournament({ title, date, location, lat, lon, eventUuid});
         const tournament = await dbSvc.getTournament(id);
         res.status(201).json(tournament);
       } catch (err) {
@@ -28,9 +28,9 @@ module.exports = (db) => {
     },
 
     getTournament: async (req, res) => {
-      const { id } = req.params;
+      const { id, uuid = null } = req.params;
       try {
-        const tournament = await dbSvc.getTournament(id);
+        const tournament = await dbSvc.getTournament(id, uuid);
         res.json({ data: tournament });
       } catch (err) {
         throw err;

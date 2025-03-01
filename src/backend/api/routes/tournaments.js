@@ -10,6 +10,7 @@ module.exports = (db) => {
   router.get("/:id", ctrl.getTournament);
   router.put("/:id", ctrl.updateTournament);
   router.delete("/:id", ctrl.deleteTournament);
+  router.get("/by-uuid/:uuid", ctrl.getTournament);
   router.post("/:id/reset", ctrl.resetTournament);
   router.get("/:id/recent-matches", ctrl.getRecentMatches);
   router.get("/:id/categories", ctrl.getTournamentCategories);
