@@ -101,24 +101,35 @@ const DrawerFinish = ({
           showScore = '??';
           break;
       }
-      return showScore.replace(/#/g, '0');
+      return showScore
   }
 
   const TeamScore = ({ id, team }) => {
+    let showGoals  = displayScore(id, 'goals');
+    let showPoints = displayScore(id, 'points');
+    let showTotal  = displayScore(id, 'total');
+    if ((showTotal + showPoints + showGoals).match(/#/g).length === 5) {
+      showGoals  = <span style={{color:'#AAA'}}>#</span>
+      showPoints = <span style={{color:'#AAA'}}>##</span>
+      showTotal  = <span style={{color:'#AAA'}}>##</span>
+    } else {
+      showPoints = <span>{showPoints.replace(/#/g, '0')}</span>;
+      showTotal = <span>{showTotal.replace(/#/g, '0')}</span>;
+    }
     return (
       <div className="teamScore">
         <h4>{team}</h4>
         <div>
           <div onClick={actions.updateScore.bind(null, id, "goals")}>
-            {displayScore(id, "goals")}
+            {showGoals}
           </div>
           <div>&nbsp;-&nbsp;</div>
           <div onClick={actions.updateScore.bind(null, id, "points")}>
-            {displayScore(id, "points")}
+            {showPoints}
           </div>
           <div>
             <span>(</span>
-            <span>{displayScore(id, 'total')}</span>
+            <span>{showTotal}</span>
             <span>)</span>
           </div>
         </div>
@@ -164,11 +175,12 @@ const DrawerFinish = ({
       <div className="drawerStep" style={drawerStepStyle("cardedPlayers")}>
         <div className="drawer-header">List carded players</div>
         <div className="drawer-container">
-          <ListCardedPlayers
-            team1={fixture.team1}
-            team2={fixture.team2}
-            onProceed={actions.cardPlayersUpdated}
-          />
+            <ListCardedPlayers
+              team1={fixture.team1}
+              team2={fixture.team2}
+              onProceed={actions.cardPlayersUpdated}
+              onClose={onClose} // Pass onClose
+            />
         </div>
       </div>
     </div>

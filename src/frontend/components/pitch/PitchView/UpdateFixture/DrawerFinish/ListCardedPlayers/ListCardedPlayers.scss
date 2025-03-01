@@ -1,55 +1,100 @@
 @import "src/frontend/shared/css/_colors.scss";
 
 .ListCardedPlayers {
-    margin-bottom: 2rem;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   min-height: 100%;  
+  .card-question {
     h3 {
       text-align: center;
+      font-size: 2rem;
+      margin: 1rem 0;
     }
-    .ready {
-        margin: 0rem 0rem;
-
-        font-size: 2rem;
-        label {
-            padding-left: 1rem;
-        }
+    .toggle {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0;
+      button {
+        padding: 1rem 2rem;
+        font-size: 1.8rem;
+        border-radius: 5px;
+        border: 1px solid $pc;
+        &.yes.active, &.no.active { background-color: $sc; color: white; }
+      }
     }
-    input[type="checkbox"] {
-        width: 3.5rem;
-        height: 3.5rem;
-        margin: 1.2rem;
+  }
+  .card-table {
+    width: 100%;
+    border-collapse: collapse;
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
     }
-    button {
-        margin-top: 4rem;
-        width: 100%;
+    th:first-child, td:first-child {
+      width: 70%; /* More space for team name */
+      font-size: 2rem;
+      font-weight: bold;
     }
-}
-
-.CardedPlayerRow {
-    display: grid;
-    grid-template-columns: 80px auto 400px 160px;
-    margin-left: 2px;
-    align-items: center;
-    margin-right: 2px;
-    column-gap: 10px;
-    input {
-        padding: 1.8rem 0.1rem;
+    th:last-child, td:last-child {
+      width: 30%; /* Less space for card type */
+      text-align: center;
+    }
+    .card-sub-table {
+      width: 100%;
+      margin: 0.5rem 0;
+      align-items: center;
+      td {
+        padding: 0.5rem;
+        .card-color {
+          width: 100px; /* Doubled */
+          height: 100px; /* Doubled */
+        border-radius: 5px;
+        &.red { background-color: red; }
+        &.yellow { background-color: yellow; }
+        &.black { background-color: black; }
+      }
+      input[type="number"] {
+        width: 100px; /* Doubled */
+        height: 100px; /* Doubled */
+        padding: 0.5rem;
         font-size: 1.6rem;
-        border-radius: 0.6rem;
-        height: 5rem;
-        border: 4px solid $pc;
-    }
-    input:nth-child(2) {
-        margin-right: 3rem;
         text-align: center;
-        max-width: 120px;
-        margin-left: 20px;
-    }
-    input:nth-child(3) {
-        padding-left: 10px;
-        max-width: 400px;
+      }
+      input[type="text"] {
+        height: 100px; /* Doubled */
+        padding: 0.5rem 1rem;
+        width: 100%; /* Full column width */
+        font-size: 1.6rem;
         text-transform: uppercase;
+      }
+      button {
+        height: 100px; /* Doubled */
+        padding: 0 1rem;
+        font-size: 1.4rem;
+        background-color: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     }
+  }
+  .card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
     button {
-        height: 8.8rem;
+      padding: 1.5rem 0;
+      font-size: 2rem;
+      border-radius: 5px;
+      border: 1px solid $pc;
+      width: 50%; // 50% each, 100% total
+      &.ok { background-color: $pc; color: white; }
+      &.cancel { background-color: #ddd; }
     }
+  }
 }
+}
+
