@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 const { processArgs } = require("./lib/process-args");
 const { dbConf } = require("../../config/config");
-const apiSetup = require("./api/index"); // Updated
+const apiSetup = require("./api/index");
 const ARGS = processArgs(process.argv);
 
 const run = async () => {

@@ -206,7 +206,21 @@ module.exports = (db) => {
 
     resetTournament: async (id) => {
       await query(
-        `UPDATE fixtures SET started = NULL, goals1 = NULL, points1 = NULL, goals2 = NULL, points2 = NULL, outcome = 'not played' WHERE tournamentId = ?`,
+        `UPDATE fixtures SET 
+          started = NULL, 
+          ended = NULL, 
+          scheduled = scheduledPlanned, 
+          pitch = pitchPlanned, 
+          team1Id = team1Planned,
+          team2Id = team2Planned,
+          umpireTeamId = umpireTeamPlanned,
+          goals1 = NULL, 
+          points1 = NULL, 
+          goals2 = NULL, 
+          points2 = NULL, 
+          outcome = 'not played' 
+          WHERE tournamentId = ?
+        `,
         [id]
       );
     },
@@ -619,18 +633,23 @@ module.exports = (db) => {
 
     // Create multiple fixtures for a tournament
     createFixtures: async (tournamentId, fixtures) => {
-      console.log(JSON.stringify(fixtures, null, 2))
+      console.log(JSON.stringify(fixtures[0], null, 2))
       try {
         const values = fixtures.map(fixture => {
-          const schedTimestamp = new Date(fixture.scheduled).toISOString().slice(0, 19).replace("T", " ");
+          let schedTimestamp;
+          try {
+            schedTimestamp = new Date(fixture.scheduled).toISOString().slice(0, 19).replace("T", " ");
+          } catch(e) {
+            schedTimestamp = new Date().toISOString().slice(0, 19).replace("T", " ");
+          }
           return [
             fixture.id,
             fixture.tournamentId,
             fixture.category,
             fixture.groupNumber,
             fixture.stage,
-            fixture.pitch,
-            schedTimestamp,
+            fixture.pitch, fixture.pitch,   // planned / actual
+            schedTimestamp, schedTimestamp, // planned / actual
             fixture.started,
             fixture.team1Planned,
             fixture.team1Id,
@@ -641,11 +660,17 @@ module.exports = (db) => {
             fixture.goals2,
             fixture.points2,
             fixture.umpireTeamPlanned,
-            fixture.umpireTeamId
+            fixture.umpireTeamId,
+            'not played'
           ]
         });
         const result = await query(
-          `INSERT INTO fixtures (id, tournamentId, category, groupNumber, stage, pitch, scheduled, started, team1Planned, team1Id, goals1, points1, team2Planned, team2Id, goals2, points2, umpireTeamPlanned, umpireTeamId) VALUES ?`,
+          `INSERT INTO fixtures (
+              id, tournamentId, category, groupNumber, 
+              stage, pitch, pitchPlanned, scheduled, scheduledPlanned, started, 
+              team1Planned, team1Id, goals1, points1, 
+              team2Planned, team2Id, goals2, points2, 
+              umpireTeamPlanned, umpireTeamId, outcome) VALUES ?`,
           [values]
         );
         const insertedFixtures = fixtures.map((fixture, index) => ({

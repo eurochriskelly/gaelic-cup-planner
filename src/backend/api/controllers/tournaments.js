@@ -7,25 +7,17 @@ module.exports = (db) => {
 
   return {
     // Tournament CRUD
-    createTournament: async (req, res) => {
+    createTournament: handleRoute(async (req) => {
       const { title, date, location, lat, lon, uuid } = req.body;
-      try {
-        const id = await dbSvc.createTournament({ title, date, location, lat, lon, eventUuid});
-        const tournament = await dbSvc.getTournament(id);
-        res.status(201).json(tournament);
-      } catch (err) {
-        throw err;
-      }
-    },
+      const id = await dbSvc.createTournament({ title, date, location, lat, lon, uuid });
+      const tournament = await dbSvc.getTournament(id);
+      return tournament;
+    }, 201),
 
-    getTournaments: async (req, res) => {
-      try {
-        const tournaments = await dbSvc.getTournaments();
-        res.json({ data: tournaments });
-      } catch (err) {
-        throw err;
-      }
-    },
+    getTournaments: handleRoute(async () => {
+      const tournaments = await dbSvc.getTournaments();
+      return { data: tournaments };
+    }),
 
     getTournament: async (req, res) => {
       const { id, uuid = null } = req.params;
@@ -329,3 +321,22 @@ module.exports = (db) => {
 
   };
 };
+
+
+function handleRoute(logic, successStatus = 200) {
+  return async (req, res, next) => {
+    try {
+      const result = await logic(req, res, next);
+      // if the route logic already sent a response (e.g., res.json(...)),
+      // you can skip this, but often it's convenient if `logic` just returns data.
+      // We automatically send a JSON response with the chosen status:
+      if (result !== undefined) {
+        return res.status(successStatus).json(result);
+      }
+    } catch (err) {
+      return next(err); // Let Express error handler catch it
+    }
+  };
+}
+
+
