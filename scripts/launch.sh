@@ -30,7 +30,11 @@ runApp() {
       relaunch=false
     else
       echo "Run # ${run_number}"
-      $CMD src/backend/server.js --port="$2" --app="$1" --use-mock=$DEV_MODE
+      prog="src/backend/src/server.js"
+      if [ ! -f "$prog" ];then
+        echo "Missing program: $prog"
+      fi
+      $CMD "$prog" --port="$2" --app="$1" --use-mock=$DEV_MODE
       run_number=$((run_number + 1))
     fi
   done

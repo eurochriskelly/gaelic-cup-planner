@@ -8,10 +8,15 @@ if [ ! -f gg_env.sh ]; then
 fi
 source gg_env.sh
 PORT=5000
-nodemon src/backend/server.js --port="$PORT" --app="mobile" &
+prog="src/backend/src/server.js"
+if [ ! -f "$prog" ];then
+  echo "Missing program: $prog"
+  exit 1
+fi
+nodemon "$prog" --port="$PORT" --app="mobile" &
 GG_PORT_OVERRIDE=$PORT vite --config vite.config-mobile.js --host &
 
-# nodemon src/backend/server.js --port="4001" --app="desktop" --use-mock=true &
+# nodemon src/backend/src/server.js --port="4001" --app="desktop" --use-mock=true &
 # vite --config vite.config-desktop.js --host &
 
 wait
