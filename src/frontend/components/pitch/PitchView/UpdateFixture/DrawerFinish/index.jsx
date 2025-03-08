@@ -108,7 +108,9 @@ const DrawerFinish = ({
     let showGoals  = displayScore(id, 'goals');
     let showPoints = displayScore(id, 'points');
     let showTotal  = displayScore(id, 'total');
-    if ((showTotal + showPoints + showGoals).match(/#/g).length === 5) {
+    const concat = `${showTotal}${showPoints}${showGoals}`
+    const match = concat.match(/#/g)
+    if ((match||[]).length === 5) {
       showGoals  = <span style={{color:'#AAA'}}>#</span>
       showPoints = <span style={{color:'#AAA'}}>##</span>
       showTotal  = <span style={{color:'#AAA'}}>##</span>

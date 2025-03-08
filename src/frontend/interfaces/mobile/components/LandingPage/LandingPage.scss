@@ -1,8 +1,10 @@
 @import "../../../../shared/css/_colors.scss";
 
+$rcol: #d4e79b;
+
 .LandingPage {
   font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top center, #7bb294, $radial2 50%);
+  background: radial-gradient(circle at top center, $rcol, $radial2 50%);
   margin-top: 500px; /* Push entire main below initial banner */
   min-height: calc(100vh - 500px); /* Ensure it fills remaining height */
 
