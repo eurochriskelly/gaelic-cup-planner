@@ -49,6 +49,9 @@ const PinLogin = () => {
 
   const onPinEntered = (joined) => {
     switch (joined) {
+      case "2121":
+        selectTournament(19);
+        break;
       case "4884":
         selectTournament(17);
         break;
