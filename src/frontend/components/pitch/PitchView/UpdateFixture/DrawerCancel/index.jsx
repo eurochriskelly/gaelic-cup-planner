@@ -49,7 +49,13 @@ const DrawerCancel = ({
             </div>
             {confirming ? (
               <div className="flex flex-col gap-4">
-                <div className="text-center text-4xl mb-6">Are you sure?</div>
+                <div className="text-center text-4xl mb-6">
+                  {selectedOption === 'draw' ? (
+                    `Click 'YES' to confirm a draw between ${team1} and ${team2}`
+                  ) : (
+                    `Click 'YES' to confirm Walkover for ${selectedOption === 'team1_forfeit' ? team1 : team2} and Forfeit for ${selectedOption === 'team1_forfeit' ? team2 : team1}`
+                  )}
+                </div>
                 <div className="flex gap-4">
                   <button
                     className="btn btn-primary flex-1 py-4 text-3xl bg-[#2b7624] hover:bg-[#1f5a1a] text-white"
