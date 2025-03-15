@@ -42,13 +42,13 @@ const DrawerCancel = ({
                 <div className="text-center text-4xl mb-6">Are you sure?</div>
                 <div className="flex gap-4">
                   <button
-                    className="btn btn-primary flex-1 py-4 text-3xl"
+                    className="btn btn-primary flex-1 py-4 text-3xl bg-[#2b7624] hover:bg-[#1f5a1a] text-white"
                     onClick={handleFinalConfirm}
                   >
                     Yes
                   </button>
                   <button
-                    className="btn btn-secondary flex-1 py-4 text-3xl"
+                    className="btn btn-secondary flex-1 py-4 text-3xl bg-[#885ea3] hover:bg-[#6f4a84] text-white"
                     onClick={cancelConfirmation}
                   >
                     No
