@@ -20,6 +20,8 @@ const DrawerCancel = ({
 
   const handleFinalConfirm = () => {
     onConfirm(selectedOption);
+    setSelectedOption(null);
+    setConfirming(false);
     onClose();
   };
 
@@ -27,6 +29,14 @@ const DrawerCancel = ({
     setSelectedOption(null);
     setConfirming(false);
   };
+
+  // Reset state when drawer closes
+  useEffect(() => {
+    if (!visible) {
+      setSelectedOption(null);
+      setConfirming(false);
+    }
+  }, [visible]);
 
   return (
     <div className="drawerCancel">
