@@ -73,7 +73,11 @@ const DrawerCancel = ({
                   className="btn btn-primary w-full py-4 text-xl"
                   onClick={() => handleConfirm('draw')}
                 >
-                  <div className="text-3xl mb-8">{team1}{' & '}{team2}</div>
+                  <div className="text-3xl mb-8">
+                    {team1.length > 22 ? `${team1.substring(0, 22)}...` : team1}
+                    {' & '}
+                    {team2.length > 22 ? `${team2.substring(0, 22)}...` : team2}
+                  </div>
                   <div className="font-bold text-5xl text-sky-700">captains agree draw</div>
                 </button>
               </div>
@@ -112,11 +116,19 @@ function ForfeitButton({
     >
       <div className="flex justify-between items-center">
         <div className="text-left">
-          <div className="text-3xl mb-8">{reverse ? forfeitTeam : walkoverTeam}</div>
+          <div className="text-3xl mb-8">
+            {(reverse ? forfeitTeam : walkoverTeam).length > 22 
+              ? `${(reverse ? forfeitTeam : walkoverTeam).substring(0, 22)}...`
+              : (reverse ? forfeitTeam : walkoverTeam)}
+          </div>
           <div className={`text-5xl font-bold ${reverse ? 'text-lime-700' : 'text-rose-500'} `}>{reverse ? 'Walkover 🏆' : 'Forfeit'}</div>
         </div>
         <div className="text-right">
-          <div className="text-3xl mb-8">{reverse ? walkoverTeam : forfeitTeam}</div>
+          <div className="text-3xl mb-8">
+            {(reverse ? walkoverTeam : forfeitTeam).length > 22
+              ? `${(reverse ? walkoverTeam : forfeitTeam).substring(0, 22)}...`
+              : (reverse ? walkoverTeam : forfeitTeam)}
+          </div>
           <div className={`text-5xl font-bold ${reverse ? 'text-rose-500' : 'text-lime-700'}`}>{reverse ? 'Forfeit' : 'Walkover 🏆'}</div>
         </div>
       </div>
