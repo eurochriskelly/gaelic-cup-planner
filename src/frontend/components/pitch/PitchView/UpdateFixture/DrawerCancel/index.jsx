@@ -8,10 +8,10 @@ const DrawerCancel = ({
   team1,
   team2
 }) => {
+  if (!visible) return null;
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [confirming, setConfirming] = useState(false);
-
-  if (!visible) return null;
 
   const handleConfirm = (type) => {
     setSelectedOption(type);

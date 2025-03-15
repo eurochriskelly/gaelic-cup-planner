@@ -57,7 +57,6 @@ const DrawerPostpone = ({
       <span>{`${data.team1} vs ${data.team2}`}</span>
     </div>
   );
-  if (!visible) return null;
   return (
     <div className="drawerPostpone">
       <div>
