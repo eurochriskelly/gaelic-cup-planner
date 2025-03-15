@@ -69,14 +69,16 @@ const DrawerCancel = ({
               </div>
             )}
           </div>
-          <div className="footer mt-6">
-            <button 
-              className="btn btn-secondary w-full py-4 text-xl"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+          {!confirming && (
+            <div className="footer mt-6">
+              <button 
+                className="btn btn-secondary w-full py-4 text-xl"
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
