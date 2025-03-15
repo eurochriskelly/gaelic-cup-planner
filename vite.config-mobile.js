@@ -2,8 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
-
-const port = process.env.GG_PORT_OVERRIDE || '4000'
+const port = process.env.GG_PORT_OVERRIDE || '4010'
 export default defineConfig({
   root: resolve(__dirname, 'src/frontend/interfaces/mobile'),
   plugins: [react()],

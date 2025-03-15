@@ -2,6 +2,7 @@ import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
+import DrawerCancel from "./DrawerCancel";
 import API from "../../../../shared/api/pitch";
 import './UpdateFixture.scss';
 
@@ -38,6 +39,15 @@ function UpdateFixture ({
         start: false,
         postpone: true,
         cancel: false,
+        finish: false,
+      });
+    },
+    cancel: () => {
+      if (enableStates.cancel === "disabled") return;
+      setVisibleDrawers({
+        start: false,
+        cancel: true,
+        postpone: false,
         finish: false,
       });
     },
@@ -83,15 +93,16 @@ function UpdateFixture ({
           onSubmit={actions.rescheduleMatch}
           pitch={fixture.pitch}
         />
-        <div
-          className="cancel"
-          style={{ display: visibleDrawers.cancel ? "block" : "none" }}
-        >
-          <div className="cancel-time">
-            <span>Cancel time</span>
-            <span>12:00</span>
-          </div>
-        </div>
+        <DrawerCancel
+          visible={visibleDrawers.cancel}
+          team1={fixture.team1}
+          team2={fixture.team2}
+          onClose={actions.closeDrawer}
+          onConfirm={(type) => {
+            console.log('Selected cancellation type:', type);
+            actions.closeDrawer();
+          }}
+        />
         <DrawerFinish
           fixture={fixture}
           updateFixtures={updateFixtures}
@@ -135,7 +146,7 @@ function BtnCancel({
 }) {
   // class should be btnCancel
   return (
-    <button className='disabled' onClick={onCancel}>
+    <button className={`space-button ${btnClass}`} onClick={onCancel}>
       Cancel match&nbsp;
       <svg width="22" height="22" viewBox="0 0 22 22">
         <circle
