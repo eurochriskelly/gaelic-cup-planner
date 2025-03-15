@@ -109,6 +109,7 @@ function ForfeitButton({
   reverse = false,
   onClick
 }) {
+  const maxTeamNameLen = 16 
   return (
     <button
       className="btn btn-primary w-full py-4 text-xl"
@@ -117,19 +118,19 @@ function ForfeitButton({
       <div className="flex justify-between items-center">
         <div className="text-left">
           <div className="text-3xl mb-8">
-            {(reverse ? forfeitTeam : walkoverTeam).length > 22 
-              ? `${(reverse ? forfeitTeam : walkoverTeam).substring(0, 22)}...`
+            {(reverse ? forfeitTeam : walkoverTeam).length > maxTeamNameLen
+              ? `${(reverse ? forfeitTeam : walkoverTeam).substring(0, maxTeamNameLen)}...`
               : (reverse ? forfeitTeam : walkoverTeam)}
           </div>
-          <div className={`text-5xl font-bold ${reverse ? 'text-lime-700' : 'text-rose-500'} `}>{reverse ? 'Walkover 🏆' : 'Forfeit'}</div>
+          <div className={`text-5xl whitespace-nowrap font-bold ${reverse ? 'text-lime-700' : 'text-rose-500'} `}>{reverse ? '🏆 Walkover'  : 'Forfeit'}</div>
         </div>
         <div className="text-right">
           <div className="text-3xl mb-8">
-            {(reverse ? walkoverTeam : forfeitTeam).length > 22
-              ? `${(reverse ? walkoverTeam : forfeitTeam).substring(0, 22)}...`
+            {(reverse ? walkoverTeam : forfeitTeam).length > maxTeamNameLen
+              ? `${(reverse ? walkoverTeam : forfeitTeam).substring(0, maxTeamNameLen)}...`
               : (reverse ? walkoverTeam : forfeitTeam)}
           </div>
-          <div className={`text-5xl font-bold ${reverse ? 'text-rose-500' : 'text-lime-700'}`}>{reverse ? 'Forfeit' : 'Walkover 🏆'}</div>
+          <div className={`text-5xl whitespace-nowrap font-bold ${reverse ? 'text-rose-500' : 'text-lime-700'}`}>{reverse ? 'Forfeit' : 'Walkover 🏆'}</div>
         </div>
       </div>
     </button>
