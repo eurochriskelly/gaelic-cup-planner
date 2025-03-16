@@ -59,9 +59,20 @@ const Fixture = ({ fixture, isFocus }) => {
           scoreUpToDate={scoreUpToDate}
           stage={stage}
           group={category}
+          fixtureId={id}
         />
-        <TeamResult goals={goals1} points={points1} team={team1} winner={winner} played={played} />
-        <TeamResult goals={goals2} points={points2} team={team2} winner={winner} played={played} />
+
+        <div className="match-up">
+          <div className="team team-1">
+            <div className="text-7xl bg-rose-500">T1</div>
+            <div className="text-1xl">{formatTeamName(team1)}</div>
+          </div>
+          <div className="text-2xl">vs.</div>
+          <div className="team team-2">
+            <div className="text-7xl bg-blue-400">T2</div>
+            <div className="text-1xl">{formatTeamName(team2)}</div>
+          </div>
+        </div>
         {!played && (
           <div className='umpires'>
             {umpireTeam ? (
@@ -88,7 +99,8 @@ function FixtureInfo({
   focus,
   scoreUpToDate,
   stage,
-  group
+  group,
+  fixtureId
 }) {
   const categoryLabel = () => group?.replace(/[^A-Z0-9]/g, "");
   return (
