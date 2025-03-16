@@ -108,7 +108,7 @@ const DrawerPostpone = ({
                         name="placement"
                         value="swap"
                         checked={placement === "swap"}
-                        onChange={handlePlacementChangeWithWizard}
+                        onChange={handlePlacementChange}
                       />
                       <b>Swap with</b> another match 
                     </div>
