@@ -15,6 +15,7 @@ const DrawerPostpone = ({
   const [placement, setPlacement] = useState("after");
   const [fixtures, setFixtures] = useState([]);
   const [pitches, setPitches] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     // When user opens the drawer, fetch all fixtures data
@@ -46,9 +47,9 @@ const DrawerPostpone = ({
     if (!readyToSubmit()) return;
     onSubmit(selFixture, selPitch, placement);
   };
-  const handlePlacementChange = (event) => {
-    console.log('placement', event)
+  const handlePlacementChangeWithWizard = (event) => {
     setPlacement(event.target.value);
+    setCurrentStep(1);
   };
 
   const customOptionLabel = ({ data }) => (
@@ -99,15 +100,24 @@ const DrawerPostpone = ({
             </div>
           </div>
           <div className="footer">
-            <button
-              className={`btn btn-primary ${readyToSubmit() ? 'enabled' : 'disabled'}`}
-              onClick={tryToSubmit}
-            >
-               Apply 
-            </button>
-            <button className="btn btn-secondary" onClick={onClose}>
-              Cancel
-            </button>
+            {currentStep === 0 && (
+              <button className="btn btn-secondary" onClick={onClose}>
+                Cancel
+              </button>
+            )}
+            {currentStep === 1 && (
+              <>
+                <button className="btn btn-secondary" onClick={() => setCurrentStep(0)}>
+                  Back
+                </button>
+                <button
+                  className={`btn btn-primary ${readyToSubmit() ? 'enabled' : 'disabled'}`}
+                  onClick={tryToSubmit}
+                >
+                  Apply
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
