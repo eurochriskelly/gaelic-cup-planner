@@ -72,7 +72,7 @@ function UpdateFixture ({
   };
 
   return (
-    <div className='updateFixture'>
+    <div className='updateFixture border-red-400 border-solid'>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
         <BtnGetReady btnClass={enableStates.start} onGetReady={actions.start} />
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />

@@ -31,7 +31,7 @@ const Fixture = ({ fixture, isFocus }) => {
 
   const scoreUpToDate = !!played;
   const rowClasses = () => {
-    const classes = [];
+    const classes = ['grid grid-columns-2'];
     if (scoreUpToDate) classes.push("scoreUpToDate");
     return classes.join(" ");
   };
@@ -45,12 +45,20 @@ const Fixture = ({ fixture, isFocus }) => {
       (" " + name.length > tlen ? name.substring(0, tlen) + "..." : name)
     );
   };
-
+  const gridStyle = { 
+    backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
+    display: 'grid',
+  }
+  if (isFocus) {
+    gridStyle.gridTemplateRows = 'auto auto'
+  } else {
+    gridStyle.gridTemplateColumns = 'auto auto'
+  }
   return (
-    <div className={`fixture ${isFocus ? 'focusFixture' : ""}`} key={id}>
+    <div className={`fixture h-128`} key={id}>
       <div
         className={rowClasses()}
-        style={{ backgroundColor: scoreUpToDate ? "#bcc6bc" : "" }}>
+        style={gridStyle}>
         <FixtureInfo
           scheduledTime={scheduledTime}
           startedTime={startedTime}
@@ -62,29 +70,42 @@ const Fixture = ({ fixture, isFocus }) => {
           fixtureId={id}
         />
 
-        <div className="match-up">
-          <div className="team team-1">
-            <div className="text-7xl bg-rose-500">T1</div>
-            <div className="text-1xl">{formatTeamName(team1)}</div>
+        <section>
+          <div>
+            <div className="match-up w-full">
+              <div/>
+              <div className="team team-1">
+                <div className="team-icon text-6xl bg-rose-500 pt-10">{extractUppercaseAndNumbers(team1).substring(0, 3)}</div>
+              </div>
+              <div className="text-6xl">vs.</div>
+              <div className="team team-2">
+                <div className="text-6xl bg-blue-400 team-icon pt-10">{extractUppercaseAndNumbers(team2).substring(0, 4)}</div>
+              </div>
+              <div/>
+            </div>
+
+            <div className="match-teams ">
+              <div/>
+              <div className="text-3xl">{formatTeamName(team1)}</div>
+              <div/>
+              <div className="text-3xl">{formatTeamName(team2)}</div>
+              <div/>
+            </div>
+
           </div>
-          <div className="text-2xl">vs.</div>
-          <div className="team team-2">
-            <div className="text-7xl bg-blue-400">T2</div>
-            <div className="text-1xl">{formatTeamName(team2)}</div>
-          </div>
-        </div>
-        {!played && (
-          <div className='umpires'>
-            {umpireTeam ? (
-              <span>
-                <b>UMPIRING: </b>
-                {formatName(umpireTeam)}
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        )}
+          {!played && (
+            <div className='umpires'>
+              {umpireTeam ? (
+                <span>
+                  <b>UMPIRING: </b>
+                  {formatName(umpireTeam)}
+                </span>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
@@ -113,17 +134,17 @@ function FixtureInfo({
             focus={focus}
             played={scoreUpToDate}
           />
-          <span className="text-2xl">{scheduledTime}</span>
         </div>
-        <div className="text-xl">matchId: {fixtureId}</div>
+        <div className="text-4xl">
+          <span>{group}</span>
+          <span className="text-rose-500">#</span>
+          <span>{`${fixtureId}`.substr(-3)}</span>
+        </div>
       </div>
       
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl">{group}</span>
-        </div>
+      <div className="flex justify-between items-center mb-4">
         <div className="text-xl">
-          State: {stage
+          Stage: {stage
             .toUpperCase()
             .replace('PLT', 'Plate')
             .replace('SHD', 'Shield')
@@ -132,4 +153,8 @@ function FixtureInfo({
       </div>
     </div>
   )
+}
+
+function extractUppercaseAndNumbers(name) {
+    return name.match(/[A-Z0-9]/g)?.join('') || '';
 }

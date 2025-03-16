@@ -68,7 +68,7 @@ const PitchView = () => {
                     return (
                       <div
                         key={fixture.id}
-                        className={focusFixture ? "focusFixture" : ""}
+                        className={focusFixture ? "focusFixture h-98" : ""}
                       >
                         <Fixture fixture={fixture} isFocus={focusFixture} />
                         {nextFixture && nextFixture.id === fixture.id && (
