@@ -47,9 +47,8 @@ const DrawerPostpone = ({
     if (!readyToSubmit()) return;
     onSubmit(selFixture, selPitch, placement);
   };
-  const handlePlacementChangeWithWizard = (event) => {
+  const handlePlacementChange = (event) => {
     setPlacement(event.target.value);
-    setCurrentStep(1);
   };
 
   const customOptionLabel = ({ data }) => (
@@ -89,7 +88,7 @@ const DrawerPostpone = ({
                         name="placement"
                         value="before"
                         checked={placement === "before"}
-                        onChange={handlePlacementChangeWithWizard}
+                        onChange={handlePlacementChange}
                       />
                       <b>Before</b> another match 
                     </div>
@@ -143,8 +142,12 @@ const DrawerPostpone = ({
           </div>
           <div className="footer">
             {currentStep === 0 && <>
-              <button className="btn btn-primary" onClick={onClose}>
-               next 
+              <button 
+                className="btn btn-primary" 
+                onClick={() => setCurrentStep(1)}
+                disabled={!placement}
+              >
+                Next
               </button>
               <button className="btn btn-secondary" onClick={onClose}>
                 cancel
