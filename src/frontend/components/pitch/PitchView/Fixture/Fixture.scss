@@ -1,9 +1,50 @@
 @import "src/frontend/shared/css/_colors.scss";
 
+$lmarg:150px;
+
 .fixture {
+  height: 600px;
+  .match-teams {
+    display: grid;
+    grid-template-columns: auto 33% auto 33% auto;
+    width:100%;
+    text-align: center;
+    >div {
+      // border: 1px solid black; 
+      margin-top:8px;
+    }
+    > div:first-child {
+    }
+  }
+  .match-up {
+    display: grid;
+    margin:auto;
+    grid-template-columns: auto $lmarg auto $lmarg auto;
+    height: $lmarg;
+    .team-icon {
+      color:red;
+    }
+    >div {
+      text-align: center;
+      display:inline-block;
+      // team icon
+      >div:first-child {
+        min-height: $lmarg;
+        text-align: center;
+        vertical-align: center;
+        color:white;
+        border: 4px solid #ddd;
+      }
+    }
+    >div:nth-child(3) {
+      text-align:center;
+      vertical-align:center;
+      color: #777;
+      margin-top:$lmarg/3;
+    }
+  }
     > div {
         width: 100%;
-        background-color: rgba(255,255,255, 0.5);
         margin: 0 0 15px 0;
         border-radius: 18px;
         display: grid;
@@ -13,13 +54,11 @@
 
         > div:first-child {
             display: grid;
-            grid-template-rows: 1fr 2fr;
+            grid-template-rows: 50px 50px;
             margin: 0;
             padding: 1rem;
             font-size: 1.4rem;
             &>div {
-                display: grid;
-                grid-template-columns: 4fr 1fr;
                 font-size: 2rem;
                 > span {
                     margin-top: 0;
@@ -38,19 +77,17 @@
 
         div.umpires {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin: 1rem;
-            background-color: desaturate($pc-light-20, 40);
+            background-color: lighten(desaturate($pc-light-20, 50), 30);
             padding: 1rem;
             border-radius: 0.5rem;
             letter-spacing: 0.2rem;
-            margin: 5rem 8rem 1rem 8rem;
+            margin: 13rem 8rem 1rem 8rem;
+            height: 60px;
         }
     }
 
-    .focusFixture > div {
-        border-bottom: 1px solid #4c226a;
-    }
 
     > div > div:first-child > span:last-child span:last-child {
         background-color: #888;
@@ -80,35 +117,6 @@
         color: desaturate($pc, 20);
     }
 
-    > div > div:nth-child(2),
-    > div > div:nth-child(3) {
-        display: grid;
-        grid-template-columns: 1fr 200px;
-        margin: 0 1.5rem;
-    }
-
-    > div > div:nth-child(3) > div:first-child,
-    > div > div:nth-child(2) > div:first-child {
-        margin-left: 2rem;
-        font-size: 2.4rem;
-        margin-top: 0.7rem;
-    }
-
-    > div > div {
-        font-size: 20px;
-        padding: 0;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    > div.teamName {
-        padding: 0;
-        margin: 0;
-        background-color: red;
-    }
-
     div.winner {
         font-weight: bold;
         color: $pc-dark-20;
@@ -136,4 +144,13 @@
     text-align: center;
     border-radius: 6px;
     padding: 1px 3px;
+}
+
+.focusFixture {
+  > div:first-child {
+    border-bottom: 1px solid #4c226a;
+    > div:first-child {
+      height: 560px;
+    }
+  }
 }
