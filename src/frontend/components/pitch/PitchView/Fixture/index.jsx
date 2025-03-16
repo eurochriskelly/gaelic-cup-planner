@@ -143,7 +143,7 @@ function FixtureInfo({
       </div>
       
       <div className="flex justify-between items-center mb-4">
-        <div className="text-xl">
+        <div className={`text-xl ${focus ? 'text-center' : 'text-left'}`}>
           Stage: {stage
             .toUpperCase()
             .replace('PLT', 'Plate')
