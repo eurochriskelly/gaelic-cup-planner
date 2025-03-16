@@ -125,7 +125,7 @@ function FixtureInfo({
 }) {
   return (
     <div className="FixtureInfo">
-      <div className="flex justify-between items-center mb-4">
+      <div className={`flex justify-between items-center mb-4 ${focus ? 'justify-center' : 'justify-start'}`}>
         <div className="flex items-center gap-2">
           <ClockIcon
             scheduled={scheduledTime}
