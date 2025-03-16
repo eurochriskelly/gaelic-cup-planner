@@ -66,9 +66,9 @@ const DrawerPostpone = ({
           <div className="postponeForm">
             {currentStep === 0 && (
               <>
-                <div className="drawer-content-row">
-                  <div className="drawer-content-label">From pitch:</div>
-                  <div className="drawer-content-value">
+                <div className="drawer-content-row grid grid-flow-col grid-columns-2">
+                  <span className="drawer-content-label uppercase">From pitch:</span>
+                  <span className="drawer-content-value">
                     <Select
                       options={pitches.map(pitch => ({ value: pitch, label: pitch }))}
                       onChange={handlePitchChange}
@@ -78,35 +78,41 @@ const DrawerPostpone = ({
                         .find(option => option.value === selPitch) || null
                       }
                     />
-                  </div>
+                  </span>
                 </div>
                 <div className="drawer-content-row">
-                  <div className="drawer-content-label">Place:</div>
+                  <div className="drawer-content-label uppercase">Place:</div>
                   <div className="drawer-content-value radio-section">
-                    <input
-                      type="radio"
-                      name="placement"
-                      value="before"
-                      checked={placement === "before"}
-                      onChange={handlePlacementChangeWithWizard}
-                    />
-                    Before
-                    <input
-                      type="radio"
-                      name="placement"
-                      value="after"
-                      checked={placement === "after"}
-                      onChange={handlePlacementChangeWithWizard}
-                    />
-                    After
-                    <input
-                      type="radio"
-                      name="placement"
-                      value="swap"
-                      checked={placement === "swap"}
-                      onChange={handlePlacementChangeWithWizard}
-                    />
-                    Swap with
+                    <div>
+                      <input
+                        type="radio"
+                        name="placement"
+                        value="before"
+                        checked={placement === "before"}
+                        onChange={handlePlacementChangeWithWizard}
+                      />
+                      <b>Before</b> another match 
+                    </div>
+                    <div>
+                      <input
+                        type="radio"
+                        name="placement"
+                        value="after"
+                        checked={placement === "after"}
+                        onChange={handlePlacementChangeWithWizard}
+                      />
+                      <b>After</b> another match
+                    </div>
+                    <div>
+                      <input
+                        type="radio"
+                        name="placement"
+                        value="swap"
+                        checked={placement === "swap"}
+                        onChange={handlePlacementChangeWithWizard}
+                      />
+                      <b>Swap with</b> another match 
+                    </div>
                   </div>
                 </div>
               </>
@@ -136,11 +142,14 @@ const DrawerPostpone = ({
             )}
           </div>
           <div className="footer">
-            {currentStep === 0 && (
-              <button className="btn btn-secondary" onClick={onClose}>
-                Cancel
+            {currentStep === 0 && <>
+              <button className="btn btn-primary" onClick={onClose}>
+               next 
               </button>
-            )}
+              <button className="btn btn-secondary" onClick={onClose}>
+                cancel
+              </button>
+            </>}
             {currentStep === 1 && (
               <>
                 <button className="btn btn-secondary" onClick={() => setCurrentStep(0)}>
