@@ -39,12 +39,20 @@ const Focused = ({
           scoreUpToDate={false}
           stage={stage}
           group={category}
+          fixtureId={id}
         />
-        
-        <Contenders>
-          <TeamResult goals={goals1} points={points1} team={team1} winner={winner} played={played} />
-          <TeamResult goals={goals2} points={points2} team={team2} winner={winner} played={played} />
-        </Contenders>
+
+        <div className="match-up">
+          <div className="team team-1">
+            <div className="text-7xl bg-rose-500">T1</div>
+            <div className="text-1xl">{formatTeamName(team1)}</div>
+          </div>
+          <div className="text-2xl">vs.</div>
+          <div className="team team-2">
+            <div className="text-7xl bg-blue-400">T2</div>
+            <div className="text-1xl">{formatTeamName(team2)}</div>
+          </div>
+        </div>
 
         <div className='prop-section bg-blue'>
           <ChangeProperty label='UMPIRES' name={umpireTeam} />
@@ -90,41 +98,36 @@ function FixtureInfo({
   focus,
   scoreUpToDate,
   stage,
-  group
+  group,
+  fixtureId
 }) {
-  const categoryLabel = () => group?.replace(/[^A-Z0-9]/g, "");
   return (
     <div className="focusedInfo">
-      <div className="w-full">
-        <span>
-          <span>{group}</span>
-        </span>
-        <span>{
-          stage
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <ClockIcon
+            scheduled={scheduledTime}
+            started={startedTime}
+            delay={delayMinutes}
+            focus={focus}
+            played={scoreUpToDate}
+          />
+          <span className="text-2xl">{scheduledTime}</span>
+        </div>
+        <div className="text-xl">matchId: {fixtureId}</div>
+      </div>
+      
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center gap-2">
+          <span className="text-3xl">{group}</span>
+        </div>
+        <div className="text-xl">
+          State: {stage
             .toUpperCase()
             .replace('PLT', 'Plate')
             .replace('SHD', 'Shield')
-            .replace('_', '/')
-        }</span>
-      </div>
-      <div>
-        <ClockIcon
-          scheduled={scheduledTime}
-          started={startedTime}
-          delay={delayMinutes}
-          focus={focus}
-          played={scoreUpToDate}
-        />
-        <div></div>
-        <button className="text-green-900">
-          <i className='pi pi-play-circle'></i>
-        </button>
-        <button className="text-red-700">
-          <i className='pi pi-times-circle'></i>
-        </button>
-        <button className="text-slate-300">
-          <i className='pi pi-calendar-clock'></i>
-        </button>
+            .replace('_', '/')}
+        </div>
       </div>
     </div>
   )
