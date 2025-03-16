@@ -102,26 +102,33 @@ function FixtureInfo({
   group,
   fixtureId
 }) {
-  const categoryLabel = () => group?.replace(/[^A-Z0-9]/g, "");
   return (
     <div className="FixtureInfo">
-      <div>
-        <span className="type-category">{group}</span>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <ClockIcon
+            scheduled={scheduledTime}
+            started={startedTime}
+            delay={delayMinutes}
+            focus={focus}
+            played={scoreUpToDate}
+          />
+          <span className="text-2xl">{scheduledTime}</span>
+        </div>
+        <div className="text-xl">matchId: {fixtureId}</div>
       </div>
-      <div>
-        <ClockIcon
-          scheduled={scheduledTime}
-          started={startedTime}
-          delay={delayMinutes}
-          focus={focus}
-          played={scoreUpToDate}
-        />
-        <span>
-          <span>
-            <label>STAGE:</label>
-            {stage}
-          </span>
-        </span>
+      
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center gap-2">
+          <span className="text-3xl">{group}</span>
+        </div>
+        <div className="text-xl">
+          State: {stage
+            .toUpperCase()
+            .replace('PLT', 'Plate')
+            .replace('SHD', 'Shield')
+            .replace('_', '/')}
+        </div>
       </div>
     </div>
   )
