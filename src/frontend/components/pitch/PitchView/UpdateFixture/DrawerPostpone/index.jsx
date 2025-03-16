@@ -60,7 +60,7 @@ const DrawerPostpone = ({
   return (
     <div className="drawerPostpone">
       <div>
-        <div className="drawer-header">Reschedule match</div>
+        <div className="drawer-header">Re-schedule match</div>
         <div className="drawer-container">
           <div className="postponeForm">
             <div className="drawer-content-row">
