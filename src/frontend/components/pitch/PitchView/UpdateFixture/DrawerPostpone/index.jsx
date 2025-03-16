@@ -64,40 +64,76 @@ const DrawerPostpone = ({
         <div className="drawer-header">Re-schedule match</div>
         <div className="drawer-container">
           <div className="postponeForm">
-            <div className="drawer-content-row">
-              <div className="drawer-content-label">Select Pitch (if different)</div>
-              <div className="drawer-content-value">
-                <Select
-                  options={pitches.map(pitch => ({ value: pitch, label: pitch }))}
-                  onChange={handlePitchChange}
-                  placeholder="Select pitch"
-                  value={pitches
-                    .map(p => ({ value: p, label: p }))
-                    .find(option => option.value === selPitch) || null
-                  }
-                />
-              </div>
-            </div>
-            <Placement placement={placement} handlePlacementChange={handlePlacementChange} />
-            <div className="drawer-content-row">
-              <div className="drawer-content-label">Relative to Fixture</div>
-              <div className="drawer-content-value">
-              <Select
-                options={fixtures
-                  .filter(fixture => fixture.pitch === selPitch)
-                  .sort((a, b) => a.scheduledTime - b.scheduledTime)
-                  .map(fixture => ({
-                    value: fixture.id,
-                    label: fixture,
-                    data: fixture
-                  }))
-                }
-                onChange={handleFixtureChange}
-                placeholder="Select fixture"
-                getOptionLabel={customOptionLabel}
-              />
-              </div>
-            </div>
+            {currentStep === 0 && (
+              <>
+                <div className="drawer-content-row">
+                  <div className="drawer-content-label">From pitch:</div>
+                  <div className="drawer-content-value">
+                    <Select
+                      options={pitches.map(pitch => ({ value: pitch, label: pitch }))}
+                      onChange={handlePitchChange}
+                      placeholder="Select pitch"
+                      value={pitches
+                        .map(p => ({ value: p, label: p }))
+                        .find(option => option.value === selPitch) || null
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="drawer-content-row">
+                  <div className="drawer-content-label">Place:</div>
+                  <div className="drawer-content-value radio-section">
+                    <input
+                      type="radio"
+                      name="placement"
+                      value="before"
+                      checked={placement === "before"}
+                      onChange={handlePlacementChangeWithWizard}
+                    />
+                    Before
+                    <input
+                      type="radio"
+                      name="placement"
+                      value="after"
+                      checked={placement === "after"}
+                      onChange={handlePlacementChangeWithWizard}
+                    />
+                    After
+                    <input
+                      type="radio"
+                      name="placement"
+                      value="swap"
+                      checked={placement === "swap"}
+                      onChange={handlePlacementChangeWithWizard}
+                    />
+                    Swap with
+                  </div>
+                </div>
+              </>
+            )}
+            {currentStep === 1 && (
+              <>
+                <div className="drawer-content-row">
+                  <div className="drawer-content-label">{`Moving fixture (${placement}):`}</div>
+                  <div className="drawer-content-value">
+                    <Select
+                      options={fixtures
+                        .filter(fixture => fixture.pitch === selPitch)
+                        .sort((a, b) => a.scheduledTime - b.scheduledTime)
+                        .map(fixture => ({
+                          value: fixture.id,
+                          label: fixture,
+                          data: fixture
+                        }))
+                      }
+                      onChange={handleFixtureChange}
+                      placeholder="Select fixture"
+                      getOptionLabel={customOptionLabel}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           <div className="footer">
             {currentStep === 0 && (
