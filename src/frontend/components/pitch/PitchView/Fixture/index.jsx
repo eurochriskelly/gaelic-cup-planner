@@ -125,31 +125,32 @@ function FixtureInfo({
 }) {
   return (
     <div className="FixtureInfo">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2">
-          <ClockIcon
-            scheduled={scheduledTime}
-            started={startedTime}
-            delay={delayMinutes}
-            focus={focus}
-            played={scoreUpToDate}
-          />
-        </div>
-        <div className="text-4xl">
-          <span>{group}</span>
-          <span className="text-rose-500">#</span>
-          <span>{`${fixtureId}`.substr(-3)}</span>
-        </div>
+      {/* Row 1: Clock and Time */}
+      <div className="flex items-center gap-2 mb-4">
+        <ClockIcon
+          scheduled={scheduledTime}
+          started={startedTime}
+          delay={delayMinutes}
+          focus={focus}
+          played={scoreUpToDate}
+        />
+        <span className="text-2xl">{scheduledTime}</span>
       </div>
-      
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-xl">
-          Stage: {stage
-            .toUpperCase()
-            .replace('PLT', 'Plate')
-            .replace('SHD', 'Shield')
-            .replace('_', '/')}
-        </div>
+
+      {/* Row 2: Group + ID (right-aligned) */}
+      <div className="text-4xl mb-4 text-right">
+        <span>{group}</span>
+        <span className="text-rose-500">#</span>
+        <span>{`${fixtureId}`.substr(-3)}</span>
+      </div>
+
+      {/* Row 3: Stage */}
+      <div className="text-xl">
+        Stage: {stage
+          .toUpperCase()
+          .replace('PLT', 'Plate')
+          .replace('SHD', 'Shield')
+          .replace('_', '/')}
       </div>
     </div>
   )
