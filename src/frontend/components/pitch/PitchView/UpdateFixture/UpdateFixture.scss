@@ -1,6 +1,7 @@
 @import "src/frontend/shared/css/_colors.scss";
 
 .updateFixture {
+  background-color: white;
 
   .drawer-header {
     background-color: desaturate($sc-dark-20, 30%);
