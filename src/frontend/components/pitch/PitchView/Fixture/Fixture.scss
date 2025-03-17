@@ -3,7 +3,24 @@
 $lmarg:150px;
 
 .fixture {
-  height: 600px;
+  height: 400px;
+  .match-area {
+    background: rgba(0,0,0,0.1);
+    padding:0;
+    margin:0;
+    padding-bottom: 2rem;
+  }
+  .FixtureInfo {
+    display: grid;
+    height: 260px;
+    grid-template-rows: 90px 60px 10px;
+    > span:first-child {
+      height: 40px;
+    }
+    > div, span {
+     text-align: center; 
+    }
+  }
   .match-teams {
     display: grid;
     grid-template-columns: auto 33% auto 33% auto;
@@ -53,8 +70,6 @@ $lmarg:150px;
         padding-bottom: 0.4rem;
 
         > div:first-child {
-            display: grid;
-            grid-template-rows: 50px 50px;
             margin: 0;
             padding: 1rem;
             font-size: 1.4rem;
