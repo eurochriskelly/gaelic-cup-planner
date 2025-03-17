@@ -91,6 +91,7 @@ function UpdateFixture ({
       <div className='drawers' style={{display: drawerOpen ? 'flex' : 'none'}}>
         {visibleDrawers.postpone && (
           <DrawerPostpone
+            visible={true}
             onClose={actions.closeDrawer}
             onSubmit={actions.rescheduleMatch}
             pitch={fixture.pitch}
@@ -98,6 +99,7 @@ function UpdateFixture ({
         )}
         {visibleDrawers.cancel && (
           <DrawerCancel
+            visible={true}
             team1={fixture.team1}
             team2={fixture.team2}
             onClose={actions.closeDrawer}
@@ -109,6 +111,7 @@ function UpdateFixture ({
         )}
         {visibleDrawers.finish && (
           <DrawerFinish
+            visible={true}
             fixture={fixture}
             updateFixtures={updateFixtures}
             onClose={actions.closeDrawer}
