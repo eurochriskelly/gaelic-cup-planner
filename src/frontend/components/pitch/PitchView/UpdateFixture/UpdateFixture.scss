@@ -113,10 +113,12 @@
 /* DRAWERS */
 .updateFixture>div.drawers {
     position: fixed;
-    top: 130px;
-    left: 30px;
-    right: 30px;
-    bottom: 30px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     background: white;
@@ -124,10 +126,12 @@
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     font-size: 1.7rem;
     z-index: 1001;
-    margin: 0 auto;
     
     .drawer-header {
         flex-shrink: 0;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
     }
     
     .drawer-container {
