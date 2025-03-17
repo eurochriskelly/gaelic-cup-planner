@@ -113,18 +113,21 @@
 /* DRAWERS */
 .updateFixture>div.drawers {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
+    top: 130px;
+    left: 30px;
+    right: 30px;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: calc(100vh - 160px); /* 130px top + 30px bottom */
     overflow-y: auto;
     background: white;
     border-radius: 1.6rem;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     font-size: 1.7rem;
     z-index: 1001;
+    margin: 0 auto;
 }
 
 .scoresUpToDate {
