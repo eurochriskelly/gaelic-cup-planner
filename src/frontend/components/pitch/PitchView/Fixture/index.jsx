@@ -31,7 +31,7 @@ const Fixture = ({ fixture, isFocus }) => {
 
   const scoreUpToDate = !!played;
   const rowClasses = () => {
-    const classes = ['grid grid-columns-2'];
+    const classes = ['grid grid-columns-2 match-area'];
     if (scoreUpToDate) classes.push("scoreUpToDate");
     return classes.join(" ");
   };
@@ -70,8 +70,8 @@ const Fixture = ({ fixture, isFocus }) => {
           fixtureId={id}
         />
 
-        <section>
-          <div>
+        <section className="mt-7 mr-0 pr-0">
+          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-xl">
             <div className="match-up w-full">
               <div/>
               <div className="team team-1">
@@ -125,31 +125,24 @@ function FixtureInfo({
 }) {
   return (
     <div className="FixtureInfo">
-      <div className={`flex justify-between items-center mb-4 ${focus ? 'justify-center' : 'justify-start'}`}>
-        <div className="flex items-center gap-2">
-          <ClockIcon
-            scheduled={scheduledTime}
-            started={startedTime}
-            delay={delayMinutes}
-            focus={focus}
-            played={scoreUpToDate}
-          />
-        </div>
-        <div className={`text-4xl mb-4 ${focus ? 'text-center' : 'text-left'}`}>
-          <span>{group}</span>
-          <span className="text-rose-500">#</span>
-          <span>{`${fixtureId}`.substr(-3)}</span>
-        </div>
+      <ClockIcon
+        scheduled={scheduledTime}
+        started={startedTime}
+        delay={delayMinutes}
+        focus={focus}
+        played={scoreUpToDate}
+      />
+      <div className="text-4xl">
+        <span>{group}</span>
+        <span className="text-rose-500">#</span>
+        <span>{`${fixtureId}`.substr(-3)}</span>
       </div>
-      
-      <div className="flex justify-between items-center mb-4">
-        <div className={`text-xl ${focus ? 'text-center' : 'text-left'}`}>
-          Stage: {stage
-            .toUpperCase()
-            .replace('PLT', 'Plate')
-            .replace('SHD', 'Shield')
-            .replace('_', '/')}
-        </div>
+      <div className="mb-4 text-xl">
+        Stage: {stage
+          .toUpperCase()
+          .replace('PLT', 'Plate')
+          .replace('SHD', 'Shield')
+          .replace('_', '/')}
       </div>
     </div>
   )

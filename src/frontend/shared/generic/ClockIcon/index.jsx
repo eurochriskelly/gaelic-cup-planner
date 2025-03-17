@@ -54,8 +54,8 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
   const hourAngle = (hour % 12) * 30 + minute * 0.5; // 12 hours, 360 degrees, plus a little for the minutes
 
   return (
-    <span>
-      <svg width="10" height="10" viewBox="0 0 30 30">
+    <span className="m-0">
+      <svg width="13" height="13" viewBox="0 0 25 25">
         <circle
           cx="15"
           cy="15"
