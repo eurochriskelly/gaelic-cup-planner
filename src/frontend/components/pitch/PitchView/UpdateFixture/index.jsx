@@ -88,29 +88,32 @@ function UpdateFixture ({
       </div>
 
       {/* DRAWERS */}
-      <div className='drawers' style={{...drawerStyle, display: drawerOpen ? 'block' : 'none'}}>
-        <DrawerPostpone
-          visible={visibleDrawers.postpone}
-          onClose={actions.closeDrawer}
-          onSubmit={actions.rescheduleMatch}
-          pitch={fixture.pitch}
-        />
-        <DrawerCancel
-          visible={visibleDrawers.cancel}
-          team1={fixture.team1}
-          team2={fixture.team2}
-          onClose={actions.closeDrawer}
-          onConfirm={(type) => {
-            console.log('Selected cancellation type:', type);
-            actions.closeDrawer();
-          }}
-        />
-        <DrawerFinish
-          fixture={fixture}
-          updateFixtures={updateFixtures}
-          visible={visibleDrawers.finish}
-          onClose={actions.closeDrawer}
-        />
+      <div className='drawers' style={{display: drawerOpen ? 'flex' : 'none'}}>
+        {visibleDrawers.postpone && (
+          <DrawerPostpone
+            onClose={actions.closeDrawer}
+            onSubmit={actions.rescheduleMatch}
+            pitch={fixture.pitch}
+          />
+        )}
+        {visibleDrawers.cancel && (
+          <DrawerCancel
+            team1={fixture.team1}
+            team2={fixture.team2}
+            onClose={actions.closeDrawer}
+            onConfirm={(type) => {
+              console.log('Selected cancellation type:', type);
+              actions.closeDrawer();
+            }}
+          />
+        )}
+        {visibleDrawers.finish && (
+          <DrawerFinish
+            fixture={fixture}
+            updateFixtures={updateFixtures}
+            onClose={actions.closeDrawer}
+          />
+        )}
       </div>
     </div>
     </>
