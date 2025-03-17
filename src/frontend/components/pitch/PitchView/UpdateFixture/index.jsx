@@ -113,6 +113,7 @@ function UpdateFixture ({
         />
       </div>
     </div>
+    </>
   )
 };
 
