@@ -5,6 +5,7 @@
   margin: 6rem 2rem 2rem 2rem;
   width: 4rem;
 }
+
 .pitchView {
     height: 100%;
     background-color: #dce4dc;
@@ -67,6 +68,9 @@
             /* Enable vertical scrolling for content */
             height: calc(100vh - 40px);
             /* Adjust height based on header's height */
+            .fixture {
+              margin-bottom: 1rem;
+            }
         }
         .noFixtures {
             margin: 0 auto;
