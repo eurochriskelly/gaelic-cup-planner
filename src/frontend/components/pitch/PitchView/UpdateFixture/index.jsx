@@ -65,7 +65,7 @@ function UpdateFixture ({
       updateFixtures();
       actions.closeDrawer('postpone');
     },
-  };
+  }
 
   const drawerStyle = {
     display: drawerOpen ? "flex" : "none",
@@ -113,7 +113,7 @@ function UpdateFixture ({
         />
       </div>
     </div>
-  );
+  )
 };
 
 
@@ -139,7 +139,7 @@ function BtnPostpone({
         <path d="M 12,12 L 16,16" stroke="white"></path>
       </svg>
     </button>
-  );
+  )
 }
 
 function BtnCancel({
