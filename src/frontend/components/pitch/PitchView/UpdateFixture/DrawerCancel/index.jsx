@@ -39,7 +39,7 @@ const DrawerCancel = ({
   }, [visible]);
 
   return (
-    <div className="drawerCancel">
+    <div className="drawer drawerCancel">
       <div>
         <div className="drawer-header">Cancel Match</div>
         <div className="drawer-container">

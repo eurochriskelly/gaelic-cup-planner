@@ -58,7 +58,7 @@ const DrawerPostpone = ({
     </div>
   );
   return (
-    <div className="drawerPostpone">
+    <div className="drawer drawerPostpone">
       <div>
         <div className="drawer-header">Re-schedule match</div>
         <div className="drawer-container">
@@ -66,7 +66,7 @@ const DrawerPostpone = ({
             {currentStep === 0 && (
               <>
                 <div className="drawer-content-row grid grid-flow-col grid-columns-2">
-                  <span className="drawer-content-label uppercase">From pitch:</span>
+                  <span className="drawer-content-label uppercase">To pitch:</span>
                   <span className="drawer-content-value">
                     <Select
                       options={pitches.map(pitch => ({ value: pitch, label: pitch }))}

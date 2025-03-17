@@ -74,7 +74,7 @@ function UpdateFixture ({
   return (
     <>
       {drawerOpen && <div className="drawer-overlay" onClick={() => actions.closeDrawer()} />}
-      <div className='updateFixture border-red-400 border-solid'>
+      <div className='updateFixture'>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
         <BtnGetReady btnClass={enableStates.start} onGetReady={actions.start} />
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />

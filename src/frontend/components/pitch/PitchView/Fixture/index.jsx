@@ -31,7 +31,8 @@ const Fixture = ({ fixture, isFocus }) => {
 
   const scoreUpToDate = !!played;
   const rowClasses = () => {
-    const classes = ['grid grid-columns-2 match-area'];
+    const classes = ['grid grid-columns-2 '];
+    if (!isFocus) classes.push('match-area')
     if (scoreUpToDate) classes.push("scoreUpToDate");
     return classes.join(" ");
   };
@@ -79,7 +80,7 @@ const Fixture = ({ fixture, isFocus }) => {
               </div>
               <div className="text-6xl">vs.</div>
               <div className="team team-2">
-                <div className="text-6xl bg-blue-400 team-icon pt-10">{extractUppercaseAndNumbers(team2).substring(0, 4)}</div>
+                <div className="text-6xl bg-blue-400 team-icon pt-10">{extractUppercaseAndNumbers(team2).substring(0, 3)}</div>
               </div>
               <div/>
             </div>

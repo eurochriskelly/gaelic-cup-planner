@@ -139,7 +139,7 @@ const DrawerFinish = ({
     );
   };
   return (
-    <div className="drawerFinish">
+    <div className="drawer drawerFinish">
       <div className="drawerStep" style={drawerStepStyle("score")}>
         <div className="drawer-header">Update match score</div>
         <div className="drawer-container" style={{ position: "relative" }}>
