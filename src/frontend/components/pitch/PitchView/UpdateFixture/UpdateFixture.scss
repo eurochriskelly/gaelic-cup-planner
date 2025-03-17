@@ -5,6 +5,7 @@
   bottom: 2rem;
   right: 2rem;
   left: 2rem;
+  z-index: 1000;
 
   .drawer-header {
     background-color: desaturate($sc-dark-20, 30%);
@@ -111,8 +112,19 @@
 
 /* DRAWERS */
 .updateFixture>div.drawers {
-    margin-top: 1rem;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 1.6rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
     font-size: 1.7rem;
+    z-index: 1001;
 }
 
 .scoresUpToDate {
@@ -125,6 +137,17 @@
 
 .updateFixture .header {
     color: red !important;
+}
+
+/* Add overlay for when drawers are open */
+.drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
 }
 
 /** TEST MODULES **/

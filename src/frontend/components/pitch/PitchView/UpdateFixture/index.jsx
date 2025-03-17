@@ -72,7 +72,9 @@ function UpdateFixture ({
   };
 
   return (
-    <div className='updateFixture border-red-400 border-solid'>
+    <>
+      {drawerOpen && <div className="drawer-overlay" onClick={() => actions.closeDrawer()} />}
+      <div className='updateFixture border-red-400 border-solid'>
       <div style={{ display: drawerOpen ? "none" : "grid" }}>
         <BtnGetReady btnClass={enableStates.start} onGetReady={actions.start} />
         <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
@@ -86,7 +88,7 @@ function UpdateFixture ({
       </div>
 
       {/* DRAWERS */}
-      <div className='drawers' style={drawerStyle}>
+      <div className='drawers' style={{...drawerStyle, display: drawerOpen ? 'block' : 'none'}}>
         <DrawerPostpone
           visible={visibleDrawers.postpone}
           onClose={actions.closeDrawer}
