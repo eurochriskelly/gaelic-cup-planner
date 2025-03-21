@@ -1,5 +1,7 @@
 import Cookies from "js-cookie";
-import { useState, useEffect } from 'react'; // Add useEffect
+import { useState, useEffect } from 'react';
+// import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
+import LogoutIcon from '../../../../shared/icons/icon-logout.svg';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
@@ -87,9 +89,14 @@ const LandingPage = () => {
       </section>
       <section className="maintenance">
         {+tournamentId === 1 && (
-          <button className='sudo' onClick={handleResetClick}>{tt('ResetTournament')}</button>
+          <button className='icon-button' onClick={handleResetClick}>
+            RESET
+          </button>
         )}
-        <button onClick={handle.disconnect}>{tt('Disconnect')}</button>
+        <button className='icon-button' onClick={handle.disconnect}>
+          <LogoutIcon className="icon" />
+          LOGOUT
+        </button>
       </section>
       <footer></footer>
     </main>

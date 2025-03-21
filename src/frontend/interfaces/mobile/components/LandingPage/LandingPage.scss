@@ -9,7 +9,7 @@ $rcol: #d4e79b;
   min-height: calc(100vh - 500px); /* Ensure it fills remaining height */
 
   /* Modified: Adjust margin for content below banner */
-  > *:not(.banner-container) {
+  header, section, footer {
     margin: 2.4rem;
   }
 
@@ -133,53 +133,57 @@ $rcol: #d4e79b;
 
       .title {
         font-size: 2.8rem;
-        margin: 0;
+        margin: 0 0 2rem 0;
         padding: 0;
         text-align: center;
         text-transform: uppercase;
-        margin-bottom: 2rem;
         color: white;
       }
 
-      > div {
+      .card-content {
         position: absolute;
         top: 3rem;
         left: 50%;
         width: 90%;
         transform: translateX(-50%);
         font-size: 2.2rem;
+        
         p {
           margin: 0 0 15px;
         }
-      }
-      > div > div:last-child {
-        margin: 0 3rem;
+        
+        & > div:last-child {
+          margin: 0 3rem;
+        }
       }
     }
   }
   section.maintenance {
-    h2 {
-      color: white;
-      width: 100%;
-      text-align: center;
-      text-transform: uppercase;
-      font-size: 1.8rem;
-    }
-    button {
-      font-size: 2rem;
-      margin: 2rem;
-      padding: 2rem;
-      border: 0;
-      margin-top: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.3em;
-      transition: transform 0.2s ease, background-color 0.2s ease;
-      &:active {
-        transform: scale(0.95);
-        background-color: rgba(200, 200, 200, 0.7);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.1);
       }
-      .sudo {
-        border: 10px solid red;
+
+      .icon {
+        width: 40px;
+        height: 40px;
+        fill: white;
+        transition: fill 0.2s ease;
+
+        &:hover {
+          fill: #ffcc00;
+        }
       }
     }
   }
