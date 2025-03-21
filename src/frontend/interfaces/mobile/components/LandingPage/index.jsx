@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
+import ScheduleIcon from '../../../../shared/icons/icon-schedule.svg?react';
+import StatusIcon from '../../../../shared/icons/icon-status.svg?react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
@@ -75,27 +77,25 @@ const LandingPage = () => {
           </tbody>
         </table>
       </header>
-      <section>
-        <Card action={jump.scheduling} icon="⚡" title={tt('sched_exe')}>
-          <p>{tt('StartMatches')}</p>
-          <p>{tt('SetScores')}</p>
-          <p>{tt('AddCardedPlayers')}</p>
-        </Card>
-        <Card action={jump.competitions} icon="🏐" title={tt('comp_status')}>
-          <p>{tt('ViewRecent')}</p>
-          <p>{tt('ViewGroupStandings')}</p>
-          <p>{tt('FollowProgressInStandings')}</p>
-        </Card>
-      </section>
-      <section className="maintenance">
-        {+tournamentId === 1 && (
-          <button className='icon-button' onClick={handleResetClick}>
-            <ResetIcon className="icon" />
+      <section className="icon-grid">
+        <div className="main-actions">
+          <button className='icon-button' onClick={jump.scheduling}>
+            <ScheduleIcon className="icon" />
           </button>
+          <button className='icon-button' onClick={jump.competitions}>
+            <StatusIcon className="icon" />
+          </button>
+          <button className='icon-button' onClick={handle.disconnect}>
+            <LogoutIcon className="icon" />
+          </button>
+        </div>
+        {+tournamentId === 1 && (
+          <div className="reset-action">
+            <button className='icon-button' onClick={handleResetClick}>
+              <ResetIcon className="icon" />
+            </button>
+          </div>
         )}
-        <button className='icon-button' onClick={handle.disconnect}>
-          <LogoutIcon className="icon" />
-        </button>
       </section>
       <footer></footer>
     </main>
@@ -103,20 +103,6 @@ const LandingPage = () => {
 };
 
 
-function Card({ title, icon, action, children }) {
-  return (
-    <button onClick={action} className="landing-card">
-      <div>
-        <div className="title">
-          {icon} {title}
-        </div>
-        <div>
-          <div>{children}</div>
-        </div>
-      </div>
-    </button>
-  );
-}
 
 function Row({ label, children }) {
   return (
