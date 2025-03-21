@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
-import ResetIcon from 'public/icons/icon-reset.svg?react';
-import LogoutIcon from 'public/icons/icon-logout.svg?react';
+import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
+import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
