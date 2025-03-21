@@ -90,12 +90,11 @@ const LandingPage = () => {
       <section className="maintenance">
         {+tournamentId === 1 && (
           <button className='icon-button' onClick={handleResetClick}>
-            RESET
+            <ResetIcon className="icon" />
           </button>
         )}
         <button className='icon-button' onClick={handle.disconnect}>
           <LogoutIcon className="icon" />
-          LOGOUT
         </button>
       </section>
       <footer></footer>
