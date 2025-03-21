@@ -101,95 +101,82 @@ $rcol: #d4e79b;
     margin-top: 5rem;
   }
 
-  section {
+  .icon-grid {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 0rem;
+    gap: 2rem;
+    margin: 2rem;
+    padding: 1rem;
 
-    .landing-card {
-      width: 100%;
-      position: relative;
-      padding: 25px;
-      height:400px;
-      margin-bottom:1rem;
-      vertical-align: top;
-      background-color: rgba(150, 150, 150, 0.7);
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      text-align: left;
-      text-decoration: none;
-      color: #333;
-      transition: background-color 0.3s ease;
-      font-size: 1.2em;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    .main-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
 
-      &:hover {
-        background-color: #e6e6e6;
-        transform: scale(1.05); /* Slight scale-up on hover */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
-      }
+      .icon-button {
+        aspect-ratio: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-      .title {
-        font-size: 2.8rem;
-        margin: 0 0 2rem 0;
-        padding: 0;
-        text-align: center;
-        text-transform: uppercase;
-        color: white;
-      }
-
-      .card-content {
-        position: absolute;
-        top: 3rem;
-        left: 50%;
-        width: 90%;
-        transform: translateX(-50%);
-        font-size: 2.2rem;
-        
-        p {
-          margin: 0 0 15px;
+        &:hover {
+          transform: scale(1.1);
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
         }
-        
-        & > div:last-child {
-          margin: 0 3rem;
+
+        .icon {
+          width: 80%;
+          height: 80%;
+          fill: white;
+          transition: fill 0.2s ease;
+        }
+
+        &:hover .icon {
+          fill: #ffcc00;
         }
       }
     }
-  }
-  section.maintenance {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
 
-    .icon-button {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
-      padding: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .reset-action {
       display: flex;
-      align-items: center;
       justify-content: center;
 
-      &:hover {
-        transform: scale(1.1);
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.5);
-      }
+      .icon-button {
+        width: 60%;
+        aspect-ratio: 3/1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-      .icon {
-        width: 32px;
-        height: 32px;
-        fill: white;
-        transition: fill 0.2s ease;
-      }
+        &:hover {
+          transform: scale(1.05);
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
 
-      &:hover .icon {
-        fill: #ffcc00;
+        .icon {
+          width: 40%;
+          height: 40%;
+          fill: white;
+          transition: fill 0.2s ease;
+        }
+
+        &:hover .icon {
+          fill: #ffcc00;
+        }
       }
     }
   }
