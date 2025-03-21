@@ -49,6 +49,7 @@
     "@storybook/react-vite": "^7.6.5",
     "@storybook/react-webpack5": "^7.6.5",
     "@storybook/test": "^7.6.5",
+    "@svgr/rollup": "^8.1.0",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.20",
     "babel-cli": "^6.26.0",
