@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import svgr from '@svgr/rollup';
+import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 
 const port = process.env.GG_PORT_OVERRIDE || '4010'
