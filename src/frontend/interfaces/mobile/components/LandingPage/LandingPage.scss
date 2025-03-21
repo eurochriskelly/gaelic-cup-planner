@@ -165,25 +165,31 @@ $rcol: #d4e79b;
     margin-top: 2rem;
 
     .icon-button {
-      background: none;
-      border: none;
-      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
       }
 
       .icon {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         fill: white;
         transition: fill 0.2s ease;
+      }
 
-        &:hover {
-          fill: #ffcc00;
-        }
+      &:hover .icon {
+        fill: #ffcc00;
       }
     }
   }
