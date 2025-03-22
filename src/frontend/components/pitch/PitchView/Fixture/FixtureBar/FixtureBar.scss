@@ -3,9 +3,13 @@
   align-items: center;
   gap: 2rem;
   padding: 1rem;
-  background: #f3f4f6;
+  background: darken(#ddff718a, 45%);
   border-radius: 0.5rem;
   margin-bottom: 1rem;
+  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border: 1px solid #ffffff5e;
+  border-bottom: 4px solid #0000005e;
   
   .fixture-id,
   .category,
@@ -15,7 +19,7 @@
     gap: 0.5rem;
     font-size: 1.25rem;
     font-weight: 500;
-    color: #374151;
+    color:white;
     
     svg {
       width: 1.5rem;
