@@ -78,6 +78,9 @@ function FixtureFinished({fixture}) {
           <div className="team-name">
             {formatTeamName(team1)}
           </div>
+          <div className="team-score">
+            {`${goals1 || 0} - ${points1 || 0} (${(goals1 || 0) * 3 + (points1 || 0)})`}
+          </div>
         </div>
 
         <div className="team-row">
@@ -86,6 +89,9 @@ function FixtureFinished({fixture}) {
           </div>
           <div className="team-name">
             {formatTeamName(team2)}
+          </div>
+          <div className="team-score">
+            {`${goals2 || 0} - ${points2 || 0} (${(goals2 || 0) * 3 + (points2 || 0)})`}
           </div>
         </div>
 
@@ -97,11 +103,6 @@ function FixtureFinished({fixture}) {
         )}
       </div>
 
-      <div className="score-column">
-        <div className="score-placeholder">
-          SCORE
-        </div>
-      </div>
     </div>
   );
 }
