@@ -56,10 +56,8 @@ function FixtureUnplayed({fixture}) {
   }
 
   return (
-    <div className={`fixture FixtureNext h-128`} key={id}>
-      <div
-        className={rowClasses()}
-        style={gridStyle}>
+    <div className="FixtureUnplayed" key={id}>
+      <div className="fixture-info">
         <FixtureInfo
           scheduledTime={scheduledTime}
           startedTime={startedTime}
@@ -69,43 +67,33 @@ function FixtureUnplayed({fixture}) {
           group={category}
           fixtureId={id}
         />
+      </div>
 
-        <section className="mt-7 mr-0 pr-0">
-          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300">
-            <div className="match-up w-full min-h-52">
-              <div/>
-              <div className="team team-1">
-                <div className="team-icon text-6xl bg-rose-500 pt-10">{extractUppercaseAndNumbers(team1).substring(0, 3)}</div>
-              </div>
-              <div className="text-6xl">vs.vs.</div>
-              <div className="team team-2">
-                <div className="text-6xl bg-blue-400 team-icon pt-10">{extractUppercaseAndNumbers(team2).substring(0, 3)}</div>
-              </div>
-              <div/>
-            </div>
-
-            <div className="match-teams ">
-              <div/>
-              <div className="text-3xl">{formatTeamName(team1)}</div>
-              <div/>
-              <div className="text-3xl">{formatTeamName(team2)}</div>
-              <div/>
-            </div>
-
+      <div className="fixture-pairing">
+        <div className="team-row">
+          <div className="team-icon team1">
+            {extractUppercaseAndNumbers(team1).substring(0, 2)}
           </div>
-          {!played && (
-            <div className='umpires'>
-              {umpireTeam ? (
-                <span >
-                  <b>UMPIRING: </b>
-                  {formatName(umpireTeam)}
-                </span>
-              ) : (
-                ""
-              )}
-            </div>
-          )}
-        </section>
+          <div className="team-name">
+            {formatTeamName(team1)}
+          </div>
+        </div>
+
+        <div className="team-row">
+          <div className="team-icon team2">
+            {extractUppercaseAndNumbers(team2).substring(0, 2)}
+          </div>
+          <div className="team-name">
+            {formatTeamName(team2)}
+          </div>
+        </div>
+
+        {!played && umpireTeam && (
+          <div className="umpires">
+            <b>UMPIRING: </b>
+            {formatName(umpireTeam)}
+          </div>
+        )}
       </div>
     </div>
   );
