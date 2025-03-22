@@ -16,11 +16,6 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
 
   const shortTime = st(started) || scheduled;
 
-  if (focus) {
-    console.log("shortTime", shortTime);
-    console.log("scheduled", scheduled);
-  }
-
   if (started && !played) {
     fillColor = "green";
     strokeColor = "white";
