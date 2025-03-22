@@ -2,6 +2,10 @@
   display: flex;
   width: 100%;
   padding: 1rem;
+  background: white;
+  border-radius: 1rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   
   .fixture-info {
     width: 30%;
@@ -39,7 +43,8 @@
       }
       
       .team-name {
-        font-size: 1.25rem;
+        font-size: 1.625rem;
+        font-weight: 500;
       }
     }
     

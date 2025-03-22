@@ -117,7 +117,7 @@ function FixtureInfo({
         focus={focus}
         played={scoreUpToDate}
       />
-      <div className="text-4xl">
+      <div className="text-6xl font-bold mb-4">
         <span>{group}</span>
         <span className="text-rose-500">#</span>
         <span>{`${fixtureId}`.substr(-3)}</span>
