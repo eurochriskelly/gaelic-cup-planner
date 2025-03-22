@@ -8,7 +8,7 @@
 
 .pitchView {
     height: 100%;
-    background-color: #dce4dc;
+    background-color: desaturate(#dfe9c0, 25%);
     >div:nth-child(2) {
         position: absolute;
         margin-top: 14rem;

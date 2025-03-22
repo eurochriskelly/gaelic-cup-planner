@@ -56,9 +56,9 @@ const DrawerCancel = ({
                     `Click 'YES' to confirm Walkover for ${selectedOption === 'team1_forfeit' ? team1 : team2} and Forfeit for ${selectedOption === 'team1_forfeit' ? team2 : team1}`
                   )}
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 bg-gray-500 p-9 text-9xl">
                   <button
-                    className="btn btn-primary flex-1 py-4 text-3xl bg-[#2b7624] hover:bg-[#1f5a1a] text-white"
+                    className="btn btn-primary flex-1 py-4  bg-[#2b7624] hover:bg-[#1f5a1a] text-white mr-1"
                     onClick={handleFinalConfirm}
                   >
                     Yes
@@ -75,17 +75,19 @@ const DrawerCancel = ({
               <div className="flex flex-col gap-4">
                 <ForfeitButton forfeitTeam={team2} walkoverTeam={team1} confirmOpt={'team1_forfeit'} onClick={handleConfirm} />
                 <ForfeitButton forfeitTeam={team1} walkoverTeam={team2} confirmOpt={'team2_forfeit'} reverse={true} onClick={handleConfirm} />
-                <button
-                  className="btn btn-primary w-full py-4 text-xl"
-                  onClick={() => handleConfirm('draw')}
-                >
-                  <div className="text-3xl mb-8">
-                    {team1.length > 22 ? `${team1.substring(0, 22)}...` : team1}
-                    {' & '}
-                    {team2.length > 22 ? `${team2.substring(0, 22)}...` : team2}
-                  </div>
-                  <div className="font-bold text-5xl text-sky-700">captains agree draw</div>
-                </button>
+                <div className="bg-gray-200 mb-3 p-7 rounded-1xl">
+                  <button
+                    className="btn btn-primary w-full py-4 text-xl bg-gray-200 mb-3 p-7 rounded-1xl"
+                    onClick={() => handleConfirm('draw')}
+                  >
+                    <div className="text-3xl mb-8 ">
+                      {team1.length > 22 ? `${team1.substring(0, 22)}...` : team1}
+                      {' & '}
+                      {team2.length > 22 ? `${team2.substring(0, 22)}...` : team2}
+                    </div>
+                    <div className="font-bold text-5xl text-sky-700">captains agree draw</div>
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -121,16 +123,16 @@ function ForfeitButton({
       className="btn btn-primary w-full py-4 text-xl"
       onClick={() => onClick(confirmOpt)}
     >
-      <div className="flex justify-between items-center">
-        <div className="text-left">
-          <div className="text-3xl mb-8">
+      <div className="flex justify-between items-center bg-gray-200 mb-3 p-7 rounded-1xl">
+        <div className="text-left pr-3 pl-3">
+          <div className="text-3xl mb-8 ">
             {(reverse ? forfeitTeam : walkoverTeam).length > maxTeamNameLen
               ? `${(reverse ? forfeitTeam : walkoverTeam).substring(0, maxTeamNameLen)}...`
               : (reverse ? forfeitTeam : walkoverTeam)}
           </div>
           <div className={`text-5xl whitespace-nowrap font-bold ${reverse ? 'text-lime-700' : 'text-rose-500'} `}>{reverse ? '🏆 Walkover'  : 'Forfeit'}</div>
         </div>
-        <div className="text-right">
+        <div className="text-right pr-3 pl-3">
           <div className="text-3xl mb-8">
             {(reverse ? walkoverTeam : forfeitTeam).length > maxTeamNameLen
               ? `${(reverse ? walkoverTeam : forfeitTeam).substring(0, maxTeamNameLen)}...`

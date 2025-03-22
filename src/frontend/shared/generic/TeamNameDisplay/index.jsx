@@ -41,7 +41,7 @@ const formatWithSpans = (text) => {
       <span>
         {text.split(/(\/)/).map((part, index) =>
           part === '/' ? (
-            <span key={index} className="slash text-rose-500 ml-2 mr-2"> / </span>
+            <span key={index} className="slash text-rose-500 ml-1 mr-1"> / </span>
           ) : (
             <span key={index} className="whitespace-nowrap">{part}</span>
           )

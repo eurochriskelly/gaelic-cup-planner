@@ -111,9 +111,9 @@ const DrawerFinish = ({
     const concat = `${showTotal}${showPoints}${showGoals}`
     const match = concat.match(/#/g)
     if ((match||[]).length === 5) {
-      showGoals  = <span style={{color:'#AAA'}}>#</span>
-      showPoints = <span style={{color:'#AAA'}}>##</span>
-      showTotal  = <span style={{color:'#AAA'}}>##</span>
+      showGoals  = <span className="grayed-score">#</span>
+      showPoints = <span className="grayed-score">##</span>
+      showTotal  = <span className="grayed-score">##</span>
     } else {
       showPoints = <span>{showPoints.replace(/#/g, '0')}</span>;
       showTotal = <span>{showTotal.replace(/#/g, '0')}</span>;
@@ -154,7 +154,7 @@ const DrawerFinish = ({
               >
                 Proceed
               </button>
-              <button onClick={actions.notReadyToSaveScore}>Cancel</button>
+              <button className="text-4xl" onClick={actions.notReadyToSaveScore}>Cancel</button>
             </div>
           </div>
           {scorePicker.visible && (

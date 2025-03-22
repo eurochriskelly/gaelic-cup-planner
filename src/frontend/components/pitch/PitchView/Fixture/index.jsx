@@ -72,8 +72,8 @@ const Fixture = ({ fixture, isFocus }) => {
         />
 
         <section className="mt-7 mr-0 pr-0">
-          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-xl">
-            <div className="match-up w-full">
+          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300">
+            <div className="match-up w-full min-h-52">
               <div/>
               <div className="team team-1">
                 <div className="team-icon text-6xl bg-rose-500 pt-10">{extractUppercaseAndNumbers(team1).substring(0, 3)}</div>
@@ -97,7 +97,7 @@ const Fixture = ({ fixture, isFocus }) => {
           {!played && (
             <div className='umpires'>
               {umpireTeam ? (
-                <span>
+                <span >
                   <b>UMPIRING: </b>
                   {formatName(umpireTeam)}
                 </span>

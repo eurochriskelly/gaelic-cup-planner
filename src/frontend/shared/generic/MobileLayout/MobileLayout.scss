@@ -8,7 +8,7 @@
 }
 
 section.MobileLayout {
-  grid-template-rows: 18rem auto;
+  grid-template-rows: 21rem auto;
   td, th {
     font-size: 1.4rem;
   }
@@ -68,7 +68,7 @@ section.MobileLayout {
     height: 16rem;
   }
   > section:last-child {
-    margin: 1rem;
+    margin: 0;
     > article table {
       width: 100%;
     }
