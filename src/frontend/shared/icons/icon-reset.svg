@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="30.9 2.14 9.85 9.85">
+<rect id="icon-reset-clickable" x="29.915" y="1.1550000000000007" width="11.819999999999999" height="11.819999999999999" fill="#788356" fill-opacity="1" stroke-dasharray="0.0452804, 0.18112" stroke-width=".028" style="mix-blend-mode:normal" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<text x="35.80447" y="10.763562" fill="white" font-family="'Devanagari Sangam MN'" font-size="1.06px" font-weight="bold" letter-spacing=".147px" stroke-linecap="round" stroke-width=".285" text-align="center" text-anchor="middle" word-spacing=".00835px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="35.839375" y="10.763562" fill="white" font-size="1.06px" stroke-width=".285" fill-opacity="1" class="fg">RESET</tspan></text>
+<g transform="matrix(.771 0 0 .771 1.17 .994)" stroke="white" stroke-linecap="round" stroke-width=".8" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg">
+    <path d="m42.8 8.52c-0.573-0.573-0.928-1.36-0.928-2.24 0-1.75 1.42-3.17 3.17-3.17 1.75 1e-7 3.17 1.42 3.17 3.17s-1.42 3.17-3.17 3.17" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+    <g stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+     <path d="m45.9 7.1-1-0.731v-1.95" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m42.7 8.67 0.445-1.33" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m42.7 8.69-1.38-0.285" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+   </g>
+</svg>

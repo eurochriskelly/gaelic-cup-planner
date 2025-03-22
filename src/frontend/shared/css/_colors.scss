@@ -4,6 +4,7 @@ To import, add the following to the top of your scss file:
 */
 
 $primary-color: #2b7624;
+$primary-color: #657338;
 $mainColor: $primary-color;
 $secondary-color: #885ea3;
 $background-color: #f8f9fa;
@@ -11,6 +12,7 @@ $pc: $primary-color;
 $sc: $secondary-color;
 $bg: $background-color;
 $text-color: #333;
+$rcol: #d4e79b;
 
 // darken by 10%
 $pc-dark-10: darken($pc, 10%);

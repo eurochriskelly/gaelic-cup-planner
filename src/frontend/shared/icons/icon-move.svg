@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="30.9 2.14 9.85 9.85">
+<rect id="icon-move-clickable" x="29.915" y="1.1550000000000007" width="11.819999999999999" height="11.819999999999999" fill="#788356" fill-opacity="1" stroke-dasharray="0.0452804, 0.18112" stroke-miterlimit="4.1" stroke-width=".028" style="mix-blend-mode:normal" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<text x="35.80447" y="10.763562" fill="white" font-family="'Devanagari Sangam MN'" font-size="1.06px" font-weight="bold" letter-spacing=".147px" stroke-linecap="round" stroke-miterlimit="4.1" stroke-width=".285" text-align="center" text-anchor="middle" word-spacing=".00835px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="35.839375" y="10.763562" fill="white" font-size="1.06px" stroke-width=".285" fill-opacity="1" class="fg">MOVE</tspan></text>
+<circle cx="35.9" cy="5.86" r="2.78" fill="white" stroke-width=".778" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+<g id="icon-move-invert" transform="translate(17.3 -1.29)" class="bg" xmlns="http://www.w3.org/2000/svg">
+    <path d="m17.8 7.41h0.523v-1.05h0.523l-0.785-1.05-0.784 1.05h0.523z" fill="#788356" stroke-width=".385" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <path d="m19.4 6.89h-0.523v1.05h-0.523l0.785 1.05 0.784-1.05h-0.523z" fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+</svg>
