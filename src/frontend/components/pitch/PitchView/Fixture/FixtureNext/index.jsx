@@ -15,28 +15,14 @@ function FixtureNext({fixture}) {
     stage,
     category,
     team1,
-    goals1,
-    points1,
     team2,
-    goals2,
-    points2,
-    played,
     umpireTeam,
   } = fixture;
 
   const tlen = 24;
 
-  const totalTeam1 = (goals1 || 0) * 3 + (points1 || 0);
-  const totalTeam2 = (goals2 || 0) * 3 + (points2 || 0);
-  let winner = null;
-  if (played) {
-    winner = totalTeam1 > totalTeam2 ? team1 : totalTeam1 < totalTeam2 ? team2 : "";
-  }
-
-  const scoreUpToDate = !!played;
   const rowClasses = () => {
     const classes = ['grid grid-columns-2 '];
-    if (scoreUpToDate) classes.push("scoreUpToDate");
     return classes.join(" ");
   };
 
@@ -50,7 +36,6 @@ function FixtureNext({fixture}) {
     );
   };
   const gridStyle = { 
-    backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
     display: 'grid',
   }
 
@@ -63,7 +48,6 @@ function FixtureNext({fixture}) {
           scheduledTime={scheduledTime}
           startedTime={startedTime}
           delayMinutes={militaryTimeDiffMins(scheduledTime, startedTime)}
-          scoreUpToDate={scoreUpToDate}
           stage={stage}
           group={category}
           fixtureId={id}
@@ -92,7 +76,7 @@ function FixtureNext({fixture}) {
             </div>
 
           </div>
-          {!played && (
+          {(
             <div className='umpires'>
               {umpireTeam ? (
                 <span >
@@ -114,7 +98,6 @@ function FixtureInfo({
   scheduledTime,
   startedTime,
   delayMinutes = 0,
-  scoreUpToDate,
   stage,
   group,
   fixtureId
@@ -126,7 +109,7 @@ function FixtureInfo({
         started={startedTime}
         delay={delayMinutes}
         focus={focus}
-        played={scoreUpToDate}
+        played={false}
       />
       <div className="text-4xl">
         <span>{group}</span>

@@ -1,5 +1,5 @@
 import FixtureNext from './FixtureNext';
-import FixtureFinished from './FixtureNext';
+import FixtureFinished from './FixtureFinished';
 import FixtureUnplayed from './FixtureUnplayed';
 
 const Fixture = ({ fixture, isFocus, view = '' }) => {
