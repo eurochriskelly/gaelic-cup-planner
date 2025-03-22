@@ -27,16 +27,15 @@
     padding: 1.6rem 0.6rem;
     min-width: 160px;
     border-radius: 0.8rem;
+    background: none;
+    border: none;
+    
     &.enabled {
       cursor: pointer;
-      background-color: $sc-dark-10;
-      border: 1px solid $sc-light-20;
-      color: white;
     }
     &.disabled {
       cursor: not-allowed;
-      background-color: #ddd;
-      color: #444;
+      opacity: 0.5;
     }
   }
 
@@ -84,8 +83,6 @@
     display: block;
   }
 }
-
-.updateFixture button {}
 
 .button-grid {
   display: grid;
@@ -182,16 +179,3 @@
   }
 }
 
-.space-button {
-  &.primary {
-    cursor: pointer;
-    background-color: $primary-color; // Primary color when not started
-    border: 1px solid $sc-light-20;
-    color: white;
-  }
-  &.grey {
-    cursor: not-allowed;
-    background-color: #888; // Grey when started
-    color: #444;
-  }
-}
