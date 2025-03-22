@@ -127,7 +127,6 @@ function UpdateFixture ({
 function BtnPostpone({ onPostpone, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onPostpone}>
-      <span>Re-schedule</span>
       <MoveIcon className="icon" />
     </button>
   );
@@ -136,7 +135,6 @@ function BtnPostpone({ onPostpone, btnClass }) {
 function BtnCancel({ onCancel, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onCancel}>
-      Cancel match
       <NotPlayedIcon className="icon" />
     </button>
   );
@@ -145,7 +143,6 @@ function BtnCancel({ onCancel, btnClass }) {
 function BtnGetReady({ onGetReady, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onGetReady}>
-      Start tracking
       <StartIcon className="icon" />
     </button>
   );
@@ -154,7 +151,6 @@ function BtnGetReady({ onGetReady, btnClass }) {
 function BtnUpdateResult({ btnClass, onFinish }) {  
   return (
     <button className={`space-button ${btnClass}`} onClick={onFinish}>
-      Update result
       <ScoreIcon className="icon" />
     </button>
   );
