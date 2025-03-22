@@ -1,28 +1,10 @@
 .FixtureUnplayed {
-  display: flex;
   width: 100%;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.55);
   border-radius: 1rem;
   margin: 1rem 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  
-  .fixture-info {
-    width: 30%;
-    padding-right: 1rem;
-    
-    .ClockIcon {
-      svg {
-        width: 3rem;
-        height: 3rem;
-      }
-      
-      span {
-        font-size: 3rem;
-        line-height: 3rem;
-      }
-    }
-  }
   
   .fixture-pairing {
     flex: 1;
