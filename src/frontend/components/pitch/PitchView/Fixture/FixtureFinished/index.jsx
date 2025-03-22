@@ -1,13 +1,10 @@
 import { extractUppercaseAndNumbers } from '../common';
-import TeamResult from "../TeamResult";
-import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
-import ClockIcon from "../../../../../shared/generic/ClockIcon";
-//import '../Fixture.scss';
-import './FixtureUnplayed.scss';
+import { formatTeamName } from "../../../../../shared/generic/TeamNameDisplay";
+import './FixtureFinished.scss';
 
-export default FixtureUnplayed;
+export default FixtureFinished;
 
-function FixtureUnplayed({fixture}) {
+function FixtureFinished({fixture}) {
   const {
     id,
     startedTime = "",
@@ -56,17 +53,21 @@ function FixtureUnplayed({fixture}) {
   }
 
   return (
-    <div className="FixtureUnplayed" key={id}>
+    <div className="FixtureFinished" key={id}>
       <div className="fixture-info">
-        <FixtureInfo
-          scheduledTime={scheduledTime}
-          startedTime={startedTime}
-          delayMinutes={militaryTimeDiffMins(scheduledTime, startedTime)}
-          scoreUpToDate={scoreUpToDate}
-          stage={stage}
-          group={category}
-          fixtureId={id}
-        />
+        <div className="text-3xl font-bold mb-4">
+          <span>{category}</span>
+          <span className="text-rose-500">#</span>
+          <span>{`${id}`.substr(-3)}</span>
+        </div>
+        <div className="mb-4 text-xl">
+          Stage: {stage
+            .toUpperCase()
+            .replace('PLT', 'Plate')
+            .replace('CUP', 'Cup')
+            .replace('SHD', 'Shield')
+            .replace('_', '/')}
+        </div>
       </div>
 
       <div className="fixture-pairing">
@@ -94,6 +95,12 @@ function FixtureUnplayed({fixture}) {
             {formatName(umpireTeam)}
           </div>
         )}
+      </div>
+
+      <div className="score-column">
+        <div className="score-placeholder">
+          SCORE
+        </div>
       </div>
     </div>
   );
