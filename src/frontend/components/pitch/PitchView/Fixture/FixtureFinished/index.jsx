@@ -1,5 +1,6 @@
 import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName } from "../../../../../shared/generic/TeamNameDisplay";
+import FixtureBar from '../FixtureBar';
 import './FixtureFinished.scss';
 
 export default FixtureFinished;
@@ -54,26 +55,17 @@ function FixtureFinished({fixture}) {
 
   return (
     <div className="FixtureFinished" key={id}>
-      <div className="fixture-info">
-        <div className="text-6xl mb-4 mt-4 text-rose-300">
-          <span className="font-bold">#</span>
-          <span>{`${id}`.substr(-3)}</span>
-        </div>
-        <div className="text-2xl  mb-4">
-          <div className="italic">Category:</div>
-          <span className="ml-3 text-3xl font-bold text-sky-600 whitespace-nowrap">{category.substring(0, 9).toUpperCase()}</span>
-        </div>
-        <div className="text-2xl mb-4">
-          <div className="italic">Stage:</div>
-          <span className="ml-3 font-bold text-emerald-600 text-3xl">{stage
-            .toUpperCase()
-            .replace('PLT', 'Plate')
-            .replace('CUP', 'Cup')
-            .replace('SHD', 'Shield')
-            .replace('_', '/')
-          }</span>
-        </div>
-      </div>
+      <FixtureBar 
+        fixtureId={id}
+        category={category.substring(0, 9).toUpperCase()}
+        stage={stage
+          .toUpperCase()
+          .replace('PLT', 'Plate')
+          .replace('CUP', 'Cup')
+          .replace('SHD', 'Shield')
+          .replace('_', '/')
+        }
+      />
 
       <div className="fixture-pairing">
         <div className="team-row">
