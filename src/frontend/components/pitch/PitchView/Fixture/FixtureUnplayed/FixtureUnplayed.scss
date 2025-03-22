@@ -4,7 +4,7 @@
   padding: 1rem;
   background: white;
   border-radius: 1rem;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   
   .fixture-info {
@@ -22,6 +22,8 @@
       align-items: center;
       gap: 1rem;
       padding: 0.5rem 0;
+      background: rgba(127, 127, 127, 0.2);
+      margin: 0.25rem;
       
       .team-icon {
         width: 2rem;
@@ -43,14 +45,14 @@
       }
       
       .team-name {
-        font-size: 1.625rem;
+        font-size: 2.125rem;
         font-weight: 500;
       }
     }
     
     .umpires {
       margin-top: 1rem;
-      font-size: 0.875rem;
+      font-size: 1.5rem;
       color: #666;
     }
   }
