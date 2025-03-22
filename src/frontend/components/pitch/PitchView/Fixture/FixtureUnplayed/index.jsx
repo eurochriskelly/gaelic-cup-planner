@@ -1,8 +1,6 @@
 import { extractUppercaseAndNumbers } from '../common';
-import TeamResult from "../TeamResult";
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
-import ClockIcon from "../../../../../shared/generic/ClockIcon";
-//import '../Fixture.scss';
+import FixtureBar from '../FixtureBar';
 import './FixtureUnplayed.scss';
 
 export default FixtureUnplayed;
@@ -57,17 +55,17 @@ function FixtureUnplayed({fixture}) {
 
   return (
     <div className="FixtureUnplayed" key={id}>
-      <div className="fixture-info">
-        <FixtureInfo
-          scheduledTime={scheduledTime}
-          startedTime={startedTime}
-          delayMinutes={militaryTimeDiffMins(scheduledTime, startedTime)}
-          scoreUpToDate={scoreUpToDate}
-          stage={stage}
-          group={category}
-          fixtureId={id}
-        />
-      </div>
+      <FixtureBar 
+        fixtureId={id}
+        category={category.substring(0, 9).toUpperCase()}
+        stage={stage
+          .toUpperCase()
+          .replace('PLT', 'Plate')
+          .replace('CUP', 'Cup')
+          .replace('SHD', 'Shield')
+          .replace('_', '/')
+        }
+      />
 
       <div className="fixture-pairing">
         <div className="team-row">
@@ -99,38 +97,4 @@ function FixtureUnplayed({fixture}) {
   );
 }
 
-function FixtureInfo({
-  scheduledTime,
-  startedTime,
-  delayMinutes = 0,
-  scoreUpToDate,
-  stage,
-  group,
-  fixtureId
-}) {
-  return (
-    <div className="FixtureInfo">
-      <ClockIcon
-        scheduled={scheduledTime}
-        started={startedTime}
-        delay={delayMinutes}
-        focus={focus}
-        played={scoreUpToDate}
-      />
-      <div className="text-3xl font-bold mb-4">
-        <span>{group}</span>
-        <span className="text-rose-500">#</span>
-        <span>{`${fixtureId}`.substr(-3)}</span>
-      </div>
-      <div className="mb-4 text-xl">
-        Stage: {stage
-          .toUpperCase()
-          .replace('PLT', 'Plate')
-          .replace('CUP', 'Cup')
-          .replace('SHD', 'Shield')
-          .replace('_', '/')}
-      </div>
-    </div>
-  )
-}
 
