@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="40.1 10.2 9.85 9.85">
+<rect id="icon-pitch-clickable" x="39.115" y="9.215" width="11.819999999999999" height="11.819999999999999" fill="#788356" fill-opacity="1" stroke-dasharray="0.0452804, 0.18112" stroke-miterlimit="4.1" stroke-width=".028" style="mix-blend-mode:normal" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<g id="txt-pitch" transform="translate(9.15 8.02)" stroke-linecap="round" stroke-miterlimit="4.1" xmlns="http://www.w3.org/2000/svg">
+    <text x="35.80447" y="10.763562" fill="white" font-family="'Devanagari Sangam MN'" font-size="1.06px" font-weight="bold" letter-spacing=".147px" stroke-width=".285" text-align="center" text-anchor="middle" word-spacing=".00835px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="35.839375" y="10.763562" fill="white" font-size="1.06px" stroke-width=".285" fill-opacity="1" class="fg">PITCH</tspan></text>
+    <g transform="matrix(.771 0 0 .771 1.17 .994)" stroke="white" stroke-width=".8" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+<g xmlns="http://www.w3.org/2000/svg">
+    <g id="icon-pitch-graphics" transform="matrix(.953 -.064 .576 .733 -5.89 7.22)" fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="39.4" y="21.6" width="2.49" height="4.3" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.974 .228 .228 .974 0 0)" x="-43" y="21.6" width=".858" height="4.3" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="37" y="23.1" width=".651" height=".193" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.226 .229 .973 0 0)" x="37.3" y="23" width=".315" height="1.31" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="37.8" y="21.6" width=".263" height="4.3" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.228 .228 .974 0 0)" x="38.3" y="21.6" width=".858" height="4.3" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="37" y="21.6" width=".652" height="1.31" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="37" y="24.5" width=".652" height="1.32" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .228 .974 0 0)" x="37" y="24.2" width=".651" height=".193" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .234 .233 .972 0 0)" x="-44.2" y="23.3" width=".651" height=".193" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .235 .233 .973 0 0)" x="-43.9" y="23.4" width=".315" height="1.31" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .234 .233 .972 0 0)" x="-43.3" y="21.9" width=".263" height="4.3" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .234 .233 .972 0 0)" x="-44.2" y="21.9" width=".652" height="1.31" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .234 .233 .972 0 0)" x="-44.2" y="24.8" width=".652" height="1.32" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .234 .233 .972 0 0)" x="-44.2" y="24.5" width=".651" height=".193" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <g id="icon-pitch-invert" transform="matrix(.953 -.064 .576 .733 -5.89 7.22)" class="bg" xmlns="http://www.w3.org/2000/svg">
+     <path d="m47.4 14c-0.345 0.0224-0.655-0.207-0.735-0.544-0.0788-0.337 0.0975-0.681 0.417-0.814" fill="#788356" stroke-linecap="round" stroke-linejoin="round" stroke-width=".148" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m42.8 15c0.319-0.133 0.495-0.477 0.417-0.813-0.0788-0.337-0.39-0.567-0.735-0.545" fill="#788356" stroke-linecap="round" stroke-linejoin="round" stroke-width=".148" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(.974 -.227 .229 .974 0 0)" x="37" y="23.4" width=".205" height=".686" fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+     <rect transform="matrix(-.972 .235 .233 .973 0 0)" x="-44.2" y="23.7" width=".205" height=".686" fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <g id="icon-pitch-posts-1-locked" transform="translate(0 -.394)" fill="#800080" stroke="#fff" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+     <path d="m47.6 13.8v-2.23" stroke-linecap="round" stroke-width=".105" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m48.1 14.2v-2.23" stroke-linecap="round" stroke-width=".105" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m47.6 13.4 0.477 0.412" stroke-width=".088" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <g id="icon-pitch-posts-2-locked" transform="translate(-5.77 1.3)" fill="#800080" stroke="#fff" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+     <path d="m47.6 13.8v-2.23" stroke-linecap="round" stroke-width=".105" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m48.1 14.2v-2.23" stroke-linecap="round" stroke-width=".105" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m47.6 13.4 0.477 0.412" stroke-width=".088" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+   </g>
+</svg>

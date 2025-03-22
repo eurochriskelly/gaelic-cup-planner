@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0.0519 0.143 9.85 9.85">
+<rect id="icon-schedule-clickable" x="-0.9330999999999994" y="-0.8419999999999994" width="11.819999999999999" height="11.819999999999999" ry=".587" fill="#788356" fill-opacity="1" stroke-dasharray="0.0452804, 0.181119" stroke-width=".028" style="mix-blend-mode:normal" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<text id="txt-schedule" transform="scale(.976 1.02)" x="4.9840231" y="8.6497364" fill="white" font-family="'Devanagari Sangam MN'" font-size="1.03px" font-weight="bold" letter-spacing=".166px" stroke-linecap="round" stroke-miterlimit="4.1" stroke-width=".246" text-align="center" text-anchor="middle" word-spacing=".00945px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="5.0180807" y="8.6497364" fill="white" font-size="1.03px" stroke-width=".246" fill-opacity="1" class="fg">SCHEDULE</tspan></text>
+<g id="view-schedule-icon" transform="matrix(.774 0 0 .813 -16.2 -24.9)" fill="white" stroke-width=".929" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
+    <rect x="24.2" y="32.8" width="5.5" height="4.77" rx=".474" ry=".519" xmlns="http://www.w3.org/2000/svg"/>
+    <circle id="icon-schedule-item-clockface-locked" cx="29.3" cy="37.9" r="1.5" stroke="#50614d" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".279" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+<g id="icon-schedule-invert" transform="matrix(.774 0 0 .813 -16.2 -24.9)" stroke-width=".929" class="bg" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
+     <rect x="24.9" y="34.8" width=".962" height=".811" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="26.5" y="34.8" width=".962" height=".811" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="28" y="34.8" width=".962" height=".811" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="24.9" y="36.2" width=".962" height=".811" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="26.5" y="36.2" width=".962" height=".811" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <path d="m23.9 34.1h5.98" fill="#788356" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".279" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <path d="m29.4 37v0.866h0.657" stroke="#788356" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".279" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <rect x="25.1" y="32" width="1.16" height="1.5" rx=".41" ry=".339" fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <rect x="27.6" y="32" width="1.16" height="1.5" rx=".41" ry=".339" fill="#788356" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <circle id="icon-schedule-item-clockedge" cx="29.3" cy="37.9" r="1.5" stroke="#788356" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".279" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+<g fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
+    <rect transform="matrix(.774 0 0 .813 -16.2 -24.9)" x="25.4" y="32.3" width=".614" height=".956" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+    <rect transform="matrix(.774 0 0 .813 -16.2 -24.9)" x="27.9" y="32.3" width=".614" height=".956" rx=".193" ry=".156" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+</svg>

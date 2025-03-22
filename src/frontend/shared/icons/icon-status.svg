@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="66.9 26.7 21.6 21.8">
+<rect id="icon-status-clickable" x="64.74000000000001" y="24.52" width="25.92" height="26.16" ry="1.5" fill="#788356" fill-opacity="1" stroke-dasharray="0.0441597, 0.176638" stroke-width=".0617" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<text id="txt-status" x="77.424767" y="45.964653" fill="white" font-family="'Devanagari Sangam MN'" font-size="2.17px" font-weight="bold" letter-spacing=".166px" stroke-linecap="round" stroke-miterlimit="4.1" stroke-width=".516" text-align="center" text-anchor="middle" word-spacing=".00945px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="77.496277" y="45.964653" fill="white" font-size="2.17px" stroke-width=".516" fill-opacity="1" class="fg">STATUS</tspan></text>
+<g id="view-status-icon" transform="matrix(1.77 0 0 1.77 -59.3 -27.7)" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".23" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg">
+     <path d="m74.5 35.6v-0.349h1.78v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m78.7 35.6v-0.349h1.78v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+     <path d="m75.4 35.2v-0.349h4.15v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <g fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
+     <rect x="73.9" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="75.7" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="78.1" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
+     <rect x="79.8" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
+    </g>
+    <path d="m77.5 33.9v0.915" stroke="white" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".23" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <path transform="matrix(.864 -.218 .218 .864 3.64 21.8)" d="m78.6 32.9-0.835 0.484-0.0753 0.962-0.718-0.645-0.939 0.226 0.392-0.882-0.505-0.823 0.96 0.0999 0.627-0.734 0.202 0.944z" fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+</svg>
