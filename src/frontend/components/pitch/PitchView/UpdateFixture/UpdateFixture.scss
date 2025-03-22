@@ -93,39 +93,40 @@
   gap: 1rem;
   width: 100%;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem;
+  background: $primary-color;
+  border-radius: 2rem;
 }
 
 .space-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 1rem;
-  min-height: 80px;
-  min-width: 80px;
+  min-height: 120px;
+  min-width: 120px;
   transition: all 0.2s ease;
+  background: transparent;
+  border: none;
   
   &.primary {
     cursor: pointer;
-    background-color: $primary-color;
-    border: 1px solid $sc-light-20;
     color: white;
     
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background: rgba(255, 255, 255, 0.1);
     }
   }
   
   &.grey {
     cursor: not-allowed;
-    background-color: #888;
-    color: #444;
+    opacity: 0.5;
   }
   
   .icon {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     fill: currentColor;
   }
 }
