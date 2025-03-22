@@ -1,6 +1,7 @@
 import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import FixtureBar from '../FixtureBar';
+import ClockIcon from "../../../../../shared/generic/ClockIcon";
 import './FixtureUnplayed.scss';
 
 export default FixtureUnplayed;
@@ -66,32 +67,42 @@ function FixtureUnplayed({fixture}) {
           .replace('_', '/')
         }
       />
-
-      <div className="fixture-pairing">
-        <div className="team-row">
-          <div className="team-icon team1">
-            {extractUppercaseAndNumbers(team1).substring(0, 2)}
-          </div>
-          <div className="team-name">
-            {formatTeamName(team1)}
-          </div>
+    
+      <div className="unplayed-fixture-data">
+        <div style={{heigh:'100px'}}>
+          <ClockIcon 
+            scheduled={scheduledTime}
+            started={startedTime}
+            focus={false}
+            played={false}
+          />
         </div>
+        <div className="fixture-pairing">
+          <div className="team-row">
+            <div className="team-icon team1">
+              aa{extractUppercaseAndNumbers(team1).substring(0, 2)}
+            </div>
+            <div className="team-name">
+              {formatTeamName(team1)}
+            </div>
+          </div>
 
-        <div className="team-row">
-          <div className="team-icon team2">
-            {extractUppercaseAndNumbers(team2).substring(0, 2)}
+          <div className="team-row">
+            <div className="team-icon team2">
+              {extractUppercaseAndNumbers(team2).substring(0, 2)}
+            </div>
+            <div className="team-name">
+              {formatTeamName(team2)}
+            </div>
           </div>
-          <div className="team-name">
-            {formatTeamName(team2)}
-          </div>
+
+          {!played && umpireTeam && (
+            <div className="umpires">
+              <b>UMPIRING: </b>
+              {formatName(umpireTeam)}
+            </div>
+          )}
         </div>
-
-        {!played && umpireTeam && (
-          <div className="umpires">
-            <b>UMPIRING: </b>
-            {formatName(umpireTeam)}
-          </div>
-        )}
       </div>
     </div>
   );

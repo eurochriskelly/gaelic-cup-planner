@@ -5,7 +5,11 @@
   border-radius: 1rem;
   margin: 0.4rem 0 2.2rem 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  
+ 
+  .unplayed-fixture-data {
+    display: grid;
+    grid-template-columns: 24% auto; 
+  }
   .fixture-pairing {
     margin:0rem 1rem 2rem 1rem;
     flex: 1;
