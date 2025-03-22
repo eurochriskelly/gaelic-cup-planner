@@ -68,27 +68,29 @@ function FixtureFinished({fixture}) {
       />
 
       <div className="fixture-pairing">
-        <div className="team-row">
-          <div className="team-icon team1">
-            {extractUppercaseAndNumbers(team1).substring(0, 2)}
+        <div className="team-pairing">
+          <div className="team team1">
+            <div className="team-icon">
+              {extractUppercaseAndNumbers(team1).substring(0, 2)}
+            </div>
+            <div className="team-name">
+              {formatTeamName(team1)}
+            </div>
+            <div className="team-score">
+              {`${goals1 || 0} - ${points1 || 0} (${(goals1 || 0) * 3 + (points1 || 0)})`}
+            </div>
           </div>
-          <div className="team-name">
-            {formatTeamName(team1)}
-          </div>
-          <div className="team-score">
-            {`${goals1 || 0} - ${points1 || 0} (${(goals1 || 0) * 3 + (points1 || 0)})`}
-          </div>
-        </div>
-
-        <div className="team-row">
-          <div className="team-icon team2">
-            {extractUppercaseAndNumbers(team2).substring(0, 2)}
-          </div>
-          <div className="team-name">
-            {formatTeamName(team2)}
-          </div>
-          <div className="team-score">
-            {`${goals2 || 0} - ${points2 || 0} (${(goals2 || 0) * 3 + (points2 || 0)})`}
+          
+          <div className="team team2">
+            <div className="team-icon">
+              {extractUppercaseAndNumbers(team2).substring(0, 2)}
+            </div>
+            <div className="team-name">
+              {formatTeamName(team2)}
+            </div>
+            <div className="team-score">
+              {`${goals2 || 0} - ${points2 || 0} (${(goals2 || 0) * 3 + (points2 || 0)})`}
+            </div>
           </div>
         </div>
 
