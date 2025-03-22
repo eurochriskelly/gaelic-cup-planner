@@ -1,5 +1,4 @@
 const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
-  console.log('started', started);
   let strokeColor = "white";
   let fillColor = "#888";
   let circleColor = "none";
@@ -54,7 +53,7 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
   const hourAngle = (hour % 12) * 30 + minute * 0.5; // 12 hours, 360 degrees, plus a little for the minutes
 
   return (
-    <span className="m-0">
+    <span className="ClockIcon m-0">
       <svg width="13" height="13" viewBox="0 0 25 25">
         <circle
           cx="15"
