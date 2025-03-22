@@ -70,7 +70,7 @@ const PitchView = () => {
                         key={fixture.id}
                         className={focusFixture ? "focusFixture h-98" : ""}
                       >
-                        <Fixture fixture={fixture} view={focusFixture ? 'next' : 'unplayed'} />
+                        <Fixture fixture={fixture} view={focusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
                         {nextFixture && nextFixture.id === fixture.id && (
                           <UpdateFixture
                             fixture={fixture}
