@@ -49,7 +49,7 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
 
   return (
     <span className="ClockIcon m-0">
-      <svg width="13" height="13" viewBox="0 0 25 25">
+      <svg width="52" height="52" viewBox="0 0 25 25">
         <circle
           cx="15"
           cy="15"
@@ -73,7 +73,7 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
       </svg>
       <span
         style={{
-          lineHeight: "5.5rem",
+          lineHeight: "3.5rem",
           fontWeight: timeWeight,
           color: timeColor,
         }}
