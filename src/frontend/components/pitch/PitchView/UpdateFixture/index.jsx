@@ -1,8 +1,8 @@
 import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
-import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
+import MoveIcon from "../../../../shared/icons/icon-move2.svg?react";
+import NotPlayedIcon from "../../../../shared/icons/icon-notplayed2.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
@@ -78,12 +78,20 @@ function UpdateFixture ({
   return (
     <>
       {drawerOpen && <div className="drawer-overlay" onClick={() => actions.closeDrawer()} />}
-      <div className='updateFixture'>
+      <div className='updateFixture select-none'>
         <div style={{ display: drawerOpen ? "none" : "grid" }} className="button-grid">
-          <BtnGetReady btnClass={enableStates.start} onGetReady={actions.start} />
-          <BtnUpdateResult btnClass={enableStates.finish} onFinish={actions.finish} />
-          <BtnPostpone btnClass={enableStates.postpone} onPostpone={actions.reschedule} />
-          <BtnCancel btnClass={enableStates.cancel} onCancel={actions.cancel} />
+          <button className={`space-button ${enableStates.start}`} onClick={actions.start}>
+            <StartIcon className="icon" />
+          </button>
+          <button className={`space-button ${enableStates.finish}`} onClick={actions.finish}>
+            <ScoreIcon className="icon" />
+          </button>
+          <button className={`space-button ${enableStates.postpone}`} onClick={actions.reschedule}>
+            <MoveIcon className="icon icon-optional" />
+          </button>
+          <button className={`space-button ${enableStates.cancel}`} onClick={actions.cancel}>
+            <NotPlayedIcon className="icon-optional" />
+          </button>
         </div>
 
       {/* DRAWERS */}
@@ -123,36 +131,6 @@ function UpdateFixture ({
 };
 
 
-// Hoist infrequently changed child components
-function BtnPostpone({ onPostpone, btnClass }) {
-  return (
-    <button className={`space-button ${btnClass}`} onClick={onPostpone}>
-      <MoveIcon className="icon" />
-    </button>
-  );
-}
 
-function BtnCancel({ onCancel, btnClass }) {
-  return (
-    <button className={`space-button ${btnClass}`} onClick={onCancel}>
-      <NotPlayedIcon className="icon" />
-    </button>
-  );
-}
 
-function BtnGetReady({ onGetReady, btnClass }) {
-  return (
-    <button className={`space-button ${btnClass}`} onClick={onGetReady}>
-      <StartIcon className="icon" />
-    </button>
-  );
-}
-
-function BtnUpdateResult({ btnClass, onFinish }) {  
-  return (
-    <button className={`space-button ${btnClass}`} onClick={onFinish}>
-      <ScoreIcon className="icon" />
-    </button>
-  );
-}
 

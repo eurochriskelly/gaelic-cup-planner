@@ -43,6 +43,10 @@
     margin: 3rem 0 0 0;
     text-transform: uppercase;
   }
+  .grayed-score {
+    color: lighten($sc-light-40, 10%);
+    font-weight: normal;
+  }
   > div {
       display: grid;
       grid-template-columns: 0.20fr 0.03fr 0.32fr 0.45fr;
@@ -71,9 +75,21 @@
 }
 .drawerFinish div.proceedButtons {
     width: 100%;
-    margin: 2rem 0 0;
+    margin: 0;
     display: grid;
-    font-size: 4rem;
-    grid-template-columns: 0.8fr 0.8fr;
+    grid-template-columns: 0.7fr 0.7fr;
+    button {
+      background-color: white;
+      padding: 2rem;
+      font-size: 3.4rem;
+      margin: 0.4rem;
+      margin-top: 6rem;
+      border-radius: 1rem;
+      border: 2px solid gray;
+    }
+    button.enabled {
+      background-color: $sc;
+      color: white;
+    }
 }
 
