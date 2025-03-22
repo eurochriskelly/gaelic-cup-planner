@@ -1,4 +1,8 @@
 import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
+import StartIcon from "../../../../shared/icons/icon-start.svg?react";
+import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
+import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
@@ -124,7 +128,7 @@ function BtnPostpone({ onPostpone, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onPostpone}>
       <span>Re-schedule</span>
-      <icon-move className="icon" />
+      <MoveIcon className="icon" />
     </button>
   );
 }
@@ -133,7 +137,7 @@ function BtnCancel({ onCancel, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onCancel}>
       Cancel match
-      <icon-notplayed className="icon" />
+      <NotPlayedIcon className="icon" />
     </button>
   );
 }
@@ -142,7 +146,7 @@ function BtnGetReady({ onGetReady, btnClass }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onGetReady}>
       Start tracking
-      <icon-start className="icon" />
+      <StartIcon className="icon" />
     </button>
   );
 }
@@ -151,7 +155,7 @@ function BtnUpdateResult({ btnClass, onFinish }) {
   return (
     <button className={`space-button ${btnClass}`} onClick={onFinish}>
       Update result
-      <icon-score className="icon" />
+      <ScoreIcon className="icon" />
     </button>
   );
 }
