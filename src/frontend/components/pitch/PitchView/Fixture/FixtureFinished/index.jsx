@@ -55,18 +55,23 @@ function FixtureFinished({fixture}) {
   return (
     <div className="FixtureFinished" key={id}>
       <div className="fixture-info">
-        <div className="text-3xl font-bold mb-4">
-          <span>{category}</span>
-          <span className="text-rose-500">#</span>
+        <div className="text-6xl mb-4 mt-4 text-rose-300">
+          <span className="font-bold">#</span>
           <span>{`${id}`.substr(-3)}</span>
         </div>
-        <div className="mb-4 text-xl">
-          Stage: {stage
+        <div className="text-2xl  mb-4">
+          <div className="italic">Category:</div>
+          <span className="ml-3 text-3xl font-bold text-sky-600 whitespace-nowrap">{category.substring(0, 9).toUpperCase()}</span>
+        </div>
+        <div className="text-2xl mb-4">
+          <div className="italic">Stage:</div>
+          <span className="ml-3 font-bold text-emerald-600 text-3xl">{stage
             .toUpperCase()
             .replace('PLT', 'Plate')
             .replace('CUP', 'Cup')
             .replace('SHD', 'Shield')
-            .replace('_', '/')}
+            .replace('_', '/')
+          }</span>
         </div>
       </div>
 
@@ -105,40 +110,5 @@ function FixtureFinished({fixture}) {
 
     </div>
   );
-}
-
-function FixtureInfo({
-  scheduledTime,
-  startedTime,
-  delayMinutes = 0,
-  scoreUpToDate,
-  stage,
-  group,
-  fixtureId
-}) {
-  return (
-    <div className="FixtureInfo">
-      <ClockIcon
-        scheduled={scheduledTime}
-        started={startedTime}
-        delay={delayMinutes}
-        focus={focus}
-        played={scoreUpToDate}
-      />
-      <div className="text-3xl font-bold mb-4">
-        <span>{group}</span>
-        <span className="text-rose-500">#</span>
-        <span>{`${fixtureId}`.substr(-3)}</span>
-      </div>
-      <div className="mb-4 text-xl">
-        Stage: {stage
-          .toUpperCase()
-          .replace('PLT', 'Plate')
-          .replace('CUP', 'Cup')
-          .replace('SHD', 'Shield')
-          .replace('_', '/')}
-      </div>
-    </div>
-  )
 }
 
