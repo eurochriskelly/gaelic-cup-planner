@@ -87,37 +87,56 @@
 
 .updateFixture button {}
 
-.updateFixture>div:first-child {
-    width: 100%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 0.6fr 0.6fr; 
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
 }
-.more {
-    margin-left: 0.4rem;
-}
-.updateFixture>div:nth-child(2) {
-    width: 100%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 0.6fr 0.6fr;
-}
-.updateFixture>div button {
-    line-height: 6rem;
-    margin-top: 1rem;
-    text-transform: uppercase;
-    font-size: 2.2rem;
-}
-.updateFixture>div:first-child button:last-child,
-.updateFixture>div:nth-child(2) button:first-child  {
-    padding:0;
-    line-height: 2rem;
+
+.space-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  text-align: center;
+  min-height: 120px;
+  transition: all 0.2s ease;
+  
+  &.primary {
+    cursor: pointer;
+    background-color: $primary-color;
+    border: 1px solid $sc-light-20;
+    color: white;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+  
+  &.grey {
+    cursor: not-allowed;
+    background-color: #888;
+    color: #444;
+  }
+  
+  .icon {
+    width: 40px;
+    height: 40px;
+    margin-top: 0.5rem;
+    fill: currentColor;
+  }
 }
 
 /* DRAWERS */
 .updateFixture>div.drawers {
     position: fixed;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 94%;
