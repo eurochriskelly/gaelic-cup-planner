@@ -6,7 +6,10 @@
   right: 2rem;
   left: 2rem;
   z-index: 1000;
-  background: #788356;
+  //background: #788356;
+  .bg {
+    fill: none;
+  }
   border-radius: 0.5rem;
   padding: 1rem;
   .drawer {
@@ -124,6 +127,13 @@
     g.fg {
       stroke: lighten($pc, 17%);
     }
+  }
+  // fixme: remove
+  .icon- {
+    user-select: none;
+    width: 90%;
+    height: 90%;
+    fill: white;
   }
 }
 

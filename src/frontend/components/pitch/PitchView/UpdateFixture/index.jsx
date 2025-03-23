@@ -1,8 +1,8 @@
 import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import MoveIcon from "../../../../shared/icons/icon-move2.svg?react";
-import NotPlayedIcon from "../../../../shared/icons/icon-notplayed2.svg?react";
+import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";

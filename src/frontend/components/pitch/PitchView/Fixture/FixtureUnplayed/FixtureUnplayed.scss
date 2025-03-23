@@ -1,15 +1,24 @@
+@import "src/frontend/shared/css/_colors.scss";
+
 .FixtureUnplayed {
   width: 100%;
   padding: 0;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
   margin: 0.4rem 0 2.2rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.4);
  
   .unplayed-fixture-data {
     display: grid;
     grid-template-columns: 24% auto; 
+    color: black;
+    > div:first-child {
+      background: rgba(lighten(saturate(#bdbdb2, 20%), 4%), 0.5);
+      border-right: 7px solid rgba($pc, 0.3);
+      margin: 0.2rem 1rem 1.4rem 1rem;
+    }
   }
+
   .fixture-pairing {
     margin:0rem 1rem 2rem 1rem;
     flex: 1;
@@ -51,7 +60,7 @@
     
     .umpires {
       font-size: 1.5rem;
-      color: white;
+      color: darken($pc, 24%);
       text-align: right;
       margin: 1.4rem 1rem;
       letter-spacing: 0.1rem;
