@@ -1,7 +1,8 @@
-import './NavFooter.scss';
+import { useNavigate, useParams } from "react-router-dom";
 import HomeIcon from './../../icons/icon-home.svg?react';
 import ScheduleIcon from './../../icons/icon-schedule.svg?react';
 import StatusIcon from './../../icons/icon-status.svg?react';
+import './NavFooter.scss';
 
 export default NavFooter;
 
