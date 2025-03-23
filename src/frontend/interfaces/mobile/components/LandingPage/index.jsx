@@ -32,10 +32,6 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const jump = {
-    competitions: () => navigate(`${base}/selectCategory`),
-    scheduling: () => navigate(`${base}/selectPitch`),
-  };
 
   const handle = {
     resetTournament: async () => {
@@ -59,7 +55,7 @@ const LandingPage = () => {
   };
 
   return (
-    <main className={`.mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
+    <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
       {/* New: Add banner container */}
       <div className="banner-container">
         <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
@@ -79,12 +75,6 @@ const LandingPage = () => {
       </header>
       <section className="icon-grid">
         <div className="main-actions">
-          <button className='icon-button' onClick={jump.scheduling}>
-            <ScheduleIcon className="icon" />
-          </button>
-          <button className='icon-button' onClick={jump.competitions}>
-            <StatusIcon className="icon" />
-          </button>
           <button className='icon-button' onClick={handle.disconnect}>
             <LogoutIcon className="icon" />
           </button>

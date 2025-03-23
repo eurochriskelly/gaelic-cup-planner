@@ -8,15 +8,31 @@ footer.NavFooter {
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
-  border-top:2px solid rgba(white, 20%);
-  display: grid;
+  border-top: 2px solid rgba(white, 20%);
   background: $pc;
-  .home-icon {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+
+  .nav-icon {
     text-align: center;
     width: $isize;
     height: $isize;
+    cursor: pointer;
+    
+    .fg {
+      fill: white;
+      opacity: 0.3;
+      transition: opacity 0.2s ease;
+    }
+
+    &.active .fg {
+      opacity: 1;
+    }
   }
+
   .bg {
-    fill:none;
+    fill: none;
   }
 }
