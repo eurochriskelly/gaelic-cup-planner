@@ -69,10 +69,11 @@ function FixtureUnplayed({fixture}) {
       />
     
       <div className="unplayed-fixture-data">
-        <div style={{heigh:'100px'}}>
+        <div className="text-6xl">
           <ClockIcon 
             scheduled={scheduledTime}
             started={startedTime}
+            layout={'top'}
             focus={false}
             played={false}
           />

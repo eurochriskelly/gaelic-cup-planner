@@ -1,4 +1,13 @@
-const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
+import './ClockIcon.scss';
+
+const ClockIcon = ({ 
+  started, 
+  played, 
+  scheduled, 
+  focus, 
+  layout = 'side',
+  delay 
+}) => {
   let strokeColor = "white";
   let fillColor = "#888";
   let circleColor = "none";
@@ -48,7 +57,7 @@ const ClockIcon = ({ started, played, scheduled, focus, delay }) => {
   const hourAngle = (hour % 12) * 30 + minute * 0.5; // 12 hours, 360 degrees, plus a little for the minutes
 
   return (
-    <span className="ClockIcon m-0">
+    <span className={`ClockIcon m-0 ${layout === 'top' ? 'clock-layout-top' : 'clock-layout-side'}`}>
       <svg width="52" height="52" viewBox="0 0 25 25">
         <circle
           cx="15"
