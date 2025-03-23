@@ -8,7 +8,6 @@ $card-main: darken(desaturate($pc, 20%), 16%);
 $card-back: lighten(desaturate($pc-light-40, 45%), 10%);
 
 .MobileSelect {
-  grid-template-rows: 14rem auto;
   > section#cardArea {
     margin: 1rem;
     display: grid;

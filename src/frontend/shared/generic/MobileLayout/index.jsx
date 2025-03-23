@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MainMenu from '../MainMenu';
 import NavBar from '../NavBar';
+import NavFooter from '../NavFooter';
 
 import './MobileLayout.scss';
 
@@ -18,18 +19,14 @@ const MobileLayout = ({
   const childrenArray = React.Children.toArray(children);
   const [SubHeading] = childrenArray;
   return (
-    <section className="MobileLayout mobile">
+    <section className="MobileLayout mobile lovely">
       <header>
-        <MainMenu selected={active} />
-        <h2>
-          <span onClick={onBack} className='pressable no-select'>&#x21A9;</span>
-          <span>{SubHeading}</span>
-        </h2>
         <NavBar tabNames={tabNames} onSelect={handle.changetab} selected={selected} />
       </header>
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
+      <NavFooter />
     </section>
   )
 };

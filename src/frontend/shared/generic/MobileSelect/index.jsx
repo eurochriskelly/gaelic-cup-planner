@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MainMenu from "../MainMenu";
+import NavFooter from "../NavFooter";
 
 import "../MobileLayout/MobileLayout.scss";
 import "./MobileSelect.scss";
@@ -14,10 +14,6 @@ const MobileSelect = ({
   const cardsPadded = cards.concat(Array(10 - cards.length).fill(null));
   return (
     <section className="MobileSelect mobile">
-      <header>
-        <MainMenu selected={active} />
-        <h2>{SubHeading}</h2>
-      </header>
       <section style={{overflowY: 'scroll'}} id="cardArea">{
         cardsPadded?.map((x, i) => {
           return (
@@ -27,6 +23,7 @@ const MobileSelect = ({
           );
         })
       }</section>
+      <NavFooter /> 
     </section>
   );
 };
