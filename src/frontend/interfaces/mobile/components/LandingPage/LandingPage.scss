@@ -88,10 +88,11 @@ $rcol: #d4e79b;
     }
   }
   footer {
+    user-select: none;
     position: fixed;
-    bottom: 3rem;
-    right: 1rem;
-    left: 1rem;
+    bottom: 0;
+    right: 0;
+    left: 0;
     text-align: center;
     margin: auto;
     color: rgba(255, 255, 255, 0.5);
