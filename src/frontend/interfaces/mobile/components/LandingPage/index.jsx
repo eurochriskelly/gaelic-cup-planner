@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
+import NavFooter from '../../../../shared/generic/NavFooter';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
 import ScheduleIcon from '../../../../shared/icons/icon-schedule.svg?react';
@@ -87,7 +88,7 @@ const LandingPage = () => {
           </div>
         )}
       </section>
-      <footer></footer>
+      <NavFooter /> 
     </main>
   );
 };

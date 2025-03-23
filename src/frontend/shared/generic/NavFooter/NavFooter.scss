@@ -23,16 +23,19 @@ footer.NavFooter {
     
     .fg {
       fill: white;
-      opacity: 0.3;
       transition: opacity 0.2s ease;
     }
-
-    &.active .fg {
-      opacity: 1;
-    }
   }
-
+  svg.inactive .fg {
+    opacity: 0.4;
+  }
+  .active .fg {
+    opacity: 1;
+  }
   .bg {
     fill: none;
+  }
+  text {
+    font-size: 3px;
   }
 }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="40.1 0.143 9.85 9.85">
+<rect id="icon-notplayed-clickable" x="39.115" y="-0.8419999999999994" width="11.819999999999999" height="11.819999999999999" fill="#788356" fill-opacity="1" stroke-dasharray="0.0452804, 0.18112" stroke-miterlimit="4.1" stroke-width=".028" style="mix-blend-mode:normal" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
+<g transform="matrix(1.57 0 0 1.57 -32.6 -1.41)" stroke="white" stroke-miterlimit="4.1" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="49.6" cy="3.38" r="1.6" stroke-width=".377" xmlns="http://www.w3.org/2000/svg"/>
+    <path d="m50.7 2.32-2.33 2.13" stroke-linejoin="round" stroke-width=".613" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+<text transform="scale(.95 1.00)" x="47.282143" y="8.4709778" fill="white" font-family="'Devanagari Sangam MN'" font-size="1.01px" font-weight="bold" letter-spacing=".147px" stroke-linecap="round" stroke-miterlimit="4.1" stroke-width=".271" text-align="center" text-anchor="middle" word-spacing=".00835px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="47.315311" y="8.4709778" fill="white" font-size="1.01px" stroke-width=".271" fill-opacity="1" class="fg">NO PLAY</tspan></text>
+<g id="icon-notplayed-invert" transform="matrix(1.57 0 0 1.57 -32.6 -1.41)" class="bg" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="49.6" cy="3.38" r="1.36" stroke="#788356" stroke-miterlimit="4.1" stroke-width=".103" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+   </g>
+</svg>
