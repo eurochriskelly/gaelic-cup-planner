@@ -7,7 +7,7 @@ const NavBar = ({
   onSelect,
   selected,
 }) => {
-  
+    
   return (
     <div>
       <div className="navBar">
@@ -19,7 +19,7 @@ const NavBar = ({
           >
             {tn}
           </span>
-        ))}{" "}
+        ))}
       </div>
     </div>
   );

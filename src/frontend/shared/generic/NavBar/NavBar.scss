@@ -3,32 +3,44 @@
 $b: desaturate(lighten($pc, 32%), 40%);
 $c: lighten(black, 20%);
 $bc: #1a1a1a;
+$navbg: darken($pc, 30%);
 
 .navBar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: $bc;
+  background: $navbg;
+  border-bottom: 0.4rem solid $navbg;
 
   > span {
     user-select: none;
     font-size: 1.9em;;
-    border: 4px solid $c;
     background: white;
+    border-right: 4px solid $navbg;
+    border-left: 4px solid $navbg;
     color: $sc-light-40;
-    font-size: 1.8rem$c;
+    font-size: 1.8rem;
     text-align: center;
     text-transform: uppercase;
     padding: 1.6rem 0.8rem;
     background-color: lighten(desaturate($pc-dark-10, 69%), 8%);
-    border-color: $bc;
-    border-bottom: 0.35rem solid $bc;
-    border-top-right-radius: 1rem;
-    border-top-left-radius: 1rem;
+    border-color: $navbg;
+    border-bottom: 0.35rem solid $navbg;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  > span:first-child {
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
+
+  > span:last-child {
+    border-bottom-right-radius: 0;
+    border-right: none;
   }
 
   > span.selected {
-    border: 0.2rem solid #323232;
-    border-bottom: none;
+    //border: 0.2rem solid #323232;
     color: darken($b, 30%);
     background-color: white;
     font-weight: bold;

@@ -1,0 +1,22 @@
+@import "../../css/_colors.scss";
+
+$isize: 9rem;
+
+footer.NavFooter {
+  display: grid;
+  height: $isize + 2;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  border-top:2px solid rgba(white, 20%);
+  display: grid;
+  background: $pc;
+  .home-icon {
+    text-align: center;
+    width: $isize;
+    height: $isize;
+  }
+  .bg {
+    fill:none;
+  }
+}
