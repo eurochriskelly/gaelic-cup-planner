@@ -7,6 +7,8 @@ $rcol: #d4e79b;
   background: radial-gradient(circle at top center, $rcol, $radial2 50%);
   margin-top: 500px; /* Push entire main below initial banner */
   min-height: calc(100vh - 500px); /* Ensure it fills remaining height */
+  display: flex;
+  flex-direction: column;
 
   /* Modified: Adjust margin for content below banner */
   header, section, footer {
@@ -66,11 +68,14 @@ $rcol: #d4e79b;
     margin-bottom: 20px;
     font-size: 2rem;
     background: rgba(255,255,255,0.1);
-    padding:2rem;
+    padding: 2rem;
     border-radius: 1rem;
+    flex-shrink: 0;
+    
     table {
       width: 100%;
       border-collapse: collapse;
+      
       tbody {
         tr {
           td {
@@ -107,34 +112,57 @@ $rcol: #d4e79b;
     flex-direction: column;
     gap: 2rem;
     margin: 2rem;
-    margin-top: 10rem;
+    margin-top: 2rem;
     padding: 1rem;
+    flex-grow: 1;
 
     .main-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+      display: flex;
+      justify-content: center;
+      background: #c9da95;
+      border-radius: 15px;
+      padding: 1rem;
+      margin: 0 2rem;
 
       .icon-button {
-        aspect-ratio: 1;
+        .icon .bg {
+          opacity: 0;
+        }
         background: none;
         border: none;
-        padding: 1.1rem; /* 10% bigger */
+        padding: 1.1rem;
         cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        justify-content: center;
-
-        &:hover {
-          transform: scale(1.1);
+        gap: 1rem;
+        width: 100%;
+        
+        .icon {
+          width: 6rem;
+          height: 6rem;
+          transition: fill 0.2s ease;
+          flex-shrink: 0;
+          
+          text {
+            display: none; /* Hide text below icons */
+          }
         }
 
-        .icon {
-          width: 100%; /* Fill available space */
-          height: 100%;
-          fill: white;
-          transition: fill 0.2s ease;
+        svg path {
+          fill: $pc;
+        }
+        .label {
+          color: $pc;
+          font-size: 1.6rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          flex-grow: 1;
+          text-align: right;
+        }
+
+        &:hover {
+          transform: scale(1.05);
         }
 
         &:hover .icon {
@@ -146,14 +174,16 @@ $rcol: #d4e79b;
     .reset-action {
       display: flex;
       justify-content: center;
-      background: #788356;
+      background: #c9da95;
       border-radius: 15px;
       padding: 1rem;
       margin: 0 2rem;
 
       .icon-button {
-        width: 60%;
-        aspect-ratio: 3/1;
+        .icon .bg {
+          opacity: 0;
+        }
+        width: 100%;
         background: none;
         border: none;
         padding: 1rem;
@@ -161,17 +191,31 @@ $rcol: #d4e79b;
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 1rem;
+        
+        .icon {
+          width: 6rem;
+          height: 6rem;
+          fill: $pc;
+          transition: fill 0.2s ease;
+          flex-shrink: 0;
+          
+          text {
+            display: none; /* Hide text below icons */
+          }
+        }
+
+        .label {
+          color: $pc;
+          font-size: 1.6rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          flex-grow: 1;
+          text-align: right;
+        }
 
         &:hover {
           transform: scale(1.05);
-        }
-
-        .icon {
-          width: 120%; /* 120% bigger */
-          height: 120%;
-          fill: white;
-          transition: fill 0.2s ease;
         }
 
         &:hover .icon {

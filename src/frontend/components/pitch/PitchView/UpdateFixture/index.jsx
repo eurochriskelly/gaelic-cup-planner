@@ -16,6 +16,7 @@ function UpdateFixture ({
   fixture,
   updateFixtures,
   startMatch,
+  isFinished = false,
 }) {
   const { startedTime } = fixture;
   const [enableStates, setEnableStates] = useFixtureStates(startedTime);
@@ -122,6 +123,13 @@ function UpdateFixture ({
             fixture={fixture}
             updateFixtures={updateFixtures}
             onClose={actions.closeDrawer}
+          />
+        )}
+        
+        {isFinished && !visibleDrawers.finish && (
+          <FixtureFinished 
+            fixture={fixture}
+            onUpdateScore={actions.finish}
           />
         )}
       </div>

@@ -26,16 +26,16 @@ footer.NavFooter {
       transition: opacity 0.2s ease;
     }
   }
-  svg.inactive .fg {
-    opacity: 0.4;
+  svg.inactive path {
+    opacity: 0.3;
+  }
+  svg.inactive text {
+    opacity: 0.5;
   }
   .active .fg {
     opacity: 1;
   }
   .bg {
     fill: none;
-  }
-  text {
-    font-size: 3px;
   }
 }

@@ -13,7 +13,7 @@ function NavFooter({ currentPath }) {
   const path = currentPath || window.location.pathname;
 
   const getIconClass = (route, match) => console.log(location, match) || 
-    `nav-icon ${path.includes(route) ? 'active' : ''} ${match.includes(location.pathname) ? ' active': ' inactive'}`;
+    `nav-icon icon ${path.includes(route) ? 'active' : ''} ${match.includes(location.pathname) ? ' active': ' inactive'}`;
 
   return (
     <footer className="NavFooter h-36">

@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName } from "../../../../../shared/generic/TeamNameDisplay";
 import FixtureBar from '../FixtureBar';
+import ScoreIcon from "../../../../../shared/icons/icon-score.svg?react";
 import './FixtureFinished.scss';
 
 export default FixtureFinished;
 
-function FixtureFinished({fixture}) {
+function FixtureFinished({fixture, onUpdateScore}) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const {
     id,
     startedTime = "",
@@ -53,8 +56,22 @@ function FixtureFinished({fixture}) {
     gridTemplateRows: 'auto auto',
   }
 
+  const handleClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleUpdateScore = (e) => {
+    e.stopPropagation();
+    onUpdateScore();
+    setIsExpanded(false); // Close the expanded view after clicking
+  };
+
   return (
-    <div className="FixtureFinished" key={id}>
+    <div 
+      className={`FixtureFinished ${isExpanded ? 'expanded' : ''}`} 
+      key={id}
+      onClick={handleClick}
+    >
       <FixtureBar 
         fixtureId={id}
         category={category.substring(0, 9).toUpperCase()}
@@ -102,6 +119,17 @@ function FixtureFinished({fixture}) {
         )}
       </div>
 
+      {isExpanded && (
+        <div className="update-actions">
+          <button 
+            className="update-score-button"
+            onClick={handleUpdateScore}
+          >
+            <ScoreIcon className="icon" />
+            Update Score
+          </button>
+        </div>
+      )}
     </div>
   );
 }
