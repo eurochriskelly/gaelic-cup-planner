@@ -78,12 +78,14 @@ const LandingPage = () => {
         <div className="main-actions">
           <button className='icon-button' onClick={handle.disconnect}>
             <LogoutIcon className="icon" />
+            <span className="label">Log Out</span>
           </button>
         </div>
         {+tournamentId === 1 && (
           <div className="reset-action">
             <button className='icon-button' onClick={handleResetClick}>
               <ResetIcon className="icon" />
+              <span className="label">Reset Tournament</span>
             </button>
           </div>
         )}

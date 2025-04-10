@@ -2,18 +2,6 @@
 <rect id="icon-status-clickable" x="64.74000000000001" y="24.52" width="25.92" height="26.16" ry="1.5" fill="#788356" fill-opacity="1" stroke-dasharray="0.0441597, 0.176638" stroke-width=".0617" class="bg-item bg" xmlns="http://www.w3.org/2000/svg"/>
 <text id="txt-status" x="77.424767" y="45.964653" fill="white" font-family="'Devanagari Sangam MN'" font-size="2.17px" font-weight="bold" letter-spacing=".166px" stroke-linecap="round" stroke-miterlimit="4.1" stroke-width=".516" text-align="center" text-anchor="middle" word-spacing=".00945px" style="line-height:1.2;mix-blend-mode:normal" xml:space="preserve" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"><tspan x="77.496277" y="45.964653" fill="white" font-size="2.17px" stroke-width=".516" fill-opacity="1" class="fg">STATUS</tspan></text>
 <g id="view-status-icon" transform="matrix(1.77 0 0 1.77 -59.3 -27.7)" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".23" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg">
-     <path d="m74.5 35.6v-0.349h1.78v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
-     <path d="m78.7 35.6v-0.349h1.78v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
-     <path d="m75.4 35.2v-0.349h4.15v0.329" fill="none" fill-opacity="0" class="no-fill" xmlns="http://www.w3.org/2000/svg"/>
-    </g>
-    <g fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg">
-     <rect x="73.9" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
-     <rect x="75.7" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
-     <rect x="78.1" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
-     <rect x="79.8" y="35.7" width="1.24" height="3.21" rx="0" ry="0" xmlns="http://www.w3.org/2000/svg"/>
-    </g>
-    <path d="m77.5 33.9v0.915" stroke="white" stroke-linejoin="round" stroke-miterlimit="4.1" stroke-width=".23" stroke-opacity="1" fill-opacity="0" class="fg" xmlns="http://www.w3.org/2000/svg"/>
-    <path transform="matrix(.864 -.218 .218 .864 3.64 21.8)" d="m78.6 32.9-0.835 0.484-0.0753 0.962-0.718-0.645-0.939 0.226 0.392-0.882-0.505-0.823 0.96 0.0999 0.627-0.734 0.202 0.944z" fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
+    <path d="m77.492 32.196-0.38164 0.77092-0.8517 0.12276 0.61572 0.60109-0.1463 0.84725 0.65643-0.34412v0.54321h-1.9845a0.11501 0.11501 0 0 0-0.11513 0.11513v0.3473a0.115 0.115 0 0 0 0.01145 0.04325h-0.79636a0.11501 0.11501 0 0 0-0.11513 0.11513v0.34284h-0.48469v3.2096h1.2397v-3.2096h-0.52476v-0.22771h1.5488v0.21308a0.115 0.115 0 0 0 0.0025 0.01463h-0.46688v3.2096h1.2403v-3.2096h-0.54639a0.115 0.115 0 0 0 0-6.36e-4 0.115 0.115 0 0 0 6.36e-4 -0.01399v-0.32821a0.11501 0.11501 0 0 0-0.11513-0.11513h-0.77215a0.115 0.115 0 0 0 0.0089-0.04325v-0.23217h3.9195v0.21308a0.115 0.115 0 0 0 0.02035 0.06233h-0.75629a0.11501 0.11501 0 0 0-0.11322 0.11513v0.34284h-0.48596v3.2096h1.2397v-3.2096h-0.5254v-0.22771h1.5507v0.21308a0.115 0.115 0 0 0 0.0025 0.01463h-0.56801v3.2096h1.2403v-3.2096h-0.44525a0.115 0.115 0 0 0 0-6.36e-4 0.115 0.115 0 0 0 6.36e-4 -0.01399v-0.32822a0.11501 0.11501 0 0 0-0.11508-0.11513h-0.83516a0.115 0.115 0 0 0 0.01908-0.06233v-0.32821a0.11501 0.11501 0 0 0-0.11386-0.11513h-1.9356v-0.53303l0.63671 0.33521-0.14502-0.84788 0.61572-0.59982-0.84979-0.12403z" fill="white" fill-opacity="1" class="fg" xmlns="http://www.w3.org/2000/svg"/>
    </g>
 </svg>

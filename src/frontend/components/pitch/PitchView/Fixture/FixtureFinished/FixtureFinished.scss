@@ -1,10 +1,53 @@
+@import "../../../../../shared/css/_colors.scss";
+
 .FixtureFinished {
   width: 100%;
   padding: 0;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 1rem;
-  margin: 0.4rem 0 2.2rem 0;
+  margin: 0rem 0 2.2rem 0;
   box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &.expanded {
+    margin: 0.4rem 0 4.2rem 0;
+  }
+
+  .update-actions {
+    padding: 0 0 2rem 0;
+    display: flex;
+    justify-content: center;
+
+    .update-score-button {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 3rem 0 3rem;
+      background: lighten(desaturate($pc, 25%), 10%);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: lighten(desaturate($pc, 25%), 10%);
+      }
+
+      .icon {
+        width: 8rem;
+        height: 8rem;
+        .bg {
+          opacity: 0;
+        }
+        text {
+          opacity: 0;
+        }
+      }
+    }
+  }
   
   .fixture-pairing {
     margin:0rem 1rem 2rem 1rem;
