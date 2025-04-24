@@ -1,29 +1,28 @@
 .PHONY: help build dev
 
+define banner
+	@echo "\n\033[1;37m=============================================="
+	@echo "  $(1)"
+	@echo "==============================================\033[0m\n"
+endef
+
 help:
-	@echo "Available commands:"
+	$(call banner,"Available commands:")
 	@echo "  make help    - Show this help message"
 	@echo "  make build   - Build mobile, desktop and storybook"
 	@echo "  make dev     - Run development servers (kills existing ones first)"
 
 build:
-	@echo "=== BUILDING MOBILE ==="
+	$(call banner,"BUILDING MOBILE")
 	npm run build:mobile
-	@echo "\n=== BUILDING DESKTOP ==="
+	$(call banner,"BUILDING DESKTOP")
 	npm run build:desktop
-	@echo "\n=== BUILDING STORYBOOK ==="
+	$(call banner,"BUILDING STORYBOOK")
 	npm run build-storybook
-	@echo "\n=== BUILD COMPLETE ==="
+	$(call banner,"BUILD COMPLETE")
 
 dev:
-	@echo "=== KILLING EXISTING SERVERS ==="
-	@pkill -f "vite --config vite.config-desktop.js" || true
-	@pkill -f "vite --config vite.config-mobile.js" || true
-	@pkill -f "storybook dev" || true
-	@echo "\n=== STARTING DESKTOP DEV SERVER ==="
-	npm run dev:desktop &
-	@echo "\n=== STARTING MOBILE DEV SERVER ==="
-	npm run dev:mobile &
-	@echo "\n=== STARTING STORYBOOK ==="
-	npm run storybook &
-	@echo "\n=== DEV SERVERS RUNNING ==="
+	$(call banner,"STARTING DEV SERVERS VIA SCRIPT")
+	@echo "Executing scripts/make-dev.sh..."
+	@echo "Use Ctrl+C to stop all servers."
+	@./scripts/make-dev.sh
