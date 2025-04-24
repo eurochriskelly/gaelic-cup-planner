@@ -4,13 +4,13 @@
     align-items: center;
     /* justify-content: center; // Allow content to flow from top */
     justify-content: flex-start; // Align content to the top
-    padding-top: 2rem; // Add padding to prevent content overlap with potential fixed headers
+    /* padding-top: 2rem; // Removed padding, handled by sticky header */
     min-height: 100vh; // Use min-height instead of height
     font-family: Arial, sans-serif;
-    // Added background styles
-    background-color: white;
-    opacity: 1;
-    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #72872b 10px ), repeating-linear-gradient( #54594455, #545944 );
+    // Re-applied background styles from commit d0f0f33
+    background-color: #799a77;
+    opacity: 0.8;
+    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #799a77 10px ), repeating-linear-gradient( #23542055, #235420 );
 
     .thinking {
       color: #999;
@@ -146,9 +146,15 @@
 
 // --- Styles for App Header (Visible in both views) ---
 .app-header {
+  position: sticky; // Make header stick to top
+  top: 0; // Stick to the very top
+  z-index: 10; // Ensure it's above other content
+  background-color: #799a77; // Match main background for consistency
+  padding-top: 1rem; // Add some padding above title
+  padding-bottom: 1rem; // Add some padding below version
   width: 100%;
   text-align: center;
-  margin-bottom: 2rem; // Add space below header
+  /* margin-bottom: 2rem; // Removed margin, padding handles spacing */
 
   h1 {
     text-transform: uppercase;
