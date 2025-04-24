@@ -98,7 +98,7 @@ const PinLogin = () => {
   const onPinEntered = (enteredPin) => {
     // Check if a tournament is selected and has a PIN property
     if (selectedTournament && selectedTournament.code) {
-      if (enteredPin === selectedTournament.code) {
+      if (enteredPin?.toLowerCase() === selectedTournament?.code?.toLowerCase()) {
         // PIN matches, proceed to select the tournament
         selectTournament(selectedTournament.Id);
       } else {
