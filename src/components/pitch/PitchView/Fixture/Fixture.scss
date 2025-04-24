@@ -1,0 +1,172 @@
+@import "src/shared/css/_colors.scss";
+
+$lmarg:150px;
+$lmarg_small: 50px;
+
+.fixture {
+  .match-area {
+    background: rgba(0,0,0,0.1);
+    padding:0;
+    margin:0;
+    padding-bottom: 2rem;
+  }
+  .FixtureInfo {
+    display: grid;
+    height: 260px;
+    grid-template-rows: 90px 60px 10px;
+    > span:first-child {
+      height: 40px;
+    }
+    > div, span {
+     text-align: center; 
+    }
+  }
+  .match-teams {
+    display: grid;
+    grid-template-columns: auto 33% auto 33% auto;
+    width:100%;
+    text-align: center;
+    >div {
+      // border: 1px solid black; 
+      margin-top:8px;
+    }
+    > div:first-child {
+    }
+  }
+  .match-up {
+    display: grid;
+    margin:auto;
+    margin-top: 4rem;
+    margin-bottom: 1.6rem;
+    grid-template-columns: auto $lmarg auto $lmarg auto;
+    height: $lmarg;
+    .team-icon {
+      color:red;
+    }
+    >div {
+      text-align: center;
+      display:inline-block;
+      // team icon
+      >div:first-child {
+        min-height: $lmarg;
+        text-align: center;
+        vertical-align: center;
+        color:white;
+        border: 4px solid #ddd;
+      }
+    }
+    >div:nth-child(3) {
+      text-align:center;
+      vertical-align:center;
+      color: #777;
+      margin-top: $lmarg_small;
+    }
+  }
+    > div {
+        width: 100%;
+        margin: 0 0 15px 0;
+        border-radius: 18px;
+        display: grid;
+        grid-template-rows: 12rem 5rem 5rem auto;
+        width: 100%;
+        padding-bottom: 0.4rem;
+
+        > div:first-child {
+            margin: 0;
+            padding: 1rem;
+            font-size: 1.4rem;
+            &>div {
+                font-size: 2rem;
+                > span {
+                    margin-top: 0;
+                    font-size: 2.8rem;
+                }
+                > span:last-child span {
+                    margin-top: 1.6rem;
+                    font-size: 2.2rem;
+                    line-height: 3rem;
+                    text-transform: uppercase;
+                    color: #444;
+                }
+            }
+
+        }
+
+        div.umpires {
+            text-align: center;
+            font-size: 1.6rem;
+            margin: 1rem;
+            background-color: lighten(desaturate($pc-light-20, 50), 30);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            letter-spacing: 0.2rem;
+            margin: 3rem 8rem 1rem 8rem;
+            height: 60px;
+        }
+    }
+
+
+    > div > div:first-child > span:last-child span:last-child {
+        background-color: #888;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 0.2rem;
+    }
+
+    > div > div:first-child > span:last-child {
+        text-align: right;
+    }
+
+    > div > div:first-child > span:first-child > svg {
+        width: 80px;
+        height: 80px;
+        fill: $pc;
+    }
+
+    > div > div:first-child > span:first-child > span {
+        vertical-align: top;
+        font-size: 3rem;
+        line-height: 4rem;
+        color: #888;
+    }
+
+    > div > div:first-child label {
+        color: desaturate($pc, 20);
+    }
+
+    div.winner {
+        font-weight: bold;
+        color: $pc-dark-20;
+    }
+
+    > div.header {
+        text-transform: uppercase;
+        color: #aaa;
+        border-bottom: 2px ridge $pc-dark-20;
+        background-color: rgba(red($pc-light-40), blue($pc-light-40), green($pc-light-40), 0.7);
+        border-radius: 0;
+        padding: 0.4rem 1.3rem;
+        width: 95%;
+
+        > div {
+            font-size: 1.4em;
+            line-height: 3rem;
+        }
+    }
+}
+
+.group > span {
+    background: $pc-light-40;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 1px 3px;
+}
+
+.focusFixture {
+  > div:first-child {
+    > div:first-child {
+      height: 560px;
+    }
+  }
+}

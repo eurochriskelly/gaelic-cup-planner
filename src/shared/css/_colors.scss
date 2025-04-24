@@ -1,0 +1,57 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/shared/css/_colors.scss";
+*/
+
+$primary-color: #657338;
+$mainColor: $primary-color;
+$secondary-color: #463873;
+$background-color: #f8f9fa;
+$pc: $primary-color;
+$sc: $secondary-color;
+$bg: $background-color;
+$text-color: #333;
+$rcol: #d4e79b;
+
+// darken by 10%
+$pc-dark-10: darken($pc, 10%);
+$sc-dark-10: darken($sc, 10%);
+$bg-dark-10: darken($bg, 10%);
+
+// darken by 20%
+$pc-dark-20: darken($pc, 20%);
+$sc-dark-20: darken($sc, 20%);
+$bg-dark-20: darken($bg, 20%);
+
+// darken by 20%
+$pc-dark-30: darken($pc, 30%);
+$sc-dark-30: darken($sc, 30%);
+$bg-dark-30: darken($bg, 30%);
+
+// darken by 20%
+$pc-dark-40: darken($pc, 40%);
+$sc-dark-40: darken($sc, 40%);
+$bg-dark-40: darken($bg, 40%);
+
+// lighten by 10%
+$pc-light-10: lighten($pc, 10%);
+$sc-light-10: lighten($sc, 10%);
+$bg-light-10: lighten($bg, 10%);
+
+// lighten by 20%
+$pc-light-20: lighten($pc, 20%);
+$sc-light-20: lighten($sc, 20%);
+$bg-light-20: lighten($bg, 20%);
+
+// lighten by 40%
+$pc-light-40: lighten($pc, 40%);
+$sc-light-40: lighten($sc, 40%);
+$bg-light-40: lighten($bg, 40%);
+
+$radial1: darken(desaturate($pc, 45%), 0%);
+//y $radial2: darken(desaturate($pc, 45%), 7%);
+$radial2: #bdbdb2;
+
+//icons
+$utf-icon-category: '\1F3BD';
+$utf-icon-pitch: '\1F6A9';
