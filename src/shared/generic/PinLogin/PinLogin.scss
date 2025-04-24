@@ -144,32 +144,48 @@
     // Styles specific to the selection view container if needed
 }
 
-/* Styles for the title/subtitle container (div) */
-.tournament-selection-view > div:first-of-type {
-  margin-top: 10%;
+// --- Styles for App Header (Visible in both views) ---
+.app-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem; // Add space below header
+
+  h1 {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 72px;
+    margin: 0; // Remove default margins
+  }
+
+  h2 {
+    // Merged styles from ai-style-change-4
+    color: rgb(0, 0, 0);
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 0.3;
+    font-size: 60px;
+    line-height: 1; // Adjusted line-height
+    text-align: center;
+    text-transform: none; // Added
+    letter-spacing: normal; // Added
+    word-spacing: 0px; // Added
+    margin: 0; // Remove default margins
+  }
 }
+// --- End Styles for App Header ---
+
+
+/* Styles for the title/subtitle container (div) */
+/* Removed .tournament-selection-view > div:first-of-type rule */
+
 
 /* Styles for the main title (h1) */
-.tournament-selection-view h1 {
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 72px;
-}
+/* Moved to .app-header h1 */
+
 
 /* Styles for the subtitle (h2) */
-.tournament-selection-view h2 {
-  // Merged styles from ai-style-change-4
-  color: rgb(0, 0, 0);
-  font-weight: 400;
-  font-family: Arial, Helvetica, sans-serif;
-  opacity: 0.3;
-  font-size: 60px;
-  line-height: 28px; // Added
-  text-align: center;
-  text-transform: none; // Added
-  letter-spacing: normal; // Added
-  word-spacing: 0px; // Added
-}
+/* Moved to .app-header h2 */
+
 
 /* Styles for the subheading h3 */
 .tournament-selection-view h3 {
