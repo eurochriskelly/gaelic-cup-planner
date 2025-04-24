@@ -21,8 +21,17 @@ build:
 	npm run build-storybook
 	$(call banner,"BUILD COMPLETE")
 
-dev:
-	$(call banner,"STARTING DEV SERVERS VIA SCRIPT")
-	@echo "Executing scripts/make-dev.sh..."
-	@echo "Use Ctrl+C to stop all servers."
-	@./scripts/make-dev.sh
+dev-mobile:
+	$(call banner,"STARTING DEV SERVER: mobile")
+	@echo "Mobile server on port 5173"
+	@npm run dev:mobile
+
+dev-desktop:
+	$(call banner,"STARTING DEV SERVER: mobile")
+	@echo "Mobile server on port 5173"
+	@npm run dev:mobile
+
+dev-storybook:
+	$(call banner,"STARTING DEV SERVER: mobile")
+	@echo "Mobile server on port 5173"
+	@npm run dev:mobile
