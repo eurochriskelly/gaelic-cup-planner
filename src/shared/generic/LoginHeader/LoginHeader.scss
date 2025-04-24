@@ -26,6 +26,15 @@
     transform: translateY(-50%); // Fine-tune vertical centering
     cursor: pointer;
     z-index: 15; // Ensure it's above header content
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img.whistle {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+    }
 
     i.pi-arrow-circle-left {
         font-size: 6rem; // Keep icon size
