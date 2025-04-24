@@ -215,7 +215,8 @@ const PinLogin = () => {
         />
       </div>
       {/* Removed the old back button container */}
-      <div style={{ textAlign: "center", fontSize: '2.8rem' }}>{t("pinLogin_enter_pin")}</div>
+      {/* Updated prompt text and added class */}
+      <div className="pin-entry-prompt">Enter tournament code</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input

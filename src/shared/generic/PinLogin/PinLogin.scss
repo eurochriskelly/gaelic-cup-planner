@@ -245,6 +245,15 @@
 
 /* Removed styles for .back-button-container and .back-button */
 
+// Styles for the "Enter tournament code" prompt
+.pin-entry-prompt {
+    text-align: center;
+    font-size: 2.8rem;
+    margin: 4rem 0 1rem 0;
+    text-transform: uppercase;
+    color: #bac68d;
+}
+
 // Container for the single selected tournament card on PIN entry screen
 .selected-tournament-display {
     width: 100%; // Take full width to allow centering
