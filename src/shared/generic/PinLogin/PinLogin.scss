@@ -232,8 +232,8 @@
     cursor: pointer;
     z-index: 5; // Ensure it's clickable
 
-    i.pi-arrow-left {
-        font-size: 3rem; // Adjust icon size
+    i.pi-arrow-circle-left { // Updated selector for new icon
+        font-size: 3.6rem; // Increased icon size by 20%
         color: #333; // Adjust icon color
         padding: 0.5rem; // Add some clickable area around the icon
     }
