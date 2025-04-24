@@ -14,6 +14,28 @@
   display: flex; // Added
   flex-direction: column; // Added
   align-items: center; // Added
+  gap: 1rem; // Added gap
+
+  // Styles for the back icon span (moved from PinLogin.scss)
+  .back-icon-span {
+    position: absolute; // Position relative to the header
+    top: 50%; // Center vertically
+    left: 55.296px; // Align with left padding
+    transform: translateY(-50%); // Fine-tune vertical centering
+    cursor: pointer;
+    z-index: 15; // Ensure it's above header content
+
+    i.pi-arrow-circle-left {
+        font-size: 6rem; // Keep icon size
+        color: #f6ffd7; // Keep icon color
+        padding: 0.5rem; // Add some clickable area around the icon
+    }
+
+    &:hover i {
+        color: #fff; // Change hover color if needed
+    }
+  }
+
 
   h1 {
     text-transform: uppercase;
