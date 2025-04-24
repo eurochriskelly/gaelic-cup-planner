@@ -59,3 +59,58 @@ export function fetchApi(tournamentId, path, method = 'GET', body = null) {
       });
   });
 }
+
+// New generic fetch helper for root API endpoints (e.g., /api/tournaments)
+export function fetchRootApi(path, method = 'GET', body = null, queryParams = null) {
+  let endpoint = `/api${path.startsWith('/') ? path : '/' + path}`; // Ensure path starts with /
+
+  // Append query parameters if they exist
+  if (queryParams) {
+    const params = new URLSearchParams();
+    Object.entries(queryParams).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        params.append(key, value);
+      }
+    });
+    if (params.toString()) {
+      endpoint += `?${params.toString()}`;
+    }
+  }
+
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+    options.body = JSON.stringify(body);
+  }
+
+  // console.log(`Root API request to endpoint ${endpoint}`); // Optional logging
+
+  return new Promise((accept, reject) => {
+    fetch(endpoint, options)
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+          });
+        }
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json();
+        } else {
+          return response.text(); // Or resolve with null/undefined for non-JSON
+        }
+      })
+      .then(data => {
+        accept(data);
+      })
+      .catch(error => {
+        console.error(`Error fetching ${endpoint}:`, error);
+        reject(error);
+      });
+  });
+}

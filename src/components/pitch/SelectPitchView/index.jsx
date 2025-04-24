@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
-import API from "../../../shared/api/endpoints/api"; // Import the API module
+import API from "../../../shared/api/endpoints";
 import MobileSelect from "../../../shared/generic/MobileSelect";
 import MainCard from "../../../shared/generic/MainCard";
 import TeamNameDisplay from "../../../shared/generic/TeamNameDisplay/";

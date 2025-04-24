@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API from "../../../shared/api/pitch";
+import API from "../../../shared/api/endpoints.js";
 
 export const useFetchFixtures = (tournamentId, pitchId) => {
   const [fixtures, setFixtures] = useState([]);
