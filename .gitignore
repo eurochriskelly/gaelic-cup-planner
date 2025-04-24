@@ -11,8 +11,8 @@ node_modules
 config/secret
 
 src/stories/
-src/frontend/interfaces/*/dist/
-src/frontend/interfaces/*/watch/
+src/interfaces/*/dist/
+src/interfaces/*/watch/
 
 dist
 gg_env.sh
