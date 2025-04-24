@@ -88,7 +88,7 @@
     }
 
     display: flex;
-    align-items: center; // Updated alignment
+    align-items: flex-start;
 
     .date-column {
         flex-basis: 25%; // Increased width
@@ -96,7 +96,6 @@
         flex-direction: column;
         align-items: center;
         gap: 14.5px; // Added vertical spacing
-        margin-right: 1rem; // Added right margin
 
         .calendar-icon {
           width: calc(0.9 * 80px); // Reduced size
@@ -297,3 +296,4 @@
     // Removed background-color, padding, border-radius
     z-index: 10; // Ensure it's above other elements if necessary
 }
+

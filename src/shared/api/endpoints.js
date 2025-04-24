@@ -8,7 +8,7 @@ export default {
 
   // Fetch fixtures for a specific pitch
   fetchFixtures: (tournamentId, pitchId) =>
-    fetchApi(tournamentId, `${pitchId}`), // GET by default
+    fetchApi(tournamentId, `pitches/${pitchId}/fixtures`), // GET by default
 
   // Start a specific match
   startMatch: (tournamentId, fixtureId) =>

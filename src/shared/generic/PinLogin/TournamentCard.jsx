@@ -1,3 +1,5 @@
+import 'primeicons/primeicons.css'; // if not already imported
+
 // Helper function to format date parts
 const formatDateParts = (dateString) => {
   if (!dateString) {
@@ -30,14 +32,18 @@ const TournamentCard = ({ title, location, date, onClick }) => {
 
   return (
     <div className={cardClass} onClick={isClickable ? onClick : undefined}>
-      <div className="date-line">
-        <span className="year">{year}</span>
-        <span className="day-month">{dayMonth}</span>
+      <div className="date-column">
+        <div className="calendar-icon">
+          <i className="pi pi-calendar"></i>
+        </div>
+        <div className="year">{year}</div>
+        <div className="day-month">{dayMonth}</div>
       </div>
-      <h3 className="title">{title || 'Tournament Title'}</h3>
-      {location && <p className="location">{location}</p>}
+      <div className="content-column">
+        <h3 className="title">{title || 'Tournament Title'}</h3>
+        {location && <p className="location">{location}</p>}
+      </div>
     </div>
   );
 };
-
 export default TournamentCard;
