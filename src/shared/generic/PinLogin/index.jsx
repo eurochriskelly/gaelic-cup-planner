@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
+import TournamentCard from "./TournamentCard"; // Import the new component
 //import LanguageSwitcher from "../LanguageSwitcher";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
+
 
 const PinLogin = () => {
   const { t } = useTranslation();
@@ -19,6 +21,7 @@ const PinLogin = () => {
   const [isLoadingTournaments, setIsLoadingTournaments] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
+  const [failedAttempts, setFailedAttempts] = useState(0);
 
   useEffect(() => {
     // Fetch tournaments when component mounts
@@ -38,9 +41,6 @@ const PinLogin = () => {
         setIsLoadingTournaments(false);
       });
 
-    // Focus first input if pin entry is shown (handled later)
-    // inputsRef.current[0]?.focus();
-
     // Check for existing tournament cookie
     const tid = Cookies.get("tournamentId");
     if (tid && tid !== "undefined") {
@@ -48,14 +48,37 @@ const PinLogin = () => {
     }
   }, [navigate]);
 
+  // focus first PIN input when a tournament is selected
+  useEffect(() => {
+    if (selectedTournament) {
+      inputsRef.current[0]?.focus();
+    }
+  }, [selectedTournament]);
+
   const handleChange = (e, index) => {
     const value = e.target.value.slice(0, 1);
+
+    // Check if entering into a later input while previous ones are empty
+    if (index > 0 && value) {
+      const previousInputs = pin.slice(0, index);
+      if (previousInputs.some(p => p === '')) {
+        // Reset pin and focus first input if any previous input is empty
+        setPin(["", "", "", ""]);
+        inputsRef.current[0]?.focus();
+        return; // Stop further processing for this input
+      }
+    }
+
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
+
+    // Move focus to the next input if a value was entered and it's not the last input
     if (value && index < 3) {
-      inputsRef.current[index + 1].focus();
+      inputsRef.current[index + 1]?.focus();
     }
+
+    // Check if the PIN is complete
     if (newPin.every((num) => num !== "")) {
       const joined = newPin.join("");
       onPinEntered(joined);
@@ -72,31 +95,46 @@ const PinLogin = () => {
     }, 500);
   };
 
-  const onPinEntered = (joined) => {
-    switch (joined) {
-      case "2101":
-        selectTournament(21);
-        break;
-      case "2104":
-        selectTournament(24);
-        break;
-      case "2103":
-        selectTournament(23);
-        break;
-      case "7172":
-        selectTournament(20);
-        break;
-      case "9191":
-        selectTournament(1);
-        break;
-      default:
-        setPin(["", "", "", ""]);
-        setMessage("Invalid pin! " + joined);
-        inputsRef.current[0].focus();
-        setTimeout(() => {
-          setMessage("");
-        }, 2000);
-        break;
+  const onPinEntered = (enteredPin) => {
+    // Check if a tournament is selected and has a PIN property
+    if (selectedTournament && selectedTournament.code) {
+      if (enteredPin === selectedTournament.code) {
+        // PIN matches, proceed to select the tournament
+        selectTournament(selectedTournament.Id);
+      } else {
+        // PIN does not match, handle invalid attempt
+        const attempts = failedAttempts + 1;
+        setFailedAttempts(attempts);
+        if (attempts >= 3) {
+          setMessage("Too many invalid attempts");
+          // After lockout message, clear pin and go back to tournament selection
+          setTimeout(() => {
+            setPin(["", "", "", ""]); // Clear PIN on lockout timeout
+            setMessage("");
+            setFailedAttempts(0);
+            setSelectedTournament(null); // Go back to tournament selection
+          }, 2000);
+        } else {
+          // Display invalid pin message, keep digits visible
+          setMessage("Invalid pin! " + enteredPin);
+          // Keep the inputs filled for 2 seconds, then reset
+          setTimeout(() => {
+            setPin(["", "", "", ""]); // Reset PIN after delay
+            inputsRef.current[0]?.focus(); // Refocus after delay
+            setMessage(""); // Clear message after delay
+          }, 2000);
+        }
+      }
+    } else {
+      // Handle case where tournament or PIN is missing (should not normally happen if flow is correct)
+      console.error("Error: No selected tournament or PIN found for validation.");
+      setMessage("An error occurred. Please select a tournament again.");
+      setPin(["", "", "", ""]);
+      inputsRef.current[0]?.focus();
+      setTimeout(() => {
+        setSelectedTournament(null); // Go back to selection
+        setMessage("");
+      }, 2500);
     }
   };
 
@@ -124,39 +162,52 @@ const PinLogin = () => {
       return <div className="pinLogin error">{fetchError}</div>;
     }
     if (availableTournaments.length === 0) {
-        return <div className="pinLogin">No active tournaments found.</div>;
+      return <div className="pinLogin">No active tournaments found.</div>;
     }
 
     return (
-      <div className="tournamentList">
-        {availableTournaments.map((t) => (
-          <div key={t.Id} className="tournamentCard" onClick={() => setSelectedTournament(t)}>
-            <h3>{t.Title}</h3>
-            {/* Display date only if it exists */}
-            {t.Date && <p>{new Date(t.Date).toLocaleDateString()}</p>}
-            {/* Display location only if it exists */}
-            {t.Location && <p>{t.Location}</p>}
-          </div>
-        ))}
+      <div className="pinLogin">
+        <div className="tournamentList">
+          {/* Use the TournamentCard component for the list */}
+          {availableTournaments.map((t) => (
+            <TournamentCard
+              key={t.Id}
+              title={t.Title}
+              location={t.Location}
+              date={t.Date}
+              onClick={() => setSelectedTournament(t)}
+            />
+          ))}
+        </div>
+        {/* Version info moved outside conditional rendering */}
       </div>
     );
   }
 
-  // Focus first input when PIN entry becomes visible
-  useEffect(() => {
-    if (selectedTournament) {
-      inputsRef.current[0]?.focus();
-    }
-  }, [selectedTournament]);
+  // PIN Entry View
 
   return (
     <div className="pinLogin">
-      {/* Back button to return to tournament selection */}
-      <button onClick={() => setSelectedTournament(null)} style={{ position: 'absolute', top: '20px', left: '20px' }}>
-        &larr; Back
-      </button>
-      <h2>{selectedTournament.Title}</h2>
-      <div style={{ textAlign: "center" }}>{t("pinLogin_enter_pin")}</div>
+      {/* Display selected tournament using the TournamentCard component */}
+      <div className="selected-tournament-display">
+        {/* Pass individual props from the selected tournament */}
+        <TournamentCard
+          title={selectedTournament?.Title}
+          location={selectedTournament?.Location}
+          date={selectedTournament?.Date}
+          // No onClick needed here
+        />
+      </div>
+      {/* Back button container */}
+      <div className="back-button-container">
+        <button
+          className="back-button"
+          onClick={() => setSelectedTournament(null)}
+        >
+          &larr;
+        </button>
+      </div>
+      <div style={{ textAlign: "center", fontSize: '2.8rem' }}>{t("pinLogin_enter_pin")}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
           <input
@@ -170,8 +221,11 @@ const PinLogin = () => {
           />
         ))}
       </div>
-      <div>&nbsp;{message}&nbsp;</div>
-      <div>{`Pitch Perfect v${versionInfo?.mobile}`}</div>
+      {/* Message display area */}
+      <div className="pin-message">&nbsp;{message}&nbsp;</div>
+
+      {/* Version info - rendered in both views */}
+      <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
     </div>
   );
 };

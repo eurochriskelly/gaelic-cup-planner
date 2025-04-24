@@ -23,13 +23,7 @@
     color: red;
 }
 
-.pinLogin > div:last-child{
-    font-size: 1.8em;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    margin-top: 5rem;
-    color: #333;
-}
+/* Removed old selector for version info: .pinLogin > div:last-child */
 
 .pinContainer {
     display: flex;
@@ -66,18 +60,171 @@
     border-radius: 0.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     padding: 1.5rem;
-    cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    // Removed base font-size increase, applying to individual elements instead
+
+    // Apply hover effects and cursor only if the card is clickable
+    &.clickable {
+        cursor: pointer;
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    // New layout styles within the card
+    .date-line {
+        display: flex;
+        justify-content: space-between; // Pushes year left, day/month right
+        font-size: 2.025rem; // Increased font size again (1.35 * 1.5)
+        color: #888; // Grey color for date
+        margin-bottom: 0.75rem; // Space below date line
+    }
+
+    .year {
+        font-weight: bold;
+    }
+
+    .day-month {
+        // Styles specific to DD/MMM if needed
+    }
+
+    .title { // Replaces h3 styling
+        font-size: 1.875rem; // Increased font size (1.25 * 1.5)
+        font-weight: bold; // Ensure title is bold
+        margin-bottom: 0.5rem; // Space below title
+        color: #333; // Darker color for title
+    }
+
+    .location { // Replaces p styling
+        font-size: 2.025rem; // Increased font size again (1.35 * 1.5)
+        line-height: 2; // Increased line height
+        color: #666; // Keep original location color
+        margin: 0; // Remove default paragraph margin
     }
 }
-.tournamentCard h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+// Remove old h3 and p selectors for tournamentCard
+// .tournamentCard h3 { ... }
+// .tournamentCard p { ... }
+
+.tournamentList {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 980px;
+    margin: auto;
+    font-size: 32px;
 }
-.tournamentCard p {
-    margin: 0.25rem 0;
-    color: #666;
+
+// Style for the PIN entry feedback message
+.pin-message {
+    font-size: 3.6em; // Double the size of the version text (1.8em * 2)
+    color: red; // Make error messages stand out
+    min-height: 1.2em; // Ensure space is reserved even when empty (adjust based on font size)
+    text-align: center; // Center the message
+    margin-top: 1rem; // Add some space above
+    margin-bottom: 1rem; // Adjust existing margin if needed
+}
+
+// Styles for the back button on the PIN entry screen
+.back-button-container {
+    width: 100%; // Take full width to allow centering
+    text-align: center; // Center the button inline
+    margin-bottom: 2rem; // Increased space below the button (1rem + 1rem)
+}
+
+.back-button {
+    font-size: 4rem; // Increased font size
+    padding: 2.4rem 4.5rem; // Increased padding
+    background-color: #f0f0f0; // Light grey background
+    border: 1px solid #ccc; // Standard border
+    border-radius: 5px; // Slightly rounded corners
+    cursor: pointer; // Indicate it's clickable
+    color: #333; // Darker text color
+    line-height: 1; // Ensure text aligns vertically
+
+    &:hover {
+        background-color: #e0e0e0; // Darken background on hover
+        border-color: #bbb; // Darken border on hover
+        color: #000;
+    }
+}
+
+// Container for the single selected tournament card on PIN entry screen
+.selected-tournament-display {
+    width: 100%; // Take full width to allow centering
+    display: flex;
+    justify-content: center; // Center the card horizontally
+    margin-bottom: 1rem; // Reduced space below the card
+
+    .tournamentCard {
+        width: 90%; // Make card slightly narrower than full width
+        max-width: 800px; // Increased max width for larger screens
+        cursor: default; // Not clickable here
+        text-align: center; // Center text inside the card
+
+        &:hover {
+            // Disable hover effect on PIN screen
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        // Adjust title font size for the single card display if needed
+        .title {
+             font-size: 3.75rem; // Increased font size (2.5 * 1.5)
+        }
+        // Adjust location font size if needed
+        .location {
+            font-size: 2.7rem; // Increased font size again (1.8 * 1.5)
+            line-height: 2; // Increased line height
+        }
+    }
+}
+
+// Styles for the fixed version info text
+.version-info {
+    position: fixed; // Fix position relative to viewport
+    bottom: 3rem; // Keep position from bottom
+    left: 0; // Align to the left edge
+    width: 100%; // Make element full width
+    text-align: center; // Center the text within the full width
+    font-size: 2.4em; // Keep doubled font size
+    text-transform: uppercase;
+    letter-spacing: 0.2em; // Keep letter spacing
+    color: #555; // Keep color
+    // Removed background-color, padding, border-radius
+    z-index: 10; // Ensure it's above other elements if necessary
+}
+
+// Style for the PIN entry feedback message
+.pin-message {
+    font-size: 3.6em; // Double the size of the version text (1.8em * 2)
+    color: red; // Make error messages stand out
+    min-height: 1.2em; // Ensure space is reserved even when empty (adjust based on font size)
+    text-align: center; // Center the message
+    margin-top: 1rem; // Add some space above
+    margin-bottom: 1rem; // Adjust existing margin if needed
+}
+
+// Styles for the back button on the PIN entry screen
+.back-button-container {
+    width: 100%; // Take full width to allow centering
+    text-align: center; // Center the button inline
+    margin-bottom: 2rem; // Increased space below the button (1rem + 1rem)
+}
+
+.back-button {
+    font-size: 4rem; // Increased font size
+    padding: 2.4rem 4.5rem; // Increased padding
+    background-color: #f0f0f0; // Light grey background
+    border: 1px solid #ccc; // Standard border
+    border-radius: 5px; // Slightly rounded corners
+    cursor: pointer; // Indicate it's clickable
+    color: #333; // Darker text color
+    line-height: 1; // Ensure text aligns vertically
+
+    &:hover {
+        background-color: #e0e0e0; // Darken background on hover
+        border-color: #bbb; // Darken border on hover
+        color: #000;
+    }
 }
