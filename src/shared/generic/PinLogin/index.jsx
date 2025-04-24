@@ -201,7 +201,7 @@ const PinLogin = () => {
     <div className="pinLogin" style={{ position: 'relative' }}> {/* Added position: relative */}
       {/* Back Icon Span */}
       <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
-        <i className="pi pi-arrow-left"></i>
+        <i className="pi pi-arrow-circle-left"></i> {/* Changed icon class */}
       </span>
 
       {/* Display selected tournament using the TournamentCard component */}
