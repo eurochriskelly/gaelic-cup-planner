@@ -214,15 +214,7 @@ const PinLogin = () => {
           // No onClick needed here
         />
       </div>
-      {/* Back button container */}
-      <div className="back-button-container">
-        <button
-          className="back-button"
-          onClick={() => setSelectedTournament(null)}
-        >
-          &larr;
-        </button>
-      </div>
+      {/* Removed the old back button container */}
       <div style={{ textAlign: "center", fontSize: '2.8rem' }}>{t("pinLogin_enter_pin")}</div>
       <div className="pinContainer">
         {pin.map((num, index) => (
