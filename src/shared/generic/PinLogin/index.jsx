@@ -208,7 +208,7 @@ const PinLogin = () => {
           </div>
         ) : (
           // PIN Entry View
-          {/* Removed position: relative style, header handles positioning context */}
+          /* Removed position: relative style, header handles positioning context */
           <div className="pinLogin pin-entry-view">
             {/* Back Icon Span moved to LoginHeader */}
 
