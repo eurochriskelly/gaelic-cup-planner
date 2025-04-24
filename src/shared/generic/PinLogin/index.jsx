@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
+import API from "../../api/endpoints.js";
 //import LanguageSwitcher from "../LanguageSwitcher";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
@@ -14,17 +15,33 @@ const PinLogin = () => {
   const [isThinking, setIsThinking] = useState(false);
   const [message, setMessage] = useState("");
   const inputsRef = useRef([]);
-
-  // static tournament data until we fetch from endpoint
-  const tournaments = [
-    { Id: 1, Date: "2029-12-31T23:00:00.000Z", Title: "Sandbox tournament 2030", Location: "Eurodisney, Paris", eventUuid: "7bd2ad30-f6aa-11ef-a162-23d9aafc1469" },
-    { Id: 2, Date: "2024-10-05T22:00:00.000Z", Title: "Euro Hurling and Camogie Finals 2024", Location: "Eindhoven, The Mew Netherlands, Mars", eventUuid: null },
-    { Id: 3, Date: "2023-08-08T22:00:00.000Z", Title: "Pan Euros", Location: "The Hague, The Netherlands", eventUuid: "7d6eab76-f6aa-11ef-9949-ef7f53e6d970" }
-  ];
+  const [availableTournaments, setAvailableTournaments] = useState([]);
+  const [isLoadingTournaments, setIsLoadingTournaments] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
 
   useEffect(() => {
-    inputsRef.current[0]?.focus();
+    // Fetch tournaments when component mounts
+    setIsLoadingTournaments(true);
+    setFetchError(null);
+    API.fetchActiveTournaments()
+      .then(response => {
+        // Assuming the API returns { data: [...] }
+        setAvailableTournaments(response?.data || []);
+      })
+      .catch(error => {
+        console.error("Error fetching tournaments:", error);
+        setFetchError("Failed to load tournaments.");
+        setAvailableTournaments([]); // Ensure it's an empty array on error
+      })
+      .finally(() => {
+        setIsLoadingTournaments(false);
+      });
+
+    // Focus first input if pin entry is shown (handled later)
+    // inputsRef.current[0]?.focus();
+
+    // Check for existing tournament cookie
     const tid = Cookies.get("tournamentId");
     if (tid && tid !== "undefined") {
       navigate(`/tournament/${tid}`, { replace: true });
@@ -100,22 +117,44 @@ const PinLogin = () => {
 
   // step 1: choose tournament
   if (!selectedTournament) {
+    if (isLoadingTournaments) {
+      return <div className="pinLogin thinking">Loading tournaments...</div>;
+    }
+    if (fetchError) {
+      return <div className="pinLogin error">{fetchError}</div>;
+    }
+    if (availableTournaments.length === 0) {
+        return <div className="pinLogin">No active tournaments found.</div>;
+    }
+
     return (
       <div className="tournamentList">
-        {tournaments.map((t) => (
+        {availableTournaments.map((t) => (
           <div key={t.Id} className="tournamentCard" onClick={() => setSelectedTournament(t)}>
             <h3>{t.Title}</h3>
-            <p>{new Date(t.Date).toLocaleDateString()}</p>
-            <p>{t.Location}</p>
+            {/* Display date only if it exists */}
+            {t.Date && <p>{new Date(t.Date).toLocaleDateString()}</p>}
+            {/* Display location only if it exists */}
+            {t.Location && <p>{t.Location}</p>}
           </div>
         ))}
       </div>
     );
   }
 
+  // Focus first input when PIN entry becomes visible
+  useEffect(() => {
+    if (selectedTournament) {
+      inputsRef.current[0]?.focus();
+    }
+  }, [selectedTournament]);
+
   return (
     <div className="pinLogin">
-      <button onClick={() => setSelectedTournament(null)}>Back to tournaments</button>
+      {/* Back button to return to tournament selection */}
+      <button onClick={() => setSelectedTournament(null)} style={{ position: 'absolute', top: '20px', left: '20px' }}>
+        &larr; Back
+      </button>
       <h2>{selectedTournament.Title}</h2>
       <div style={{ textAlign: "center" }}>{t("pinLogin_enter_pin")}</div>
       <div className="pinContainer">

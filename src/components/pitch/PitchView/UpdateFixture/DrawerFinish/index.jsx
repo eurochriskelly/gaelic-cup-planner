@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import API from "../../../../../shared/api/pitch";
+import API from "../../../../../shared/api/endpoints";
 import ScoreSelect from "./ScoreSelect";
 import ListCardedPlayers from "./ListCardedPlayers";
 import './DrawerFinish.scss';

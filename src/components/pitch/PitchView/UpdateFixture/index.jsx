@@ -7,7 +7,7 @@ import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
 import DrawerCancel from "./DrawerCancel";
-import API from "../../../../shared/api/endpoints/api";
+import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
 
 export default UpdateFixture;

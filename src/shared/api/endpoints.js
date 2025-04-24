@@ -1,6 +1,10 @@
-import { fetchApi } from '../api-helper.js';
+import { fetchApi, fetchRootApi } from './api-helper.js'; // Import new helper
 
 export default {
+
+  // Fetch active tournaments with specific statuses
+  fetchActiveTournaments: (statuses = ['new', 'in-design']) =>
+    fetchRootApi('/tournaments', 'GET', null, { status: statuses.join(',') }),
 
   // Fetch fixtures for a specific pitch
   fetchFixtures: (tournamentId, pitchId) =>

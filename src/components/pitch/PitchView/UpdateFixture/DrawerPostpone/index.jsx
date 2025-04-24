@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Select from 'react-select';
-import API from '../../../../../shared/api/endpoints/api'; // Import the API module
+import API from '../../../../../shared/api/endpoints'; // Import the API module
 import './DrawerPostpone.scss';
 
 const DrawerPostpone = ({
