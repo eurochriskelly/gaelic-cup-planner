@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Select from 'react-select';
+import API from '../../../../../shared/api/endpoints/api'; // Import the API module
 import './DrawerPostpone.scss';
 
 const DrawerPostpone = ({
@@ -18,23 +19,35 @@ const DrawerPostpone = ({
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    // When user opens the drawer, fetch all fixtures data
-    fetch(`/api/tournaments/${tournamentId}/pitches`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('pitch', data.data)
-        setPitches(data.data.map(pitch => pitch.pitch));
-      })
-      .catch((error) => {
-        console.error('Error fetching pitches', error)
-      });
-    fetch(`/api/tournaments/${tournamentId}/fixtures`)
-      .then((response) => response.json())
-      .then((data) => { 
-        setFixtures(data.data);
-      })
-      .catch((error) => { console.error("Error fetching data:", error); });
-  }, []);
+    if (visible && tournamentId) {
+      // Fetch pitches using the API module
+      API.fetchPitches(tournamentId)
+        .then((data) => {
+          // Ensure data.data exists and is an array before mapping
+          const pitchNames = Array.isArray(data?.data) ? data.data.map(pitch => pitch.pitch) : [];
+          setPitches(pitchNames);
+        })
+        .catch((error) => {
+          console.error('Error fetching pitches via API:', error);
+          setPitches([]); // Set to empty array on error
+        });
+
+      // Fetch all fixtures using the API module
+      API.fetchAllFixtures(tournamentId)
+        .then((data) => {
+          // Ensure data.data exists and is an array
+          setFixtures(Array.isArray(data?.data) ? data.data : []);
+        })
+        .catch((error) => {
+          console.error("Error fetching all fixtures via API:", error);
+          setFixtures([]); // Set to empty array on error
+        });
+    } else {
+      // Clear data if drawer is not visible or no tournamentId
+      setPitches([]);
+      setFixtures([]);
+    }
+  }, [visible, tournamentId]); // Re-run if visibility or tournamentId changes
 
   if (!visible) return null;
 

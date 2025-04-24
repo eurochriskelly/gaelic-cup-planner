@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
+import API from "../../../shared/api/endpoints/api"; // Import the API module
 import MobileSelect from "../../../shared/generic/MobileSelect";
 import MainCard from "../../../shared/generic/MainCard";
 import TeamNameDisplay from "../../../shared/generic/TeamNameDisplay/";
@@ -13,31 +14,32 @@ const SelectPitchView = () => {
   const [pitchData, setPitchData] = useState([]);
   const [pitchFixtures, setPitchFixtures] = useState({});
 
-  async function fetchData() {
-    await fetch(`/api/tournaments/${tournamentId}/pitches`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPitchData(data.data);
-        // Fetch all fixtures for the tournament
-        fetch(`/api/tournaments/${tournamentId}/fixtures`)
-          .then(res => res.json())
-          .then(fixtureData => {
-            const fixturesMap = fixtureData.data.reduce((acc, fixture) => {
-              if (!acc[fixture.pitch]) acc[fixture.pitch] = [];
-              acc[fixture.pitch].push(fixture);
-              return acc;
-            }, {});
-            setPitchFixtures(fixturesMap);
-          })
-          .catch(error => console.error("Error fetching fixtures:", error));
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }
   useEffect(() => {
+    const fetchData = async () => {
+      if (!tournamentId) return; // Don't fetch if tournamentId is not available yet
+
+      try {
+        // Fetch pitches using the API module
+        const pitchResponse = await API.fetchPitches(tournamentId);
+        setPitchData(pitchResponse.data);
+
+        // Fetch all fixtures using the API module
+        const fixtureResponse = await API.fetchAllFixtures(tournamentId);
+        const fixturesMap = fixtureResponse.data.reduce((acc, fixture) => {
+          if (!acc[fixture.pitch]) acc[fixture.pitch] = [];
+          acc[fixture.pitch].push(fixture);
+          return acc;
+        }, {});
+        setPitchFixtures(fixturesMap);
+
+      } catch (error) {
+        console.error("Error fetching pitch or fixture data:", error);
+        // Optionally set an error state here to display to the user
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [tournamentId]); // Dependency array ensures fetch runs when tournamentId changes
 
   const handle = {
     select: (pitchId) => {
