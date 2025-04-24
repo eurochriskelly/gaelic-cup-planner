@@ -224,29 +224,26 @@
     margin-bottom: 1rem; // Adjust existing margin if needed
 }
 
-// Styles for the back button on the PIN entry screen
-.back-button-container {
-    width: 100%; // Take full width to allow centering
-    text-align: center; // Center the button inline
-    margin-bottom: 2rem; // Increased space below the button (1rem + 1rem)
-}
+// Styles for the new back icon span
+.back-icon-span {
+    position: absolute;
+    top: 20px; // Adjust as needed
+    left: 20px; // Adjust as needed
+    cursor: pointer;
+    z-index: 5; // Ensure it's clickable
 
-.back-button {
-    font-size: 4rem; // Increased font size
-    padding: 2.4rem 4.5rem; // Increased padding
-    background-color: #f0f0f0; // Light grey background
-    border: 1px solid #ccc; // Standard border
-    border-radius: 5px; // Slightly rounded corners
-    cursor: pointer; // Indicate it's clickable
-    color: #333; // Darker text color
-    line-height: 1; // Ensure text aligns vertically
+    i.pi-arrow-left {
+        font-size: 3rem; // Adjust icon size
+        color: #333; // Adjust icon color
+        padding: 0.5rem; // Add some clickable area around the icon
+    }
 
-    &:hover {
-        background-color: #e0e0e0; // Darken background on hover
-        border-color: #bbb; // Darken border on hover
-        color: #000;
+    &:hover i {
+        color: #000; // Darken icon on hover
     }
 }
+
+/* Removed styles for .back-button-container and .back-button */
 
 // Container for the single selected tournament card on PIN entry screen
 .selected-tournament-display {

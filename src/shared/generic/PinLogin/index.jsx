@@ -198,7 +198,12 @@ const PinLogin = () => {
   // PIN Entry View
 
   return (
-    <div className="pinLogin">
+    <div className="pinLogin" style={{ position: 'relative' }}> {/* Added position: relative */}
+      {/* Back Icon Span */}
+      <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
+        <i className="pi pi-arrow-left"></i>
+      </span>
+
       {/* Display selected tournament using the TournamentCard component */}
       <div className="selected-tournament-display">
         {/* Pass individual props from the selected tournament */}
