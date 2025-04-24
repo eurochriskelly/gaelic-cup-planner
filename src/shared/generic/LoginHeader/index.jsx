@@ -1,5 +1,5 @@
 import './LoginHeader.scss'; // Import the component's styles
-import whistleImage from '../../../../interfaces/mobile/public/pp-whistle.png';
+import whistleImage from '../../../interfaces/mobile/public/pp-whistle.png';
 
 const LoginHeader = ({ version, showBackButton, onBackClick }) => (
   <div className="app-header">
