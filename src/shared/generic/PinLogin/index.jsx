@@ -167,7 +167,8 @@ const PinLogin = () => {
        // Handle empty state - Render header and message
        return (
          <>
-           <LoginHeader version={versionInfo?.mobile} />
+           {/* Pass showBackButton={false} */}
+           <LoginHeader version={versionInfo?.mobile} showBackButton={false} />
            <div className="pinLogin">No active tournaments found.</div>
            <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
          </>
@@ -178,7 +179,12 @@ const PinLogin = () => {
   // Main return statement for the component
   return (
     <> {/* Use Fragment to wrap header and content */}
-      <LoginHeader version={versionInfo?.mobile} />
+      {/* Pass showBackButton and onBackClick props */}
+      <LoginHeader
+        version={versionInfo?.mobile}
+        showBackButton={!!selectedTournament} // Show only when tournament is selected
+        onBackClick={() => setSelectedTournament(null)} // Pass handler
+      />
 
       {/* Conditional rendering for Tournament Selection or PIN Entry */}
         {!selectedTournament ? (
@@ -202,11 +208,9 @@ const PinLogin = () => {
           </div>
         ) : (
           // PIN Entry View
-          <div className="pinLogin pin-entry-view" style={{ position: 'relative' }}>
-            {/* Back Icon Span */}
-            <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
-              <i className="pi pi-arrow-circle-left"></i>
-            </span>
+          {/* Removed position: relative style, header handles positioning context */}
+          <div className="pinLogin pin-entry-view">
+            {/* Back Icon Span moved to LoginHeader */}
 
             {/* Display selected tournament using the TournamentCard component */}
             <div className="selected-tournament-display">

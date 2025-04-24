@@ -219,24 +219,8 @@
     margin-bottom: 1rem; // Adjust existing margin if needed
 }
 
-// Styles for the new back icon span
-.back-icon-span {
-    position: absolute;
-    top: 20px; // Adjust as needed
-    left: 20px; // Adjust as needed
-    cursor: pointer;
-    z-index: 5; // Ensure it's clickable
-
-    i.pi-arrow-circle-left { // Updated selector for new icon
-        font-size: 6rem; // Increased icon size
-        color: #f6ffd7; // Updated icon color
-        padding: 0.5rem; // Add some clickable area around the icon
-    }
-
-    &:hover i {
-        color: #000; // Darken icon on hover
-    }
-}
+// Styles for the back icon span moved to LoginHeader.scss
+/* Removed styles for .back-icon-span */
 
 /* Removed styles for .back-button-container and .back-button */
 
