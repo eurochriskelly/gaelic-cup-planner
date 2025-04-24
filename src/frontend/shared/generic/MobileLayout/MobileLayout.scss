@@ -8,6 +8,7 @@
 }
 
 section.MobileLayout {
+  height: calc(var(--vh, 1vh) * 100);
   grid-template-rows: 6rem auto;
   td, th {
     font-size: 1.4rem;
