@@ -18,7 +18,7 @@ const MobileLayout = ({
 
   const childrenArray = React.Children.toArray(children);
   const [SubHeading] = childrenArray;
-  return (
+  return <> 
     <section className="MobileLayout mobile lovely">
       <header>
         <NavBar tabNames={tabNames} onSelect={handle.changetab} selected={selected} />
@@ -26,9 +26,9 @@ const MobileLayout = ({
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
-      <NavFooter />
     </section>
-  )
+    <NavFooter />
+  </> 
 };
 
 export default MobileLayout;

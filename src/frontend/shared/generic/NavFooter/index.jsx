@@ -17,26 +17,26 @@ function NavFooter({ currentPath }) {
 
   return (
     <footer className="NavFooter h-36">
-      <ScheduleIcon 
-        className={getIconClass('selectPitch', [
-          `/tournament/${tournamentId}/selectPitch`,
-          `/tournament/${tournamentId}/pitch/${pitchId?.replace(/ /g, '%20')}`,
-        ])}
-        onClick={() => navigate(`/tournament/${tournamentId}/selectPitch`)}
-      />
-      <HomeIcon 
-        className={getIconClass('LandingPage', [
-          `/tournament/${tournamentId}` 
-        ])}
-        onClick={() => navigate(`/tournament/${tournamentId}`)}
-      />
-      <StatusIcon 
-        className={getIconClass('selectCategory', [
-          `/tournament/${tournamentId}/selectCategory`,
-          `/tournament/${tournamentId}/category/${category?.replace(/ /g, '%20')}`,
-        ])}
-        onClick={() => navigate(`/tournament/${tournamentId}/selectCategory`)}
-      />
+        <ScheduleIcon 
+          className={getIconClass('selectPitch', [
+            `/tournament/${tournamentId}/selectPitch`,
+            `/tournament/${tournamentId}/pitch/${pitchId?.replace(/ /g, '%20')}`,
+          ])}
+          onClick={() => navigate(`/tournament/${tournamentId}/selectPitch`)}
+        />
+        <HomeIcon 
+          className={getIconClass('LandingPage', [
+            `/tournament/${tournamentId}` 
+          ])}
+          onClick={() => navigate(`/tournament/${tournamentId}`)}
+        />
+        <StatusIcon 
+          className={getIconClass('selectCategory', [
+            `/tournament/${tournamentId}/selectCategory`,
+            `/tournament/${tournamentId}/category/${category?.replace(/ /g, '%20')}`,
+          ])}
+          onClick={() => navigate(`/tournament/${tournamentId}/selectCategory`)}
+        />
     </footer>
   )
 }

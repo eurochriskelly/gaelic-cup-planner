@@ -13,7 +13,9 @@ footer.NavFooter {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 10000;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 
   .nav-icon {
     text-align: center;

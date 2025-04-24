@@ -8,6 +8,14 @@
 
   <body>
     <div id="app"></div>
+    <script>
+      const setVh = () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      };
+      setVh();
+      window.addEventListener('resize', setVh);
+    </script>
     <script type="module">
       import "./main.jsx";
     </script>
