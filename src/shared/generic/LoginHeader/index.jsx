@@ -1,4 +1,3 @@
-import React from 'react'; // Added React import
 import './LoginHeader.scss'; // Import the component's styles
 
 const LoginHeader = ({ version, showBackButton, onBackClick }) => (

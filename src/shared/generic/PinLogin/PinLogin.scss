@@ -8,17 +8,14 @@
     min-height: 100vh; // Use min-height instead of height
     font-family: Arial, sans-serif;
     // Re-applied background styles from commit d0f0f33
-    background-color: #799a77;
-    opacity: 0.8;
-    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #799a77 10px ), repeating-linear-gradient( #23542055, #235420 );
-
-    // Import LoginHeader styles (adjust path if necessary)
-    @import '../LoginHeader/LoginHeader.scss';
-
+    background-color: #909f66;
+opacity: 1;
+background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #909f66 10px ), repeating-linear-gradient( #9aa37d55, #9aa37d );
     .thinking {
       color: #999;
       font-size: 2.8rem;
     }
+    padding-top: 3rem;
 }
 
 /* Removed broad .pinLogin div rule */
@@ -60,9 +57,10 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     padding: 1.5rem;
     // Added card background styles
-    background-color: #a5b17d;
-        opacity: 1;
-        background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #a5b17d 10px), repeating-linear-gradient(#98a07b55, #98a07b);
+    background-color: #748050;
+    opacity: 1;
+    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #748050 10px ), repeating-linear-gradient( #9cae5a55, #9cae5a );
+
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     // Removed base font-size increase, applying to individual elements instead
 

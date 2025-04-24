@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "0.3.1",
+  mobile: "0.4.0",
   desktop: "0.0.1",
 };
 
