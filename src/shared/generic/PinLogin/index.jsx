@@ -173,15 +173,85 @@ const PinLogin = () => {
       </div>
     );
 
+    // Render Header outside the main content div
+    return (
+      <> {/* Use Fragment to wrap header and content */}
+        <AppHeader />
+
+        {/* Conditional rendering for Tournament Selection or PIN Entry */}
+        {!selectedTournament ? (
+          // Tournament Selection View
+          <div className="pinLogin tournament-selection-view">
+            {/* Subheading before the tournament list */}
+            <h3>Select from upcoming tournaments</h3>
+
+            <div className="tournamentList">
+              {/* Use the TournamentCard component for the list */}
+              {availableTournaments.map((t) => (
+                <TournamentCard
+                  key={t.Id}
+                  title={t.Title}
+                  location={t.Location}
+                  date={t.Date}
+                  onClick={() => setSelectedTournament(t)}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          // PIN Entry View
+          <div className="pinLogin pin-entry-view" style={{ position: 'relative' }}>
+            {/* Back Icon Span */}
+            <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
+              <i className="pi pi-arrow-circle-left"></i>
+            </span>
+
+            {/* Display selected tournament using the TournamentCard component */}
+            <div className="selected-tournament-display">
+              <TournamentCard
+                title={selectedTournament?.Title}
+                location={selectedTournament?.Location}
+                date={selectedTournament?.Date}
+              />
+            </div>
+
+            {/* Updated prompt text and added class */}
+            <div className="pin-entry-prompt">Enter tournament code</div>
+            <div className="pinContainer">
+              {pin.map((num, index) => (
+                <input
+                  className={isThinking ? "thinking" : ""}
+                  key={index}
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  value={num}
+                  onChange={(e) => handleChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  maxLength="1"
+                />
+              ))}
+            </div>
+
+            {/* Message display area */}
+            <div className="pin-message">&nbsp;{message}&nbsp;</div>
+          </div>
+        )}
+
+        {/* Version info - rendered outside main content */}
+        <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
+      </>
+    );
+
+    /* Original structure below is now handled within the main return block above */
+    /*
     // Tournament Selection View
     if (!selectedTournament) {
       // ... loading/error/empty checks ...
 
       return (
         <div className="pinLogin tournament-selection-view">
-          <AppHeader /> {/* Render header */}
+          <AppHeader /> // Render header //
 
-          {/* Subheading before the tournament list */}
+          // Subheading before the tournament list //
           <h3>Select from upcoming tournaments</h3>
 
           <div className="tournamentList">
@@ -205,13 +275,21 @@ const PinLogin = () => {
     );
   }
 
+          </div>
+        // Version info moved outside conditional rendering //
+      </div>
+    );
+  }
+  */
+
+  /*
   // PIN Entry View
 
   return (
-    <div className="pinLogin pin-entry-view" style={{ position: 'relative' }}> {/* Added class */}
-      <AppHeader /> {/* Render header */}
+    <div className="pinLogin pin-entry-view" style={{ position: 'relative' }}> // Added class //
+      <AppHeader /> // Render header //
 
-      {/* Back Icon Span */}
+      // Back Icon Span //
       <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
         <i className="pi pi-arrow-circle-left"></i> {/* Changed icon class */}
       </span>
@@ -245,10 +323,11 @@ const PinLogin = () => {
       {/* Message display area */}
       <div className="pin-message">&nbsp;{message}&nbsp;</div>
 
-      {/* Version info - rendered in both views */}
+      // Version info - rendered in both views //
       <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
     </div>
   );
+  */
 };
 
 export default PinLogin;
