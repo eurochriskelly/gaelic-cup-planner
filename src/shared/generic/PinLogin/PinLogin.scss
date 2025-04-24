@@ -90,7 +90,7 @@
     }
 
     .title { // Replaces h3 styling
-        font-size: 1.875rem; // Increased font size (1.25 * 1.5)
+        font-size: 1.775rem; // Increased font size (1.25 * 1.5)
         font-weight: bold; // Ensure title is bold
         margin-bottom: 0.5rem; // Space below title
         color: #333; // Darker color for title
@@ -121,7 +121,7 @@
     color: red; // Make error messages stand out
     min-height: 1.2em; // Ensure space is reserved even when empty (adjust based on font size)
     text-align: center; // Center the message
-    margin-top: 1rem; // Add some space above
+    margin-top: 1-rem; // Add some space above
     margin-bottom: 1rem; // Adjust existing margin if needed
 }
 
@@ -170,7 +170,10 @@
 
         // Adjust title font size for the single card display if needed
         .title {
-             font-size: 3.75rem; // Increased font size (2.5 * 1.5)
+            font-size: 2.75rem; // Increased font size (2.5 * 1.5)
+            text-transform: uppercase;
+            line-height: 1.5; // Increased line height
+
         }
         // Adjust location font size if needed
         .location {
