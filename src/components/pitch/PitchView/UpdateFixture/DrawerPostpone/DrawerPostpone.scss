@@ -1,0 +1,78 @@
+@import "src/shared/css/_colors.scss";
+
+.drawerPostpone {
+    margin: -23.8rem 0;
+    width: 100%;
+    background-color: white;
+    border-radius: 2rem;
+
+    .postponeForm {
+        font-size: 3rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 1rem;
+        width: 90%;
+        box-sizing: border-box;
+
+        .drawer-content-row {
+            align-items: center;
+        }
+
+        .drawer-content-label {
+            margin-right: 1rem;
+            font-size: 2.4rem;
+            margin-top: 1rem;
+        }
+        .drawer-content-value {
+            > div > div > div {
+                background: desaturate(lighten($sc, 40%), 14%);
+                > div{
+                   padding: 2rem;
+                   color: $sc;
+                }
+            }
+            color: $sc;
+        }
+        .radio-section {
+            padding: 2rem;
+            input[type="radio"] {
+                margin: 1.3rem 3rem 1.3rem 0;
+                width: 3rem;
+                height: 3rem;
+                vertical-align: middle;
+            }
+        }
+
+        input[type="text"], select {
+            width: 90%;
+            box-sizing: border-box;
+            padding: 2rem;
+            font-size: 2rem;
+            border-radius: 1rem;
+        }
+
+    }
+    
+    .footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr ;
+        button {
+            margin: 1rem;
+            padding: 1rem 2rem;
+            font-size: 2rem;
+            border-radius: 1rem;
+        }
+
+        .btn-primary {
+            background-color: $primary-color; // assuming $primary-color is defined in _colors.scss
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: $secondary-color; // assuming $secondary-color is defined in _colors.scss
+            color: white;
+            border: none;
+        }
+    }
+}

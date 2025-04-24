@@ -1,0 +1,85 @@
+/*
+To import, add the following to the top of your scss file:
+@import "src/shared/css/_colors.scss";
+*/
+* {
+  user-select: none; }
+
+body {
+  margin: 0; }
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f8f9fa; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px; }
+
+a {
+  color: #2b7624;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
+button {
+  background-color: #2b7624;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer; }
+  button:hover {
+    background-color: #1d4f18; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  text-transform: uppercase;
+  margin: 0;
+  user-select: none; }
+
+h1 {
+  background: #152014;
+  color: #2b7624;
+  font-size: 2.2em;
+  line-height: 3rem;
+  padding: 0 0;
+  letter-spacing: 0.12em;
+  text-align: center;
+  top: 0; }
+
+h2 {
+  font-size: 30px;
+  color: white;
+  height: 100%;
+  border-bottom: 4px solid white;
+  border-right: 2px solid white;
+  background-color: #d7ebd5; }
+
+h3 {
+  font-size: 24px;
+  color: #885ea3;
+  text-align: center;
+  border-left: 1px solid white;
+  border-right: 1px solid white; }
+
+h4 {
+  font-size: 20px;
+  color: #885ea3;
+  background-color: #ddd; }
+
+h5 {
+  font-size: 18px;
+  color: #333; }
+
+h6 {
+  font-size: 16px;
+  color: #333; }
