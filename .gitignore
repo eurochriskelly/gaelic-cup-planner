@@ -19,3 +19,4 @@ gg_env.sh
 .aider*
 
 src/backend/
+versions/
