@@ -162,7 +162,6 @@ const PinLogin = () => {
       return <div className="pinLogin error">{fetchError}</div>;
     }
     if (availableTournaments.length === 0) {
-      return <div className="pinLogin">No active tournaments found.</div>;
     }
 
     // Common Header for both views
@@ -173,7 +172,7 @@ const PinLogin = () => {
       </div>
     );
 
-    // Render Header outside the main content div
+    // Main return statement for the component
     return (
       <> {/* Use Fragment to wrap header and content */}
         <AppHeader />
@@ -240,8 +239,6 @@ const PinLogin = () => {
         <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
       </>
     );
-
-    /* Removed commented-out old structure */
 };
 
 export default PinLogin;
