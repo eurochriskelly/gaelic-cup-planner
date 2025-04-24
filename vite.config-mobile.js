@@ -5,9 +5,9 @@ import { resolve } from 'path';
 
 const port = process.env.GG_PORT_OVERRIDE || '4010'
 export default defineConfig({
-  root: resolve(__dirname, 'src/frontend/interfaces/mobile'),
+  root: resolve(__dirname, 'src/interfaces/mobile'),
   plugins: [react(), svgr()],
-  publicDir: resolve(__dirname, 'src/frontend/interfaces/mobile/public'),
+  publicDir: resolve(__dirname, 'src/interfaces/mobile/public'),
   server: {
     proxy: {
       '/api': 'http://localhost:' + port,
