@@ -5,25 +5,19 @@
     justify-content: center;
     height: 100vh;
     font-family: Arial, sans-serif;
+    // Added background styles
+    background-color: white;
+    opacity: 1;
+    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #72872b 10px ), repeating-linear-gradient( #54594455, #545944 );
+
     .thinking {
       color: #999;
       font-size: 2.8rem;
     }
 }
 
-.pinLogin div {
-    margin-bottom: 2rem;
-}
-.pinLogin > div:first-child {
-    font-size: 4em;
-    color: white;
-}
-.pinLogin > div:nth-child(2){
-    font-size: 2.8em;
-    color: red;
-}
-
-/* Removed old selector for version info: .pinLogin > div:last-child */
+/* Removed broad .pinLogin div rule */
+/* Removed outdated .pinLogin > div:first-child and nth-child(2) rules */
 
 .pinContainer {
     display: flex;
@@ -56,10 +50,14 @@
     padding: 2rem;
 }
 .tournamentCard {
-    background: #fff;
-    border-radius: 0.5rem;
+    // background: #fff; // Replaced by new background styles
+    border-radius: 1rem; // Updated border-radius
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     padding: 1.5rem;
+    // Added card background styles
+    background-color: #a5b17d;
+        opacity: 1;
+        background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #a5b17d 10px), repeating-linear-gradient(#98a07b55, #98a07b);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     // Removed base font-size increase, applying to individual elements instead
 
@@ -77,43 +75,144 @@
         display: flex;
         justify-content: space-between; // Pushes year left, day/month right
         font-size: 2.025rem; // Increased font size again (1.35 * 1.5)
-        color: #888; // Grey color for date
+        color: white; // Changed color to white
         margin-bottom: 0.75rem; // Space below date line
     }
 
     .year {
-        font-weight: bold;
+        font-weight: normal; // Changed font-weight to normal
     }
 
     .day-month {
-        // Styles specific to DD/MMM if needed
+        font-weight: bold !important; // Added bold font-weight
     }
 
-    .title { // Replaces h3 styling
-        font-size: 1.775rem; // Increased font size (1.25 * 1.5)
-        font-weight: bold; // Ensure title is bold
-        margin-bottom: 0.5rem; // Space below title
-        color: #333; // Darker color for title
+    display: flex;
+    align-items: flex-start;
+
+    .date-column {
+        flex-basis: 25%; // Increased width
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14.5px; // Added vertical spacing
+
+        .calendar-icon {
+          width: calc(0.9 * 80px); // Reduced size
+          height: calc(0.9 * 80px); // Reduced size
+          i {
+            font-size: 5rem !important;  // ~5× larger
+            display: block;
+          }
+        }
+
+        .year {
+          font-size: calc(0.9 * 48px) !important; // Final reduced size (43.2px)
+        }
+
+        .day-month {
+          font-size: 24px; // Final restored size
+        }
     }
 
-    .location { // Replaces p styling
-        font-size: 2.025rem; // Increased font size again (1.35 * 1.5)
-        line-height: 2; // Increased line height
-        color: #666; // Keep original location color
-        margin: 0; // Remove default paragraph margin
+    .content-column {
+        flex: 1;
+        text-align: left;
+
+        .title {
+            text-align: left;
+            margin-top: 0px; // Removed top margin
+        }
+        .location {
+            text-align: left;
+        }
     }
 }
-// Remove old h3 and p selectors for tournamentCard
-// .tournamentCard h3 { ... }
-// .tournamentCard p { ... }
+/* Removed comment about old selectors */
 
-.tournamentList {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 980px;
-    margin: auto;
-    font-size: 32px;
+/* Specific layout for tournament list in selection view moved below */
+
+// --- Styles for Tournament Selection View ---
+
+.pinLogin {
+    margin-top: 0px; // Applied globally as requested
 }
+
+.tournament-selection-view {
+    // Styles specific to the selection view container if needed
+}
+
+/* Styles for the title/subtitle container (div) */
+.tournament-selection-view > div:first-of-type {
+  margin-top: 10%;
+}
+
+/* Styles for the main title (h1) */
+.tournament-selection-view h1 {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 72px;
+}
+
+/* Styles for the subtitle (h2) */
+.tournament-selection-view h2 {
+  // Merged styles from ai-style-change-4
+  color: rgb(0, 0, 0);
+  font-weight: 400;
+  font-family: Arial, Helvetica, sans-serif;
+  opacity: 0.3;
+  font-size: 60px;
+  line-height: 28px; // Added
+  text-align: center;
+  text-transform: none; // Added
+  letter-spacing: normal; // Added
+  word-spacing: 0px; // Added
+}
+
+/* Styles for the subheading h3 */
+.tournament-selection-view h3 {
+    // Merged styles from ai-style-change-1
+    color: rgb(255, 255, 255); // Changed
+    font-weight: 700; // Changed
+    font-family: Arial, Helvetica, sans-serif; // Added
+    opacity: 1; // Added
+    font-size: 43.2px;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 784px;
+    line-height: 1.5;
+    margin-left: auto; // Center the h3 block itself if max-width applies
+    margin-right: auto;
+    margin-bottom: 1rem; // Add some space below subheading
+}
+
+/* Styles for the tournament cards (.tournamentCard.clickable) */
+.tournamentCard.clickable {
+  margin-bottom: 35px;
+  margin-left: 35px;
+  margin-right: 35px;
+}
+
+/* Styles for the tournament list (.tournamentList) */
+.tournament-selection-view .tournamentList {
+  margin-top: 0px;
+  // Properties moved from the duplicate rule block:
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  width: 980px;
+  margin-left: auto; // Use auto margins for centering block element
+  margin-right: auto;
+  font-size: 32px; // Note: This sets base font size for list items
+}
+
+/* Styles for the tournament card titles (.tournamentCard.clickable .title) */
+.tournamentCard.clickable .title {
+  font-size: 31.24px; // Overrides the general .title font-size for clickable cards
+  text-transform: uppercase;
+}
+
+// --- End Styles for Tournament Selection View ---
+
 
 // Style for the PIN entry feedback message
 .pin-message {
@@ -196,38 +295,4 @@
     color: #555; // Keep color
     // Removed background-color, padding, border-radius
     z-index: 10; // Ensure it's above other elements if necessary
-}
-
-// Style for the PIN entry feedback message
-.pin-message {
-    font-size: 3.6em; // Double the size of the version text (1.8em * 2)
-    color: red; // Make error messages stand out
-    min-height: 1.2em; // Ensure space is reserved even when empty (adjust based on font size)
-    text-align: center; // Center the message
-    margin-top: 1rem; // Add some space above
-    margin-bottom: 1rem; // Adjust existing margin if needed
-}
-
-// Styles for the back button on the PIN entry screen
-.back-button-container {
-    width: 100%; // Take full width to allow centering
-    text-align: center; // Center the button inline
-    margin-bottom: 2rem; // Increased space below the button (1rem + 1rem)
-}
-
-.back-button {
-    font-size: 4rem; // Increased font size
-    padding: 2.4rem 4.5rem; // Increased padding
-    background-color: #f0f0f0; // Light grey background
-    border: 1px solid #ccc; // Standard border
-    border-radius: 5px; // Slightly rounded corners
-    cursor: pointer; // Indicate it's clickable
-    color: #333; // Darker text color
-    line-height: 1; // Ensure text aligns vertically
-
-    &:hover {
-        background-color: #e0e0e0; // Darken background on hover
-        border-color: #bbb; // Darken border on hover
-        color: #000;
-    }
 }
