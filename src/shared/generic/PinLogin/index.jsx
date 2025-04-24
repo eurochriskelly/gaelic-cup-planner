@@ -165,18 +165,28 @@ const PinLogin = () => {
       return <div className="pinLogin">No active tournaments found.</div>;
     }
 
-    return (
-      // Add scoping class and new title/subtitle elements
-      <div className="pinLogin tournament-selection-view">
-        {/* Container for the title and subtitle */}
-        <div>
-          <h1>Pitch perfect</h1>
-          {/* Use versionInfo from context */}
-          <h2>v{versionInfo?.mobile || '?.?.?'}</h2>
-        </div>
+    // Common Header for both views
+    const AppHeader = () => (
+      <div className="app-header">
+        <h1>Pitch perfect</h1>
+        <h2>v{versionInfo?.mobile || '?.?.?'}</h2>
+      </div>
+    );
 
-        {/* Subheading before the tournament list */}
-        <h3>Select from upcoming tournaments</h3>
+    // Tournament Selection View
+    if (!selectedTournament) {
+      // ... loading/error/empty checks ...
+
+      return (
+        <div className="pinLogin tournament-selection-view">
+          <AppHeader /> {/* Render header */}
+
+          {/* Subheading before the tournament list */}
+          <h3>Select from upcoming tournaments</h3>
+
+          <div className="tournamentList">
+            {/* Use the TournamentCard component for the list */}
+            {availableTournaments.map((t) => (
 
         <div className="tournamentList">
           {/* Use the TournamentCard component for the list */}
@@ -198,7 +208,9 @@ const PinLogin = () => {
   // PIN Entry View
 
   return (
-    <div className="pinLogin" style={{ position: 'relative' }}> {/* Added position: relative */}
+    <div className="pinLogin pin-entry-view" style={{ position: 'relative' }}> {/* Added class */}
+      <AppHeader /> {/* Render header */}
+
       {/* Back Icon Span */}
       <span className="back-icon-span" onClick={() => setSelectedTournament(null)}>
         <i className="pi pi-arrow-circle-left"></i> {/* Changed icon class */}
