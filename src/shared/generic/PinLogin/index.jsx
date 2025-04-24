@@ -8,6 +8,13 @@ import TournamentCard from "./TournamentCard"; // Import the new component
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 
+// Moved AppHeader outside the PinLogin component
+const AppHeader = ({ version }) => (
+  <div className="app-header">
+    <h1>Pitch perfect</h1>
+    <h2>v{version || '?.?.?'}</h2>
+  </div>
+);
 
 const PinLogin = () => {
   const { t } = useTranslation();
@@ -162,22 +169,23 @@ const PinLogin = () => {
       return <div className="pinLogin error">{fetchError}</div>;
     }
     if (availableTournaments.length === 0) {
+       // Handle empty state - Render header and message
+       return (
+         <>
+           <AppHeader version={versionInfo?.mobile} />
+           <div className="pinLogin">No active tournaments found.</div>
+           <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
+         </>
+       );
     }
+  } // End of loading/error/empty checks
 
-    // Common Header for both views
-    const AppHeader = () => (
-      <div className="app-header">
-        <h1>Pitch perfect</h1>
-        <h2>v{versionInfo?.mobile || '?.?.?'}</h2>
-      </div>
-    );
+  // Main return statement for the component
+  return (
+    <> {/* Use Fragment to wrap header and content */}
+      <AppHeader version={versionInfo?.mobile} />
 
-    // Main return statement for the component
-    return (
-      <> {/* Use Fragment to wrap header and content */}
-        <AppHeader />
-
-        {/* Conditional rendering for Tournament Selection or PIN Entry */}
+      {/* Conditional rendering for Tournament Selection or PIN Entry */}
         {!selectedTournament ? (
           // Tournament Selection View
           <div className="pinLogin tournament-selection-view">
