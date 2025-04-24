@@ -4,17 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
 import TournamentCard from "./TournamentCard"; // Import the new component
+import LoginHeader from "../LoginHeader"; // Import the new LoginHeader component
 //import LanguageSwitcher from "../LanguageSwitcher";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 
-// Moved AppHeader outside the PinLogin component
-const AppHeader = ({ version }) => (
-  <div className="app-header">
-    <h1>Pitch perfect</h1>
-    <h2>v{version || '?.?.?'}</h2>
-  </div>
-);
+// Removed AppHeader definition from here
 
 const PinLogin = () => {
   const { t } = useTranslation();
@@ -172,7 +167,7 @@ const PinLogin = () => {
        // Handle empty state - Render header and message
        return (
          <>
-           <AppHeader version={versionInfo?.mobile} />
+           <LoginHeader version={versionInfo?.mobile} />
            <div className="pinLogin">No active tournaments found.</div>
            <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
          </>
@@ -183,7 +178,7 @@ const PinLogin = () => {
   // Main return statement for the component
   return (
     <> {/* Use Fragment to wrap header and content */}
-      <AppHeader version={versionInfo?.mobile} />
+      <LoginHeader version={versionInfo?.mobile} />
 
       {/* Conditional rendering for Tournament Selection or PIN Entry */}
         {!selectedTournament ? (

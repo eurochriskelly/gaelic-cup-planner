@@ -12,6 +12,9 @@
     opacity: 0.8;
     background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #799a77 10px ), repeating-linear-gradient( #23542055, #235420 );
 
+    // Import LoginHeader styles (adjust path if necessary)
+    @import '../LoginHeader/LoginHeader.scss';
+
     .thinking {
       color: #999;
       font-size: 2.8rem;
@@ -144,45 +147,8 @@
     // Styles specific to the selection view container if needed
 }
 
-// --- Styles for App Header (Visible in both views) ---
-.app-header {
-  position: sticky; // Make header stick to top
-  top: 0; // Stick to the very top
-  z-index: 10; // Ensure it's above other content
-  background-color: #799a77; // Match main background for consistency
-  padding-top: 27.648px; // Increased
-  padding-bottom: 27.648px; // Increased
-  padding-left: 55.296px; // Increased
-  padding-right: 55.296px; // Increased
-  width: 100%;
-  text-align: center;
-  /* margin-bottom: 2rem; // Removed margin, padding handles spacing */
-  display: flex; // Added
-  flex-direction: column; // Added
-  align-items: center; // Added
-
-  h1 {
-    text-transform: uppercase;
-    text-align: center;
-    font-size: 72px;
-    margin: 0; // Remove default margins
-  }
-
-  h2 {
-    // Merged styles from ai-style-change-4
-    color: rgb(0, 0, 0);
-    font-weight: 400;
-    font-family: Arial, Helvetica, sans-serif;
-    opacity: 0.3;
-    font-size: 60px;
-    line-height: 1; // Adjusted line-height
-    text-align: center;
-    text-transform: none; // Added
-    letter-spacing: normal; // Added
-    word-spacing: 0px; // Added
-    margin: 0; // Remove default margins
-  }
-}
+// --- Styles for App Header ---
+// Moved to src/shared/generic/LoginHeader/LoginHeader.scss
 // --- End Styles for App Header ---
 
 
