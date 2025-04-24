@@ -166,7 +166,18 @@ const PinLogin = () => {
     }
 
     return (
-      <div className="pinLogin">
+      // Add scoping class and new title/subtitle elements
+      <div className="pinLogin tournament-selection-view">
+        {/* Container for the title and subtitle */}
+        <div>
+          <h1>Pitch perfect</h1>
+          {/* Use versionInfo from context */}
+          <h2>v{versionInfo?.mobile || '?.?.?'}</h2>
+        </div>
+
+        {/* Subheading before the tournament list */}
+        <h3>Select from upcoming tournaments</h3>
+
         <div className="tournamentList">
           {/* Use the TournamentCard component for the list */}
           {availableTournaments.map((t) => (
