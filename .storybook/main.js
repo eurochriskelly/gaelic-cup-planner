@@ -43,10 +43,19 @@ const config = {
     //   include: path.resolve(__dirname, '../src'),
     // });
 
-    // Remove manual SCSS rule - let @storybook/addon-postcss handle it along with sass-loader (which it should detect)
-    // config.module.rules.push({
-    //   test: /\.scss$/,
-    //   use: [
+    // Re-add manual SCSS rule to ensure sass-loader is used.
+    // @storybook/addon-postcss should still process the output CSS.
+    config.module.rules.push({
+      test: /\.scss$/,
+      use: [
+        'style-loader', // Inject styles into DOM
+        'css-loader',   // Translates CSS into CommonJS
+        'sass-loader'   // Compiles Sass to CSS
+      ],
+      include: path.resolve(__dirname, '../src'), // Target SCSS files within src
+    });
+
+    // Remove default CSS rule filtering if it exists (it's commented out anyway)
     //     'style-loader',
     //     'css-loader',
     //     'sass-loader'
