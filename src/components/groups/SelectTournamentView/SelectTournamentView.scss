@@ -1,5 +1,5 @@
-// @import "../../../../../shared/css/_colors.scss";
-@import "src/shared/css/_colors.scss";
+// @import "../../../../../shared/css/_colors.scss"; // Old path commented out
+@import "~/src/shared/css/_colors.scss"; // Use alias
 
 .selectTournamentView {
     > article {
