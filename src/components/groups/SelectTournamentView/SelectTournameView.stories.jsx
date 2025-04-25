@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import SelectTournamentView from './';
-import '~/src/shared/css/site.css';
+// import '~/src/shared/css/site.css'; // Removed redundant import (already in preview.js)
 
 const PageTournament = (props) => {
   return (
