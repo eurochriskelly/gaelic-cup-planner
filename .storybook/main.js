@@ -74,7 +74,7 @@ const config = {
     // Remove default CSS rule if it conflicts (optional, depends on exact Storybook version/setup)
     // This prevents Storybook's default CSS rule from interfering
     config.module.rules = config.module.rules.filter(
-       rule => rule.test?.toString() !== '/\\.css$/i' && rule.test?.toString() !== '/\\.css$/'
+       // rule => rule.test?.toString() !== '/\\.css$/i' && rule.test?.toString() !== '/\\.css$/' // Temporarily remove filter
     );
 
 
