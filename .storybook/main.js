@@ -59,7 +59,7 @@ const config = {
         require.resolve('style-loader'), // Use require.resolve
         require.resolve('css-loader'), // Use require.resolve
         {
-          loader: require.resolve('postcss-loader'), // Use require.resolve
+          loader: 'postcss-loader', // Revert this specific line back to string
           options: {
             postcssOptions: {
               config: path.resolve(__dirname, '../postcss.config.js'),
