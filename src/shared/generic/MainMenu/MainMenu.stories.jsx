@@ -26,7 +26,7 @@ const Show = (props) => {
 }
 
 export default {
-  title: 'layout/MainMenu',
+  title: 'generic/MainMenu',
   component: Show,
   parameters: {
     layout: 'centered',

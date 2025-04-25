@@ -3,7 +3,7 @@
 import './logo-box.js'; // Adjust the import path to where your component is defined
 
 export default {
-  title: 'Components/LogoBox', // The title in Storybook's sidebar
+  title: 'web-comp/LogoBox', // The title in Storybook's sidebar
   component: 'logo-box', // The custom element tag name
   argTypes: {
     title: {

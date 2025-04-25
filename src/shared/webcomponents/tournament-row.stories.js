@@ -2,7 +2,7 @@
 import { createTournamentRow } from './tournament-row.js';
 
 export default {
-  title: 'Components/TournamentRow',
+  title: 'web-comp/TournamentRow',
   component: 'tournament-row', // Storybook still treats it as a "component" conceptually
 };
 

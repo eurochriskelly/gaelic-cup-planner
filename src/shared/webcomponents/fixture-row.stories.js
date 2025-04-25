@@ -4,7 +4,7 @@ import './team-name.js';    // Assume this exists
 import './knockout-level.js'; // Assume this exists
 
 export default {
-  title: 'Components/FixtureRow',
+  title: 'web-comp/FixtureRow',
   component: 'fixture-row',
   argTypes: {
     team1: { control: 'text' },

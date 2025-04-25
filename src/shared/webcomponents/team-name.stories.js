@@ -2,7 +2,7 @@ import './team-name.js';
 import './logo-box.js';
 
 export default {
-    title: 'Components/TeamName',
+    title: 'web-comp/TeamName',
     component: 'team-name',
     argTypes: {
         name: { control: 'text', description: 'Team name, can include slashes' },

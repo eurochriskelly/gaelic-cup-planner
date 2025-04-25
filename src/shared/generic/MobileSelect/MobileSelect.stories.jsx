@@ -15,7 +15,7 @@ const Show = (props) => {
 }
 
 export default {
-  title: 'layout/MobileSelect',
+  title: 'generic/MobileSelect',
   component: Show,
   parameters: {
     layout: 'centered',
