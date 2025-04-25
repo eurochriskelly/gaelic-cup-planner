@@ -4,6 +4,11 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: resolve(__dirname, 'src/interfaces/desktop'),
+  resolve: {
+    alias: {
+      '~': resolve(__dirname, '.'), // Define ~ alias to point to project root
+    },
+  },
   plugins: [react()],
   publicDir: resolve(__dirname, 'src/interfaces/desktop/public'),
   server: {
