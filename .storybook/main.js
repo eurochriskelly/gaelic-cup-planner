@@ -33,31 +33,28 @@ const config = {
       '~': path.resolve(__dirname, '../'), // Add '~' alias
     };
 
-    // --- CSS/Tailwind/PostCSS Setup ---
-    // Ensure CSS rules process files in src and handle PostCSS correctly
-    config.module.rules.push({
-      test: /\.css$/,
-      use: [
-        { loader: 'style-loader' }, // Keep style-loader
-        { loader: 'css-loader', options: { importLoaders: 1 } }, // Keep css-loader (importLoaders might still be relevant depending on other loaders)
-        // Remove explicit postcss-loader configuration for CSS
-      ],
-      include: path.resolve(__dirname, '../src'), // Target CSS files within src
-    });
+    // Remove manual CSS rule - let @storybook/addon-postcss handle it
+    // config.module.rules.push({
+    //   test: /\.css$/,
+    //   use: [
+    //     { loader: 'style-loader' },
+    //     { loader: 'css-loader', options: { importLoaders: 1 } },
+    //   ],
+    //   include: path.resolve(__dirname, '../src'),
+    // });
 
-    // --- SCSS Setup ---
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: [
-        'style-loader', // Keep style-loader
-        'css-loader', // Keep css-loader
-        // Remove explicit postcss-loader configuration for SCSS
-        'sass-loader' // Keep sass-loader
-      ],
-      include: path.resolve(__dirname, '../src'), // Target SCSS files within src
-    });
+    // Remove manual SCSS rule - let @storybook/addon-postcss handle it along with sass-loader (which it should detect)
+    // config.module.rules.push({
+    //   test: /\.scss$/,
+    //   use: [
+    //     'style-loader',
+    //     'css-loader',
+    //     'sass-loader'
+    //   ],
+    //   include: path.resolve(__dirname, '../src'),
+    // });
 
-    // Remove default CSS rule if it conflicts (optional, depends on exact Storybook version/setup)
+    // Remove default CSS rule filtering if it exists (it's commented out anyway)
     // This prevents Storybook's default CSS rule from interfering
     // config.module.rules = config.module.rules.filter( // Line removed/commented out as the filter logic is commented
     //    // rule => rule.test?.toString() !== '/\\.css$/i' && rule.test?.toString() !== '/\\.css$/'
