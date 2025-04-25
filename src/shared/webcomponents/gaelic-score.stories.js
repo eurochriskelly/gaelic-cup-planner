@@ -1,7 +1,7 @@
 import './gaelic-score.js';
 
 export default {
-  title: 'Components/GaelicScore',
+  title: 'web-comp/GaelicScore',
   component: 'gaelic-score',
   argTypes: {
     goals: {

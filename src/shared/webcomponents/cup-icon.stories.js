@@ -1,7 +1,7 @@
 import './cup-icon.js';
 
 export default {
-  title: 'Components/CupIcon',
+  title: 'web-comp/CupIcon',
   component: 'cup-icon',
   argTypes: {
     icon: {

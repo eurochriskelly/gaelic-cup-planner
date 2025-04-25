@@ -15,7 +15,7 @@ const NavBar = (props) => {
 }
 
 export default {
-  title: 'layout/NavBar',
+  title: 'generic/NavBar',
   component: NavBar,
   parameters: {
     layout: 'centered',

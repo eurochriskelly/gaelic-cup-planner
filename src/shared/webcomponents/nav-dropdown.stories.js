@@ -2,7 +2,7 @@
 import './nav-dropdown.js';
 
 export default {
-  title: 'Components/NavDropdown',
+  title: 'web-comp/NavDropdown',
   component: 'nav-dropdown',
 };
 

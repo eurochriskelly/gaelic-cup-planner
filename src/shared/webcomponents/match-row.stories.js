@@ -2,7 +2,7 @@
 import { createMatchRow } from './match-row.js';
 
 export default {
-  title: 'Components/MatchRow',
+  title: 'web-comp/MatchRow',
   component: 'match-row',
 };
 

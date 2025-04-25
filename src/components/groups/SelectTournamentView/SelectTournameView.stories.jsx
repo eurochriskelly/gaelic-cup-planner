@@ -27,7 +27,7 @@ const PageTournament = (props) => {
 };
 
 export default {
-  title: 'groups/GroupStandings',
+  title: 'groups/SelectTournamentView',
   component: PageTournament,
   parameters: {
     layout: 'centered',

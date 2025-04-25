@@ -1,7 +1,7 @@
 import './knockout-level.js';
 
 export default {
-  title: 'Components/KnockoutLevel',
+  title: 'web-comp/KnockoutLevel',
   component: 'knockout-level',
   argTypes: {
     matchId: {

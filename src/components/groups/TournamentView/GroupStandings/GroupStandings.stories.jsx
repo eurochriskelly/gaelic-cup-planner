@@ -23,7 +23,7 @@ const Page = (props) => {
 }
 
 export default {
-  title: 'groups/GroupStandings',
+  title: 'groups/TournamentView/GroupStandings',
   component: Page,
   parameters: {
     layout: 'centered',
