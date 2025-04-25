@@ -8,9 +8,11 @@ endef
 
 help:
 	$(call banner,"Available commands:")
-	@echo "  make help    - Show this help message"
-	@echo "  make build   - Build mobile, desktop and storybook"
-	@echo "  make dev     - Run development servers (kills existing ones first)"
+	@echo "  make help           - Show this help message"
+	@echo "  make build          - Build mobile, desktop and storybook"
+	@echo "  make dev-mobile     - Run development servers (kills existing ones first)"
+	@echo "  make dev-desktop    - Run development servers for desktop"
+	@echo "  make story          - Run storybook"
 
 build:
 	$(call banner,"BUILDING MOBILE")
@@ -31,7 +33,7 @@ dev-desktop:
 	@echo "Mobile server on port 5173"
 	@npm run dev:mobile
 
-dev-storybook:
+story:
 	$(call banner,"STARTING DEV SERVER: mobile")
 	@echo "Mobile server on port 5173"
-	@npm run dev:mobile
+	@npm run storybook

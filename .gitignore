@@ -20,3 +20,4 @@ gg_env.sh
 
 src/backend/
 versions/
+storybook-static
