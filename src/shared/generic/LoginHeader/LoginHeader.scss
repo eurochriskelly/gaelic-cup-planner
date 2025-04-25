@@ -19,38 +19,51 @@
   opacity: 1;
   background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 10px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (moved from PinLogin.scss)
-  .logo-container {
+  .app-header {
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 2rem;
+  }
 
+  .logo-container {
     .whistle {
-      height: 180px; // Increased by 50% from 120px
+      height: 180px;
       width: auto;
       object-fit: contain;
     }
   }
 
-  .title-container {
+  .title-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    padding-top: 1rem;
+  }
+
+  .app-name {
+    font-size: 72px;
+    text-transform: uppercase;
+    margin: 0;
+    color: #f6ffd7;
+    line-height: 1;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    padding-bottom: 0.5rem;
+  }
+
+  .version-line {
+    display: flex;
+    justify-content: flex-end;
     width: 100%;
-    padding: 0 2rem;
+  }
 
-    .app-name {
-      font-size: 72px;
-      text-transform: uppercase;
-      margin: 0;
-      color: #f6ffd7;
-    }
-
-    .app-version {
-      font-size: 60px;
-      color: rgba(0, 0, 0, 0.3);
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-    }
+  .app-version {
+    font-size: 60px;
+    color: rgba(0, 0, 0, 0.3);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding-top: 0.5rem;
   }
 
   .back-icon-span {

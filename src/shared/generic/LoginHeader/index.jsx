@@ -6,15 +6,17 @@ const LoginHeader = ({ version, showBackButton, onBackClick }) => (
     <div className="logo-container">
       <img src={whistleImage} className="whistle" alt="Pitch Perfect Whistle" />
     </div>
-    <div className="title-container">
+    <div className="title-group">
       <span className="app-name">Pitch Perfect</span>
-      <span className="app-version">v{version || '?.?.?'}</span>
-      {showBackButton && (
-        <span className="back-icon-span" onClick={onBackClick}>
-          <i className="pi pi-arrow-circle-left"></i>
-        </span>
-      )}
+      <div className="version-line">
+        <span className="app-version">v{version || '?.?.?'}</span>
+      </div>
     </div>
+    {showBackButton && (
+      <span className="back-icon-span" onClick={onBackClick}>
+        <i className="pi pi-arrow-circle-left"></i>
+      </span>
+    )}
   </div>
 );
 
