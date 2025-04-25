@@ -2,6 +2,7 @@
 
 // At the top of your file
 const path = require('path');
+const webpack = require('webpack'); // Import webpack
 
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
 const config = {
@@ -67,8 +68,15 @@ const config = {
     // This prevents Storybook's default CSS rule from interfering
     // config.module.rules = config.module.rules.filter( // Line removed/commented out as the filter logic is commented
     //    // rule => rule.test?.toString() !== '/\\.css$/i' && rule.test?.toString() !== '/\\.css$/'
-    // );
+    // ); // End of SCSS rule push
 
+    // Add ProvidePlugin to make React globally available in Storybook modules
+    // This helps components that rely on Vite's jsxInject and don't explicitly import React.
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        React: 'react',
+      })
+    );
 
     return config;
   },
