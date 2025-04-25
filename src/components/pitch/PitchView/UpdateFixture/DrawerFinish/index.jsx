@@ -119,16 +119,15 @@ const DrawerFinish = ({
       showTotal = <span>{showTotal.replace(/#/g, '0')}</span>;
     }
     return (
-      <div className="teamScore">
+      <div
+        className="teamScore"
+        onClick={actions.updateScore.bind(null, id, "goals")}
+      >
         <h4>{team}</h4>
         <div>
-          <div onClick={actions.updateScore.bind(null, id, "goals")}>
-            {showGoals}
-          </div>
+          <div>{showGoals}</div>
           <div>&nbsp;-&nbsp;</div>
-          <div onClick={actions.updateScore.bind(null, id, "points")}>
-            {showPoints}
-          </div>
+          <div>{showPoints}</div>
           <div>
             <span>(</span>
             <span>{showTotal}</span>
