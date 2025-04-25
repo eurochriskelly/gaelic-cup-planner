@@ -74,12 +74,13 @@
 
     i.pi-arrow-circle-left {
       font-size: 6rem;
-      color: #f6ffd7;
+      color: rgba(174, 214, 36, 0.3); /* #aed624 with 30% opacity */
       padding: 0.5rem;
+      transition: color 0.2s ease;
     }
 
     &:hover i {
-      color: #fff;
+      color: rgba(174, 214, 36, 0.7); /* 70% opacity on hover */
     }
   }
 }
