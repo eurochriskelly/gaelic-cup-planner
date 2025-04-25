@@ -1,83 +1,115 @@
 @import "src/shared/css/_colors.scss";
 
 .ListCardedPlayers {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   min-height: 100%;  
-   .card-question {
-     h3 {
-       text-align: center;
-       font-size: 2.7rem;
-       margin: 0rem 0 3rem;
-     }
-     .toggle {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
 
-        margin: 1rem 0;
-        button {
+  .card-question {
+      h3 {
+        text-align: center;
+        font-size: 2.7rem;
+        margin: 0rem 0 3rem;
+      }
+
+        .toggle {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+
+      margin: 1rem 0;
+
+      button {
           padding: 2rem 6rem;
           font-size: 3.3rem;
           border-radius: 1rem;
           border: 1px solid $pc;
-          &.yes.active, &.no.active { background-color: $sc; color: white; }
+&.yes.active,
+  &.no.active {
+    background-color: $sc;
+    color: white;
         }
       }
     }
-    .card-question {
-       > div > button {
-         padding:18px;
-         margin: 10px;
-       }
     }
+    .card-question {
+    >div>button {
+        padding: 18px;
+        margin: 10px;
+      }
+    }
+
     .card-table {
       width: 100%;
       border-collapse: collapse;
-      th, td {
-        padding: 0rem;
-        border-bottom: 1px solid #ddd;
-      }
-      th:first-child, td:first-child {
-        width: 70%; /* More space for team name */
-        font-size: 2rem;
-        font-weight: bold;
-      }
-      th:last-child, td:last-child {
-        width: 30%; /* Less space for card type */
-        text-align: center;
-      }
-      .card-sub-table {
-        width: 100%;
-        margin: 0.5rem 0;
-        align-items: center;
-        td {
+th,
+  td {
+    padding: 0rem;
+    border-bottom: 1px solid #ddd;
+  }
+th:first-child,
+td:first-child {
+  width: 70%;
+  /* More space for team name */
+  font-size: 2rem;
+  font-weight: bold;
+}
+th:last-child,
+td:last-child {
+  width: 30%;
+  /* Less space for card type */
+  text-align: center;
+}
+
+        .card-sub-table {
+          width: 100%;
+          margin: 0.5rem 0;
+          align-items: center;
+
+      td {
           padding: 0.5rem;
-          .card-color {
-            width: 100px; /* Doubled */
-            height: 100px; /* Doubled */
+
+        .card-color {
+          width: 100px;
+            /* Doubled */
+            height: 100px;
+            /* Doubled */
           border-radius: 5px;
-          &.red { background-color: red; }
-          &.yellow { background-color: yellow; }
-          &.black { background-color: black; }
-        }
+&.red {
+    background-color: red;
+  }
+&.yellow {
+  background-color: yellow;
+}
+
+&.black {
+  background-color: black;
+}
+}
         input[type="number"] {
-          width: 100px; /* Doubled */
-          height: 100px; /* Doubled */
+          width: 100px;
+            /* Doubled */
+            height: 100px;
+            /* Doubled */
           padding: 0.5rem;
           font-size: 1.6rem;
           text-align: center;
         }
+
         input[type="text"] {
-          height: 100px; /* Doubled */
+          height: 100px;
+            /* Doubled */
           padding: 0.5rem 1rem;
-          width: 100%; /* Full column width */
+          width: 100%;
+            /* Full column width */
           font-size: 1.6rem;
           text-transform: uppercase;
         }
+
         button {
-          height: 100px; /* Doubled */
+          height: 100px;
+            /* Doubled */
           padding: 0 1rem;
           font-size: 1.4rem;
           background-color: #ff4444;
@@ -88,35 +120,37 @@
         }
       }
     }
+
     .card-actions {
       display: flex;
       justify-content: space-between;
       gap: 1rem;
       margin: 2rem 0;
-      
+
       button {
         flex: 1;
-        padding: 2rem;
-        font-size: 2.5rem;
-        font-weight: bold;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        
+        padding: 2rem !important;
+          font-size: 2.5rem !important;
+          font-weight: bold !important;
+          border-radius: 10px !important;
+          border: none !important;
+          cursor: pointer !important;
+          transition: all 0.2s ease !important;
+          min-width: 8rem;
+          text-align: center;
         &.ok {
-          background-color: $sc;
-          color: white;
+          background-color: $sc !important;
+            color: white !important;
           &:hover {
-            background-color: darken($sc, 10%);
+            background-color: darken($sc, 10%) !important;
           }
         }
-        
+
         &.cancel {
-          background-color: $bg-dark-20;
-          color: white;
+          background-color: $bg-dark-20 !important;
+            color: white !important;
           &:hover {
-            background-color: darken($bg-dark-20, 10%);
+            background-color: darken($bg-dark-20, 10%) !important;
           }
         }
       }
@@ -124,3 +158,12 @@
   }
 }
 
+// Override OK/Cancel button sizing for ListCardedPlayers
+.ListCardedPlayers .card-actions>button.ok,
+.ListCardedPlayers .card-actions>button.cancel {
+  display: inline-block !important;
+  padding: 2rem 2rem !important;
+  font-size: 3rem !important;
+  min-width: 12rem !important;
+  line-height: 1 !important;
+}
