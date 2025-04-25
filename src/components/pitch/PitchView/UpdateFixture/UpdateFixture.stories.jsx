@@ -1,6 +1,6 @@
 import React from 'react'
 import UpdateFixture from './';
-import './UpdateFixture.css'
+import './UpdateFixture.scss' // Corrected extension from .css to .scss
 
 const TestUpdateFixture = (props) => {
   return (
