@@ -32,20 +32,32 @@
     padding: 0.2rem;
 
     span {
-      color: white;
+      color: inherit;
       padding: 1.5rem 0;
       text-align: center;
+      font-size: 1.5em;
+      background: transparent;
     }
   }
 
   button {
-    max-width: 20px;
-    padding: 0 !important;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    padding: 0.5rem !important;
     margin: 0 !important;
-    min-width: 3.5rem !important;
-    max-width: 0 !important;
-    border-radius: 0;
-    font-size: 3rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #aed624;
+    }
+
+    &:disabled {
+      color: #666;
+      cursor: not-allowed;
+    }
   }
 
   .points>div,

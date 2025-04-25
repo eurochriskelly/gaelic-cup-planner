@@ -33,13 +33,15 @@ const Header = ({ name, team, pages, setPages, setScores, scores }) => {
   return (
     <div className='header'>
       <button
+        className="pi pi-chevron-circle-left"
         disabled={pages[name] < 0 ? "disabled" : ""}
         onClick={decreasePage}
-      >
-        &larr;
-      </button>
+      />
       <span>{name.toUpperCase()}</span>
-      <button onClick={increasePage}>&rarr;</button>
+      <button 
+        className="pi pi-chevron-circle-right"
+        onClick={increasePage}
+      />
     </div>
   );
 };
