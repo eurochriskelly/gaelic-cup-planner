@@ -13,6 +13,7 @@ const config = {
     "@storybook/addon-onboarding",
     "@storybook/addon-interactions",
     "@storybook/addon-viewport",
+    "@storybook/addon-postcss", // Add the official PostCSS addon
   ],
   framework: {
     name: "@storybook/react-webpack5",
@@ -37,17 +38,9 @@ const config = {
     config.module.rules.push({
       test: /\.css$/,
       use: [
-        { loader: 'style-loader' }, // Revert to string
-        { loader: 'css-loader', options: { importLoaders: 1 } }, // Revert to string
-        {
-          loader: 'postcss-loader', // Revert to string
-          options: {
-            // Use postcss.config.js located at the project root
-            postcssOptions: {
-              config: path.resolve(__dirname, '../postcss.config.js'),
-            },
-          },
-        },
+        { loader: 'style-loader' }, // Keep style-loader
+        { loader: 'css-loader', options: { importLoaders: 1 } }, // Keep css-loader (importLoaders might still be relevant depending on other loaders)
+        // Remove explicit postcss-loader configuration for CSS
       ],
       include: path.resolve(__dirname, '../src'), // Target CSS files within src
     });
@@ -56,17 +49,10 @@ const config = {
     config.module.rules.push({
       test: /\.scss$/,
       use: [
-        'style-loader', // Revert to string
-        'css-loader', // Revert to string
-        {
-          loader: 'postcss-loader', // Already string
-          options: {
-            postcssOptions: {
-              config: path.resolve(__dirname, '../postcss.config.js'),
-            },
-          },
-        },
-        'sass-loader' // Revert to string
+        'style-loader', // Keep style-loader
+        'css-loader', // Keep css-loader
+        // Remove explicit postcss-loader configuration for SCSS
+        'sass-loader' // Keep sass-loader
       ],
       include: path.resolve(__dirname, '../src'), // Target SCSS files within src
     });
