@@ -2,7 +2,7 @@
 
 .scoreSelect {
   display: grid;
-  grid-template-columns: 2fr 0.5fr 4fr;
+  grid-template-columns: 2fr 4fr 4fr;
   align-items: normal;
   width: 100%;
   padding: 0.5rem;
@@ -25,7 +25,7 @@
 
   .header {
     display: grid;
-    grid-template-columns: 60px auto 60px;
+    grid-template-columns: 40px auto 40px;
     gap: 10px;
     margin-bottom: 20px;
     padding: 0.2rem;
@@ -35,26 +35,24 @@
       color: $sc-dark-20;
       padding: 1.5rem 0;
       text-align: center;
-      font-size: 2.5em;
+      font-size: 2.1em;
       font-weight: bold;
       background: transparent;
     }
   }
 
-  button {
+        .navigate {
     background: transparent;
     border: none;
     color: $sc-dark-20;
-    font-size: 2.5rem;
-    width: 60px;
+    font-size: 2.2rem;
+      max-width: 60px !important;
+      min-width: 60px !important;
+      width: 60px !important;
     padding: 0 !important;
     margin: 0 !important;
     cursor: pointer;
     transition: color 0.2s ease;
-
-    &:hover {
-      color: #aed624;
-    }
 
     &:disabled {
       color: #666;
@@ -64,7 +62,7 @@
 
   .points>div,
   .goals>div {
-    width: 6rem;
+    width: 7rem;
     padding: 0.1rem 0.7rem;
     color: white;
     text-align: center;
