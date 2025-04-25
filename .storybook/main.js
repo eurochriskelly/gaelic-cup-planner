@@ -37,10 +37,10 @@ const config = {
     config.module.rules.push({
       test: /\.css$/,
       use: [
-        { loader: require.resolve('style-loader') }, // Use require.resolve for robustness
-        { loader: require.resolve('css-loader'), options: { importLoaders: 1 } }, // Use require.resolve
+        { loader: 'style-loader' }, // Revert to string
+        { loader: 'css-loader', options: { importLoaders: 1 } }, // Revert to string
         {
-          loader: require.resolve('postcss-loader'), // Use require.resolve
+          loader: 'postcss-loader', // Revert to string
           options: {
             // Use postcss.config.js located at the project root
             postcssOptions: {
@@ -56,17 +56,17 @@ const config = {
     config.module.rules.push({
       test: /\.scss$/,
       use: [
-        require.resolve('style-loader'), // Use require.resolve
-        require.resolve('css-loader'), // Use require.resolve
+        'style-loader', // Revert to string
+        'css-loader', // Revert to string
         {
-          loader: 'postcss-loader', // Revert this specific line back to string
+          loader: 'postcss-loader', // Already string
           options: {
             postcssOptions: {
               config: path.resolve(__dirname, '../postcss.config.js'),
             },
           },
         },
-        require.resolve('sass-loader') // Use require.resolve
+        'sass-loader' // Revert to string
       ],
       include: path.resolve(__dirname, '../src'), // Target SCSS files within src
     });
