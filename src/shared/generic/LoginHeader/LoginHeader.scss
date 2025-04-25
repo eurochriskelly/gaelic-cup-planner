@@ -19,6 +19,21 @@
   opacity: 1;
   background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 10px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (moved from PinLogin.scss)
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+
+    .whistle {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
   .back-icon-span {
     position: absolute; // Position relative to the header
     top: 50%; // Center vertically
@@ -26,15 +41,6 @@
     transform: translateY(-50%); // Fine-tune vertical centering
     cursor: pointer;
     z-index: 15; // Ensure it's above header content
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    img.whistle {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
-    }
 
     i.pi-arrow-circle-left {
         font-size: 6rem; // Keep icon size
@@ -47,6 +53,12 @@
     }
   }
 
+
+  .title-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
   h1 {
     text-transform: uppercase;
