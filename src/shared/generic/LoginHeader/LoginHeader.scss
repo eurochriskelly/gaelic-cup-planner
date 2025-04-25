@@ -19,66 +19,54 @@
   opacity: 1;
   background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 10px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (moved from PinLogin.scss)
-  .header-content {
+  .logo-container {
     display: flex;
-    align-items: center;
-    gap: 2rem;
-    width: 100%;
     justify-content: center;
-    position: relative;
+    margin-bottom: 1rem;
 
     .whistle {
-      height: 120px;
+      height: 180px; // Increased by 50% from 120px
       width: auto;
       object-fit: contain;
     }
   }
 
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 2rem;
+
+    .app-name {
+      font-size: 72px;
+      text-transform: uppercase;
+      margin: 0;
+      color: #f6ffd7;
+    }
+
+    .app-version {
+      font-size: 60px;
+      color: rgba(0, 0, 0, 0.3);
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+    }
+  }
+
   .back-icon-span {
-    position: absolute; // Position relative to the header
-    top: 50%; // Center vertically
-    left: 55.296px; // Align with left padding
-    transform: translateY(-50%); // Fine-tune vertical centering
+    position: absolute;
+    left: 55.296px;
     cursor: pointer;
-    z-index: 15; // Ensure it's above header content
+    z-index: 15;
 
     i.pi-arrow-circle-left {
-        font-size: 6rem; // Keep icon size
-        color: #f6ffd7; // Keep icon color
-        padding: 0.5rem; // Add some clickable area around the icon
+      font-size: 6rem;
+      color: #f6ffd7;
+      padding: 0.5rem;
     }
 
     &:hover i {
-        color: #fff; // Change hover color if needed
+      color: #fff;
     }
-  }
-
-
-  .title-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  h1 {
-    text-transform: uppercase;
-    text-align: center;
-    font-size: 72px;
-    margin: 0; // Remove default margins
-  }
-
-  h2 {
-    // Merged styles from ai-style-change-4
-    color: rgb(0, 0, 0);
-    font-weight: 400;
-    font-family: Arial, Helvetica, sans-serif;
-    opacity: 0.3;
-    font-size: 60px;
-    line-height: 1; // Adjusted line-height
-    text-align: center;
-    text-transform: none; // Added
-    letter-spacing: normal; // Added
-    word-spacing: 0px; // Added
-    margin: 0; // Remove default margins
   }
 }
