@@ -1,5 +1,5 @@
 /** @type { import('@storybook/react').Preview } */
-// import '../src/shared/styles/tailwind.css';
+import '~/src/shared/css/site.css'; // Use the alias and point to your global CSS
 
 const preview = {
   parameters: {
