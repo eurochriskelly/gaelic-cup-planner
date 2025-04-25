@@ -25,17 +25,18 @@
 
   .header {
     display: grid;
-    grid-template-columns: 55px auto 55px;
-    background: desaturate(lighten($sc, 20%), 15%);
+    grid-template-columns: 60px auto 60px;
     gap: 10px;
     margin-bottom: 20px;
     padding: 0.2rem;
+    background: transparent;
 
     span {
-      color: inherit;
+      color: $sc-dark-20;
       padding: 1.5rem 0;
       text-align: center;
-      font-size: 1.5em;
+      font-size: 2.5em;
+      font-weight: bold;
       background: transparent;
     }
   }
@@ -43,9 +44,10 @@
   button {
     background: transparent;
     border: none;
-    color: white;
+    color: $sc-dark-20;
     font-size: 2.5rem;
-    padding: 0.5rem !important;
+    width: 60px;
+    padding: 0 !important;
     margin: 0 !important;
     cursor: pointer;
     transition: color 0.2s ease;
@@ -75,6 +77,9 @@
 
   .points>div {
     background: lighten($sc, 5%);
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
   }
 
   .square {
