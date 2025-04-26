@@ -1,187 +1,202 @@
 import { useState } from "react";
 import CardButton from "./CardButton";
 import './ListCardedPlayers.scss';
-     
+
 const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () => {} }) => {
-  const [recordCards, setRecordCards] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [editingCard, setEditingCard] = useState(null);
   const [cardedPlayersTeam1, setCardedPlayersTeam1] = useState([]);
   const [cardedPlayersTeam2, setCardedPlayersTeam2] = useState([]);
+  const [formData, setFormData] = useState({
+    team: team1,
+    cardType: 'red',
+    number: '',
+    name: ''
+  });
 
   const actions = {
-    addCard: (team, cardType) => {
-      const newCard = { id: Date.now(), team, cardType, number: '', name: '', confirmed: false }; // Add confirmed state
-      if (team === team1) {
-        setCardedPlayersTeam1([...cardedPlayersTeam1, newCard]);
-      } else {
-        setCardedPlayersTeam2([...cardedPlayersTeam2, newCard]);
+    addOrUpdateCard: () => {
+      if (!formData.number) {
+        alert('Player number is required.');
+        return;
       }
-    },
-    updateCard: (team, id, field, value) => {
-      const updateTeam = team === team1 ? setCardedPlayersTeam1 : setCardedPlayersTeam2;
-      updateTeam(prev => prev.map(card => 
-        card.id === id ? { ...card, [field]: value } : card
-      ));
+      const card = {
+        id: editingCard ? editingCard.id : Date.now(),
+        team: formData.team,
+        cardType: formData.cardType,
+        number: formData.number,
+        name: formData.name || 'Not provided',
+        confirmed: true
+      };
+      const updateTeam = formData.team === team1 ? setCardedPlayersTeam1 : setCardedPlayersTeam2;
+      if (editingCard) {
+        updateTeam(prev => prev.map(c => c.id === card.id ? card : c));
+      } else {
+        updateTeam(prev => [...prev, card]);
+      }
+      resetForm();
     },
     removeCard: (team, id) => {
       const updateTeam = team === team1 ? setCardedPlayersTeam1 : setCardedPlayersTeam2;
       updateTeam(prev => prev.filter(card => card.id !== id));
     },
-    confirmCard: (team, id) => {
-      const teamCards = team === team1 ? cardedPlayersTeam1 : cardedPlayersTeam2;
-      const cardToConfirm = teamCards.find(card => card.id === id);
-
-      if (!cardToConfirm.number) {
-        alert('Player number is required.'); // Or handle error more gracefully
-        return;
-      }
-
-      const finalName = cardToConfirm.name || 'Not provided';
-      const updateTeam = team === team1 ? setCardedPlayersTeam1 : setCardedPlayersTeam2;
-
-      updateTeam(prev => prev.map(card =>
-        card.id === id ? { ...card, name: finalName, confirmed: true } : card
-      ));
-    },
-    formatCards: (cards) => {
-      return cards.map(card => ({
-        playerId: card.number,
-        cardColor: card.cardType,
-        playerName: card.name,
+    editCard: (card) => {
+      setEditingCard(card);
+      setFormData({
         team: card.team,
-      }));
+        cardType: card.cardType,
+        number: card.number,
+        name: card.name === 'Not provided' ? '' : card.name
+      });
+      setShowForm(true);
     },
+    formatCards: (cards) => cards.map(card => ({
+      playerId: card.number,
+      cardColor: card.cardType,
+      playerName: card.name,
+      team: card.team
+    }))
   };
- 
-  // Check if any card row across both teams is unconfirmed
-  const isAnyRowUnconfirmed = () => {
-    const allCards = [...cardedPlayersTeam1, ...cardedPlayersTeam2];
-    return allCards.some(card => !card.confirmed);
+
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingCard(null);
+    setFormData({ team: team1, cardType: 'red', number: '', name: '' });
   };
- 
-  // Function to render a team's card section (add buttons & subtable)
+
+  const renderCardForm = () => (
+    <div className="card-form-overlay">
+      <div className="card-form AscendantPanel">
+        <h3>{editingCard ? 'Edit Carded Player' : 'Add Carded Player'}</h3>
+        <div className="form-group">
+          <label>Select Team</label>
+          <div className="team-selection">
+            <label>
+              <input
+                type="radio"
+                name="team"
+                value={team1}
+                checked={formData.team === team1}
+                onChange={() => setFormData({ ...formData, team: team1 })}
+              /> {team1}
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="team"
+                value={team2}
+                checked={formData.team === team2}
+                onChange={() => setFormData({ ...formData, team: team2 })}
+              /> {team2}
+            </label>
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Card Type</label>
+          <div className="card-type-selection">
+            <CardButton type="R" onClick={() => setFormData({ ...formData, cardType: 'red' })} active={formData.cardType === 'red'} />
+            <CardButton type="Y" onClick={() => setFormData({ ...formData, cardType: 'yellow' })} active={formData.cardType === 'yellow'} />
+            <CardButton type="B" onClick={() => setFormData({ ...formData, cardType: 'black' })} active={formData.cardType === 'black'} />
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Player Number</label>
+          <input
+            type="number"
+            value={formData.number}
+            onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+            placeholder="Enter player number"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Player Name (Optional)</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value.toUpperCase() })}
+            placeholder="Enter player name"
+          />
+        </div>
+        <div className="form-actions">
+          <button className="cancel-button" onClick={resetForm}>
+            <i className="pi pi-times"></i> Cancel
+          </button>
+          <button className="save-button" onClick={actions.addOrUpdateCard}>
+            <i className="pi pi-check"></i> {editingCard ? 'Save' : 'Add'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderTeamSection = (team, cards, suffix) => (
-    <>
-      <tr key={`${suffix}-add-buttons`}>
-        <td>{team.toUpperCase()}</td>
-        <td style={suffix === 'team1' ? { minWidth: '370px' } : undefined}>
-          {!isAnyRowUnconfirmed() && (
-            <div className={`card-buttons add-card-buttons-${suffix}`}>
-              <CardButton type="R" onClick={() => actions.addCard(team, 'red')} />
-              <CardButton type="Y" onClick={() => actions.addCard(team, 'yellow')} />
-              <CardButton type="B" onClick={() => actions.addCard(team, 'black')} />
+    <div className={`team-section team-${suffix}`}>
+      <div className="team-header">
+        <h4>Team: {team}</h4>
+        {!showForm && (
+          <button
+            className="add-card-button"
+            onClick={() => {
+              setFormData({ ...formData, team });
+              setShowForm(true);
+            }}
+          >
+            <i className="pi pi-plus"></i> Add Card
+          </button>
+        )}
+      </div>
+      {cards.length > 0 ? (
+        <div className="cards-list">
+          {cards.map(card => (
+            <div key={card.id} className="card-entry">
+              <div className={`card-indicator card-${card.cardType}`}>
+                [{card.cardType.charAt(0).toUpperCase()}]
+              </div>
+              <span className="card-number">#{card.number}</span>
+              <span className="card-name">{card.name}</span>
+              <div className="card-actions">
+                <i
+                  className="pi pi-minus-circle remove-icon"
+                  onClick={() => actions.removeCard(team, card.id)}
+                  title="Remove Card"
+                ></i>
+                <i
+                  className="pi pi-pencil edit-icon"
+                  onClick={() => actions.editCard(card)}
+                  title="Edit Card"
+                ></i>
+              </div>
             </div>
-          )}
-        </td>
-      </tr>
-      {!!cards.length && (
-        <tr key={`${suffix}-subtable`}>
-          <td colSpan="2">
-            <table className="card-sub-table">
-              <tbody>
-                {cards.map(card => (
-                  <React.Fragment key={card.id}>
-                    <tr className="card-row">
-                      <td style={{ width: suffix === 'team1' ? '60px' : '70px' }}>
-                        <div className={`card-color ${card.cardType}`}></div>
-                      </td>
-                      <td style={{ width: '70px' }}>
-                        <input
-                          type="number"
-                          placeholder="#"
-                          className={`player-number-input player-number-input-${suffix}`}
-                          value={card.number}
-                          onChange={e => actions.updateCard(team, card.id, 'number', e.target.value)}
-                        />
-                      </td>
-                      <td style={{ width: 'auto' }}>
-                        <input
-                          type="text"
-                          style={{ width: '420px' }}
-                          placeholder="player name required"
-                          className={`player-name-input player-name-input-${suffix}`}
-                          value={card.name}
-                          onChange={e => actions.updateCard(team, card.id, 'name', e.target.value.toUpperCase())}
-                        />
-                      </td>
-                      <td style={{ width: '70px', textAlign: 'center', verticalAlign: 'middle' }}>
-                        <i
-                          className={`pi pi-minus-circle remove-card-icon remove-card-icon-${suffix}`}
-                          onClick={() => actions.removeCard(team, card.id)}
-                          title="Remove Card"
-                        ></i>
-                      </td>
-                    </tr>
-                    {!card.confirmed && (
-                      <tr key={`${card.id}-add`}>
-                        <td colSpan="4" style={{ padding: '5px 0' }}>
-                          <button
-                            className={`confirm-full-width-button confirm-full-width-button-${suffix}`}
-                            onClick={() => actions.confirmCard(team, card.id)}
-                          >
-                            <i className="pi pi-plus-circle"></i>
-                            <span>Add Carded Player</span>
-                          </button>
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
-          </td>
-        </tr>
+          ))}
+        </div>
+      ) : (
+        <p className="no-cards">No cards recorded for this team.</p>
       )}
-    </>
+    </div>
   );
 
   return (
     <div className="ListCardedPlayers">
-      {!recordCards && (
-        <div className="card-question" style={{ marginTop: '150px' }}>
-          <h3 className="text-8xl">Do you want to record any carded players?</h3>
-          <div className="toggle">
-            {/* Button to decline recording cards */}
-            <button className={`decline-record-cards ${recordCards ? "no" : "yes active"}`} onClick={() => { setRecordCards(false); onClose(); onProceed([]); }}>No</button>
-            {/* Button to confirm recording cards */}
-            <button className={`confirm-record-cards ${recordCards ? "yes active" : "no"}`} onClick={() => setRecordCards(true)}>Yes</button>
-          </div>
+      {showForm && renderCardForm()}
+      <div className="card-content">
+        {renderTeamSection(team1, cardedPlayersTeam1, 'team1')}
+        {renderTeamSection(team2, cardedPlayersTeam2, 'team2')}
+        <div className="card-actions">
+          <button
+            className="proceed-button"
+            onClick={() => onProceed(actions.formatCards([...cardedPlayersTeam1, ...cardedPlayersTeam2]))}
+          >
+            <i className="pi pi-check-circle"></i> Proceed
+          </button>
+          <button className="cancel-button" onClick={onClose}>
+            <i className="pi pi-times-circle"></i> Cancel
+          </button>
         </div>
-      )}
-      {recordCards && (
-        <>
-          <table className="card-table">
-            <thead>
-              <tr>
-                <th>Add card for team</th>
-                <th>Card type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {renderTeamSection(team1, cardedPlayersTeam1, 'team1')}
-              {renderTeamSection(team2, cardedPlayersTeam2, 'team2')}
-            </tbody>
-          </table>
-          <div className="card-actions">
-            {/* Button to confirm and proceed with entered cards */}
-            <button
-              className="ok confirm-card-entries"
-              onClick={onProceed.bind(null, actions.formatCards([...cardedPlayersTeam1, ...cardedPlayersTeam2]))}
-              disabled={isAnyRowUnconfirmed()} // Disable if any row is unconfirmed
-            >
-              OK
-            </button>
-            {/* Button to cancel card entry and go back */}
-            <button
-              className="cancel cancel-card-entry"
-              onClick={() => setRecordCards(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </>
-      )}
+      </div>
     </div>
   );
 };
 
 export default ListCardedPlayers;
+

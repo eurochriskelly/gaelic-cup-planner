@@ -6,7 +6,7 @@ const CardButton = ({ type, onClick }) => { // Remove isAddButton prop
   return (
     <button
       className={buttonClass} // Use the original class string
-      style={{minWidth: '95px', minHeight: '100px'}}
+      style={{ minWidth: '70px', minHeight: '100px', margin: '7px' }}
       onClick={onClick}>
       +
     </button>
