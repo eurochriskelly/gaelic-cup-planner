@@ -1,7 +1,8 @@
 import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import SkipIcon from "../../../../shared/icons/icon-skip.svg?react";
+import CardIcon from "../../../../shared/icons/icon-card.svg?react";
 import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
@@ -88,10 +89,10 @@ function UpdateFixture ({
             <ScoreIcon className="icon" />
           </button>
           <button className={`space-button ${enableStates.postpone}`} onClick={actions.reschedule}>
-            <MoveIcon className="icon icon-optional" />
+            <CardIcon className="icon icon" />
           </button>
           <button className={`space-button ${enableStates.cancel}`} onClick={actions.cancel}>
-            <NotPlayedIcon className="icon-optional" />
+            <SkipIcon className="icon" />
           </button>
         </div>
 

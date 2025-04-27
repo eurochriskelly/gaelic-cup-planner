@@ -11,7 +11,7 @@
     fill: none;
   }
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0;
   .drawer {
     box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.5);
     min-height: 54rem;
@@ -30,7 +30,7 @@
   }
 
   button {
-    padding: 1.6rem 0.6rem;
+    padding: 1.9rem 0.8rem;
     min-width: 160px;
     border-radius: 0.8rem;
     background: none;
@@ -174,9 +174,6 @@
     text-align: center;
 }
 
-.updateFixture .header {
-    color: red !important;
-}
 
 /* Add overlay for when drawers are open */
 .drawer-overlay {
