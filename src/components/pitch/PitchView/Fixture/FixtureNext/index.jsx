@@ -1,5 +1,4 @@
 import { extractUppercaseAndNumbers } from '../common';
-import TeamResult from "../TeamResult";
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
 import '../Fixture.scss';
@@ -7,7 +6,7 @@ import './FixtureNext.scss';
 
 export default FixtureNext;
 
-function FixtureNext({fixture}) {
+function FixtureNext({ fixture }) {
   const {
     id,
     startedTime = "",
@@ -51,6 +50,7 @@ function FixtureNext({fixture}) {
           stage={stage}
           group={category}
           fixtureId={id}
+          fixture={fixture}
         />
 
         <section className="mt-7 mr-0 pr-0">
@@ -100,10 +100,11 @@ function FixtureInfo({
   delayMinutes = 0,
   stage,
   group,
-  fixtureId
+  fixtureId,
+  fixture,
 }) {
   return (
-    <div className="FixtureInfo">
+    <div className="FixtureInfo" onClick={() => console.log(fixture)}>
       <ClockIcon
         scheduled={scheduledTime}
         started={startedTime}
@@ -125,6 +126,6 @@ function FixtureInfo({
           .replace('_', '/')}
       </div>
     </div>
-  )
+  );
 }
 
