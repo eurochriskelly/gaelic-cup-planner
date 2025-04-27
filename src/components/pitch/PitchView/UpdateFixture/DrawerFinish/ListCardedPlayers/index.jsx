@@ -178,22 +178,25 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
 
   return (
     <div className="ListCardedPlayers">
-      {showForm && renderCardForm()}
-      <div className="card-content">
-        {renderTeamSection(team1, cardedPlayersTeam1, 'team1')}
-        {renderTeamSection(team2, cardedPlayersTeam2, 'team2')}
-        <div className="card-actions">
-          <button
-            className="proceed-button"
-            onClick={() => onProceed(actions.formatCards([...cardedPlayersTeam1, ...cardedPlayersTeam2]))}
-          >
-            <i className="pi pi-check-circle"></i> Proceed
-          </button>
-          <button className="cancel-button" onClick={onClose}>
-            <i className="pi pi-times-circle"></i> Cancel
-          </button>
+      {showForm ? (
+        renderCardForm()
+      ) : (
+        <div className="card-content">
+          {renderTeamSection(team1, cardedPlayersTeam1, 'team1')}
+          {renderTeamSection(team2, cardedPlayersTeam2, 'team2')}
+          <div className="card-actions">
+            <button
+              className="proceed-button"
+              onClick={() => onProceed(actions.formatCards([...cardedPlayersTeam1, ...cardedPlayersTeam2]))}
+            >
+              <i className="pi pi-check-circle"></i> Proceed
+            </button>
+            <button className="cancel-button" onClick={onClose}>
+              <i className="pi pi-times-circle"></i> Cancel
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
