@@ -18,6 +18,12 @@ function UpdateFixture ({
   updateFixtures,
   startMatch,
 }) {
+  // Guard clause: If fixture data is missing, don't render the component
+  if (!fixture) {
+    console.warn("UpdateFixture rendered without fixture data.");
+    return null; // Or return a loading indicator/placeholder
+  }
+
   const { startedTime } = fixture;
   const [enableStates, setEnableStates] = useFixtureStates(startedTime);
   const [visibleDrawers, setVisibleDrawers, drawerOpen] = useVisibleDrawers();

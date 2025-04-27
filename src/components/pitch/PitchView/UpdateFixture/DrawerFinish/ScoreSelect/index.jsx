@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import './ScoreSelect.scss';
 
-const Header = ({ name, team, pages, setPages, setScores, scores }) => {
+// Update Header props to use local state and setter
+const Header = ({ name, team, pages, setPages, setLocalScores, localScores }) => {
   const updateScore = () => {
+    // Operate on localScores
     const newScore = {
-      ...scores,
+      ...localScores,
       [team]: {
         ...scores[team],
         [name]: null,
       },
     };
-    setScores(newScore);
+    setLocalScores(newScore); // Use the passed setter for local state
   };
   const increasePage = () => {
     updateScore();
@@ -47,11 +49,20 @@ const Header = ({ name, team, pages, setPages, setScores, scores }) => {
 };
 
 const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
-  const [localScores, setScores] = useState(scores);
+  console.log("ScoreSelect: Rendering with scores prop:", JSON.stringify(scores)); // DEBUG: Log received prop
+  const [localScores, setScores] = useState(scores); // This is the setter for localScores
   const [pages, setPages] = useState({
     goals: 0,
     points: 0,
   });
+
+  // Effect to sync localScores with the scores prop when it changes
+  useEffect(() => {
+    setScores(scores);
+    // Log the value being set, as state update is async
+    console.log("ScoreSelect useEffect: Syncing localScores with prop:", JSON.stringify(scores)); // DEBUG
+  }, [scores]);
+
   let squaresGoals = [];
   let squaresPoints = [];
 
@@ -103,6 +114,7 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
   squaresGoals = updateSquares(currentTeam, "goals", 9);
   squaresPoints = updateSquares(currentTeam, "points", 19);
 
+  console.log("ScoreSelect: Rendering Header with localScores:", JSON.stringify(localScores)); // DEBUG: Log local state before Header render
   return (
     <div className='scoreSelect'>
       <div>
@@ -111,8 +123,9 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
           team={currentTeam}
           pages={pages}
           setPages={setPages}
-          scores={scores}
-          setScores={setScores}
+          // Pass local state and setter to Header
+          localScores={localScores}
+          setLocalScores={setScores}
         />
         <div className='goals'>{squaresGoals}</div>
       </div>
@@ -123,8 +136,9 @@ const ScoreSelect = ({ scores, currentTeam, updateScore }) => {
           team={currentTeam}
           pages={pages}
           setPages={setPages}
-          scores={scores}
-          setScores={setScores}
+          // Pass local state and setter to Header
+          localScores={localScores}
+          setLocalScores={setScores}
         />
         <div className='points'>{squaresPoints}</div>
       </div>
