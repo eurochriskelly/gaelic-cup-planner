@@ -68,28 +68,10 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
     <div className="card-form-overlay">
       <div className="card-form AscendantPanel">
         <h3>{editingCard ? 'Edit Carded Player' : 'Add Carded Player'}</h3>
+        {/* Display the selected team instead of radio buttons */}
         <div className="form-group">
-          <label>Select Team</label>
-          <div className="team-selection">
-            <label>
-              <input
-                type="radio"
-                name="team"
-                value={team1}
-                checked={formData.team === team1}
-                onChange={() => setFormData({ ...formData, team: team1 })}
-              /> {team1}
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="team"
-                value={team2}
-                checked={formData.team === team2}
-                onChange={() => setFormData({ ...formData, team: team2 })}
-              /> {team2}
-            </label>
-          </div>
+          <label>Team</label>
+          <span className="selected-team-display">{formData.team}</span> {/* Display the team name */}
         </div>
         <div className="form-group">
           <label>Card Type</label>

@@ -68,11 +68,22 @@
           border-color: $sc;
           box-shadow: 0 0 0 2px rgba($sc, 0.2);
         }
-      }
-    }
+     }
+   }
 
-    .team-selection,
-    .card-type-selection {
+   /* Add style for the static team display */
+   .selected-team-display {
+     display: block; // Make it block level like inputs
+     padding: 18px; // Match input padding
+     border: 1px solid #d1d5db; // Match input border
+     border-radius: 4px; // Match input border-radius
+     background-color: #f3f4f6; // Slightly grey background to indicate non-editable
+     font-size: 150%; // Match general font size increase
+     color: #374151; // Dark grey text color
+   }
+
+   .team-selection, // Keep this selector if it's used elsewhere, otherwise remove
+   .card-type-selection {
       display: flex;
       gap: 1rem;
       align-items: center;
@@ -237,15 +248,15 @@
       color: #1f2937;
     }
 
-    .card-actions {
-      display: flex;
-      gap: 0.5rem;
+   .card-actions {
+     display: flex;
+     gap: 1rem; /* Increased gap for more spacing */
 
-      .remove-icon,
-      .edit-icon {
-        font-size: 1.25rem;
-        cursor: pointer;
-        transition: color 0.2s;
+     .remove-icon,
+     .edit-icon {
+       font-size: 2.5rem; /* Doubled font size */
+       cursor: pointer;
+       transition: color 0.2s;
       }
 
       .remove-icon {
