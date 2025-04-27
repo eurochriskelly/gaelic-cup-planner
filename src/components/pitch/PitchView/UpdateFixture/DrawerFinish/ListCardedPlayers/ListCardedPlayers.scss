@@ -20,10 +20,13 @@
     /* justify-content: center; */
     /* z-index: 1000; */
   /* } */
+  .card-form-overlay {
+    margin: 0 ;
+    padding: 0;
+  }
 
   .card-form {
     /* Style as a regular content block */
-    background: white;
     padding: 2rem;
     // margin: 1rem auto; /* Removed centered margin */
     margin: 0; /* Use default margin or adjust as needed */
@@ -34,12 +37,12 @@
 
     /* Apply general font size increase */
     h3, label, input, button, span { // Apply broadly within card-form
-      font-size: 150%; // Adjust base size if needed, e.g., 1.2rem * 1.5
+      font-size: 180%; // Adjust base size if needed, e.g., 1.2rem * 1.5
     }
 
     h3 {
       // font-size: 1.5rem; /* Base size before increase */
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.9rem;
       color: $pc;
     }
 
@@ -330,4 +333,6 @@
       }
     }
   }
+  padding:0 !important  ;
+  margin:0;
 }
