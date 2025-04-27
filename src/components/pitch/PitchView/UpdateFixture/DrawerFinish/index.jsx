@@ -46,9 +46,9 @@ const DrawerFinish = ({
 
   const actions = {
     saveScore: async () => {
-      onConfirm();
+      // onConfirm(); // Removed to prevent potential side-effects triggering progression
       await API.updateScore(tournamentId, fixture.id, scores);
-      setCurrentStep(1);
+      setCurrentStep(1); // Move to card step
     },
     notReadyToSaveScore: () => {
       setCurrentStep(0);
@@ -58,9 +58,9 @@ const DrawerFinish = ({
       if (players.length) {
         await API.updateCardedPlayers(tournamentId, fixture.id, players);
       }
-      setCurrentStep(0);
-      updateFixtures();
-      onClose();
+      setCurrentStep(0); // Reset step
+      // updateFixtures(); // Removed: Do not automatically fetch next fixture here
+      onClose(); // Close the drawer
     },
     updateScore: (team, type, amount) => {
       setCurrentTeam(team);

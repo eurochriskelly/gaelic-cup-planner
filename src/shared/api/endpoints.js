@@ -10,6 +10,10 @@ export default {
   fetchFixtures: (tournamentId, pitchId) =>
     fetchApi(tournamentId, `pitches/${pitchId}/fixtures`), // GET by default
 
+  // Fetch a single fixture's details
+  fetchFixture: (tournamentId, fixtureId) =>
+    fetchApi(tournamentId, `/${fixtureId}`), // GET by default
+
   // Start a specific match
   startMatch: (tournamentId, fixtureId) =>
     fetchApi(tournamentId, `${fixtureId}/start`, 'POST'),

@@ -2,7 +2,7 @@ import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import SkipIcon from "../../../../shared/icons/icon-skip.svg?react";
-import CardIcon from "../../../../shared/icons/icon-card.svg?react";
+import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
 import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
@@ -17,7 +17,6 @@ function UpdateFixture ({
   fixture,
   updateFixtures,
   startMatch,
-  isFinished = false,
 }) {
   const { startedTime } = fixture;
   const [enableStates, setEnableStates] = useFixtureStates(startedTime);
@@ -89,7 +88,7 @@ function UpdateFixture ({
             <ScoreIcon className="icon" />
           </button>
           <button className={`space-button ${enableStates.postpone}`} onClick={actions.reschedule}>
-            <CardIcon className="icon icon" />
+            <MoveIcon className="icon icon" />
           </button>
           <button className={`space-button ${enableStates.cancel}`} onClick={actions.cancel}>
             <SkipIcon className="icon" />
@@ -127,12 +126,6 @@ function UpdateFixture ({
           />
         )}
         
-        {isFinished && !visibleDrawers.finish && (
-          <FixtureFinished 
-            fixture={fixture}
-            onUpdateScore={actions.finish}
-          />
-        )}
       </div>
     </div>
     </>
