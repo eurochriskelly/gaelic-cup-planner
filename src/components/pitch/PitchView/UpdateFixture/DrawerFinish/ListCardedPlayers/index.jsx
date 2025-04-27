@@ -158,6 +158,12 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
     </div>
   );
 
+  // Calculate total cards
+  const totalCards = cardedPlayersTeam1.length + cardedPlayersTeam2.length;
+  const proceedButtonLabel = totalCards === 0
+    ? "Proceed: No carded players"
+    : `Proceed: ${totalCards} carded player${totalCards > 1 ? 's' : ''}`;
+
   return (
     <div className="ListCardedPlayers">
       {showForm ? (
@@ -166,16 +172,18 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
         <div className="card-content">
           {renderTeamSection(team1, cardedPlayersTeam1, 'team1')}
           {renderTeamSection(team2, cardedPlayersTeam2, 'team2')}
+          {/* Updated card actions section */}
           <div className="card-actions">
             <button
               className="proceed-button"
               onClick={() => onProceed(actions.formatCards([...cardedPlayersTeam1, ...cardedPlayersTeam2]))}
             >
-              <i className="pi pi-check-circle"></i> Proceed
+              <i className="pi pi-check-circle"></i> {proceedButtonLabel} {/* Use dynamic label */}
             </button>
-            <button className="cancel-button" onClick={onClose}>
+            {/* Removed Cancel button */}
+            {/* <button className="cancel-button" onClick={onClose}>
               <i className="pi pi-times-circle"></i> Cancel
-            </button>
+            </button> */}
           </div>
         </div>
       )}
