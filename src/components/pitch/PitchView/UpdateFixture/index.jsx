@@ -17,6 +17,7 @@ function UpdateFixture ({
   fixture,
   updateFixtures,
   startMatch,
+  moveToNextFixture, // Add new prop
 }) {
   // Guard clause: If fixture data is missing, don't render the component
   if (!fixture) {
@@ -96,7 +97,8 @@ function UpdateFixture ({
           <button className={`space-button ${enableStates.postpone}`} onClick={actions.reschedule}>
             <MoveIcon className="icon icon" />
           </button>
-          <button className={`space-button ${enableStates.cancel}`} onClick={actions.cancel}>
+          {/* Use SkipIcon button to trigger moving to the next fixture */}
+          <button className={`space-button ${enableStates.cancel}`} onClick={moveToNextFixture}>
             <SkipIcon className="icon" />
           </button>
         </div>
