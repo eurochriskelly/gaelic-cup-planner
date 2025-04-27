@@ -1,13 +1,11 @@
 import { useFixtureStates, useVisibleDrawers } from "./UpdateFixture.hooks";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import SkipIcon from "../../../../shared/icons/icon-skip.svg?react";
+import ProgressIcon from "../../../../shared/icons/icon-skip.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
-import NotPlayedIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 // Child components
 import DrawerFinish from "./DrawerFinish";
 import DrawerPostpone from "./DrawerPostpone";
-import DrawerCancel from "./DrawerCancel";
 import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
 
@@ -17,7 +15,7 @@ function UpdateFixture ({
   fixture,
   updateFixtures,
   startMatch,
-  moveToNextFixture, // Add new prop
+  moveToNextFixture,
 }) {
   // Guard clause: If fixture data is missing, don't render the component
   if (!fixture) {
@@ -25,16 +23,15 @@ function UpdateFixture ({
     return null; // Or return a loading indicator/placeholder
   }
 
-  const { startedTime } = fixture;
-  const [enableStates, setEnableStates] = useFixtureStates(startedTime);
+  const { startedTime, isResult } = fixture;
+  const [enableStates, setEnableStates] = useFixtureStates(startedTime, isResult);
   const [visibleDrawers, setVisibleDrawers, drawerOpen] = useVisibleDrawers();
 
   const actions = {
-    closeDrawer: (from) => {
-      // Reset only visibility, preserve enableStates unless explicitly changed
+    closeDrawer: () => {
       setVisibleDrawers({
         start: false,
-        cancel: false,
+        proceed: false,
         postpone: false,
         finish: false,
       });
@@ -50,24 +47,18 @@ function UpdateFixture ({
       setVisibleDrawers({
         start: false,
         postpone: true,
-        cancel: false,
         finish: false,
       });
     },
-    cancel: () => {
-      if (enableStates.cancel === "disabled") return;
-      setVisibleDrawers({
-        start: false,
-        cancel: true,
-        postpone: false,
-        finish: false,
-      });
+    proceed: () => {
+      if (enableStates.proceed === "disabled") return;
+      moveToNextFixture();
     },
     finish: () => {
       if (enableStates.finish === "disabled") return;
       setVisibleDrawers({
         start: false,
-        cancel: false,
+        proceed: false,
         postpone: false,
         finish: true,
       });
@@ -78,10 +69,6 @@ function UpdateFixture ({
       actions.closeDrawer('postpone');
     },
   }
-
-  const drawerStyle = {
-    display: drawerOpen ? "flex" : "none",
-  };
 
   return (
     <>
@@ -98,8 +85,8 @@ function UpdateFixture ({
             <MoveIcon className="icon icon" />
           </button>
           {/* Use SkipIcon button to trigger moving to the next fixture */}
-          <button className={`space-button ${enableStates.cancel}`} onClick={moveToNextFixture}>
-            <SkipIcon className="icon" />
+          <button className={`space-button ${enableStates.proceed}`} onClick={actions.proceed}>
+            <ProgressIcon className="icon" />
           </button>
         </div>
 
@@ -112,19 +99,7 @@ function UpdateFixture ({
             onSubmit={actions.rescheduleMatch}
             pitch={fixture.pitch}
           />
-        )}
-        {visibleDrawers.cancel && (
-          <DrawerCancel
-            visible={true}
-            team1={fixture.team1}
-            team2={fixture.team2}
-            onClose={actions.closeDrawer}
-            onConfirm={(type) => {
-              console.log('Selected cancellation type:', type);
-              actions.closeDrawer();
-            }}
-          />
-        )}
+          )}
         {visibleDrawers.finish && (
           <DrawerFinish
             visible={true}
