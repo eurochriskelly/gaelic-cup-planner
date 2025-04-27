@@ -11,5 +11,9 @@
   &.y { background-color: yellow; color: black; }
   &.b { background-color: black; }
 
-  // Removed the incorrect add-button-style rule
+  // Style for the active card button
+  box-sizing: border-box; /* Ensure border is included in element dimensions */
+  &.active {
+    border: 5px solid blue;
+  }
 }
