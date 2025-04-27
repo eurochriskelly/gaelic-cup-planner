@@ -26,14 +26,14 @@ const DrawerFinish = ({
   // Initialize scores directly from the fixture prop
   const [scores, setScores] = useState({
     team1: {
-      goals: fixture.score1Goals ?? "", // Use prop data, default to "" if null/undefined
-      points: fixture.score1Points ?? "",
+      goals: fixture.goals1 ?? "", // Use prop data, default to "" if null/undefined
+      points: fixture.points1 ?? "",
       name: fixture.team1,
       category: fixture.category,
     },
     team2: {
-      goals: fixture.score2Goals ?? "",
-      points: fixture.score2Points ?? "",
+      goals: fixture.goals2 ?? "",
+      points: fixture.points2 ?? "",
       name: fixture.team2,
       category: fixture.category,
     },
