@@ -84,10 +84,19 @@
       justify-content: flex-end;
     }
   }
-
   .card-content {
     max-width: 800px;
-    margin: 0 auto;
+    // margin: 0 auto; /* Original margin */
+    margin-left: 0px; /* Removed horizontal auto margin */
+    margin-right: 0px;
+    transform: none; /* Ensure no transform is applied */
+
+    /* Increase font size and set default text color to black */
+    h4, p, span, label, .card-number, .card-name /* Apply to relevant text elements */ {
+        font-size: 150%;
+        color: black; /* Default to black */
+    }
+    /* Note: Input placeholders and button text might need separate targeting if they shouldn't be black */
   }
 
   .team-section {
@@ -97,30 +106,39 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+     margin-bottom: 1rem;
 
-      h4 {
-        font-size: 1.25rem;
-        font-weight: bold;
-        color: #1f2937;
-      }
-    }
+     h4 {
+       // font-size: 1.25rem; /* Base size before increase */
+       font-weight: bold;
+       // color: #1f2937; /* Original color */
+       color: rgb(70, 56, 115); /* Restored color */
+       font-size: 150%; /* Ensure font size increase applies */
+     }
+   }
 
     .add-card-button {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background-color: $sc;
-      color: white;
-      border: none;
+      // padding: 0.5rem 1rem; // Original padding
+      // background-color: $sc; // Original background
+      // color: white; // Original color
+      border: none; // Restored no border
       border-radius: 4px;
-      font-size: 1rem;
+      // font-size: 1rem; // Original font size
       cursor: pointer;
       transition: background-color 0.2s;
 
+      /* Integrated Styles */
+      font-size: 150%; /* 50% larger font size */
+      padding: 18px 36px; /* Increased padding */
+      margin: 6px; /* Added margin */
+      background-color: rgb(70, 56, 115); /* Restored background ($sc equivalent) */
+      color: white; /* Restored text color */
+
       &:hover {
-        background-color: darken($sc, 10%);
+        background-color: darken(rgb(70, 56, 115), 10%); // Adjust hover for restored color
       }
     }
 
@@ -197,13 +215,15 @@
           color: darken($sc, 10%);
         }
       }
-    }
+   }
 
-    .no-cards {
-      color: #6b7280;
-      font-style: italic;
-    }
-  }
+   .no-cards {
+     // color: #6b7280; // Original color
+     font-style: italic;
+     color: rgb(189, 198, 208); /* Restored color */
+     font-size: 150%; /* Ensure font size increase applies */
+   }
+ }
 
   .card-actions {
     display: flex;
@@ -216,29 +236,38 @@
     .save-button {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+     gap: 0.5rem;
+     // padding: 0.75rem 1.5rem; // Original padding
+     border: none; // Restored no border
+     border-radius: 4px;
+     // font-size: 1rem; // Original font size
+     cursor: pointer;
+     transition: background-color 0.2s;
 
-    .proceed-button,
-    .save-button {
-      background-color: $sc;
-      color: white;
-      &:hover {
-        background-color: darken($sc, 10%);
-      }
-    }
+     /* Integrated Styles */
+     font-size: 150%; /* 50% larger font size */
+     padding: 18px 36px; /* Increased padding */
+     margin: 6px; /* Added margin */
+   }
 
-    .cancel-button {
-      background-color: $bg-dark-20;
-      color: white;
-      &:hover {
-        background-color: darken($bg-dark-20, 10%);
+   .proceed-button,
+   .save-button {
+     // background-color: $sc; // Original background
+     // color: white; // Original color
+     background-color: rgb(70, 56, 115); /* Restored background ($sc equivalent) */
+     color: white; /* Restored text color */
+     &:hover {
+       background-color: darken(rgb(70, 56, 115), 10%); // Adjust hover for restored color
+     }
+   }
+
+   .cancel-button {
+     // background-color: $bg-dark-20; // Original background
+     // color: white; // Original color
+     background-color: rgb(189, 198, 208); /* Restored background ($bg-dark-20 equivalent) */
+     color: white; /* Restored text color */
+     &:hover {
+       background-color: darken(rgb(189, 198, 208), 10%); // Adjust hover for restored color
       }
     }
   }
