@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Ensure useEffect is imported
 import { useParams } from "react-router-dom";
 import API from "../../../../../shared/api/endpoints";
 import ScoreSelect from "./ScoreSelect";
@@ -14,6 +14,7 @@ const DrawerFinish = ({
   onClose = () => {},
 }) => {
   if (!visible) return null;
+  console.log("DrawerFinish: Rendering with fixture:", JSON.stringify(fixture)); // DEBUG: Log initial fixture prop
 
   const { tournamentId } = useParams();
 
@@ -22,16 +23,17 @@ const DrawerFinish = ({
   const [currentTeam, setCurrentTeam] = useState("");
   const [currentType, setCurrentType] = useState("");
   const [currentStep, setCurrentStep] = useState(initialStep);
+  // Initialize scores directly from the fixture prop
   const [scores, setScores] = useState({
     team1: {
-      goals: "",
-      points: "",
+      goals: fixture.score1Goals ?? "", // Use prop data, default to "" if null/undefined
+      points: fixture.score1Points ?? "",
       name: fixture.team1,
       category: fixture.category,
     },
     team2: {
-      goals: "",
-      points: "",
+      goals: fixture.score2Goals ?? "",
+      points: fixture.score2Points ?? "",
       name: fixture.team2,
       category: fixture.category,
     },
@@ -52,6 +54,7 @@ const DrawerFinish = ({
     },
     notReadyToSaveScore: () => {
       setCurrentStep(0);
+      updateFixtures(); // Refresh the list in PitchView
       onClose();
     },
     cardPlayersUpdated: async (players) => {
@@ -59,7 +62,7 @@ const DrawerFinish = ({
         await API.updateCardedPlayers(tournamentId, fixture.id, players);
       }
       setCurrentStep(0); // Reset step
-      // updateFixtures(); // Removed: Do not automatically fetch next fixture here
+      updateFixtures(); // Refresh the list in PitchView
       onClose(); // Close the drawer
     },
     updateScore: (team, type, amount) => {
@@ -79,21 +82,29 @@ const DrawerFinish = ({
   };
 
   const { team1, team2 } = fixture;
+  console.log("DrawerFinish: Rendering TeamScore with scores state:", JSON.stringify(scores)); // DEBUG: Log scores state before TeamScore render
   const displayScore = (team, type = 'total') => {
       const score = scores[team][type];
-      const ozp = n => `##${n}`.slice(-2); // Pads to 2 digits
+      const ozp = n => `00${n}`.slice(-2); // Pads to 2 digits with leading zeros
       const goals = scores[team].goals;
       const points = scores[team].points;
-      let showScore = ''
+
+      // Helper to check if a value is null, undefined, or empty string
+      const isScoreSet = (value) => value !== null && value !== undefined && value !== "";
+
+      let showScore = '';
       switch (type) {
         case 'points':
-          showScore = points || points === 0 ? ozp(points) : '##';
+          // Show points if set (including 0), otherwise placeholder
+          showScore = isScoreSet(points) ? ozp(points) : '##';
           break;
         case 'goals':
-          showScore = goals || goals === 0 ? `${goals}` : '#';
+          // Show goals if set (including 0), otherwise placeholder
+          showScore = isScoreSet(goals) ? `${goals}` : '#';
           break;
         case 'total':
-          showScore = (goals || goals === 0) && (points || points === 0)
+          // Show total only if both goals and points are set
+          showScore = isScoreSet(goals) && isScoreSet(points)
             ? ozp((goals * 3) + points)
             : '##';
           break;
@@ -108,6 +119,7 @@ const DrawerFinish = ({
     let showGoals  = displayScore(id, 'goals');
     let showPoints = displayScore(id, 'points');
     let showTotal  = displayScore(id, 'total');
+    console.log(`DrawerFinish TeamScore (${team}): Calculated display values - Goals: ${showGoals}, Points: ${showPoints}, Total: ${showTotal}`); // DEBUG
     const concat = `${showTotal}${showPoints}${showGoals}`
     const match = concat.match(/#/g)
     if ((match||[]).length === 5) {

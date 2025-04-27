@@ -17,6 +17,14 @@ export const useFixtureStates = (startedTime) => {
         cancel: "enabled",
         finish: "enabled",
       });
+    } else {
+      // Reset to initial state if match is not started
+      setEnableStates({
+        start: "enabled",
+        postpone: "enabled",
+        cancel: "enabled",
+        finish: "disabled",
+      });
     }
   }, [started]);
 
