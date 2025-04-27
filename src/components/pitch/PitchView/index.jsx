@@ -133,6 +133,7 @@ const PitchView = () => {
                             // fixtures={fixtures} // Pass fixtures if needed by UpdateFixture children
                             updateFixtures={fetchFixtures}
                             startMatch={startMatch}
+                            moveToNextFixture={moveToNextFixture} // Pass the function down
                           />
                         )}
                       </div>
