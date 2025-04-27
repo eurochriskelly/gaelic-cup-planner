@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // Import useState, useEffect
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFetchFixtures, useStartMatch } from "./PitchView.hooks";
@@ -14,11 +15,63 @@ const PitchView = () => {
   const { fixtures, nextFixture, fetchFixtures } = useFetchFixtures(tournamentId, pitchId);
   const startMatch = useStartMatch(tournamentId, pitchId, fetchFixtures);
   const navigate = useNavigate();
+  // State to track the fixture currently being interacted with
+  const [currentFocusFixtureId, setCurrentFocusFixtureId] = useState(null);
+
+  // Set the initial focus when the component loads and finds the first nextFixture
+  useEffect(() => {
+    if (nextFixture && !currentFocusFixtureId) {
+      setCurrentFocusFixtureId(nextFixture.id);
+    }
+    // If nextFixture becomes null (e.g., all played), clear focus? Or keep last focus?
+    // For now, only setting initial focus.
+  }, [nextFixture]); // Depend on the initially loaded nextFixture
+
+  // Function to explicitly move focus to the next unplayed fixture
+  const moveToNextFixture = () => {
+    const currentFocusIndex = fixtures.findIndex(f => f.id === currentFocusFixtureId);
+    let nextUnplayedFixture = null;
+
+    // Search *after* the current index first
+    for (let i = currentFocusIndex + 1; i < fixtures.length; i++) {
+      if (!fixtures[i].played) {
+        nextUnplayedFixture = fixtures[i];
+        break;
+      }
+    }
+    // If not found after, search from the beginning up to the current index
+    if (!nextUnplayedFixture && currentFocusIndex > 0) { // Check currentFocusIndex > 0
+       for (let i = 0; i < currentFocusIndex; i++) {
+         if (!fixtures[i].played) {
+           nextUnplayedFixture = fixtures[i];
+           break;
+         }
+       }
+    }
+
+    if (nextUnplayedFixture) {
+      setCurrentFocusFixtureId(nextUnplayedFixture.id);
+    } else {
+      // Handle case where no *other* unplayed fixture is found
+      // Maybe check if the *current* one is still unplayed?
+      const currentFixtureStillUnplayed = fixtures[currentFocusIndex] && !fixtures[currentFocusIndex].played;
+      if (!currentFixtureStillUnplayed) {
+         setCurrentFocusFixtureId(null); // Truly no more unplayed fixtures
+         console.log("PitchView: No more unplayed fixtures.");
+         // Optionally navigate away or show a message
+      } else {
+        // Stay on the current fixture if it's the only unplayed one left
+        console.log("PitchView: Current fixture is the last unplayed one.");
+      }
+    }
+  };
+
 
   let displayFixtures = tabNames.map((tab) => {
     return fixtures
       .filter((f) => {
-        const focusFixture = nextFixture && nextFixture.id === f.id;
+        // Use currentFocusFixtureId to determine the "next" (focused) fixture
+        const focusFixture = currentFocusFixtureId && currentFocusFixtureId === f.id;
         switch (tab.toLowerCase()) {
           case "next":
             return focusFixture;
@@ -63,18 +116,21 @@ const PitchView = () => {
               <div className="fixturesArea">
                 {displayFixtures[tab.toLowerCase()].length ? (
                   displayFixtures[tab.toLowerCase()].map((fixture) => {
-                    const focusFixture =
-                      nextFixture && nextFixture.id === fixture.id;
+                    // Determine focus based on currentFocusFixtureId
+                    const isFocusFixture = currentFocusFixtureId && currentFocusFixtureId === fixture.id;
                     return (
                       <div
                         key={fixture.id}
-                        className={focusFixture ? "focusFixture h-98" : ""}
+                        // Apply focus class based on currentFocusFixtureId
+                        className={isFocusFixture ? "focusFixture h-98" : ""}
                       >
-                        <Fixture fixture={fixture} view={focusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
-                        {nextFixture && nextFixture.id === fixture.id && (
+                        {/* Set view prop based on currentFocusFixtureId */}
+                        <Fixture fixture={fixture} view={isFocusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
+                        {/* Render UpdateFixture based on currentFocusFixtureId */}
+                        {isFocusFixture && (
                           <UpdateFixture
                             fixture={fixture}
-                            fixtures={fixtures}
+                            // fixtures={fixtures} // Pass fixtures if needed by UpdateFixture children
                             updateFixtures={fetchFixtures}
                             startMatch={startMatch}
                           />

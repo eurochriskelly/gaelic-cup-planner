@@ -6,12 +6,15 @@ export const useFetchFixtures = (tournamentId, pitchId) => {
   const [nextFixture, setNextFixture] = useState(null);
 
   const fetchFixtures = async () => {
+    // Fetch the data
     const { data } = await API.fetchFixtures(tournamentId, pitchId);
+    // Only update the list, do not automatically recalculate nextFixture here
     setFixtures(data);
-    setNextFixture(data.filter((f) => !f.played).shift());
+    // nextFixture state will only be set initially by the useEffect below
   };
 
   useEffect(() => {
+    // Initial fetch and setting of the *first* nextFixture
     fetchFixtures();
   }, [tournamentId, pitchId]);
 
