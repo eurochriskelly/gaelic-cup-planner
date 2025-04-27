@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 1rem;
-  background-color: #f9fafb;
+  // padding: 1rem; /* Removed padding */
+  // background-color: #f9fafb; /* Removed background color */
 
   /* Remove overlay styles */
   /* .card-form-overlay { */
@@ -25,14 +25,20 @@
     /* Style as a regular content block */
     background: white;
     padding: 2rem;
-    margin: 1rem auto; /* Add margin for spacing */
-    border-radius: 8px;
+    // margin: 1rem auto; /* Removed centered margin */
+    margin: 0; /* Use default margin or adjust as needed */
+    border-radius: 8px; // Keep rounded corners? Or remove? Keeping for now.
     width: 100%;
-    max-width: 500px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    // max-width: 500px; /* Removed max-width */
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Removed shadow */
+
+    /* Apply general font size increase */
+    h3, label, input, button, span { // Apply broadly within card-form
+      font-size: 150%; // Adjust base size if needed, e.g., 1.2rem * 1.5
+    }
 
     h3 {
-      font-size: 1.5rem;
+      // font-size: 1.5rem; /* Base size before increase */
       margin-bottom: 1.5rem;
       color: $pc;
     }
@@ -50,10 +56,13 @@
       input[type="number"],
       input[type="text"] {
         width: 100%;
-        padding: 0.75rem;
+        // padding: 0.75rem; /* Base padding */
+        padding: 18px; /* Increased padding to match font */
         border: 1px solid #d1d5db;
         border-radius: 4px;
-        font-size: 1rem;
+        // font-size: 1rem; /* Base font size */
+        font-size: 150%; /* Ensure font size increase */
+        box-sizing: border-box; /* Include padding in width */
         &:focus {
           outline: none;
           border-color: $sc;
@@ -72,12 +81,15 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 1rem;
+        // font-size: 1rem; /* Base font size */
+        font-size: 150%; /* Ensure font size increase */
       }
 
       input[type="radio"] {
-        width: 1.25rem;
-        height: 1.25rem;
+        // width: 1.25rem; /* Base size */
+        // height: 1.25rem; /* Base size */
+        width: 1.875rem; /* Increased size (1.25 * 1.5) */
+        height: 1.875rem; /* Increased size */
       }
     }
 
@@ -85,6 +97,37 @@
       display: flex;
       gap: 1rem;
       justify-content: flex-end;
+
+      /* Ensure buttons inside form actions use the larger style */
+      .save-button, .cancel-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        /* Integrated Styles from main buttons */
+        font-size: 150%;
+        padding: 18px 36px;
+        margin: 6px;
+
+        &.save-button {
+          background-color: rgb(70, 56, 115);
+          color: white;
+          &:hover {
+            background-color: darken(rgb(70, 56, 115), 10%);
+          }
+        }
+        &.cancel-button {
+          background-color: rgb(189, 198, 208);
+          color: white;
+          &:hover {
+            background-color: darken(rgb(189, 198, 208), 10%);
+          }
+        }
+      }
     }
   }
   .card-content {
