@@ -15,9 +15,8 @@
   flex-direction: column; // Added
   align-items: center; // Added
   gap: 1rem; // Added gap
-  background-color: red;
   opacity: 1;
-  background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 80px ), repeating-linear-gradient( #656d4b55, #656d4b );
+  background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (mo:ed from PinLogin.scss)
   .app-header {
     display: flex;
