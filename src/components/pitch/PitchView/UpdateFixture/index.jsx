@@ -4,7 +4,7 @@ import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import ProgressIcon from "../../../../shared/icons/icon-skip.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
 // Child components
-import DrawerFinish from "./DrawerFinish";
+import DialogUpdate from "./DialogUpdate";
 import DrawerPostpone from "./DrawerPostpone";
 import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
@@ -101,7 +101,7 @@ function UpdateFixture ({
           />
           )}
         {visibleDrawers.finish && (
-          <DrawerFinish
+          <DialogUpdate
             visible={true}
             fixture={fixture}
             updateFixtures={updateFixtures}

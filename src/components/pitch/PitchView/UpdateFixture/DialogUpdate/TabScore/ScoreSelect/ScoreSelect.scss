@@ -1,0 +1,91 @@
+@import "src/shared/css/_colors.scss";
+
+.scoreSelect {
+  display: grid;
+  grid-template-columns: 2fr 4fr 4fr;
+  align-items: normal;
+  width: 100%;
+  padding: 0.5rem;
+
+  .goals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin: auto;
+  }
+
+  .points {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .header {
+    display: grid;
+    grid-template-columns: 40px auto 40px;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 0.2rem;
+    background: transparent;
+
+    span {
+      color: $sc-dark-20;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 2.1em;
+      font-weight: bold;
+      background: transparent;
+    }
+  }
+
+  .navigate {
+    background: transparent;
+    border: none;
+    color: $sc-dark-20;
+    font-size: 2.2rem;
+    max-width: 60px !important;
+    min-width: 60px !important;
+    width: 60px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:disabled {
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+
+  .points>div,
+  .goals>div {
+    width: 7rem;
+    padding: 0.1rem 0.7rem;
+    color: white;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .goals>div {
+    background: darken($sc, 5%);
+  }
+
+  .points>div {
+    background: lighten($sc, 5%);
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .square {
+    width: 100%;
+    cursor: pointer;
+
+    &.active {
+      background-color: #007bff;
+      color: white;
+    }
+  }
+}
