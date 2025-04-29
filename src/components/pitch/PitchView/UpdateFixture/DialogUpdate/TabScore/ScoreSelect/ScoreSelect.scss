@@ -5,12 +5,13 @@
   grid-template-columns: 2fr 4fr 4fr;
   align-items: normal;
   width: 100%;
-  padding: 0.5rem;
+  padding: 0rem;
+  background:white;
 
   .goals {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 2px;
     margin-bottom: 20px;
     margin: auto;
   }
@@ -18,7 +19,7 @@
   .points {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 10px;
+    gap: 2px;
     margin-bottom: 20px;
   }
 

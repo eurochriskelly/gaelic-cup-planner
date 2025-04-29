@@ -27,8 +27,6 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
   return (
     <div className="drawerCancel">
       <div>
-        <div className="drawer-header">Cancel Match</div>
-        <div className="drawer-container">
           <div className="cancelForm">
             <div className="drawer-content-row text-center uppercase text-4xl mb-6">
               Select option
@@ -58,7 +56,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 ">
                 <ForfeitButton forfeitTeam={team2} walkoverTeam={team1} confirmOpt={'team1_forfeit'} onClick={handleConfirm} />
                 <ForfeitButton forfeitTeam={team1} walkoverTeam={team2} confirmOpt={'team2_forfeit'} reverse={true} onClick={handleConfirm} />
                 <div className="bg-gray-200 mb-3 p-7 rounded-1xl">
@@ -71,23 +69,12 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                       {' & '}
                       {team2.length > 22 ? `${team2.substring(0, 22)}...` : team2}
                     </div>
-                    <div className="font-bold text-5xl text-sky-700">captains agree draw</div>
+                    <div className="font-bold text-5xl text-sky-700">Teams agree draw</div>
                   </button>
                 </div>
               </div>
             )}
           </div>
-          {!confirming && (
-            <div className="footer mt-6">
-              <button 
-                className="btn btn-secondary w-full py-4 text-xl"
-                onClick={onClose}
-              >
-                Close
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

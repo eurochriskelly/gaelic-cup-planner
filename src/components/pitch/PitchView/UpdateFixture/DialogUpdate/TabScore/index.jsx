@@ -2,11 +2,7 @@ import { useState } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
-const TabScore = ({ fixture, onProceed, onClose }) => {
-  const [scores, setScores] = useState({
-    team1: { goals: fixture.goals1 ?? "", points: fixture.points1 ?? "", name: fixture.team1 },
-    team2: { goals: fixture.goals2 ?? "", points: fixture.points2 ?? "", name: fixture.team2 },
-  });
+const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
 
@@ -16,13 +12,11 @@ const TabScore = ({ fixture, onProceed, onClose }) => {
       setScorePicker({ visible: true });
     },
     saveScore: () => {
-      onProceed(scores);
-      onClose();
+      onProceed();
     },
     cancel: () => onClose(),
   };
 
-  const scoresNotReady = () => !(scores.team1.goals !== "" && scores.team1.points !== "" && scores.team2.goals !== "" && scores.team2.points !== "");
 
   const displayScore = (team, type) => {
     const score = scores[team][type];
@@ -81,25 +75,12 @@ const TabScore = ({ fixture, onProceed, onClose }) => {
   };
 
   return (
-    <div className="drawerFinish">
-      <div className="drawer-header">Set Score</div>
-      <div className="drawer-container" style={{ position: "relative" }}>
-        <div>
-          <TeamScore id="team1" team={fixture.team1} />
-          <TeamScore id="team2" team={fixture.team2} />
-          <div className="proceedButtons">
-            <button
-              disabled={scoresNotReady()}
-              className={scoresNotReady() ? "disabled" : "enabled"}
-              onClick={actions.saveScore}
-            >
-              Proceed
-            </button>
-            <button onClick={actions.cancel}>Cancel</button>
-          </div>
-        </div>
+    <div className="tab-score-content">
+      <div className="score-container" style={{ position: "relative" }}>
+        <TeamScore id="team1" team={fixture.team1} />
+        <TeamScore id="team2" team={fixture.team2} />
         {scorePicker.visible && (
-          <div className="scoreSelector">
+          <div className="scoreSelectorOverlay">
             <ScoreSelect
               scores={scores}
               currentTeam={currentTeam}
