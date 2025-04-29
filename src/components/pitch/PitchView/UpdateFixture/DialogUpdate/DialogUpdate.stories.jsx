@@ -1,17 +1,12 @@
-import DialogUpdate from './';
-import './DialogUpdate.scss'; // Import component styles
-import '../TabScore/TabScore.scss'; // Import child component styles
-import '../TabScore/ScoreSelect/ScoreSelect.scss';
-import '../TabCancel/TabCancel.scss';
-import '../TabCards/TabCards.scss';
-import '../TabCards/ListCardedPlayers/ListCardedPlayers.scss';
-import '../TabCards/ListCardedPlayers/CardButton/CardButton.scss';
+import DialogUpdate from '../';
+// Removed explicit SCSS imports - Storybook should handle these via webpack config
 
 export default {
-  title: 'pitch/PitchView/UpdateFixture/DialogUpdate',
+  title: 'Pitch/PitchView/UpdateFixture/DialogUpdate', // Adjusted title for better grouping
   component: DialogUpdate,
   parameters: {
-    layout: 'fullscreen', // Use fullscreen layout as it's a dialog/modal
+    // layout: 'fullscreen', // Let's try centered first, like Fixture.stories
+    layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {

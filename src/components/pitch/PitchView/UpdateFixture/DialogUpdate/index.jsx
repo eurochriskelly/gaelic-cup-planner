@@ -1,7 +1,7 @@
 import { useState } from "react";
-import TabScore from "../TabScore"; // Corrected path
-import TabCards from "../TabCards"; // Corrected path
-import TabCancel from "../TabCancel"; // Corrected path
+import TabScore from "./TabScore";
+import TabCards from "./TabCards";
+import TabCancel from "./TabCancel";
 import './DialogUpdate.scss';
 
 const DialogUpdate = ({ fixture, onClose }) => {
