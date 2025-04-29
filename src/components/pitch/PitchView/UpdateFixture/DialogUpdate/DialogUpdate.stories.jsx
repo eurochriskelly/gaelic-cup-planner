@@ -7,6 +7,10 @@ export default {
   parameters: {
     // layout: 'fullscreen', // Let's try centered first, like Fixture.stories
     layout: 'centered',
+    // Set default viewport for stories in this file
+    viewport: {
+      defaultViewport: 'iphone6', // Or choose another key from INITIAL_VIEWPORTS
+    },
   },
   tags: ['autodocs'],
   argTypes: {
