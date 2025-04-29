@@ -78,6 +78,23 @@ const config = {
       })
     );
 
+    // --- SVG Handling with SVGR ---
+    // Find the default asset rule (which includes svg)
+    const assetRule = config.module.rules.find(({ test }) => test && test.test(".svg"));
+
+    // Exclude SVG from the default asset rule
+    if (assetRule) {
+      assetRule.test = /\.(ico|jpg|jpeg|png|apng|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/;
+    }
+
+    // Add SVGR rule for SVG files
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+    // --- End SVG Handling ---
+
+
     return config;
   },
 };
