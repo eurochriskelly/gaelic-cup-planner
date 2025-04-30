@@ -19,8 +19,8 @@ export default {
     fetchApi(tournamentId, `${fixtureId}/start`, 'POST'),
 
   // Update the score for a specific match
-  updateScore: (tournamentId, fixtureId, scores) =>
-    fetchApi(tournamentId, `${fixtureId}/score`, 'POST', scores),
+  updateScore: (tournamentId, fixtureId, result) =>
+    fetchApi(tournamentId, `${fixtureId}/score`, 'POST', result),
 
   // Update the carded players for a specific match
   updateCardedPlayers: (tournamentId, fixtureId, players) =>

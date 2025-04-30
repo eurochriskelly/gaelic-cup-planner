@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TabScore from "./TabScore";
 import TabCards from "./TabCards";
 import TabCancel from "./TabCancel";
+import API from "../../../../../shared/api/endpoints"; // Import API
 import './DialogUpdate.scss';
 
 const DialogUpdate = ({ fixture, onClose }) => {
@@ -19,6 +20,20 @@ const DialogUpdate = ({ fixture, onClose }) => {
   const [cancellationOption, setCancellationOption] = useState(null);
 
   const scoresNotReady = () => !(scores.team1.goals !== "" && scores.team1.points !== "" && scores.team2.goals !== "" && scores.team2.points !== "");
+
+  // Log and call API when all scores are filled
+  useEffect(() => {
+    if (!scoresNotReady()) {
+      const result = {
+        scores,
+        outcome: 'played'
+      };
+      API.updateScore(fixture.tournamentId, fixture.id, result)
+        .then(() => console.log("Scores successfully updated"))
+        .catch((error) => console.error("Error updating scores:", error));
+    }
+  }, [scores, fixture.tournamentId, fixture.id]);
+
   // Handlers for Proceed actions
   const handleScoreProceed = () => {
     console.log("Scores saved:", scores);
@@ -93,6 +108,7 @@ const DialogUpdate = ({ fixture, onClose }) => {
               onClose={onClose}
               team1={fixture.team1}
               team2={fixture.team2}
+              fixture={fixture} // Add fixture prop
             />
           </div>
           <div style={{ display: currentTab === "cards" ? "block" : "none" }}>

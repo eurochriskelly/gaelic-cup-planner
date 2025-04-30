@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import API from "../../../../../../shared/api/endpoints";
 import './TabCancel.scss';
 
-const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClose, team1, team2 }) => {
+const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClose, team1, team2, fixture }) => {
   const [confirming, setConfirming] = useState(false);
 
   const handleConfirm = (type) => {
@@ -10,7 +11,31 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
   };
 
   const handleFinalConfirm = () => {
-    onConfirm();
+    // Create the result object with the appropriate scores
+    const result = {
+      scores: {
+        team1: { goals: 0, points: 0 },
+        team2: { goals: 0, points: 0 }
+      },
+      outcome: "not played"
+    };
+    
+    // Set the appropriate scores based on selected option
+    if (cancellationOption === 'team1_forfeit') {
+      result.scores.team2.points = 1;
+    } else if (cancellationOption === 'team2_forfeit') {
+      result.scores.team1.points = 1;
+    }
+    
+    // Update score via API
+    API.updateScore(fixture.tournamentId, fixture.id, result)
+      .then(() => {
+        console.log("Match settled without playing:", result);
+        onConfirm();
+      })
+      .catch((error) => {
+        console.error("Error updating match outcome:", error);
+      });
   };
 
   const cancelConfirmation = () => {
@@ -37,7 +62,20 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                   {cancellationOption === 'draw' ? (
                     `Click 'YES' to confirm a draw between ${team1} and ${team2}`
                   ) : (
-                    `Click 'YES' to confirm Walkover for ${cancellationOption === 'team1_forfeit' ? team1 : team2} and Forfeit for ${cancellationOption === 'team1_forfeit' ? team2 : team1}`
+                    <div className="non-played-outcome">
+                      <div>Click <b>YES</b> to confirm</div>
+                      <div>
+                        <span className="decision walkover">Walkover</span> 
+                        <span>for</span>
+                        <span>{cancellationOption === 'team1_forfeit' ? team1 : team2}</span>
+                      </div>
+                      <div>and</div>
+                      <div>
+                        <span className="decision forfeit">Forfeit</span>
+                        <span>for</span>
+                        <span>{cancellationOption === 'team1_forfeit' ? team2 : team1}</span>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div className="flex gap-4 bg-gray-500 p-9 text-9xl">
@@ -80,8 +118,6 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
   );
 };
 
-export default TabCancel;
-
 function ForfeitButton({ forfeitTeam, walkoverTeam, confirmOpt, reverse = false, onClick }) {
   const maxTeamNameLen = 16;
   return (
@@ -114,3 +150,5 @@ function ForfeitButton({ forfeitTeam, walkoverTeam, confirmOpt, reverse = false,
     </button>
   );
 }
+
+export default TabCancel;

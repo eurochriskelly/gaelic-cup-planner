@@ -9,7 +9,7 @@ export default {
     layout: 'centered',
     // Set default viewport for stories in this file
     viewport: {
-      defaultViewport: 'iphone6', // Or choose another key from INITIAL_VIEWPORTS
+      defaultViewport: 'Samsung Galaxy S8+', // Or choose another key from INITIAL_VIEWPORTS
     },
   },
   tags: ['autodocs'],
