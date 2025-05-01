@@ -20,22 +20,35 @@ const DialogUpdate = ({ fixture, onClose }) => {
   });
   const [cancellationOption, setCancellationOption] = useState(null);
 
+  const registereCardedPlayers = (x, y, z) => {
+    const formattedPlayers = [
+      ...cardedPlayers.team1,
+      ...cardedPlayers.team2,
+    ];
+    console.log("Carded players updated:", formattedPlayers);
+    //console.log("Carded players registered:", x(), 'xx', y, z);
+  }
+  const registereCardedPlayers1 = () => {
+    const formattedPlayers = [
+      ...cardedPlayers.team1,
+      ...cardedPlayers.team2,
+    ];
+    console.log("Carded players updated:", formattedPlayers);
+  };
+
   // Fetch fixtures when dialog opens and update scores
   useEffect(() => {
     API.fetchFixture(fixture.tournamentId, fixture.id)
       .then(response => {
-        console.log('Loading data initially ', response);
         // Find the current fixture in the fetched data
         const updatedFixture = response?.data
         if (updatedFixture) {
           // Update scores with fresh data
-          console.log('Updated fixture data:', Object.keys(updatedFixture));
           const { cardedPlayers, goals1, goals2, points1, points2, team1, team2 } = updatedFixture;
           const scores = {
             team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
             team2: { goals: goals2 ?? "", points: points2 ?? "", name: team2 },
           }
-          console.log('Updated scores:', scores);
           setScores(scores);
           const carded = {
             team1: cardedPlayers.filter(player => player.team === team1),
@@ -80,14 +93,6 @@ const DialogUpdate = ({ fixture, onClose }) => {
     // onClose();
   };
 
-  const handleCardsProceed = () => {
-    const formattedPlayers = [
-      ...cardedPlayers.team1,
-      ...cardedPlayers.team2,
-    ];
-    console.log("Carded players updated:", formattedPlayers);
-    onClose();
-  };
 
   const handleCancelProceed = () => {
     console.log("Match cancelled with reason:", cancellationOption);
@@ -144,9 +149,8 @@ const DialogUpdate = ({ fixture, onClose }) => {
           <div style={{ display: currentTab === "cards" ? "block" : "none" }}>
             <TabCards
               cardedPlayers={cardedPlayers}
-              setCardedPlayers={setCardedPlayers}
+              setCardedPlayers={registereCardedPlayers}
               fixture={fixture}
-              onProceed={handleCardsProceed}
               onClose={onClose}
             />
           </div>
