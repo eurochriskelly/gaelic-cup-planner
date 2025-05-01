@@ -1,6 +1,6 @@
 import { useState } from "react";
 import API from "../../../../../../shared/api/endpoints";
-import CardButton from "./ListCardedPlayers/CardButton";
+import CardButton from "./CardButton";
 import './TabCards.scss';
 
 const TabCards = ({ 
@@ -184,7 +184,7 @@ const TabCards = ({
   );
 
   return (
-    <div className="ListCardedPlayers">
+    <div className="TabCards">
       {showForm ? (
         renderCardForm()
       ) : (
