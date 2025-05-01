@@ -53,7 +53,20 @@
       width: 100%;
       gap: 0.2rem; /* Tiny gap between buttons */
       margin: 0; /* No margins */
-
+      .tab-icons {
+        .icon {
+          fill: red;
+          width: 8rem;
+          height: 8rem;
+          .bg {
+            opacity: 0;
+          }
+          text {
+            opacity: 0;
+          }
+        }
+      }
+      
       button {
         flex: 1;
         padding: 0.3rem; /* Minimal padding */
@@ -73,7 +86,7 @@
         }
 
         &.active {
-          border-bottom: 10px solid #007bff;
+          border-bottom: 10px solid #007bff; // This style will be applied when the class is added
         }
 
         // Explicitly reset underlines for buttons if the issue persists
@@ -84,30 +97,6 @@
     }
   }
 
-  /* Header */
-  .drawer-footer {
-    background-color: #333;
-    color: white;
-    padding: 0rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    display: grid;
-    grid-template-columns: auto auto;
-    button {
-      color:white;
-      font-size:2.5rem;
-      text-transform:uppercase;
-    }
-    height: 10rem;
-    margin: 0; /* No margins */
-    border-bottom-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-  }
-
-  .drawer-container {
-    /* Existing styles for drawer container */
-  }
 }
 
 /* Main content area */
