@@ -3,16 +3,17 @@ import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName } from "../../../../../shared/generic/TeamNameDisplay";
 import FixtureBar from '../FixtureBar';
 import ScoreIcon from "../../../../../shared/icons/icon-score.svg?react";
+import DialogUpdate from '../../UpdateFixture/DialogUpdate';
+import '../../UpdateFixture/UpdateFixture.scss'; // Import the styles from UpdateFixture
 import './FixtureFinished.scss';
 
 export default FixtureFinished;
 
-function FixtureFinished({fixture, onUpdateScore}) {
+function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const {
     id,
-    startedTime = "",
-    scheduledTime = "",
     stage,
     category,
     team1,
@@ -35,11 +36,6 @@ function FixtureFinished({fixture, onUpdateScore}) {
   }
 
   const scoreUpToDate = !!played;
-  const rowClasses = () => {
-    const classes = ['grid grid-columns-2 match-area'];
-    if (scoreUpToDate) classes.push("scoreUpToDate");
-    return classes.join(" ");
-  };
 
   const formatName = (name, winner) => {
     if (name.startsWith("~")) {
@@ -62,8 +58,13 @@ function FixtureFinished({fixture, onUpdateScore}) {
 
   const handleUpdateScore = (e) => {
     e.stopPropagation();
-    onUpdateScore();
+    setIsDialogOpen(true);
     setIsExpanded(false); // Close the expanded view after clicking
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    if (onUpdateScore) onUpdateScore(); // Call the original onUpdateScore if provided
   };
 
   return (
@@ -111,16 +112,11 @@ function FixtureFinished({fixture, onUpdateScore}) {
           </div>
         </div>
 
-        {!played && umpireTeam && (
-          <div className="umpires">
-            <b>UMPIRING: </b>
-            {formatName(umpireTeam)}
-          </div>
-        )}
       </div>
 
       {isExpanded && (
         <div className="update-actions">
+          <div>ooooo</div>
           <button 
             className="update-score-button"
             onClick={handleUpdateScore}
@@ -129,6 +125,20 @@ function FixtureFinished({fixture, onUpdateScore}) {
             Update Score
           </button>
         </div>
+      )}
+
+      {isDialogOpen && (
+        <>
+          <div className="drawer-overlay" onClick={handleCloseDialog} />
+          <div className="updateFixture">
+            <div className="drawers">
+              <DialogUpdate
+                tournamentId={tournamentId}
+                onClose={handleCloseDialog}
+              />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

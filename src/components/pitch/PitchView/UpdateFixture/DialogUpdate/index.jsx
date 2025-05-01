@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useFixtureContext } from "../../FixturesContext";
 import TabScore from "./TabScore";
 import TabCards from "./TabCards";
@@ -8,9 +9,9 @@ import './DialogUpdate.scss';
 
 // Changed props to fixtureId and tournamentId instead of fixture
 const DialogUpdate = ({ 
-  tournamentId, 
   onClose 
 }) => {
+  const { tournamentId, pitchId } = useParams();
   const { nextFixture } = useFixtureContext();
   const fixtureId = nextFixture?.id;
   // Added state to store the complete fixture data
