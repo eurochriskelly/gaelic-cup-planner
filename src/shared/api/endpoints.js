@@ -7,16 +7,16 @@ export default {
     fetchRootApi('/tournaments', 'GET', null, { status: statuses.join(',') }),
 
   // Fetch fixtures for a specific pitch
-  fetchFixtures: (tournamentId, pitchId) =>
-    fetchApi(tournamentId, `pitches/${pitchId}/fixtures`), // GET by default
+  fetchFixtures: async (tournamentId, pitchId) =>
+    await fetchApi(tournamentId, `pitches/${pitchId}/fixtures`),
 
   // Fetch a single fixture's details
   fetchFixture: (tournamentId, fixtureId) =>
-    fetchApi(tournamentId, `/${fixtureId}`), // GET by default
+    fetchApi(tournamentId, `/${fixtureId}`),
 
   // Start a specific match
-  startMatch: (tournamentId, fixtureId) =>
-    fetchApi(tournamentId, `${fixtureId}/start`, 'POST'),
+  startMatch: async (tournamentId, fixtureId) =>
+    await fetchApi(tournamentId, `${fixtureId}/start`, 'POST'),
 
   // Update the score for a specific match
   updateScore: (tournamentId, fixtureId, result) =>

@@ -26,6 +26,10 @@ export function fetchApi(tournamentId, path, method = 'GET', body = null) {
     method,
     headers: {
       'Content-Type': 'application/json',
+      // Add cache-busting headers
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
     },
   };
 
@@ -33,8 +37,15 @@ export function fetchApi(tournamentId, path, method = 'GET', body = null) {
     options.body = JSON.stringify(body);
   }
 
+  // Add cache busting parameter for GET requests
+  const urlWithCacheBusting = method === 'GET'
+    ? `${endpoint}${endpoint.includes('?') ? '&' : '?'}_t=${Date.now()}`
+    : endpoint;
+
+  console.log(`Fetching ${method} ${urlWithCacheBusting}`);
+
   return new Promise((accept, reject) => {
-    fetch(endpoint, options)
+    fetch(urlWithCacheBusting, options)
       .then(response => {
         if (!response.ok) {
           // Throw an error for bad responses (4xx, 5xx)
@@ -51,10 +62,11 @@ export function fetchApi(tournamentId, path, method = 'GET', body = null) {
         }
       })
       .then(data => {
+        console.log(`Response from ${method} ${urlWithCacheBusting}:`, data);
         accept(data); // Resolve the promise with the data
       })
       .catch(error => {
-        console.error(`Error fetching ${endpoint}:`, error);
+        console.error(`Error fetching ${urlWithCacheBusting}:`, error);
         reject(error); // Reject the promise on error
       });
   });
@@ -81,6 +93,10 @@ export function fetchRootApi(path, method = 'GET', body = null, queryParams = nu
     method,
     headers: {
       'Content-Type': 'application/json',
+      // Add cache-busting headers
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
     },
   };
 
@@ -88,10 +104,15 @@ export function fetchRootApi(path, method = 'GET', body = null, queryParams = nu
     options.body = JSON.stringify(body);
   }
 
-  // console.log(`Root API request to endpoint ${endpoint}`); // Optional logging
+  // Add cache busting parameter for GET requests
+  const urlWithCacheBusting = method === 'GET'
+    ? `${endpoint}${endpoint.includes('?') ? '&' : '?'}_t=${Date.now()}`
+    : endpoint;
+
+  console.log(`Fetching ${method} ${urlWithCacheBusting}`);
 
   return new Promise((accept, reject) => {
-    fetch(endpoint, options)
+    fetch(urlWithCacheBusting, options)
       .then(response => {
         if (!response.ok) {
           return response.text().then(text => {
@@ -109,7 +130,7 @@ export function fetchRootApi(path, method = 'GET', body = null, queryParams = nu
         accept(data);
       })
       .catch(error => {
-        console.error(`Error fetching ${endpoint}:`, error);
+        console.error(`Error fetching ${urlWithCacheBusting}:`, error);
         reject(error);
       });
   });
