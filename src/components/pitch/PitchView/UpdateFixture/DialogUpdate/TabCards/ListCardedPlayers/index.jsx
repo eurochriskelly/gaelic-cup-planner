@@ -2,19 +2,24 @@ import { useState } from "react";
 import CardButton from "./CardButton";
 import './ListCardedPlayers.scss';
 
-const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onProceed = () => {}, onClose = () => {} }) => {
+const ListCardedPlayers = ({ 
+  team1, 
+  team2, 
+  cardedPlayers, 
+  setCardedPlayers, 
+}) => {
   const [showForm, setShowForm] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
   const [formData, setFormData] = useState({
     team: team1,
     cardColor: 'red',
-    number: '',
-    name: ''
+    playerNumber: '',
+    playerName: ''
   });
 
   const actions = {
     addOrUpdateCard: () => {
-      if (!formData.number) {
+      if (!formData.playerNumber) {
         alert('Player number is required.');
         return;
       }
@@ -22,8 +27,8 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
         id: editingCard ? editingCard.id : Date.now(),
         team: formData.team,
         cardColor: formData.cardColor,
-        number: formData.number,
-        name: formData.name || 'Not provided',
+        playerNumber: formData.playerNumber,
+        playerName: formData.playerName || 'Not provided',
         confirmed: true
       };
       const teamKey = formData.team === team1 ? 'team1' : 'team2';
@@ -52,8 +57,8 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
       setFormData({
         team: card.team,
         cardColor: card.cardColor,
-        number: card.number,
-        name: card.name === 'Not provided' ? '' : card.name
+        playerNumber: card.playerNumber,
+        playerName: card.playerName === 'Not provided' ? '' : card.playerName
       });
       setShowForm(true);
     },
@@ -62,7 +67,7 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
   const resetForm = () => {
     setShowForm(false);
     setEditingCard(null);
-    setFormData({ team: team1, cardColor: 'red', number: '', name: '' });
+    setFormData({ team: team1, cardColor: 'red', playerNumber: '', playerName: '' });
   };
 
   const renderCardForm = () => (
@@ -85,8 +90,8 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
           <label>Player Number</label>
           <input
             type="number"
-            value={formData.number}
-            onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+            value={formData.playerNumber}
+            onChange={(e) => setFormData({ ...formData, playerNumber: e.target.value })}
             placeholder="Enter player number"
             required
           />
@@ -95,8 +100,9 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
           <label>Player Name (Optional)</label>
           <input
             type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value.toUpperCase() })}
+            value={formData.playerName}
+            style={{ textTransform: 'uppercase' }}
+            onChange={(e) => setFormData({ ...formData, playerName: e.target.value.toUpperCase() })}
             placeholder="Enter player name"
           />
         </div>
@@ -135,8 +141,8 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
               <div className={`card-indicator card-${card.cardColor}`}>
                 [{card.cardColor.charAt(0).toUpperCase()}]
               </div>
-              <span className="card-number">#{card.number}</span>
-              <span className="card-name">{card.name}</span>
+              <span className="card-number">#{card.playerNumber}</span>
+              <span className="card-name">{card.playerName}</span>
               <div className="card-actions">
                 <i
                   className="pi pi-minus-circle remove-icon"
@@ -158,11 +164,6 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
     </div>
   );
 
-  const totalCards = cardedPlayers.team1.length + cardedPlayers.team2.length;
-  const proceedButtonLabel = totalCards === 0
-    ? "Proceed: No carded players"
-    : `Proceed: ${totalCards} carded player${totalCards > 1 ? 's' : ''}`;
-
   return (
     <div className="ListCardedPlayers">
       {showForm ? (
@@ -171,14 +172,6 @@ const ListCardedPlayers = ({ team1, team2, cardedPlayers, setCardedPlayers, onPr
         <div className="card-content">
           {renderTeamSection(team1, cardedPlayers.team1, 'team1')}
           {renderTeamSection(team2, cardedPlayers.team2, 'team2')}
-          <div className="card-actions">
-            <button
-              className="proceed-button"
-              onClick={() => onProceed()}
-            >
-              <i className="pi pi-check-circle"></i> {proceedButtonLabel}
-            </button>
-          </div>
         </div>
       )}
     </div>
