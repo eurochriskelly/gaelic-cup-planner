@@ -20,21 +20,6 @@ const DialogUpdate = ({ fixture, onClose }) => {
   });
   const [cancellationOption, setCancellationOption] = useState(null);
 
-  const registereCardedPlayers = (x, y, z) => {
-    const formattedPlayers = [
-      ...cardedPlayers.team1,
-      ...cardedPlayers.team2,
-    ];
-    console.log("Carded players updated:", formattedPlayers);
-    //console.log("Carded players registered:", x(), 'xx', y, z);
-  }
-  const registereCardedPlayers1 = () => {
-    const formattedPlayers = [
-      ...cardedPlayers.team1,
-      ...cardedPlayers.team2,
-    ];
-    console.log("Carded players updated:", formattedPlayers);
-  };
 
   // Fetch fixtures when dialog opens and update scores
   useEffect(() => {
@@ -148,8 +133,10 @@ const DialogUpdate = ({ fixture, onClose }) => {
           </div>
           <div style={{ display: currentTab === "cards" ? "block" : "none" }}>
             <TabCards
+              team1={fixture.team1}
+              team2={fixture.team2}
               cardedPlayers={cardedPlayers}
-              setCardedPlayers={registereCardedPlayers}
+              setCardedPlayers={setCardedPlayers}
               fixture={fixture}
               onClose={onClose}
             />
