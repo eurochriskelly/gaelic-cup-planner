@@ -2,164 +2,134 @@ import { useState, useEffect, useRef } from "react";
 import TabScore from "./TabScore";
 import TabCards from "./TabCards";
 import TabCancel from "./TabCancel";
-import API from "../../../../../shared/api/endpoints"; // Import API
+import API from "../../../../../shared/api/endpoints";
 import './DialogUpdate.scss';
 
 const DialogUpdate = ({ fixture, onClose }) => {
   const [currentTab, setCurrentTab] = useState("score");
-  const initialLoadRef = useRef(true); // Track initial load state
-
-  // State for all tabs, initialized with fixture data
   const [scores, setScores] = useState({
     team1: { goals: fixture.goals1 ?? "", points: fixture.points1 ?? "", name: fixture.team1 },
     team2: { goals: fixture.goals2 ?? "", points: fixture.points2 ?? "", name: fixture.team2 },
   });
-  const [cardedPlayers, setCardedPlayers] = useState({
-    team1: [],
-    team2: [],
-  });
+  const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
   const [cancellationOption, setCancellationOption] = useState(null);
+  const initialLoadRef = useRef(true);
 
-  const registerCardedPlayer = (player) => {
-    console.log("Carded player:", player);
-    if (player?.action === "delete") {
-      API.deleteCardedPlayer(fixture.tournamentId, fixture.id, player)
-    } else {
-      API.updateCardedPlayer(fixture.tournamentId, fixture.id, player)
-    }
-  }
-
-  // Fetch fixtures when dialog opens and update scores
   useEffect(() => {
     API.fetchFixture(fixture.tournamentId, fixture.id)
-      .then(response => {
-        // Find the current fixture in the fetched data
-        const updatedFixture = response?.data
-        if (updatedFixture) {
-          // Update scores with fresh data
-          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2 } = updatedFixture;
-          const scores = {
+      .then(({ data }) => {
+        if (data) {
+          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2 } = data;
+          setScores({
             team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
             team2: { goals: goals2 ?? "", points: points2 ?? "", name: team2 },
-          }
-          setScores(scores);
-          const carded = {
+          });
+          setCardedPlayers({
             team1: cardedPlayers.filter(player => player.team === team1),
             team2: cardedPlayers.filter(player => player.team === team2),
-          } 
-          console.log('Carded players:', carded);
-          setCardedPlayers(carded)
+          });
         }
       })
-      .catch(error => console.error("Error fetching fixture data:", error))
+      .catch(error => console.error("Error fetching fixture:", error))
       .finally(() => {
-        // Wait for the next render cycle to set initialLoadRef to false
-        setTimeout(() => {
-          initialLoadRef.current = false;
-        }, 0);
+        initialLoadRef.current = false;
       });
-  }, []); // Empty dependency array ensures this runs only once when component mounts
+  }, [fixture.tournamentId, fixture.id]);
 
-  const scoresNotReady = () => !(scores.team1.goals !== "" && scores.team1.points !== "" && scores.team2.goals !== "" && scores.team2.points !== "");
-
-  // Log and call API when all scores are filled, but not during initial load
   useEffect(() => {
-    // Skip the effect during initial load
-    if (initialLoadRef.current) {
-      return;
-    }
+    if (initialLoadRef.current) return;
 
-    if (!scoresNotReady()) {
-      const result = {
-        scores,
-        outcome: 'played'
-      };
+    const hasScores = Object.values(scores).every(
+      team => team.goals !== "" && team.points !== ""
+    );
+
+    if (hasScores) {
+      const result = { scores, outcome: 'played' };
       API.updateScore(fixture.tournamentId, fixture.id, result)
-        .then(() => console.log("Scores successfully updated"))
-        .catch((error) => console.error("Error updating scores:", error));
+        .catch(error => console.error("Error updating scores:", error));
     }
   }, [scores, fixture.tournamentId, fixture.id]);
 
-  // Handlers for Proceed actions
-  const handleScoreProceed = () => {
-    console.log("Scores saved:", scores);
-    // onClose();
+  const registerCardedPlayer = (player) => {
+    const action = player?.action === "delete"
+      ? API.deleteCardedPlayer
+      : API.updateCardedPlayer;
+    action(fixture.tournamentId, fixture.id, player);
   };
 
-
   const handleCancelProceed = () => {
-    console.log("Match cancelled with reason:", cancellationOption);
     onClose();
+  };
+
+  const renderTabContent = () => {
+    switch (currentTab) {
+      case "score":
+        return (
+          <TabScore
+            scores={scores}
+            setScores={setScores}
+            fixture={fixture}
+            onProceed={() => { }}
+            onClose={onClose}
+          />
+        );
+      case "cancel":
+        return (
+          <TabCancel
+            cancellationOption={cancellationOption}
+            setCancellationOption={setCancellationOption}
+            onConfirm={handleCancelProceed}
+            onClose={onClose}
+            team1={fixture.team1}
+            team2={fixture.team2}
+            fixture={fixture}
+          />
+        );
+      case "cards":
+        return (
+          <TabCards
+            team1={fixture.team1}
+            team2={fixture.team2}
+            cardedPlayers={cardedPlayers}
+            setCardedPlayer={registerCardedPlayer}
+            fixture={fixture}
+            onClose={onClose}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="dialog-update">
       <div className="drawer-header">
-        <div className="title">Update Fixture</div>
+        <div className="title">
+          <span className="mr-8">Update Fixture</span>
+          <i
+            className="pi pi-times-circle"
+            onClick={handleCancelProceed}
+            style={{ color: 'white', cursor: 'pointer', fontSize: '1.2em' }}
+            role="button"
+            aria-label="Close"
+          />
+        </div>
         <div className="tab-navigation">
-          <button
-            className={currentTab === "score" ? "active" : ""}
-            onClick={() => setCurrentTab("score")}
-          >
-            Set Score
-          </button>
-          <button
-            className={currentTab === "cancel" ? "active" : ""}
-            onClick={() => setCurrentTab("cancel")}
-          >
-            Cancel Match
-          </button>
-          <button
-            className={currentTab === "cards" ? "active" : ""}
-            onClick={() => setCurrentTab("cards")}
-          >
-            Card Players
-          </button>
+          {["score", "cancel", "cards"].map(tab => (
+            <button
+              key={tab}
+              className={currentTab === tab ? "active" : ""}
+              onClick={() => setCurrentTab(tab)}
+            >
+              {tab === "score" ? "Set Score" : tab === "cancel" ? "Cancel Match" : "Card Players"}
+            </button>
+          ))}
         </div>
       </div>
       <div className="drawer-container">
         <div className="tab-content">
-          <div style={{ display: currentTab === "score" ? "block" : "none" }}>
-            <TabScore
-              scores={scores}
-              setScores={setScores}
-              fixture={fixture}
-              onProceed={handleScoreProceed}
-              onClose={onClose}
-            />
-          </div>
-          <div style={{ display: currentTab === "cancel" ? "block" : "none" }}>
-            <TabCancel
-              cancellationOption={cancellationOption}
-              setCancellationOption={setCancellationOption}
-              onConfirm={handleCancelProceed}
-              onClose={onClose}
-              team1={fixture.team1}
-              team2={fixture.team2}
-              fixture={fixture} // Add fixture prop
-            />
-          </div>
-          <div style={{ display: currentTab === "cards" ? "block" : "none" }}>
-            <TabCards
-              team1={fixture.team1}
-              team2={fixture.team2}
-              cardedPlayers={cardedPlayers}
-              setCardedPlayer={registerCardedPlayer}
-              fixture={fixture}
-              onClose={onClose}
-            />
-          </div>
+          {renderTabContent()}
         </div>
-      </div>
-      <div className="drawer-footer">
-        <button
-          disabled={scoresNotReady()}
-          className={scoresNotReady() ? "disabled" : "enabled"}
-          onClick={() => {}} // saveScore
-        >
-          Proceed
-        </button>
-        <button onClick={handleCancelProceed}>Cancel</button>
       </div>
     </div>
   );
