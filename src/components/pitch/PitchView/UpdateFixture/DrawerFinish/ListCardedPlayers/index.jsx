@@ -9,7 +9,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
   const [cardedPlayersTeam2, setCardedPlayersTeam2] = useState([]);
   const [formData, setFormData] = useState({
     team: team1,
-    cardType: 'red',
+    cardColor: 'red',
     number: '',
     name: ''
   });
@@ -23,7 +23,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
       const card = {
         id: editingCard ? editingCard.id : Date.now(),
         team: formData.team,
-        cardType: formData.cardType,
+        cardColor: formData.cardColor,
         number: formData.number,
         name: formData.name || 'Not provided',
         confirmed: true
@@ -44,7 +44,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
       setEditingCard(card);
       setFormData({
         team: card.team,
-        cardType: card.cardType,
+        cardColor: card.cardColor,
         number: card.number,
         name: card.name === 'Not provided' ? '' : card.name
       });
@@ -52,7 +52,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
     },
     formatCards: (cards) => cards.map(card => ({
       playerId: card.number,
-      cardColor: card.cardType,
+      cardColor: card.cardColor,
       playerName: card.name,
       team: card.team
     }))
@@ -61,7 +61,7 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
   const resetForm = () => {
     setShowForm(false);
     setEditingCard(null);
-    setFormData({ team: team1, cardType: 'red', number: '', name: '' });
+    setFormData({ team: team1, cardColor: 'red', number: '', name: '' });
   };
 
   const renderCardForm = () => (
@@ -76,9 +76,9 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
         <div className="form-group">
           <label>Card Type</label>
           <div className="card-type-selection">
-            <CardButton type="R" onClick={() => setFormData({ ...formData, cardType: 'red' })} active={formData.cardType === 'red'} />
-            <CardButton type="Y" onClick={() => setFormData({ ...formData, cardType: 'yellow' })} active={formData.cardType === 'yellow'} />
-            <CardButton type="B" onClick={() => setFormData({ ...formData, cardType: 'black' })} active={formData.cardType === 'black'} />
+            <CardButton type="R" onClick={() => setFormData({ ...formData, cardColor: 'red' })} active={formData.cardColor === 'red'} />
+            <CardButton type="Y" onClick={() => setFormData({ ...formData, cardColor: 'yellow' })} active={formData.cardColor === 'yellow'} />
+            <CardButton type="B" onClick={() => setFormData({ ...formData, cardColor: 'black' })} active={formData.cardColor === 'black'} />
           </div>
         </div>
         <div className="form-group">
@@ -132,8 +132,8 @@ const ListCardedPlayers = ({ team1, team2, onProceed = () => {}, onClose = () =>
         <div className="cards-list">
           {cards.map(card => (
             <div key={card.id} className="card-entry">
-              <div className={`card-indicator card-${card.cardType}`}>
-                [{card.cardType.charAt(0).toUpperCase()}]
+              <div className={`card-indicator card-${card.cardColor}`}>
+                [{card.cardColor.charAt(0).toUpperCase()}]
               </div>
               <span className="card-number">#{card.number}</span>
               <span className="card-name">{card.name}</span>
