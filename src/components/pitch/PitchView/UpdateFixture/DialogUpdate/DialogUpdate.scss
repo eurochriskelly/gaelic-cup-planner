@@ -15,70 +15,99 @@
   padding: 0rem;
   margin: 0; /* No margins */
   border-radius: 2rem;
-}
 
-/* Header */
-.drawer-header {
-  background-color: #333;
-  color: white;
-  padding: 0rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0; /* No margins */
-}
+  .drawer-header {
+    background-color: #333;
+    color: white;
+    padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0; /* No margins */
 
-/* Header */
-.drawer-footer {
-  background-color: #333;
-  color: white;
-  padding: 0rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  display: grid;
-  grid-template-columns: auto auto;
-  button {
-    color:white;
-    font-size:2.5rem;
-    text-transform:uppercase;
+    .title {
+      display: flex;
+      justify-content: space-between; // Pushes items to ends
+      align-items: center; // Vertically aligns items in the middle
+      width: 100%; // Ensure it takes full width if needed
+
+      // Target only direct span child if necessary
+      > span {
+        // Add specific styles for the title text if needed
+      }
+
+      // Target only direct i child
+      > i.pi-times-circle {
+        color: white;
+        cursor: pointer;
+        font-size: 1.2em;
+        // Reset any inherited styles causing underlines if necessary
+        text-decoration: none; // Example reset
+        border-bottom: none; // Example reset
+      }
+    }
+
+    .tab-navigation {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      gap: 0.2rem; /* Tiny gap between buttons */
+      margin: 0; /* No margins */
+
+      button {
+        flex: 1;
+        padding: 0.3rem; /* Minimal padding */
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        min-width: 60px; /* Adjusted for mobile */
+        height: 7rem;
+        font-size: 1.9rem;
+        text-transform: uppercase;
+        background: none;
+        border-bottom: 10px solid #007bff;
+
+        &:hover {
+          background-color: #666;
+        }
+
+        &.active {
+          border-bottom: 10px solid #007bff;
+        }
+
+        // Explicitly reset underlines for buttons if the issue persists
+        text-decoration: none; // Ensure no underline
+        border-bottom: none; // Ensure no border mimics underline
+        // Add other necessary button styles here
+      }
+    }
   }
-  height: 10rem;
-  margin: 0; /* No margins */
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
-}
 
-/* Tab navigation (Set Score, Cancel Match, Card Players) */
-.tab-navigation {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  gap: 0.2rem; /* Tiny gap between buttons */
-  margin: 0; /* No margins */
-}
+  /* Header */
+  .drawer-footer {
+    background-color: #333;
+    color: white;
+    padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    button {
+      color:white;
+      font-size:2.5rem;
+      text-transform:uppercase;
+    }
+    height: 10rem;
+    margin: 0; /* No margins */
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+  }
 
-.tab-navigation button {
-  flex: 1;
-  padding: 0.3rem; /* Minimal padding */
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  min-width: 60px; /* Adjusted for mobile */
-  height: 7rem;
-  font-size: 1.9rem;
-  text-transform: uppercase;
-  background: none;
-  border-bottom: 10px solid #007bff;
-}
-
-.tab-navigation button:hover {
-  background-color: #666;
-}
-
-.tab-navigation button.active {
-  border-bottom: 10px solid #007bff;
+  .drawer-container {
+    /* Existing styles for drawer container */
+  }
 }
 
 /* Main content area */
@@ -112,10 +141,10 @@
   justify-content: center;
   align-items: center;
   margin: 0; /* No margins */
-}
 
-.score-button:hover {
-  background-color: #5a0c9d;
+  &:hover {
+    background-color: #5a0c9d;
+  }
 }
 
 /* Mobile-specific adjustments */

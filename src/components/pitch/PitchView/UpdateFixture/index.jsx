@@ -17,10 +17,9 @@ function UpdateFixture ({
   startMatch,
   moveToNextFixture,
 }) {
-  // Guard clause: If fixture data is missing, don't render the component
   if (!fixture) {
     console.warn("UpdateFixture rendered without fixture data.");
-    return null; // Or return a loading indicator/placeholder
+    return null;
   }
 
   const { startedTime, isResult } = fixture;
