@@ -17,7 +17,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
         team1: { goals: 0, points: 0 },
         team2: { goals: 0, points: 0 }
       },
-      outcome: "not played"
+      outcome: "skipped",
     };
     
     // Set the appropriate scores based on selected option
@@ -31,7 +31,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
     API.updateScore(fixture.tournamentId, fixture.id, result)
       .then(() => {
         console.log("Match settled without playing:", result);
-        onConfirm();
+        setConfirming(false);
       })
       .catch((error) => {
         console.error("Error updating match outcome:", error);
@@ -53,9 +53,6 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
     <div className="drawerCancel">
       <div>
           <div className="cancelForm">
-            <div className="drawer-content-row text-center uppercase text-4xl mb-6">
-              Select option
-            </div>
             {confirming ? (
               <div className="flex flex-col gap-4">
                 <div className="text-center text-4xl mb-6">
@@ -64,13 +61,13 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                   ) : (
                     <div className="non-played-outcome">
                       <div>Click <b>YES</b> to confirm</div>
-                      <div>
+                      <div className="p-8">
                         <span className="decision walkover">Walkover</span> 
                         <span>for</span>
                         <span>{cancellationOption === 'team1_forfeit' ? team1 : team2}</span>
                       </div>
-                      <div>and</div>
-                      <div>
+                      <div className="color-gray-200 pb-4">and</div>
+                      <div className="p-8">
                         <span className="decision forfeit">Forfeit</span>
                         <span>for</span>
                         <span>{cancellationOption === 'team1_forfeit' ? team2 : team1}</span>
@@ -80,13 +77,13 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                 </div>
                 <div className="flex gap-4 bg-gray-500 p-9 text-9xl">
                   <button
-                    className="btn btn-primary flex-1 py-4 bg-[#2b7624] hover:bg-[#1f5a1a] text-white mr-1"
+                    className="btn btn-primary flex-1 py-4 text-3xl text-white mr-1"
                     onClick={handleFinalConfirm}
                   >
                     Yes
                   </button>
                   <button
-                    className="btn btn-secondary flex-1 py-4 text-3xl bg-[#885ea3] hover:bg-[#6f4a84] text-white"
+                    className="btn btn-secondary flex-1 py-4 text-3xl text-white"
                     onClick={cancelConfirmation}
                   >
                     No

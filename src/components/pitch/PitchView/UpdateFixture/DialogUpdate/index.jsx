@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TabScore from "./TabScore";
 import TabCards from "./TabCards";
 import TabCancel from "./TabCancel";
@@ -7,6 +7,7 @@ import './DialogUpdate.scss';
 
 const DialogUpdate = ({ fixture, onClose }) => {
   const [currentTab, setCurrentTab] = useState("score");
+  const initialLoadRef = useRef(true); // Track initial load state
 
   // State for all tabs, initialized with fixture data
   const [scores, setScores] = useState({
@@ -19,10 +20,49 @@ const DialogUpdate = ({ fixture, onClose }) => {
   });
   const [cancellationOption, setCancellationOption] = useState(null);
 
+  // Fetch fixtures when dialog opens and update scores
+  useEffect(() => {
+    API.fetchFixture(fixture.tournamentId, fixture.id)
+      .then(response => {
+        console.log('Loading data initially ', response);
+        // Find the current fixture in the fetched data
+        const updatedFixture = response?.data
+        if (updatedFixture) {
+          // Update scores with fresh data
+          console.log('Updated fixture data:', Object.keys(updatedFixture));
+          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2 } = updatedFixture;
+          const scores = {
+            team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
+            team2: { goals: goals2 ?? "", points: points2 ?? "", name: team2 },
+          }
+          console.log('Updated scores:', scores);
+          setScores(scores);
+          const carded = {
+            team1: cardedPlayers.filter(player => player.team === team1),
+            team2: cardedPlayers.filter(player => player.team === team2),
+          } 
+          console.log('Carded players:', carded);
+          setCardedPlayers(carded)
+        }
+      })
+      .catch(error => console.error("Error fetching fixture data:", error))
+      .finally(() => {
+        // Wait for the next render cycle to set initialLoadRef to false
+        setTimeout(() => {
+          initialLoadRef.current = false;
+        }, 0);
+      });
+  }, []); // Empty dependency array ensures this runs only once when component mounts
+
   const scoresNotReady = () => !(scores.team1.goals !== "" && scores.team1.points !== "" && scores.team2.goals !== "" && scores.team2.points !== "");
 
-  // Log and call API when all scores are filled
+  // Log and call API when all scores are filled, but not during initial load
   useEffect(() => {
+    // Skip the effect during initial load
+    if (initialLoadRef.current) {
+      return;
+    }
+
     if (!scoresNotReady()) {
       const result = {
         scores,
@@ -37,23 +77,13 @@ const DialogUpdate = ({ fixture, onClose }) => {
   // Handlers for Proceed actions
   const handleScoreProceed = () => {
     console.log("Scores saved:", scores);
-    onClose();
+    // onClose();
   };
 
   const handleCardsProceed = () => {
     const formattedPlayers = [
-      ...cardedPlayers.team1.map(card => ({
-        playerId: card.number,
-        cardColor: card.cardType,
-        playerName: card.name,
-        team: fixture.team1,
-      })),
-      ...cardedPlayers.team2.map(card => ({
-        playerId: card.number,
-        cardColor: card.cardType,
-        playerName: card.name,
-        team: fixture.team2,
-      })),
+      ...cardedPlayers.team1,
+      ...cardedPlayers.team2,
     ];
     console.log("Carded players updated:", formattedPlayers);
     onClose();

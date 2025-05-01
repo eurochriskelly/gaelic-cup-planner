@@ -19,7 +19,9 @@ export const useFetchFixtures = (tournamentId, pitchId) => {
       const { data } = await API.fetchFixtures(tournamentId, pitchId);
       setFixtures(data);
       // Set the initial next fixture based on the first fetch
-      setNextFixture(data.filter((f) => !f.played).shift());
+      const nextFixture = data.filter((f) => !f.played).shift()
+      console.log("PitchView: Initial nextFixture:", nextFixture);
+      setNextFixture(nextFixture);
     };
     initialFetch();
     // Intentionally omitting fetchFixtures from dependency array

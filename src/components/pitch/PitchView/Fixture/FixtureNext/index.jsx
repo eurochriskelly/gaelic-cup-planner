@@ -37,7 +37,6 @@ function FixtureNext({ fixture }) {
   const gridStyle = { 
     display: 'grid',
   }
-
   return (
     <div className={`fixture FixtureNext h-128`} key={id}>
       <div
