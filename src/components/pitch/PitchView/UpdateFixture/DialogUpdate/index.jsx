@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useFixtureContext } from "../../FixturesContext";
 import TabScore from "./TabScore";
 import TabCards from "./TabCards";
 import TabCancel from "./TabCancel";
@@ -7,10 +8,11 @@ import './DialogUpdate.scss';
 
 // Changed props to fixtureId and tournamentId instead of fixture
 const DialogUpdate = ({ 
-  fixtureId, 
   tournamentId, 
   onClose 
 }) => {
+  const { nextFixture } = useFixtureContext();
+  const fixtureId = nextFixture?.id;
   // Added state to store the complete fixture data
   const [fixture, setFixture] = useState(null);
   const [currentTab, setCurrentTab] = useState("score");
@@ -135,10 +137,6 @@ const DialogUpdate = ({
       });
   };
 
-  const handleCancelProceed = () => {
-    onClose(fixture?.isResult);
-  };
-
   const renderTabContent = () => {
     // Don't render tabs until fixture data is loaded
     if (!fixture) return <div>Loading...</div>;
@@ -157,7 +155,7 @@ const DialogUpdate = ({
           <TabCancel
             cancellationOption={cancellationOption}
             setCancellationOption={setCancellationOption}
-            onConfirm={handleCancelProceed}
+            onConfirm={onClose}
             onClose={onClose}
             team1={fixture.team1}
             team2={fixture.team2}
@@ -188,10 +186,12 @@ const DialogUpdate = ({
     <div className="dialog-update">
       <div className="drawer-header">
         <div className="title">
-          <span className="mr-8">Update Fixture</span>
+          <span className="mr-8">
+            Update Fixture <span className="ml-2 text-gray-500">#{fixtureId?.toString().slice(-3)}</span>
+          </span>
           <i
             className="pi pi-times-circle"
-            onClick={handleCancelProceed}
+            onClick={onClose}
             style={{ color: 'white', cursor: 'pointer', fontSize: '1.2em' }}
             role="button"
             aria-label="Close"

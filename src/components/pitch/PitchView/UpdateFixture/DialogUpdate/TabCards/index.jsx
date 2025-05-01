@@ -2,7 +2,6 @@ import { useState } from "react";
 import API from "../../../../../../shared/api/endpoints";
 import CardButton from "./CardButton";
 import './TabCards.scss';
-import { action } from "@storybook/addon-actions";
 
 const TabCards = ({ 
   team1, 

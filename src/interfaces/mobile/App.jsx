@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { Provider } from "../../shared/js/Provider";
+import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContext";
 import SelectTournamentView from "../../components/groups/SelectTournamentView";
 import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./components/LandingPage";
@@ -17,9 +18,8 @@ import "./App.scss";
 import "./i18n";
 
 function App() {
-  const { tournamentId } = useParams();
   const tidFromCookie = Cookies.get("tournamentId");
-  const effectiveTid = tournamentId || tidFromCookie;
+  console.log('tidFromCookie', tidFromCookie);
 
   return (
     <Provider>
@@ -29,10 +29,23 @@ function App() {
         <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
         <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
         <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
-        <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchView />} />
+        <Route path="/tournament/:tournamentId/pitch/:pitchId" element={
+          <PitchViewWrapper />
+        } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Provider>
+  );
+}
+
+function PitchViewWrapper() {
+  const { tournamentId, pitchId } = useParams();
+  console.log('In PitchViewWrapper - tournamentId:', tournamentId, 'pitchId:', pitchId);
+
+  return (
+    <FixtureProvider tournamentId={tournamentId} pitchId={pitchId}>
+      <PitchView />
+    </FixtureProvider>
   );
 }
 

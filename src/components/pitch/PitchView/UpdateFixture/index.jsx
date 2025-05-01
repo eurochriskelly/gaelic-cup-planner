@@ -5,63 +5,57 @@ import ProgressIcon from "../../../../shared/icons/icon-skip.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
 import DialogUpdate from "./DialogUpdate";
 import DrawerPostpone from "./DrawerPostpone";
+import { useFixtureContext } from "../FixturesContext";
 import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
 
-const UpdateFixture = ({ fixture, updateFixtures, startMatch, moveToNextFixture }) => {
-  if (!fixture) return null;
+const UpdateFixture = () => {
+  const { nextFixture, fetchFixtures, startMatch, fixtures } = useFixtureContext();
+  if (!nextFixture) return null;
 
-  const { startedTime } = fixture;
-  // Maintain local state for isResult that can be updated by the drawer
-  const [fixtureHasResult, setFixtureHasResult] = useState(fixture.isResult);
   const [activeDrawer, setActiveDrawer] = useState(null);
-
-  // Update local isResult state when fixture prop changes
-  useEffect(() => {
-    setFixtureHasResult(fixture.isResult);
-  }, [fixture.isResult]);
 
   // Compute button states based on fixture status
   const buttonStates = useMemo(() => {
-    const states = {
-      start: startedTime || fixtureHasResult ? "disabled" : "enabled",
-      finish: startedTime ? "enabled" : "disabled",
-      postpone: !startedTime && !fixtureHasResult ? "enabled" : "disabled",
-      proceed: fixtureHasResult ? "enabled" : "disabled",
+    console.log("Computing button states...");
+    const hasStarted = !!nextFixture.startedTime;
+    const hasResult = !!nextFixture.isResult;
+    return {
+      start: !hasStarted && !hasResult ? "enabled" : "disabled",
+      finish: hasStarted ? "enabled" : "disabled",
+      postpone: !hasStarted && !hasResult ? "enabled" : "disabled",
+      proceed: hasResult ? "enabled" : "disabled",
     };
-    return states;
-  }, [startedTime, fixtureHasResult]);
+  }, [nextFixture.startedTime, nextFixture.started, nextFixture.isResult]);
 
   const actions = {
-    // Updated to handle isResult parameter
-    closeDrawer: (isResult) => {
-      // Update local result state if provided
-      console.log('is result from drawer:', isResult);
-      if (isResult) {
-        setFixtureHasResult(isResult);
-      }
+    closeDrawer: () => {
       setActiveDrawer(null);
-    },
-    start: async () => {
-      if (buttonStates.start === "disabled") return;
-      await startMatch(fixture.id);
-      // No need to update states manually; buttonStates will recompute based on fixture changes
+      fetchFixtures();
     },
     reschedule: () => {
       if (buttonStates.postpone === "disabled") return;
       setActiveDrawer("postpone");
     },
-    proceed: () => {
-      if (buttonStates.proceed === "disabled") return;
-      moveToNextFixture();
+    start: async () => {
+      if (buttonStates.start === "disabled") return;
+      try {
+        await startMatch(nextFixture.id);
+      } catch (error) {
+        console.error("Error starting match:", error);
+      }
     },
     finish: () => {
       if (buttonStates.finish === "disabled") return;
       setActiveDrawer("finish");
     },
+    proceed: async () => {
+      if (buttonStates.proceed === "disabled") return;
+      await fetchFixtures(true);
+    },
     rescheduleMatch: async (fixtureId, targetPitch, placement) => {
-      await API.rescheduleMatch(fixture.tournamentId, targetPitch, fixture.id, fixtureId, placement);
-      updateFixtures();
+      await API.rescheduleMatch(nextFixture.tournamentId, targetPitch, nextFixture.id, fixtureId, placement);
+      await fetchFixtures();
       setActiveDrawer(null);
     },
   };
@@ -74,7 +68,7 @@ const UpdateFixture = ({ fixture, updateFixtures, startMatch, moveToNextFixture 
   ];
 
   return (
-    <div className="updateFixture select-none">
+    <div className="updateFixture select-none" onClick={() => console.log(nextFixture, fixtures)}>
       {activeDrawer && <div className="drawer-overlay" onClick={actions.closeDrawer} />}
       <div
         className="button-grid"
@@ -96,14 +90,13 @@ const UpdateFixture = ({ fixture, updateFixtures, startMatch, moveToNextFixture 
           <DrawerPostpone
             onClose={actions.closeDrawer}
             onSubmit={actions.rescheduleMatch}
-            pitch={fixture.pitch}
+            pitch={nextFixture.pitch}
           />
         )}
         {activeDrawer === "finish" && (
           <DialogUpdate
-            fixtureId={fixture.id}
-            tournamentId={fixture.tournamentId}
-            updateFixtures={updateFixtures}
+            fixtureId={nextFixture.id}
+            tournamentId={nextFixture.tournamentId}
             onClose={actions.closeDrawer}
           />
         )}

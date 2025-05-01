@@ -41,7 +41,7 @@
     }
     &.disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      opacity: 0.35;
     }
   }
 
@@ -95,8 +95,9 @@
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
   margin: 0 auto;
-  padding: 1rem;
-  gap: 1rem;
+  padding: 0;
+    gap: 0;
+    padding-bottom: 3rem;
 }
 
 .space-button {
@@ -111,7 +112,7 @@
   
   &.grey {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.35;
   }
   
   .icon {
@@ -197,4 +198,3 @@
     grid-template-columns: auto auto auto;
   }
 }
-
