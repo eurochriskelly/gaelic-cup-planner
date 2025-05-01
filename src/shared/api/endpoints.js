@@ -23,9 +23,12 @@ export default {
     fetchApi(tournamentId, `${fixtureId}/score`, 'POST', result),
 
   // Update the carded players for a specific match
-  updateCardedPlayers: (tournamentId, fixtureId, players) =>
-    fetchApi(tournamentId, `${fixtureId}/carded`, 'POST', players),
+  updateCardedPlayer: (tournamentId, fixtureId, player) =>
+    fetchApi(tournamentId, `${fixtureId}/carded`, 'POST', player),
 
+  // Update the carded players for a specific match
+  deleteCardedPlayer: (tournamentId, fixtureId, player) =>
+    fetchApi(tournamentId, `${fixtureId}/carded/${player.id}`, 'DELETE'),
 
   // Reschedule a match
   rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, newFixtureId, placement) =>

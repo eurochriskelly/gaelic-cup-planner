@@ -2,12 +2,13 @@ import { useState } from "react";
 import API from "../../../../../../shared/api/endpoints";
 import CardButton from "./CardButton";
 import './TabCards.scss';
+import { action } from "@storybook/addon-actions";
 
 const TabCards = ({ 
   team1, 
   team2, 
   cardedPlayers, 
-  setCardedPlayers,
+  setCardedPlayer,
   fixture,
   onClose
 }) => {
@@ -42,34 +43,21 @@ const TabCards = ({
         alert('Player number is required.');
         return;
       }
+      // no id means new card 
       const card = {
-        id: editingCard ? editingCard.id : Date.now(),
+        id: editingCard ? editingCard.id : null, 
         team: formData.team,
         cardColor: formData.cardColor,
         playerNumber: formData.playerNumber,
         playerName: formData.playerName || 'Not provided',
         confirmed: true
       };
-      const teamKey = formData.team === team1 ? 'team1' : 'team2';
-      if (editingCard) {
-        setCardedPlayers(prev => ({
-          ...prev,
-          [teamKey]: prev[teamKey].map(c => c.id === card.id ? card : c)
-        }));
-      } else {
-        setCardedPlayers(prev => ({
-          ...prev,
-          [teamKey]: [...prev[teamKey], card]
-        }));
-      }
+      setCardedPlayer(card);
       resetForm();
     },
     removeCard: (team, id) => {
       const teamKey = team === team1 ? 'team1' : 'team2';
-      setCardedPlayers(prev => ({
-        ...prev,
-        [teamKey]: prev[teamKey].filter(card => card.id !== id)
-      }));
+      setCardedPlayer({ id, action: 'delete' });
     },
     editCard: (card) => {
       setEditingCard(card);
@@ -116,7 +104,7 @@ const TabCards = ({
           />
         </div>
         <div className="form-group">
-          <label>Player Name (Optional)</label>
+          <label>Player Name</label>
           <input
             type="text"
             value={formData.playerName}

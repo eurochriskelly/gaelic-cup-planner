@@ -20,6 +20,14 @@ const DialogUpdate = ({ fixture, onClose }) => {
   });
   const [cancellationOption, setCancellationOption] = useState(null);
 
+  const registerCardedPlayer = (player) => {
+    console.log("Carded player:", player);
+    if (player?.action === "delete") {
+      API.deleteCardedPlayer(fixture.tournamentId, fixture.id, player)
+    } else {
+      API.updateCardedPlayer(fixture.tournamentId, fixture.id, player)
+    }
+  }
 
   // Fetch fixtures when dialog opens and update scores
   useEffect(() => {
@@ -136,7 +144,7 @@ const DialogUpdate = ({ fixture, onClose }) => {
               team1={fixture.team1}
               team2={fixture.team2}
               cardedPlayers={cardedPlayers}
-              setCardedPlayers={setCardedPlayers}
+              setCardedPlayer={registerCardedPlayer}
               fixture={fixture}
               onClose={onClose}
             />

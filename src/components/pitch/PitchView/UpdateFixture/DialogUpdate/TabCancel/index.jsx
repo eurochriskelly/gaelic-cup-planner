@@ -37,7 +37,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
         console.error("Error updating match outcome:", error);
       });
   };
-
+  
   const cancelConfirmation = () => {
     setCancellationOption(null);
     setConfirming(false);
