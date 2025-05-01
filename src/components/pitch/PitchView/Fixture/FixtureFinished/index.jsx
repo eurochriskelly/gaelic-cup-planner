@@ -116,7 +116,6 @@ function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
 
       {isExpanded && (
         <div className="update-actions">
-          <div>ooooo</div>
           <button 
             className="update-score-button"
             onClick={handleUpdateScore}

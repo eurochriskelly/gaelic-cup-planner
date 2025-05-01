@@ -1,22 +1,20 @@
-import { useFixtureContext } from '../FixturesContext';
 import FixtureNext from './FixtureNext';
 import FixtureFinished from './FixtureFinished';
 import FixtureUnplayed from './FixtureUnplayed';
 
-const Fixture = ({ view = '' }) => {
-  const { nextFixture } = useFixtureContext();
-  let model = <div>no model</div>
+const Fixture = ({ fixture, view = '' }) => {
+  let model = null;
   switch (view) {
     case 'unplayed': 
-      model = <FixtureUnplayed fixture={nextFixture} />
+      model = <FixtureUnplayed fixture={fixture} />
       break;
       
     case 'finished':
-      model = <FixtureFinished fixture={nextFixture} />
+      model = <FixtureFinished fixture={fixture} />
       break;
 
     default: 
-      model = <FixtureNext fixture={nextFixture} />
+      model = <FixtureNext fixture={fixture} />
       break
   }
   return model

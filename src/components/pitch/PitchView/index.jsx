@@ -9,7 +9,7 @@ import UpdateFixture from "./UpdateFixture";
 import './PitchView.scss';
 
 const PitchView = () => {
-  const { fixtures, nextFixture, fetchFixtures } = useFixtureContext();
+  const { fixtures, nextFixture } = useFixtureContext();
   const { pitchId, tournamentId } = useParams();
   const { sections } = useAppContext();
   const tabNames = ["Next", "Finished", "Unplayed"];
@@ -83,7 +83,7 @@ const PitchView = () => {
             return true;
         }
       })
-      .map((f) => ({ ...f, tab: tab.toLowerCase() }));
+      .map((f) => ({ ...f, tab: tab.toLowerCase() }))
   });
 
   displayFixtures = {
