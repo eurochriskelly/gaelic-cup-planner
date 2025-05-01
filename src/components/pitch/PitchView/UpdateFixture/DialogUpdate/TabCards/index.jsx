@@ -1,7 +1,7 @@
 import { useState } from "react";
-import API from "../../../../../shared/api/endpoints";
+import API from "../../../../../../shared/api/endpoints";
 import CardButton from "./ListCardedPlayers/CardButton";
-import './ListCardedPlayers.scss';
+import './TabCards.scss';
 
 const TabCards = ({ 
   team1, 

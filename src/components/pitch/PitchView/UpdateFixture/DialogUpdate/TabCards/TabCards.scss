@@ -10,3 +10,251 @@
 .drawer-container {
   padding: 1rem;
 }
+.ListCardedPlayers {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding:0 !important;
+  margin:0;
+
+  .card-form-overlay {
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-form {
+    padding: 2rem;
+    margin: 0;
+    border-radius: 8px;
+    width: 100%;
+    h3, label, input, button, span {
+      font-size: 180%;
+    }
+    h3 {
+      margin-bottom: 1.9rem;
+      color: $pc;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+      }
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        padding: 18px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        font-size: 150%;
+        box-sizing: border-box;
+        &:focus {
+          outline: none;
+          border-color: $sc;
+          box-shadow: 0 0 0 2px rgba($sc, 0.2);
+        }
+      }
+    }
+    .selected-team-display {
+      display: block;
+      padding: 18px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      background-color: #f3f4f6;
+      font-size: 150%;
+      color: #374151;
+    }
+    .card-type-selection {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 150%;
+      }
+      input[type="radio"] {
+        width: 1.875rem;
+        height: 1.875rem;
+      }
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      .save-button, .cancel-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 150%;
+        padding: 18px 36px;
+        margin: 6px;
+        &.save-button {
+          background-color: rgb(70, 56, 115);
+          color: white;
+          &:hover {
+            background-color: darken(rgb(70, 56, 115), 10%);
+          }
+        }
+        &.cancel-button {
+          background-color: rgb(189, 198, 208);
+          color: white;
+          &:hover {
+            background-color: darken(rgb(189, 198, 208), 10%);
+          }
+        }
+      }
+    }
+  }
+  .card-content {
+    max-width: 800px;
+    margin-left: 0px;
+    margin-right: 0px;
+    transform: none;
+    h4, p, span, label, .card-number, .card-name {
+      font-size: 150%;
+      color: black;
+    }
+  }
+  .team-section {
+    margin-bottom: 2rem;
+    .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      h4 {
+        font-weight: bold;
+        color: rgb(70, 56, 115);
+        font-size: 150%;
+      }
+    }
+    .add-card-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 150%;
+      padding: 18px 36px;
+      margin: 6px;
+      background-color: rgb(70, 56, 115);
+      color: white;
+      &:hover {
+        background-color: darken(rgb(70, 56, 115), 10%);
+      }
+    }
+    .cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .card-entry {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card-indicator {
+      width: 2rem;
+      height: 3rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      &.card-red {
+        background-color: #ef4444;
+      }
+      &.card-yellow {
+        background-color: #eab308;
+      }
+      &.card-black {
+        background-color: #1f2937;
+      }
+    }
+    .card-number {
+      width: 4rem;
+      font-weight: bold;
+      color: #1f2937;
+    }
+    .card-name {
+      flex: 1;
+      color: #1f2937;
+    }
+    .card-actions {
+      display: flex;
+      gap: 1rem;
+      .remove-icon,
+      .edit-icon {
+        font-size: 2.5rem;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .remove-icon {
+        color: #ef4444;
+        &:hover {
+          color: darken(#ef4444, 10%);
+        }
+      }
+      .edit-icon {
+        color: $sc;
+        &:hover {
+          color: darken($sc, 10%);
+        }
+      }
+    }
+    .no-cards {
+      color: rgb(189, 198, 208);
+      font-style: italic;
+      font-size: 150%;
+    }
+  }
+  .card-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    .proceed-button,
+    .cancel-button,
+    .save-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-size: 150%;
+      padding: 18px 36px;
+      margin: 6px;
+    }
+    .proceed-button,
+    .save-button {
+      background-color: rgb(70, 56, 115);
+      color: white;
+      &:hover {
+        background-color: darken(rgb(70, 56, 115), 10%);
+      }
+    }
+    .cancel-button {
+      background-color: rgb(189, 198, 208);
+      color: white;
+      &:hover {
+        background-color: darken(rgb(189, 198, 208), 10%);
+      }
+    }
+  }
+}
