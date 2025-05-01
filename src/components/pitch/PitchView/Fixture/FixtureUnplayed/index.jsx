@@ -81,7 +81,7 @@ function FixtureUnplayed({fixture}) {
         <div className="fixture-pairing">
           <div className="team-row">
             <div className="team-icon team1">
-              aa{extractUppercaseAndNumbers(team1).substring(0, 2)}
+              {extractUppercaseAndNumbers(team1).substring(0, 2)}
             </div>
             <div className="team-name">
               {formatTeamName(team1)}

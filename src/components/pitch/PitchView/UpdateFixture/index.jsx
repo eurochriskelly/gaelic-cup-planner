@@ -96,7 +96,6 @@ const UpdateFixture = () => {
         {activeDrawer === "finish" && (
           <DialogUpdate
             fixtureId={nextFixture.id}
-            tournamentId={nextFixture.tournamentId}
             onClose={actions.closeDrawer}
           />
         )}
