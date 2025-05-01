@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-
 
 const Context = createContext();
 

@@ -5,63 +5,144 @@ import TabCancel from "./TabCancel";
 import API from "../../../../../shared/api/endpoints";
 import './DialogUpdate.scss';
 
-const DialogUpdate = ({ fixture, onClose }) => {
+// Changed props to fixtureId and tournamentId instead of fixture
+const DialogUpdate = ({ 
+  fixtureId, 
+  tournamentId, 
+  onClose 
+}) => {
+  // Added state to store the complete fixture data
+  const [fixture, setFixture] = useState(null);
   const [currentTab, setCurrentTab] = useState("score");
+  // Initialize with empty values since we'll get real data from the API
   const [scores, setScores] = useState({
-    team1: { goals: fixture.goals1 ?? "", points: fixture.points1 ?? "", name: fixture.team1 },
-    team2: { goals: fixture.goals2 ?? "", points: fixture.points2 ?? "", name: fixture.team2 },
+    team1: { goals: "", points: "", name: "" },
+    team2: { goals: "", points: "", name: "" },
   });
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
   const [cancellationOption, setCancellationOption] = useState(null);
   const initialLoadRef = useRef(true);
+  const originalScoresRef = useRef({
+    team1: { goals: "", points: "" },
+    team2: { goals: "", points: "" }
+  });
 
-  useEffect(() => {
-    API.fetchFixture(fixture.tournamentId, fixture.id)
+  // Helper function to refresh fixture data
+  const refreshFixtureData = () => {
+    console.log('Fetching fixture data from server...');
+    return API.fetchFixture(tournamentId, fixtureId)
       .then(({ data }) => {
         if (data) {
-          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2 } = data;
+          setFixture(data); // Store the complete fixture data
+
+          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2, outcome } = data;
+
+          // Update original scores reference
+          originalScoresRef.current = {
+            team1: { goals: goals1 ?? "", points: points1 ?? "" },
+            team2: { goals: goals2 ?? "", points: points2 ?? "" }
+          };
+
           setScores({
             team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
             team2: { goals: goals2 ?? "", points: points2 ?? "", name: team2 },
           });
+
           setCardedPlayers({
-            team1: cardedPlayers.filter(player => player.team === team1),
-            team2: cardedPlayers.filter(player => player.team === team2),
+            team1: cardedPlayers?.filter(player => player.team === team1) || [],
+            team2: cardedPlayers?.filter(player => player.team === team2) || [],
           });
+
+          // Update tab based on API data outcome
+          if (outcome === 'skipped') {
+            console.log('Setting tab to "cancel" based on API outcome === skipped');
+            setCurrentTab('cancel');
+          } else if (outcome === 'played') {
+            console.log('Setting tab to "score" based on API outcome === played');
+            setCurrentTab('score');
+          }
         }
+        return data;
       })
-      .catch(error => console.error("Error fetching fixture:", error))
+      .catch(error => {
+        console.error("Error refreshing fixture data:", error);
+        throw error;
+      });
+  };
+
+  // Set initial tab based on fixture data once it's loaded
+  useEffect(() => {
+    if (!fixture) return;
+
+    if (fixture.outcome === 'skipped') {
+      setCurrentTab('cancel');
+    } else {
+      setCurrentTab('score');
+    }
+  }, [fixture?.outcome]);
+
+  // Initial data fetch using the provided IDs
+  useEffect(() => {
+    refreshFixtureData()
       .finally(() => {
         initialLoadRef.current = false;
       });
-  }, [fixture.tournamentId, fixture.id]);
+  }, [fixtureId, tournamentId]);
 
+  // Update scores effect
   useEffect(() => {
-    if (initialLoadRef.current) return;
+    if (initialLoadRef.current || !fixture) return;
 
     const hasScores = Object.values(scores).every(
       team => team.goals !== "" && team.points !== ""
     );
 
-    if (hasScores) {
+    // Check if scores have changed from original
+    const scoresHaveChanged =
+      scores.team1.goals !== originalScoresRef.current.team1.goals ||
+      scores.team1.points !== originalScoresRef.current.team1.points ||
+      scores.team2.goals !== originalScoresRef.current.team2.goals ||
+      scores.team2.points !== originalScoresRef.current.team2.points;
+
+    if (hasScores && scoresHaveChanged) {
+      console.log('Updating scores - detected changes:', {
+        current: scores,
+        original: originalScoresRef.current
+      });
+
       const result = { scores, outcome: 'played' };
-      API.updateScore(fixture.tournamentId, fixture.id, result)
+      API.updateScore(tournamentId, fixtureId, result)
+        .then(() => {
+          console.log('Score update successful, refreshing data');
+          return refreshFixtureData();
+        })
         .catch(error => console.error("Error updating scores:", error));
     }
-  }, [scores, fixture.tournamentId, fixture.id]);
+  }, [scores, fixtureId, tournamentId, fixture]);
 
   const registerCardedPlayer = (player) => {
     const action = player?.action === "delete"
       ? API.deleteCardedPlayer
       : API.updateCardedPlayer;
-    action(fixture.tournamentId, fixture.id, player);
+
+    action(tournamentId, fixtureId, player)
+      .then(() => {
+        console.log(`Card ${player?.action === "delete" ? "removal" : "update"} successful, refreshing data`);
+        return refreshFixtureData();
+      })
+      .catch(error => {
+        console.error(`Error with carded player ${player?.action}:`, error);
+      });
   };
 
   const handleCancelProceed = () => {
-    onClose();
+    onClose(fixture?.isResult);
   };
 
   const renderTabContent = () => {
+    // Don't render tabs until fixture data is loaded
+    if (!fixture) return <div>Loading...</div>;
+
     switch (currentTab) {
       case "score":
         return (
@@ -69,8 +150,6 @@ const DialogUpdate = ({ fixture, onClose }) => {
             scores={scores}
             setScores={setScores}
             fixture={fixture}
-            onProceed={() => { }}
-            onClose={onClose}
           />
         );
       case "cancel":
@@ -93,13 +172,17 @@ const DialogUpdate = ({ fixture, onClose }) => {
             cardedPlayers={cardedPlayers}
             setCardedPlayer={registerCardedPlayer}
             fixture={fixture}
-            onClose={onClose}
           />
         );
       default:
         return null;
     }
   };
+
+  // Show loading state while waiting for fixture data
+  if (!fixture) {
+    return <div className="dialog-update">Loading fixture data...</div>;
+  }
 
   return (
     <div className="dialog-update">

@@ -48,7 +48,7 @@ const TabCards = ({
         id: editingCard ? editingCard.id : null, 
         team: formData.team,
         cardColor: formData.cardColor,
-        playerNumber: formData.playerNumber,
+        playerNumber: +(formData.playerNumber),
         playerName: formData.playerName || 'Not provided',
         confirmed: true
       };
@@ -179,14 +179,6 @@ const TabCards = ({
         <div className="card-content">
           {renderTeamSection(team1, cardedPlayers.team1, 'team1')}
           {renderTeamSection(team2, cardedPlayers.team2, 'team2')}
-          <div className="card-actions">
-            <button className="cancel-button" onClick={onClose}>
-              <i className="pi pi-times"></i> Cancel
-            </button>
-            <button className="save-button" onClick={handleSaveCards}>
-              <i className="pi pi-check"></i> Save Cards
-            </button>
-          </div>
         </div>
       )}
     </div>
