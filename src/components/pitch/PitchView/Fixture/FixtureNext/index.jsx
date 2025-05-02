@@ -1,7 +1,9 @@
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
+import UmpiresIcon from "../../../../../shared/icons/icon-umpires.svg?react";
 import '../../../../../components/web/gaelic-score.js';
 import '../../../../../components/web/logo-box.js';
+import '../../../../../components/web/team-name.js';
 import '../Fixture.scss';
 import './FixtureNext.scss';
 
@@ -114,10 +116,10 @@ function FixtureNext({ fixture }) {
           {(
             <div className='umpires'>
               {umpireTeam ? (
-                <span >
-                  <b>UMPIRING: </b>
-                  {formatName(umpireTeam)}
-                </span>
+                < >
+                  <UmpiresIcon width="82" height="82" />
+                  <team-name name={umpireTeam} show-logo="true" direction="r2l" height="35px"></team-name>
+                </>
               ) : (
                 ""
               )}

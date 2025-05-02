@@ -22,18 +22,31 @@
    padding-top: 1rem; // Add some top padding
    flex: 1;
    font-size: 1.7rem;
-   display: flex;
+   display: grid;
    flex-direction: column;
    gap: 1.5rem; // Add gap between team-name components
 
    .umpires {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 3fr 1fr 80px;
+      #icon-umpires-clickable {
+        opacity: 0;
+      }
+      text { opacity: 0;}
+      path { 
+        fill: darken($pc, 24%);
+      }
+      team-name {
+        margin-bottom: 0.8rem;
+      }
       font-size: 1.5rem;
       color: darken($pc, 24%);
       text-align: right;
-      margin: 1.4rem 1rem;
+      margin: 0;
       letter-spacing: 0.1rem;
       text-transform: uppercase;
-      margin-top: -3rem;
+      
     }
   }
 }
