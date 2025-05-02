@@ -11,7 +11,10 @@ import './FixtureFinished.scss';
 
 export default FixtureFinished;
 
-function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
+function FixtureFinished({ 
+  fixture,
+  onUpdateScore
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const {
@@ -57,9 +60,9 @@ function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
     setIsExpanded(false); // Close the expanded view after clicking
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = async() => {
+    if (onUpdateScore) await onUpdateScore(); // Call the original onUpdateScore if provided
     setIsDialogOpen(false);
-    if (onUpdateScore) onUpdateScore(); // Call the original onUpdateScore if provided
   };
 
   return (
@@ -118,7 +121,7 @@ function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
           <div className="updateFixture">
             <div className="drawers">
               <DialogUpdate
-                tournamentId={tournamentId}
+                nextFixture={fixture}
                 onClose={handleCloseDialog}
               />
             </div>
