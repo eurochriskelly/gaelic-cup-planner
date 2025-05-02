@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { extractUppercaseAndNumbers } from '../common';
+// Removed extractUppercaseAndNumbers import
 import { formatTeamName } from "../../../../../shared/generic/TeamNameDisplay";
 import FixtureBar from '../FixtureBar';
 import ScoreIcon from "../../../../../shared/icons/icon-score.svg?react";
+import '../../../../../components/web/logo-box.js'; // Added logo-box import
+import '../../../../../components/web/team-name.js'; // Added team-name import
 import DialogUpdate from '../../UpdateFixture/DialogUpdate';
 import '../../UpdateFixture/UpdateFixture.scss'; // Import the styles from UpdateFixture
 import './FixtureFinished.scss';
