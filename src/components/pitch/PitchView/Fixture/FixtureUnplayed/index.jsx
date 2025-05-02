@@ -1,6 +1,7 @@
 import { militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay"; // Removed formatTeamName
 import FixtureBar from '../FixtureBar';
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
+import UmpiresIcon from "../../../../../shared/icons/icons-umpires.svg?react";
 import '../../../../../components/web/gaelic-score.js';
 // Removed extractUppercaseAndNumbers import
 import '../../../../../components/web/logo-box.js';
@@ -81,7 +82,7 @@ function FixtureUnplayed({fixture}) {
 
          {!played && umpireTeam && (
            <div className="umpires">
-             <b>UMPIRING: </b>
+             <UmpiresIcon width="60" height="60" />
              {/* Using team-name for umpire, no logo, smaller height */}
              <team-name name={umpireTeam} show-logo="true" direction="r2l" height="35px"></team-name>
            </div>
