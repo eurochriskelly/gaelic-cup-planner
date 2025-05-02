@@ -15,6 +15,7 @@ $menu-grid-color: lighten($menu-bg-color, 13%);
       radial-gradient(circle, transparent 20%, $menu-bg-color 20%, $menu-bg-color 80%, transparent 80%, transparent) 25px 25px,
       linear-gradient($menu-grid-color 2px, transparent 2px) 0 -1px,
       linear-gradient(90deg, $menu-grid-color 2px, $menu-bg-color 2px) -1px 0;
+
     background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
     height: 7rem;
     text-transform: uppercase;

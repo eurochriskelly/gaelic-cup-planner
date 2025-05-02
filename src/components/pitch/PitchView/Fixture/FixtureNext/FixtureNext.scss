@@ -1,4 +1,25 @@
 .FixtureNext {
   //background: red;
   height: 1100px;
+.match-scores {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr 1fr;
+    text-align: center;
+
+    .team1-score,
+    .team2-score {
+      min-width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 3rem;
+      gaelic-score {
+        margin: 0 auto;
+        width: 100%;
+        transform-origin: center center !important;
+      }
+    }
+  }
 }

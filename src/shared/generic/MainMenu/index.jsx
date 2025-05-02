@@ -33,7 +33,7 @@ const MainMenu = ({
       <span style={{height: "100px", fontSize: "9rem"}} onClick={handle.hamburger} >
         <PitchIcon width={219} height={159} />&nbsp;
       </span>
-      <span className="title">{pitchId}</span>
+      <span className="title">{pitchId.replace(/_/g, ' ')}</span>
     </div>
   );
 };
