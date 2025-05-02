@@ -69,20 +69,21 @@ function FixtureUnplayed({fixture}) {
           <ClockIcon 
             scheduled={scheduledTime}
             started={startedTime}
+            size={150}
             layout={'top'}
             focus={false}
             played={false}
          />
        </div>
        <div className="fixture-pairing">
-         <team-name name={team1} show-logo="true" height="40px" direction="l2r"></team-name>
-         <team-name name={team2} show-logo="true" height="40px" direction="l2r"></team-name>
+         <team-name name={team1} show-logo="true" height="50px" direction="l2r" width="680px"></team-name>
+         <team-name name={team2} show-logo="true" height="50px" direction="l2r"></team-name>
 
          {!played && umpireTeam && (
            <div className="umpires">
              <b>UMPIRING: </b>
              {/* Using team-name for umpire, no logo, smaller height */}
-             <team-name name={umpireTeam} show-logo="false" height="20px"></team-name>
+             <team-name name={umpireTeam} show-logo="true" direction="r2l" height="35px"></team-name>
            </div>
          )}
        </div>
