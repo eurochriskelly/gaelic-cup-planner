@@ -2,6 +2,9 @@ import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import FixtureBar from '../FixtureBar';
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
+import '../../../../../components/web/gaelic-score.js';
+import '../../../../../components/web/logo-box.js';
+import '../../../../../components/web/team-name.js';
 import './FixtureUnplayed.scss';
 
 export default FixtureUnplayed;
