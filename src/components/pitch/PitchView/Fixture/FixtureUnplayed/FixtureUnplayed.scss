@@ -18,47 +18,17 @@
       margin: 0.2rem 1rem 1.4rem 1rem;
     }
   }
+ .fixture-pairing {
+   margin: 0rem 1rem 2rem 1rem;
+   padding-top: 1rem; // Add some top padding
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   gap: 1.5rem; // Add gap between team-name components
 
-  .fixture-pairing {
-    margin:0rem 1rem 2rem 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    
-    .team-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.4rem; 
-      background: rgba(255, 255, 255, 0.4);
-      margin: 0.25rem;
-      
-      .team-icon {
-        width: 2rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 0.25rem;
-        font-size: 1.25rem;
-        font-weight: bold;
-        
-        &.team1 {
-          background: #f43f5e; // rose-500
-        }
-        
-        &.team2 {
-          background: #60a5fa; // blue-400
-        }
-      }
-      
-      .team-name {
-        font-size: 2.125rem;
-        font-weight: 500;
-      }
-    }
-    
-    .umpires {
+   // Removed .team-row, .team-icon, .team-name styles
+
+   .umpires {
       font-size: 1.5rem;
       color: darken($pc, 24%);
       text-align: right;
