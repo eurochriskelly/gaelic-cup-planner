@@ -61,9 +61,9 @@ const UpdateFixture = () => {
   };
 
   const buttons = [
+    { action: actions.reschedule, state: buttonStates.postpone, Icon: MoveIcon },
     { action: actions.start, state: buttonStates.start, Icon: StartIcon },
     { action: actions.finish, state: buttonStates.finish, Icon: ScoreIcon },
-    { action: actions.reschedule, state: buttonStates.postpone, Icon: MoveIcon },
     { action: actions.proceed, state: buttonStates.proceed, Icon: ProgressIcon },
   ];
 
