@@ -26,8 +26,6 @@
    flex-direction: column;
    gap: 1.5rem; // Add gap between team-name components
 
-   // Removed .team-row, .team-icon, .team-name styles
-
    .umpires {
       font-size: 1.5rem;
       color: darken($pc, 24%);
