@@ -1,22 +1,41 @@
 .FixtureNext {
   //background: red;
   height: 1100px;
-.match-scores {
+  .match-up {
+      display: grid;
+      grid-template-columns: 0.5fr 2fr 1fr 2fr 0.5fr;
+      justify-items: center;
+      align-items: center;
+    }
+  
+    .match-teams {
+      display: grid;
+      grid-template-columns: 0.5fr 2fr 1fr 2fr 0.5fr;
+      justify-items: center;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .match-scores {
     margin-top: 1rem;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 2fr 1fr;
     text-align: center;
+    height: 13rem;
+      vertical-align: middle;
 
     .team1-score,
     .team2-score {
+      background-color: #cccccc55;
+        border-radius: 100rem;
+        height: 12rem;
       min-width: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
 
-      margin-top: 3rem;
       gaelic-score {
         margin: 0 auto;
+        margin-top: 19rem;
         width: 100%;
         transform-origin: center center !important;
       }

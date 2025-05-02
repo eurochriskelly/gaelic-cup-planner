@@ -15,7 +15,7 @@ export function makeEndpoint(tournamentId, rest) {
   // Ensure 'rest' starts with a '/' if it's not empty, or handle empty 'rest'
   const endpointPath = rest ? (rest.startsWith('/') ? rest : `/${rest}`) : '';
   const endpoint = `${basePath}${endpointPath}`;
-  // console.log(`API request to endpoint ${endpoint}`); // Removed default logging
+  // console.log(`API request to endpoint ${endpoint}`);
   return endpoint;
 }
 

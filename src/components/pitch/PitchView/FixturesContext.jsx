@@ -31,6 +31,8 @@ export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
     // wait 0.5 seconds
     const { data } = await API.fetchFixture(tournamentId, nextFixture?.id);
     setFixture(data);
+    const nextFixture = data.find((f) => !f.played && f.ended);
+    setNextFixture(nextFixture);
   };
 
   const startMatch = async (fixtureId) => {

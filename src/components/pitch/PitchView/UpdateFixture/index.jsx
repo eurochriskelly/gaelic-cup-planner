@@ -9,7 +9,9 @@ import { useFixtureContext } from "../FixturesContext";
 import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
 
-const UpdateFixture = () => {
+const UpdateFixture = ({
+  moveToNextFixture,
+}) => {
   const { nextFixture, fetchFixtures, startMatch, fixtures } = useFixtureContext();
   if (!nextFixture) return null;
 
@@ -49,8 +51,10 @@ const UpdateFixture = () => {
       if (buttonStates.finish === "disabled") return;
       setActiveDrawer("finish");
     },
-    proceed: async () => {
+    proceed: async (xx) => {
       if (buttonStates.proceed === "disabled") return;
+      moveToNextFixture();
+      await API.endMatch(nextFixture.tournamentId, nextFixture.id);
       await fetchFixtures(true);
     },
     rescheduleMatch: async (fixtureId, targetPitch, placement) => {

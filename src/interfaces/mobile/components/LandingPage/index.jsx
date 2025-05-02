@@ -3,19 +3,18 @@ import { useState, useEffect } from 'react';
 import NavFooter from '../../../../shared/generic/NavFooter';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
-import ScheduleIcon from '../../../../shared/icons/icon-schedule.svg?react';
-import StatusIcon from '../../../../shared/icons/icon-status.svg?react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useTranslation } from 'react-i18next';
+import API from "../../../../shared/api/endpoints";
 import { useFetchTournament } from './LandingPage.hooks';
 import './LandingPage.scss';
 
 const LandingPage = () => {
+  const { tournamentId } = useParams();
+
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // New: Track scroll state
-  const { tournamentId } = useParams();
-  const base = `/tournament/${tournamentId}`;
   const { tournInfo } = useFetchTournament(tournamentId);
   const { t } = useTranslation();
   const tt = code => t(`landingPage_${code}`);
@@ -33,13 +32,12 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-
   const handle = {
     resetTournament: async () => {
       const button = document.querySelector('.sudo');
       button.classList.add('active');
+      await API.resetTournament(tournamentId);
       button.classList.remove('active');
-      await fetch(`/api/tournaments/1/reset`);
     },
     disconnect: () => {
       Cookies.remove("tournamentId");
@@ -48,6 +46,7 @@ const LandingPage = () => {
   };
 
   const handleResetClick = async () => {
+    console.log('Reset Tournament clicked');
     setIsResetClicked(true);
     await handle.resetTournament();
     setTimeout(() => {
@@ -82,7 +81,7 @@ const LandingPage = () => {
           </button>
         </div>
         {+tournamentId === 1 && (
-          <div className="reset-action">
+          <div className="reset-action sudo">
             <button className='icon-button' onClick={handleResetClick}>
               <ResetIcon className="icon" />
               <span className="label">Reset Tournament</span>
