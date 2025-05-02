@@ -99,7 +99,7 @@ const UpdateFixture = ({
         )}
         {activeDrawer === "finish" && (
           <DialogUpdate
-            fixtureId={nextFixture.id}
+            nextFixture={nextFixture}
             onClose={actions.closeDrawer}
           />
         )}

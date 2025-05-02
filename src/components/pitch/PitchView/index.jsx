@@ -9,7 +9,7 @@ import UpdateFixture from "./UpdateFixture";
 import './PitchView.scss';
 
 const PitchView = () => {
-  const { fixtures, nextFixture } = useFixtureContext();
+  const { fixtures, fetchFixtures, nextFixture } = useFixtureContext();
   const { pitchId, tournamentId } = useParams();
   const { sections } = useAppContext();
   const tabNames = ["Next", "Finished", "Unplayed"];
@@ -126,7 +126,7 @@ const PitchView = () => {
                         className={isFocusFixture ? "focusFixture h-98" : ""}
                       >
                         {/* Set view prop based on currentFocusFixtureId */}
-                        <Fixture fixture={fixture} view={isFocusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
+                        <Fixture fixture={fixture} onUpdate={fetchFixtures} view={isFocusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
                         {/* Render UpdateFixture based on currentFocusFixtureId */}
                         {isFocusFixture && <UpdateFixture fixture={nextFixture} moveToNextFixture={moveToNextFixture} />}
                       </div>
