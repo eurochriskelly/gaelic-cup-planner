@@ -11,7 +11,7 @@
   .unplayed-fixture-data {
     display: grid;
     grid-template-columns: 24% auto; 
-    color: black;
+    color: #000; // Use hex code instead of named color
     > div:first-child {
       background: rgba(lighten(saturate(#bdbdb2, 20%), 4%), 0.5);
       border-right: 7px solid rgba($pc, 0.3);
