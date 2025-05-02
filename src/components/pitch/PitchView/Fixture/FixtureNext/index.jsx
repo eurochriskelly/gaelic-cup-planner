@@ -1,6 +1,7 @@
 import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
+import '../../../../../components/web/gaelic-score.js';
 import '../Fixture.scss';
 import './FixtureNext.scss';
 
@@ -17,6 +18,16 @@ function FixtureNext({ fixture }) {
     team2,
     umpireTeam,
   } = fixture;
+
+  // Check if all score values are valid integers (directly from fixture)
+  const hasScores = typeof fixture.goals1 === 'number' &&
+    typeof fixture.goals2 === 'number' &&
+    typeof fixture.points1 === 'number' &&
+    typeof fixture.points2 === 'number' &&
+    !isNaN(fixture.goals1) &&
+    !isNaN(fixture.goals2) &&
+    !isNaN(fixture.points1) &&
+    !isNaN(fixture.points2);
 
   const tlen = 24;
 
@@ -53,7 +64,7 @@ function FixtureNext({ fixture }) {
         />
 
         <section className="mt-7 mr-0 pr-0">
-          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300">
+          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300" style={{height: "42rem"}}>
             <div className="match-up w-full min-h-52">
               <div/>
               <div className="team team-1">
@@ -74,6 +85,31 @@ function FixtureNext({ fixture }) {
               <div/>
             </div>
 
+            {hasScores && (
+              <div className="match-scores mt-4">
+                <div />
+                <div className="team-score team1-score">
+                  <gaelic-score
+                    goals={fixture.goals1}
+                    points={fixture.points1}
+                    layout="over"
+                    scale="2.2"
+                    played="true"
+                  ></gaelic-score>
+                </div>
+                <div />
+                <div className="team-score team2-score">
+                  <gaelic-score
+                    goals={fixture.goals2}
+                    points={fixture.points2}
+                    layout="over"
+                    scale="2.2"
+                    played="true"
+                  ></gaelic-score>
+                </div>
+                <div />
+              </div>
+            )}
           </div>
           {(
             <div className='umpires'>
