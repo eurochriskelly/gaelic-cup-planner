@@ -50,6 +50,7 @@ const PitchView = () => {
     }
 
     if (nextUnplayedFixture) {
+      console.log("PitchView: Moving to next unplayed fixture:", nextUnplayedFixture);
       setCurrentFocusFixtureId(nextUnplayedFixture.id);
     } else {
       // Handle case where no *other* unplayed fixture is found

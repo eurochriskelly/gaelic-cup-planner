@@ -18,6 +18,10 @@ export default {
   startMatch: async (tournamentId, fixtureId) =>
     await fetchApi(tournamentId, `${fixtureId}/start`, 'POST'),
 
+  // Start a specific match
+  endMatch: async (tournamentId, fixtureId) =>
+    await fetchApi(tournamentId, `${fixtureId}/end`, 'POST'),
+
   // Update the score for a specific match
   updateScore: (tournamentId, fixtureId, result) =>
     fetchApi(tournamentId, `${fixtureId}/score`, 'POST', result),
@@ -29,6 +33,11 @@ export default {
   // Update the carded players for a specific match
   deleteCardedPlayer: (tournamentId, fixtureId, player) =>
     fetchApi(tournamentId, `${fixtureId}/carded/${player.id}`, 'DELETE'),
+
+  resetTournament: (tournamentId) =>
+    fetch(`/api/tournaments/${tournamentId}/reset`, {
+      method: 'POST',
+    }),
 
   // Reschedule a match
   rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, newFixtureId, placement) =>

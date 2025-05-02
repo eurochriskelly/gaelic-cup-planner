@@ -1,7 +1,7 @@
-import { extractUppercaseAndNumbers } from '../common';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
 import '../../../../../components/web/gaelic-score.js';
+import '../../../../../components/web/logo-box.js';
 import '../Fixture.scss';
 import './FixtureNext.scss';
 
@@ -68,16 +68,16 @@ function FixtureNext({ fixture }) {
             <div className="match-up w-full min-h-52">
               <div/>
               <div className="team team-1">
-                <div className="team-icon text-6xl bg-rose-500 pt-10">{extractUppercaseAndNumbers(team1).substring(0, 3)}</div>
+                <logo-box title={team1} size="140px" border-color="#e11d48"></logo-box>
               </div>
               <div className="text-6xl">vs.</div>
               <div className="team team-2">
-                <div className="text-6xl bg-blue-400 team-icon pt-10">{extractUppercaseAndNumbers(team2).substring(0, 3)}</div>
+                <logo-box title={team2} size="140px" border-color="#38bdf8"></logo-box>
               </div>
               <div/>
             </div>
 
-            <div className="match-teams ">
+            <div className="match-teams">
               <div/>
               <div className="text-3xl">{formatTeamName(team1)}</div>
               <div/>
@@ -86,7 +86,7 @@ function FixtureNext({ fixture }) {
             </div>
 
             {hasScores && (
-              <div className="match-scores mt-4">
+              <div className="match-scores mt-8">
                 <div />
                 <div className="team-score team1-score">
                   <gaelic-score
