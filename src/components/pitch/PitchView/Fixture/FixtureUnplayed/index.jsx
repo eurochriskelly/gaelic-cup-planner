@@ -39,21 +39,14 @@ function FixtureUnplayed({fixture}) {
   const rowClasses = () => {
     const classes = ['grid grid-columns-2 match-area'];
     if (scoreUpToDate) classes.push("scoreUpToDate");
-    return classes.join(" ");
-  };
+   return classes.join(" ");
+ };
 
-  const formatName = (name, winner) => {
-    if (name.startsWith("~")) {
-      return formatTeamName(name);
-    }
-    return (
-      (winner ? "🏅" : "") +
-      (" " + name.length > tlen ? name.substring(0, tlen) + "..." : name)
-    );
-  };
-  const gridStyle = { 
-    backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
-    display: 'grid',
+ // Removed formatName function
+
+ const gridStyle = {
+   backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
+   display: 'grid',
     gridTemplateRows: 'auto auto',
   }
 
@@ -79,34 +72,20 @@ function FixtureUnplayed({fixture}) {
             layout={'top'}
             focus={false}
             played={false}
-          />
-        </div>
-        <div className="fixture-pairing">
-          <div className="team-row">
-            <div className="team-icon team1">
-              {extractUppercaseAndNumbers(team1).substring(0, 2)}
-            </div>
-            <div className="team-name">
-              {formatTeamName(team1)}
-            </div>
-          </div>
+         />
+       </div>
+       <div className="fixture-pairing">
+         <team-name name={team1} show-logo="true" height="40px" direction="l2r"></team-name>
+         <team-name name={team2} show-logo="true" height="40px" direction="l2r"></team-name>
 
-          <div className="team-row">
-            <div className="team-icon team2">
-              {extractUppercaseAndNumbers(team2).substring(0, 2)}
-            </div>
-            <div className="team-name">
-              {formatTeamName(team2)}
-            </div>
-          </div>
-
-          {!played && umpireTeam && (
-            <div className="umpires">
-              <b>UMPIRING: </b>
-              {formatName(umpireTeam)}
-            </div>
-          )}
-        </div>
+         {!played && umpireTeam && (
+           <div className="umpires">
+             <b>UMPIRING: </b>
+             {/* Using team-name for umpire, no logo, smaller height */}
+             <team-name name={umpireTeam} show-logo="false" height="20px"></team-name>
+           </div>
+         )}
+       </div>
       </div>
     </div>
   );
