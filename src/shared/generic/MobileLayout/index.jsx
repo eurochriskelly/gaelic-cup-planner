@@ -21,6 +21,7 @@ const MobileLayout = ({
   return <> 
     <section className="MobileLayout mobile lovely">
       <header>
+        <MainMenu></MainMenu>
         <NavBar tabNames={tabNames} onSelect={handle.changetab} selected={selected} />
       </header>
       <section style={{overflowY: 'scroll'}}>{

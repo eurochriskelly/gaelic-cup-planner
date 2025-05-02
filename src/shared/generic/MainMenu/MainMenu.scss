@@ -1,37 +1,47 @@
 @import "../../css/_colors.scss";
 
+$menu-bg-color:  desaturate(darken(#272f0e, 10%), 20%); 
+$menu-grid-color: lighten($menu-bg-color, 13%);
+
 .no-select {
   user-select: none;
 }
 .MainMenu {
-  > h1 {
+  display: grid;
+    grid-template-columns: 1fr 6fr;
     font-size: 2rem;
+    opacity: 0.8;
+    background: radial-gradient(circle, transparent 20%, $menu-bg-color 20%, $menu-bg-color 80%, transparent 80%, transparent),
+      radial-gradient(circle, transparent 20%, $menu-bg-color 20%, $menu-bg-color 80%, transparent 80%, transparent) 25px 25px,
+      linear-gradient($menu-grid-color 2px, transparent 2px) 0 -1px,
+      linear-gradient(90deg, $menu-grid-color 2px, $menu-bg-color 2px) -1px 0;
+    background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
     height: 7rem;
     text-transform: uppercase;
     color: white;
-    > span {
+  
+    >span {
       color: white;
       height: 7rem;
     }
-    .hamburger::after {
-      // home icon
-      margin-left: 1rem;
-    }
     .circled {
       opacity: 0.6;
-      margin-top:1rem;
+      margin-top: 1rem;
     }
+  
     .circled::after {
       // gaelic football icon
       content: '\1F3D0';
       margin-right: 0rem;
       font-size: 4.5rem;
-      padding-top:4rem;
+      padding-top: 4rem;
     }
+  
     >span:first-child {
       margin-right: 1.4rem;
       margin-left: 1rem;
     }
+  
     >span:last-child {
       float: right;
       // background: red;
@@ -39,10 +49,12 @@
       border-radius: 5rem;
       margin-right: 1.4rem;
     }
+  
     .title {
-      font-size: 2.8rem;
-      margin:0;
+      font-size: 3.2rem;
+      margin: 0;
+      margin-top: 2.2rem;
+      color: #ffffff99;
       padding-bottom: 1rem;
-    }
   }
 }

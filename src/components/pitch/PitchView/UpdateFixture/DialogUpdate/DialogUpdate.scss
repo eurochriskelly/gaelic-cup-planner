@@ -31,16 +31,12 @@
       align-items: center; // Vertically aligns items in the middle
       width: 100%; // Ensure it takes full width if needed
 
-      // Target only direct span child if necessary
-      > span {
-        // Add specific styles for the title text if needed
-      }
 
       // Target only direct i child
-      > i.pi-times-circle {
-        color: white;
+      > i.pi-check-circle {
+        color: green;
         cursor: pointer;
-        font-size: 1.2em;
+        font-size: 2.3em;
         // Reset any inherited styles causing underlines if necessary
         text-decoration: none; // Example reset
         border-bottom: none; // Example reset

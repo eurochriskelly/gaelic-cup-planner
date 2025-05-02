@@ -191,9 +191,8 @@ const DialogUpdate = ({
             Update Fixture <span className="ml-2 text-gray-500">#{fixtureId?.toString().slice(-3)}</span>
           </span>
           <i
-            className="pi pi-times-circle"
+            className="pi pi-check-circle"
             onClick={onClose}
-            style={{ color: 'white', cursor: 'pointer', fontSize: '1.2em' }}
             role="button"
             aria-label="Close"
           />
