@@ -66,7 +66,7 @@ function FixtureNext({ fixture }) {
         />
 
         <section className="mt-7 mr-0 pr-0">
-          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300" style={{height: "42rem"}}>
+          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300" style={{ height: "46rem" }}>
             <div className="match-up w-full min-h-52">
               <div/>
               <div className="team team-1">
