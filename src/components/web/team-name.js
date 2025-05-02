@@ -102,7 +102,7 @@ class TeamName extends HTMLElement {
         const isR2L = direction === 'r2l';
 
         // Calculate the max-width based on completion level
-        let nameMaxWidth = '330px'; // Default for completion 1
+        let nameMaxWidth = '530px'; // Default for completion 1
         if (completion === 2) {
             nameMaxWidth = '300px';
         } else if (completion === 3) {

@@ -21,6 +21,7 @@
    margin: 0rem 1rem 2rem 1rem;
    padding-top: 1rem; // Add some top padding
    flex: 1;
+   font-size: 1.7rem;
    display: flex;
    flex-direction: column;
    gap: 1.5rem; // Add gap between team-name components
@@ -34,6 +35,7 @@
       margin: 1.4rem 1rem;
       letter-spacing: 0.1rem;
       text-transform: uppercase;
+      margin-top: -3rem;
     }
   }
 }

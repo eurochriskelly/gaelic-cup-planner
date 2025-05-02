@@ -4,6 +4,7 @@ const ClockIcon = ({
   started, 
   played, 
   scheduled, 
+  size = 52,
   focus, 
   layout = 'side',
   delay 
@@ -58,7 +59,7 @@ const ClockIcon = ({
 
   return (
     <span className={`ClockIcon m-0 ${layout === 'top' ? 'clock-layout-top' : 'clock-layout-side'}`}>
-      <svg width="52" height="52" viewBox="0 0 25 25">
+      <svg width={size} height={size} viewBox="0 0 25 25">
         <circle
           cx="15"
           cy="15"
