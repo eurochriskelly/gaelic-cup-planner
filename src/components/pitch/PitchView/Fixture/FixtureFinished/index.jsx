@@ -37,20 +37,13 @@ function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
     winner = totalTeam1 > totalTeam2 ? team1 : totalTeam1 < totalTeam2 ? team2 : "";
   }
 
-  const scoreUpToDate = !!played;
+ const scoreUpToDate = !!played;
 
-  const formatName = (name, winner) => {
-    if (name.startsWith("~")) {
-      return formatTeamName(name);
-    }
-    return (
-      (winner ? "🏅" : "") +
-      (" " + name.length > tlen ? name.substring(0, tlen) + "..." : name)
-    );
-  };
-  const gridStyle = { 
-    backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
-    display: 'grid',
+ // Removed formatName function
+
+ const gridStyle = {
+   backgroundColor: scoreUpToDate ? "#bcc6bc" : "",
+   display: 'grid',
     gridTemplateRows: 'auto auto',
   }
 
@@ -87,34 +80,25 @@ function FixtureFinished({ fixture, onUpdateScore, tournamentId }) {
         }
       />
 
-      <div className="fixture-pairing">
-        <div className="team-pairing">
-          <div className="team team1">
-            <div className="team-icon">
-              {extractUppercaseAndNumbers(team1).substring(0, 2)}
-            </div>
-            <div className="team-name">
-              {formatTeamName(team1)}
-            </div>
-            <div className="team-score">
-              {`${goals1 || 0} - ${points1 || 0} (${(goals1 || 0) * 3 + (points1 || 0)})`}
-            </div>
-          </div>
-          
-          <div className="team team2">
-            <div className="team-icon">
-              {extractUppercaseAndNumbers(team2).substring(0, 2)}
-            </div>
-            <div className="team-name">
-              {formatTeamName(team2)}
-            </div>
-            <div className="team-score">
-              {`${goals2 || 0} - ${points2 || 0} (${(goals2 || 0) * 3 + (points2 || 0)})`}
-            </div>
-          </div>
-        </div>
+     <div className="fixture-pairing">
+       <div className="team-pairing">
+         {/* Replaced manual team display with team-name component and score */}
+         <div className="team-row-finished">
+           <team-name name={team1} show-logo="true" height="40px" direction="l2r"></team-name>
+           <div className="team-score">
+             {`${goals1 || 0} - ${points1 || 0} (${(goals1 || 0) * 3 + (points1 || 0)})`}
+           </div>
+         </div>
 
-      </div>
+         <div className="team-row-finished">
+           <team-name name={team2} show-logo="true" height="40px" direction="l2r"></team-name>
+           <div className="team-score">
+             {`${goals2 || 0} - ${points2 || 0} (${(goals2 || 0) * 3 + (points2 || 0)})`}
+           </div>
+         </div>
+       </div>
+
+     </div>
 
       {isExpanded && (
         <div className="update-actions">
