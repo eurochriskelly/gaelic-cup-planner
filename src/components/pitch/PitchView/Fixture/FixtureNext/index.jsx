@@ -1,6 +1,6 @@
 import { formatTeamName, militaryTimeDiffMins } from "../../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../../shared/generic/ClockIcon";
-import UmpiresIcon from "../../../../../shared/icons/icon-umpires.svg?react";
+import UmpiresIcon from "../../../../../shared/icons/icon-umpires-circle.svg?react";
 import '../../../../../components/web/gaelic-score.js';
 import '../../../../../components/web/logo-box.js';
 import '../../../../../components/web/team-name.js';
@@ -38,15 +38,6 @@ function FixtureNext({ fixture }) {
     return classes.join(" ");
   };
 
-  const formatName = (name, winner) => {
-    if (name.startsWith("~")) {
-      return formatTeamName(name);
-    }
-    return (
-      (winner ? "🏅" : "") +
-      (" " + name.length > tlen ? name.substring(0, tlen) + "..." : name)
-    );
-  };
   const gridStyle = { 
     display: 'grid',
   }
@@ -66,7 +57,7 @@ function FixtureNext({ fixture }) {
         />
 
         <section className="mt-7 mr-0 pr-0">
-          <div className="bg-white p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-8 border-gray-300" style={{ height: "46rem" }}>
+          <div className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4" style={{ height: "46rem", background: '#dadac4', borderColor: '#bebfb1' }}>
             <div className="match-up w-full min-h-52">
               <div/>
               <div className="team team-1">
@@ -87,7 +78,7 @@ function FixtureNext({ fixture }) {
               <div/>
             </div>
 
-            {hasScores && (
+            {hasScores ? (
               <div className="match-scores mt-8">
                 <div />
                 <div className="team-score team1-score">
@@ -110,6 +101,15 @@ function FixtureNext({ fixture }) {
                   ></gaelic-score>
                 </div>
                 <div />
+              </div>
+            ) : (
+              <div className="scoreboard-message">
+                <h3>KEEP THE SCOREBOARD UP-TO-DATE!</h3>
+                <div>{
+                fixture?.startedTime
+                  ? <div>Update the <b>RESULT</b> and <b>CARDS</b> below</div>
+                  : <div>Press <b>START</b> as soon as the game begins!</div>
+                }</div>
               </div>
             )}
           </div>

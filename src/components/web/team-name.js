@@ -22,33 +22,96 @@ class TeamName extends HTMLElement {
         return s[(v - 20) % 10] || s[v] || s[0];
     }
 
+    /**
+     * Parse and format special team name formats starting with ~
+     * @param {string} specialName - The special name format (starting with ~)
+     * @returns {Object} - Formatted name and additional metadata
+     */
+    parseSpecialName(specialName) {
+        // Handle group format: ~group:X/p:Y
+        const groupMatch = specialName.match(/^~group:(\d+)\/p:(\d+)$/i);
+        if (groupMatch) {
+            const groupNumber = parseInt(groupMatch[1], 10);
+            const position = parseInt(groupMatch[2], 10);
+
+            // Validate position is in range 1-9
+            if (position >= 1 && position <= 9) {
+                const ordinalSuffix = this.getOrdinalSuffix(position);
+                return {
+                    displayText: `${position}${ordinalSuffix} in Gp.${groupNumber}`,
+                    type: 'group',
+                    groupNumber,
+                    position,
+                    cssClass: 'special-name group-name'
+                };
+            }
+        }
+
+        // Handle best format: ~best:X/p:Y
+        const bestMatch = specialName.match(/^~best:(\d+)\/p:(\d+)$/i);
+        if (bestMatch) {
+            const bestRank = parseInt(bestMatch[1], 10);
+            const position = parseInt(bestMatch[2], 10);
+
+            // Validate position and rank are in range 1-9
+            if (position >= 1 && position <= 9 && bestRank >= 1 && bestRank <= 9) {
+                const positionSuffix = this.getOrdinalSuffix(position);
+
+                // For bestRank=1, just use "Best" instead of "1st best"
+                let rankText = '';
+                if (bestRank === 1) {
+                    rankText = 'Best';
+                } else {
+                    const rankSuffix = this.getOrdinalSuffix(bestRank);
+                    rankText = `${bestRank}${rankSuffix}-best`;
+                }
+
+                return {
+                    displayText: `${rankText} ${position}${positionSuffix} in Groups`,
+                    type: 'best',
+                    bestRank,
+                    position,
+                    cssClass: 'special-name best-name'
+                };
+            }
+        }
+
+        // Handle match result format: ~match:X/p:Y
+        const matchMatch = specialName.match(/^~match:(\d+)\/p:([12])$/i);
+        if (matchMatch) {
+            const matchNumber = matchMatch[1];
+            const resultType = parseInt(matchMatch[2], 10);
+
+            // Format match number (last 3 digits padded with zeros)
+            const lastThreeDigits = matchNumber.slice(-3);
+            const paddedMatchNumber = lastThreeDigits.padStart(3, '0');
+
+            const resultLabel = resultType === 1 ? 'Winner' : 'Loser';
+
+            return {
+                displayText: `${resultLabel} #${paddedMatchNumber}`,
+                type: 'match',
+                matchNumber,
+                resultType,
+                cssClass: 'special-name match-name'
+            };
+        }
+
+        // Format not recognized, return as-is
+        return {
+            displayText: specialName,
+            type: 'unknown',
+            cssClass: 'special-name unknown-format'
+        };
+    }
+
     renderNameParts(name) {
         if (!name) return '<span>?</span>';
 
         // Handle special ~ names
         if (name.startsWith('~')) {
-            const groupMatch = name.match(/^~group:(\d+)\/p:(\d+)$/);
-            if (groupMatch) {
-                const N = groupMatch[1];
-                const M = parseInt(groupMatch[2], 10);
-                if (M >= 1 && M <= 9) {
-                    return `<span>${M}${this.getOrdinalSuffix(M)} Gp.${N}</span>`;
-                }
-            }
-
-            const matchMatch = name.match(/^~match:(\d+)\/p:([12])$/);
-            if (matchMatch) {
-                const N = matchMatch[1];
-                const M = parseInt(matchMatch[2], 10);
-                const type = M === 1 ? 'Winner' : 'Loser';
-                // Take last 3 digits and pad with leading zeros if necessary
-                const lastThreeDigits = N.slice(-3);
-                const paddedN = lastThreeDigits.padStart(3, '0');
-                return `<span>${type} #${paddedN}</span>`;
-            }
-
-            // Fallback for unrecognised ~ format
-            return `<span>${name}</span>`;
+            const parsedSpecial = this.parseSpecialName(name);
+            return `<span class="${parsedSpecial.cssClass}" title="${name}">${parsedSpecial.displayText}</span>`;
         }
 
         // Original logic for regular names
@@ -94,7 +157,8 @@ class TeamName extends HTMLElement {
     }
 
     render() {
-        const name = this.getAttribute('name').toUpperCase() || '';
+        const name = this.getAttribute('name') || '';
+        const nameUpper = name.toUpperCase();
         const showLogo = this.getAttribute('showLogo') !== 'false';
         const height = this.getAttribute('height') || '30px';
         const direction = this.getAttribute('direction') || 'l2r';
@@ -135,6 +199,14 @@ class TeamName extends HTMLElement {
                     display: flex;
                     align-items: center;
                 }
+                .special-name {
+                    font-weight: 500;
+                    color: #0a58ca; /* Dark blue for all special types */
+                    text-transform: uppercase;
+                }
+                .unknown-format {
+                    font-style: italic;
+                }
             </style>
             <span class="container" style="${containerStyle}">
                 ${isR2L && completion > 1 ? `
@@ -149,7 +221,7 @@ class TeamName extends HTMLElement {
                     </span>
                 ` : ''}
                 ${this.hasAttribute('icon-only') ? '' : `<span class="name-container" style="flex: 1; min-width: 0; max-width: ${nameMaxWidth}; overflow: hidden; text-overflow: ellipsis; ${isR2L ? 'justify-content: flex-end;' : ''}">
-                    ${this.renderNameParts(name)}
+                    ${this.renderNameParts(nameUpper)}
                 </span>`}
             </span>
         `;
