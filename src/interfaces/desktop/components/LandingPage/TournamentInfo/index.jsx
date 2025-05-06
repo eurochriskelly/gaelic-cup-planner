@@ -62,7 +62,7 @@ function TournamentInfo({ tournamentId }) {
           </Row>
           <Row label="Location">
             <AutoComplete
-              value={tournament.location.region}
+              value={tournament?.location?.region}
               suggestions={filteredRegions} 
               completeMethod={searchRegion} 
               field="name" 
