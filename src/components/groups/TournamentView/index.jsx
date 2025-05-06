@@ -66,10 +66,6 @@ const TournamentView = () => {
     }, []);
   };
 
-  const changeCategory = (selected) => {
-    setSelectedCategory(selected.value);
-    fetchData();
-  };
   return (
     <MobileLayout
       sections={sections}
