@@ -17,11 +17,6 @@ function LandingPage () {
   const { tournamentId } = useAppContext();
   const toast= useRef(null);
 
-  const uploadHandler = ({ files }) => {
-    console.log('Uploading files:', files);
-    uploadFile(files);
-  };
-
   const uploadFile = (files) => {
     // Your logic to handle files
     // For example, reading file data and processing it
@@ -32,6 +27,7 @@ function LandingPage () {
     };
     reader.readAsText(files[0]);
   };
+
   return (
     <main className={`desktop LandingPage`}>
       <header className='flex flex-column md:flex-row justify-content-between my-5'>
