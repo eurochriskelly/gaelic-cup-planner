@@ -38,7 +38,7 @@ const BigView = ({
         )
       })
       .catch((error) => {
-        console.error("Error fetching tournament info:", error);
+        console.error("Error fetching3 tournament info:", error);
       });
       setPreliminaryStages([
         rules?.preliminary?.groups && 'Group',

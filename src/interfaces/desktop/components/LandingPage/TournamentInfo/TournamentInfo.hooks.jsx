@@ -22,7 +22,7 @@ export function useTournamentInfo(tournamentId) {
         setOriginalDate(fetchedDate);
         setRegion(data.data.Region);
       })
-      .catch((error) => console.error("Error fetching tournament info:", error));
+      .catch((error) => console.error("Error fetching2 tournament info:", error));
   }, [tournamentId]);
 
   return { tournInfo, setTournInfo, originalInfo, date, setDate, originalDate, region, setRegion };

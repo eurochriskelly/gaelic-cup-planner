@@ -72,7 +72,6 @@ const SelectPitchView = () => {
           scheduledTime,
           type,
         } = pitchInfo;
-        console.log('pi', pitchInfo)
         const midStr = `${matchId}`
         return (
           <MainCard
