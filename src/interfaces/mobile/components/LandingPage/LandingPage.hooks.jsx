@@ -12,7 +12,7 @@ export const useFetchTournament = (tid) => {
       .then((data) => setTournInfo(data.data || defaultDate))
       .catch((error) => {
         setTournInfo(defaultDate)
-        console.error("Error fetching tournament info:", error);
+        console.error(`Error fetching tournament info for [${tid}]`, error);  
       });
   }, [tid]);
 
