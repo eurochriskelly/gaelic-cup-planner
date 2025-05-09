@@ -16,7 +16,9 @@ help:
 
 build:
 	$(call banner,"BUILDING MOBILE")
+	bash scripts/bump.sh --release
 	npm run build:mobile
+	bash scripts/bump.sh --release-candidate
 	$(call banner,"BUILDING DESKTOP")
 	npm run build:desktop
 	$(call banner,"BUILDING STORYBOOK")
