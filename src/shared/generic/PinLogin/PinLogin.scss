@@ -269,10 +269,10 @@ background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #909
 .version-info {
     position: fixed; // Fix position relative to viewport
     bottom: 1rem; // Keep position from bottom
-    left: 1rem; // Align to the left edge
-    width: 100%; // Make element full width
-    text-align: left; // Center the text within the full width
-    font-size: 1.1vh; // Keep doubled font size
+    left: 1rem;
+    width: 100%;
+    text-align: center;
+    font-size: 1.1vh; // Make sure it's small regardless of screen size
     text-transform: uppercase;
     letter-spacing: 0.2em; // Keep letter spacing
     color: #555; // Keep color

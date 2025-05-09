@@ -1,0 +1,85 @@
+.
+├── components
+│   ├── groups
+│   │   ├── SelectTournamentView
+│   │   └── TournamentView
+│   │       ├── CategorySelect
+│   │       ├── GroupStandings
+│   │       ├── KnockoutTree
+│   │       └── UpcomingFixtures
+│   ├── pitch
+│   │   ├── common
+│   │   ├── PitchView
+│   │   │   ├── Fixture
+│   │   │   │   ├── FixtureBar
+│   │   │   │   ├── FixtureFinished
+│   │   │   │   ├── FixtureNext
+│   │   │   │   ├── FixtureUnplayed
+│   │   │   │   └── TeamResult
+│   │   │   └── UpdateFixture
+│   │   │       ├── DialogUpdate
+│   │   │       │   ├── TabCancel
+│   │   │       │   ├── TabCards
+│   │   │       │   │   └── CardButton
+│   │   │       │   └── TabScore
+│   │   │       │       └── ScoreSelect
+│   │   │       ├── DrawerFinish
+│   │   │       │   └── ListCardedPlayers
+│   │   │       └── DrawerPostpone
+│   │   └── SelectPitchView
+│   └── web
+├── dump
+├── interfaces
+│   ├── desktop
+│   │   ├── components
+│   │   │   └── LandingPage
+│   │   │       ├── CompetitionsTabView
+│   │   │       │   └── BigView
+│   │   │       │       ├── FixtureTable
+│   │   │       │       │   ├── DialogTeam
+│   │   │       │       │   │   ├── EditFixtureStage
+│   │   │       │       │   │   ├── EditLocation
+│   │   │       │       │   │   ├── EditReferee
+│   │   │       │       │   │   ├── EditTeam
+│   │   │       │       │   │   └── EditTimeAndPlace
+│   │   │       │       │   └── TeamSelect
+│   │   │       │       ├── StageSelector
+│   │   │       │       └── TeamGroupings
+│   │   │       ├── TeamsTabView
+│   │   │       ├── TournamentInfo
+│   │   │       │   └── MainMenu
+│   │   │       └── VenuesTabView
+│   │   └── public
+│   │       ├── images
+│   │       └── locales
+│   │           └── en
+│   └── mobile
+│       ├── components
+│       │   ├── LandingPage
+│       │   └── TouchMenu
+│       ├── public
+│       │   ├── images
+│       │   └── locales
+│       │       ├── en
+│       │       └── fr
+│       └── watch
+└── shared
+    ├── generic
+    │   ├── AutocompleteSelect
+    │   ├── ClockIcon
+    │   ├── Divider
+    │   ├── HeaderOne
+    │   ├── LanguageSwitcher
+    │   ├── LoginHeader
+    │   ├── MainCard
+    │   ├── MainMenu
+    │   ├── MobileLayout
+    │   ├── MobileSelect
+    │   ├── NavBar
+    │   ├── NavFooter
+    │   ├── PinLogin
+    │   ├── ScoreDisplay
+    │   └── TeamNameDisplay
+    └── test
+
+88 directories
