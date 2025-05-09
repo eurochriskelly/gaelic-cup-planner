@@ -4,8 +4,8 @@ import Cookies from "js-cookie";
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "0.4.0",
-  desktop: "0.0.1",
+  mobile: "%%0.4.3_RC%%".replace(/%/g, ''),
+  desktop: "%%0.0.2_RC%%".replace(/%/g, ''),
 };
 
 export const Provider = ({ children }) => {

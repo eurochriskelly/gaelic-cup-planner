@@ -12,7 +12,6 @@ import './LandingPage.scss';
 
 const LandingPage = () => {
   const { tournamentId } = useParams();
-
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // New: Track scroll state
   const { tournInfo } = useFetchTournament(tournamentId);
@@ -27,7 +26,6 @@ const LandingPage = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       setIsScrolled(scrollTop > 50); // Shrink after scrolling 50px
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -60,7 +58,7 @@ const LandingPage = () => {
       <div className="banner-container">
         <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
         <h1>
-          <div className='version-info'>Pitch Perfect. V{versionInfo.mobile}</div>
+          <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
           <div>{t('landingPage_heading')}</div>
         </h1>
       </div>
