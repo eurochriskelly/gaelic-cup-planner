@@ -1,0 +1,38 @@
+@import '../../../../shared/scss/variables'; // Assuming you have a variables file
+
+.kanban-card {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  cursor: grab; // Indicates draggable
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  position: relative; // For potential pseudo-elements or absolutely positioned children
+
+  &:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    transform: translateY(-2px);
+  }
+
+  &.selected {
+    border: 2px solid $primary-color; // Use a theme color for selection
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.3); // Glow effect
+  }
+
+  .card-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #333; // Darker text for better readability on pastel backgrounds
+  }
+
+  .card-detail {
+    font-size: 0.875rem;
+    color: #555; // Slightly lighter text for details
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

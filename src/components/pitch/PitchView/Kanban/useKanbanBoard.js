@@ -1,0 +1,160 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import API from '../../../../shared/api/endpoints.js'; // Assuming API calls will be needed
+
+// Helper to determine Kanban column based on fixture status
+const getKanbanColumn = (fixture) => {
+  if (fixture.played || fixture.actualEndedTime) {
+    return 'finished';
+  }
+  if (fixture.actualStartedTime && !fixture.actualEndedTime) {
+    return 'started';
+  }
+  return 'planned';
+};
+
+export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatchCallback) => {
+  const { tournamentId } = useParams();
+  const [boardFixtures, setBoardFixtures] = useState([]);
+  const [selectedFixture, setSelectedFixture] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [selectedPitch, setSelectedPitch] = useState('All Pitches');
+  const [selectedTeam, setSelectedTeam] = useState('All Teams');
+
+  // Pastel color mapping for pitches
+  const pitchColors = {
+    // Define some default pastel colors or generate them dynamically
+    'Pitch 1': '#B3CDE0', // Pastel Blue
+    'Pitch 2': '#C1E1C1', // Pastel Green
+    'Pitch 3': '#F4C2C2', // Pastel Pink
+    'Pitch 4': '#FFE5B4', // Pastel Yellow
+    // Add more or a generator if needed
+  };
+
+  const getPitchColor = (pitch) => pitchColors[pitch] || '#E6E6E6'; // Default Pastel Gray
+
+  useEffect(() => {
+    const processedFixtures = initialFixtures.map(f => ({
+      ...f,
+      column: getKanbanColumn(f),
+    }));
+    setBoardFixtures(processedFixtures);
+  }, [initialFixtures]);
+
+  const pitches = ['All Pitches', ...new Set(boardFixtures.map(fixture => fixture.pitch))];
+  const teams = ['All Teams', ...new Set(boardFixtures.flatMap(fixture => [fixture.team1, fixture.team2].filter(Boolean)))];
+
+  const filteredFixtures = boardFixtures.filter(fixture => {
+    const pitchMatch = selectedPitch === 'All Pitches' || fixture.pitch === selectedPitch;
+    const teamMatch = selectedTeam === 'All Teams' || fixture.team1 === selectedTeam || fixture.team2 === selectedTeam;
+    return pitchMatch && teamMatch;
+  });
+
+  const showError = useCallback((message) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(null), 3000);
+  }, []);
+
+  const onDragStart = (e, fixtureId) => {
+    e.dataTransfer.setData('fixtureId', fixtureId.toString());
+  };
+
+  const onDrop = async (e, targetColumn) => {
+    e.preventDefault();
+    const fixtureId = parseInt(e.dataTransfer.getData('fixtureId'), 10);
+    const fixtureToMove = boardFixtures.find(f => f.id === fixtureId);
+
+    if (!fixtureToMove) return;
+
+    // Validations from concept.jsx
+    if (targetColumn === 'started') {
+      const hasStartedMatchOnPitch = boardFixtures.some(
+        f => f.column === 'started' && f.pitch === fixtureToMove.pitch && f.id !== fixtureId
+      );
+      if (hasStartedMatchOnPitch) {
+        showError("Can't start 2 matches on one pitch at the same time.");
+        return;
+      }
+      // Call API to start match
+      try {
+        await startMatchCallback(fixtureId); // Uses the startMatch from PitchView.hooks
+        // fetchFixturesCallback will be called by startMatchCallback internally
+      } catch (error) {
+        showError(`Failed to start match: ${error.message}`);
+        return;
+      }
+    }
+
+    if (targetColumn === 'finished' && fixtureToMove.column === 'started') {
+      // In a real app, score might be on fixture or need to be checked/entered.
+      // For now, assume if it's being moved to finished, it's okay.
+      // Add score check if fixture data includes it:
+      // if (fixtureToMove.score1 === null || fixtureToMove.score2 === null) {
+      //   showError("Cannot finish match without a score");
+      //   return;
+      // }
+      // TODO: API call to mark as finished if not handled by score update
+      console.log(`Fixture ${fixtureId} moved to finished. Implement API call if needed.`);
+    }
+
+    if (targetColumn === 'planned' && fixtureToMove.column === 'started') {
+      // Add score check if fixture data includes it:
+      // if (fixtureToMove.score1 !== null || fixtureToMove.score2 !== null) {
+      //   showError("Cannot move a scored match back to planned");
+      //   return;
+      // }
+      // TODO: API call to un-start or move to planned
+      console.log(`Fixture ${fixtureId} moved to planned from started. Implement API call if needed.`);
+    }
+    
+    // Optimistic update for UI, real data comes from fetchFixturesCallback
+    setBoardFixtures(prevFixtures =>
+      prevFixtures.map(f =>
+        f.id === fixtureId ? { ...f, column: targetColumn } : f
+      )
+    );
+    // If not handled by specific actions like startMatch, call generic refresh
+    if (targetColumn !== 'started') { // startMatch already calls fetchFixtures
+        await fetchFixturesCallback();
+    }
+  };
+
+  const onDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleFixtureClick = (fixture) => {
+    setSelectedFixture(prevSelected => (prevSelected && prevSelected.id === fixture.id ? null : fixture));
+  };
+
+  const handlePitchChange = (e) => {
+    setSelectedPitch(e.target.value);
+    setSelectedFixture(null);
+  };
+
+  const handleTeamChange = (e) => {
+    setSelectedTeam(e.target.value);
+    setSelectedFixture(null);
+  };
+
+  const columns = ['planned', 'started', 'finished'];
+
+  return {
+    filteredFixtures,
+    selectedFixture,
+    errorMessage,
+    selectedPitch,
+    selectedTeam,
+    pitches,
+    teams,
+    columns,
+    getPitchColor,
+    onDragStart,
+    onDrop,
+    onDragOver,
+    handleFixtureClick,
+    handlePitchChange,
+    handleTeamChange,
+    showError, // Export showError if needed by child components directly
+  };
+};

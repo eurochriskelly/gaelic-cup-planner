@@ -1,0 +1,57 @@
+.kanban-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%; // Ensure it takes up tab content height
+  padding: 10px;
+  box-sizing: border-box;
+
+  .kanban-filters {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      label {
+        font-weight: bold;
+      }
+
+      select {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+
+  .kanban-board-area {
+    flex-grow: 1; // Allows columns to fill available space
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    overflow: hidden; // Prevent board from causing page scroll if columns overflow horizontally
+    position: relative; // For details panel positioning
+
+    &.details-visible {
+      // Adjust height or padding if details panel is overlaying or pushing content
+      // Example: padding-bottom: 300px; if panel is fixed at bottom
+    }
+  }
+
+  .kanban-error-message {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da; // Light red
+    color: #721c24; // Dark red
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1050; // High z-index to be on top
+  }
+}
