@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useStartMatch } from '../PitchView.hooks'; // Re-using existing hook
 import { useKanbanBoard } from './useKanbanBoard';
