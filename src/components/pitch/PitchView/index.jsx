@@ -1,18 +1,17 @@
-import { useState, useEffect } from "react"; // Import useState, useEffect
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFixtureContext } from "./FixturesContext";
-// import { useFetchFixtures, useStartMatch } from "./PitchView.hooks";
 import MobileLayout from "../../../shared/generic/MobileLayout";
 import Fixture from "./Fixture";
 import UpdateFixture from "./UpdateFixture";
+import KanbanView from "./Kanban"; // Import the new KanbanView
 import './PitchView.scss';
 
 const PitchView = () => {
-  const { fixtures, fetchFixtures, nextFixture } = useFixtureContext();
-  const { pitchId, tournamentId } = useParams();
+  const { fixtures, fetchFixtures, nextFixture, pitchId, tournamentId } = useFixtureContext(); // Ensure pitchId, tournamentId from context if needed by KanbanView directly, or it uses useParams
   const { sections } = useAppContext();
-  const tabNames = ["Kanban", "Next", "Finished", "Unplayed"];
+  const tabNames = ["Kanban", "Next", "Finished", "Unplayed"]; // Added Kanban
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
@@ -68,10 +67,13 @@ const PitchView = () => {
   };
 
 
-  let displayFixtures = tabNames.map((tab) => {
+  // This logic is for the list-based tabs, Kanban will render its own content.
+  // We filter out "Kanban" for this specific displayFixtures logic.
+  const listTabNames = tabNames.filter(t => t.toLowerCase() !== "kanban");
+
+  let displayFixtures = listTabNames.map((tab) => {
     return fixtures
       .filter((f) => {
-        // Use currentFocusFixtureId to determine the "next" (focused) fixture
         const focusFixture = currentFocusFixtureId && currentFocusFixtureId === f.id;
         switch (tab.toLowerCase()) {
           case "next":
@@ -80,18 +82,18 @@ const PitchView = () => {
             return f.played;
           case "unplayed":
             return !f.played && !focusFixture;
-          default:
-            return true;
+          // No default case needed as we are iterating over known tab names
         }
+        return false; // Should not happen
       })
-      .map((f) => ({ ...f, tab: tab.toLowerCase() }))
+      .map((f) => ({ ...f, tab: tab.toLowerCase() }));
   });
 
-  displayFixtures = {
-    next: displayFixtures[0],
-    finished: displayFixtures[1],
-    unplayed: displayFixtures[2],
-  };
+  // Create an object for easier access, e.g., displayFixtures.next
+  const processedListFixtures = {};
+  listTabNames.forEach((tabName, index) => {
+    processedListFixtures[tabName.toLowerCase()] = displayFixtures[index];
+  });
 
   const handle = {
     back: () => {
@@ -110,24 +112,22 @@ const PitchView = () => {
       <span>
         <span className="type-pitch">{pitchId}</span>
       </span>
-      {tabNames.map((tab, i) => {
-        return (
-          <div key={`tab-${i}`} className="pitchView">
+      {tabNames.map((tab, i) => (
+        <div key={`tab-${i}`} className="pitchView"> {/* This div is part of MobileLayout's tab content */}
+          {tab.toLowerCase() === "kanban" ? (
+            <KanbanView />
+          ) : (
             <div className="fixturesBody">
               <div className="fixturesArea">
-                {displayFixtures[tab.toLowerCase()].length ? (
-                  displayFixtures[tab.toLowerCase()].map((fixture) => {
-                    // Determine focus based on currentFocusFixtureId
+                {processedListFixtures[tab.toLowerCase()] && processedListFixtures[tab.toLowerCase()].length > 0 ? (
+                  processedListFixtures[tab.toLowerCase()].map((fixture) => {
                     const isFocusFixture = currentFocusFixtureId && currentFocusFixtureId === fixture.id;
                     return (
                       <div
                         key={fixture.id}
-                        // Apply focus class based on currentFocusFixtureId
                         className={isFocusFixture ? "focusFixture h-98" : ""}
                       >
-                        {/* Set view prop based on currentFocusFixtureId */}
                         <Fixture fixture={fixture} onUpdate={fetchFixtures} view={isFocusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
-                        {/* Render UpdateFixture based on currentFocusFixtureId */}
                         {isFocusFixture && <UpdateFixture fixture={nextFixture} moveToNextFixture={moveToNextFixture} />}
                       </div>
                     );
@@ -139,9 +139,9 @@ const PitchView = () => {
                 )}
               </div>
             </div>
-          </div>
-        );
-      })}
+          )}
+        </div>
+      ))}
     </MobileLayout>
   );
 };
