@@ -47,6 +47,8 @@ class KnockoutLevel extends HTMLElement {
         abbrev = `SF${levelNum || ''}`;
       } else if ((level === 'quarters') || (level === 'quarter')) {
         abbrev = `QF${levelNum || ''}`;
+      } else if ((level === 'roundrobin') || (level === 'rrobin')) {
+        abbrev = `RR${levelNum || ''}`;
       } else {
         // Handle positional matches (e.g., 3/4, 4/5, etc.)
         const mappings = {
