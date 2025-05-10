@@ -1,9 +1,9 @@
 import './KanbanDetailsPanel.scss';
 
-const KanbanDetailsPanel = ({ fixture }) => {
+const KanbanDetailsPanel = ({ fixture, onClose }) => {
   if (!fixture) return null;
 
-  return (
+  return <>
     <div className="kanban-details-panel">
       <h2 className="panel-title">Fixture Details</h2>
       <div className="panel-content">
@@ -23,7 +23,7 @@ const KanbanDetailsPanel = ({ fixture }) => {
         {fixture.outcome && <p><strong>Outcome:</strong> {fixture.outcome}</p>}
       </div>
     </div>
-  );
+  </>;
 };
 
 export default KanbanDetailsPanel;
