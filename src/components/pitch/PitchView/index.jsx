@@ -12,7 +12,7 @@ const PitchView = () => {
   const { fixtures, fetchFixtures, nextFixture } = useFixtureContext();
   const { pitchId, tournamentId } = useParams();
   const { sections } = useAppContext();
-  const tabNames = ["Next", "Finished", "Unplayed"];
+  const tabNames = ["Kanban", "Next", "Finished", "Unplayed"];
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
