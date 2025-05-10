@@ -28,10 +28,10 @@ class TeamName extends HTMLElement {
      * @returns {Object} - Formatted name and additional metadata
      */
     parseSpecialName(specialName) {
-        // Handle group format: ~group:X/p:Y
-        const groupMatch = specialName.match(/^~group:(\d+)\/p:(\d+)$/i);
+        // Handle group formaet: ~group:X/p:Y
+        const groupMatch = specialName.match(/^~group:([\d]+(?:[-,]\d+)*)\/p:(\d+)$/i);
         if (groupMatch) {
-            const groupNumber = parseInt(groupMatch[1], 10);
+            const groupNumber = groupMatch[1]
             const position = parseInt(groupMatch[2], 10);
 
             // Validate position is in range 1-9
