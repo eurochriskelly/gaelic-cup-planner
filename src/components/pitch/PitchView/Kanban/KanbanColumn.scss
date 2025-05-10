@@ -1,43 +1,53 @@
 .kanban-column {
-  flex: 1; // Each column takes equal width
-  min-width: 280px; // Minimum width for a column
-  max-width: 350px; // Maximum width for a column
-  background-color: #f4f5f7; // Light grey background for the column
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  height: 100%; // Fill the height of .kanban-board-area
+  flex: 1;
+    /* Make columns equally share available width */
+    min-width: 0;
+    /* Allow columns to shrink below content width */
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto;
 
-  .column-title {
-    font-size: 1.25rem;
+  .column-header {
     font-weight: bold;
-    margin-bottom: 1rem;
+    padding: 0.5rem;
+      margin-bottom: 0.5rem;
     text-align: center;
-    padding: 0.5rem 0;
-    background-color: #e9ecef; // Slightly darker header background
-    border-radius: 4px 4px 0 0;
-    position: sticky; // Make title sticky if column scrolls
-    top: 0;
-    z-index: 10;
+    background-color: #e0e0e0;
+      border-radius: 3px;
   }
 
   .column-content {
-    flex-grow: 1;
-    overflow-y: auto; // Allow scrolling for cards within the column
-    padding: 5px; // Padding for the scrollable area
-
-    // Custom scrollbar (optional)
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #c1c1c1;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: #f4f5f7;
-    }
+    flex: 1;
+      overflow-y: auto;
+      padding: 0.25rem;
   }
+}
+
+
+.kanban-column:first-child {
+  border-right: 4px solid #007bff;
+}
+.kanban-column:last-child {
+  border-left: 4px solid #007bff;
+
+}
+// Hide scrollbars but keep scrolling on all devices
+.kanban-column .column-content {
+  -ms-overflow-style: none;    // IE and Edge
+  scrollbar-width: none;       // Firefox
+}
+.kanban-column .column-content::-webkit-scrollbar {
+  display: none;               // Chrome, Safari, Opera
+}
+
+// Adjust padding for first and last columns
+.kanban-column:first-child .column-content {
+  padding-left: 0.5rem;
+}
+.kanban-column:last-child .column-content {
+  padding-right: 0.5rem;
 }

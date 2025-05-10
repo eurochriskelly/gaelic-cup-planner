@@ -36,14 +36,6 @@ const KanbanView = () => {
   return (
     <div className={`kanban-view ${selectedFixture ? 'details-visible' : ''}`}>
       <KanbanErrorMessage message={errorMessage} />
-      <KanbanFilters
-        pitches={pitches}
-        selectedPitch={selectedPitch}
-        onPitchChange={handlePitchChange}
-        teams={teams}
-        selectedTeam={selectedTeam}
-        onTeamChange={handleTeamChange}
-      />
       <div className="kanban-board-area">
         {columns.map(column => (
           <KanbanColumn
@@ -59,7 +51,15 @@ const KanbanView = () => {
           />
         ))}
       </div>
-      <KanbanDetailsPanel fixture={selectedFixture} />
+      <KanbanFilters
+        pitches={pitches}
+        selectedPitch={selectedPitch}
+        onPitchChange={handlePitchChange}
+        teams={teams}
+        selectedTeam={selectedTeam}
+        onTeamChange={handleTeamChange}
+      />
+      <KanbanDetailsPanel fixture={selectedFixture} onClose={handleFixtureClick} />
     </div>
   );
 };
