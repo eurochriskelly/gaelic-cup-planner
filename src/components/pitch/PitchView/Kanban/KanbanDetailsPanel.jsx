@@ -1,4 +1,3 @@
-import React from 'react';
 import './KanbanDetailsPanel.scss';
 
 const KanbanDetailsPanel = ({ fixture }) => {

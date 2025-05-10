@@ -1,5 +1,3 @@
-import React from 'react';
-
 const KanbanErrorMessage = ({ message }) => {
   if (!message) return null;
 
