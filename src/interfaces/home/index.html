@@ -20,35 +20,68 @@
             text-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
             margin-bottom: 2rem;
         }
-        .mystery-text {
-            border-left: 3px solid #8a2be2;
-            padding-left: 1rem;
+        .intro {
+            background-color: rgba(138, 43, 226, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
             margin: 2rem 0;
-            font-style: italic;
+        }
+        .features {
+            margin: 2rem 0;
+        }
+        .features ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .features li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .features li:before {
+            content: "→";
+            color: #8a2be2;
+            position: absolute;
+            left: 0;
         }
         .contact {
             margin-top: 3rem;
             text-align: center;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            padding: 1.5rem;
+            background-color: rgba(138, 43, 226, 0.1);
+            border-radius: 8px;
         }
-        .contact:hover {
-            opacity: 1;
+        .contact a {
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>Pitch Perfect</h1>
+    <h1>Pitch Perfect Tournament Software</h1>
     
-    <div class="mystery-text">
-        <p>Some secrets are meant to be discovered, not told.</p>
-        <p>The perfect pitch lies not in the notes, but in the silence between them.</p>
+    <div class="intro">
+        <p>Welcome to the official software platform for Gaelic games tournaments.</p>
+        <p>This system is currently in private beta for tournament organizers.</p>
     </div>
 
-    <p>Begin your journey where others end theirs.</p>
+    <div class="features">
+        <h2>Key Features:</h2>
+        <ul>
+            <li>Real-time score tracking</li>
+            <li>Automated fixtures and standings</li>
+            <li>Custom team and player management</li>
+            <li>Mobile-friendly interface</li>
+        </ul>
+    </div>
 
     <div class="contact">
-        For inquiries: <a href="mailto:info@pitchperfect.eu.com">info@pitchperfect.eu.com</a>
+        <p>For access inquiries or support:</p>
+        <p><a href="mailto:info@pitchperfect.eu.com">info@pitchperfect.eu.com</a></p>
     </div>
 </body>
 </html>
