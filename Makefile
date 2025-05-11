@@ -35,6 +35,9 @@ dev-desktop:
 	@echo "Mobile server on port 5173"
 	@npm run dev:mobile
 
+home:
+	@httpster -p 5175 -d src/interfaces/home
+
 story:
 	$(call banner,"STARTING DEV SERVER: mobile")
 	@echo "Mobile server on port 5173"
