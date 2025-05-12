@@ -1,6 +1,10 @@
 import './KanbanDetailsPanel.scss';
+import UpdateFixture from '../../PitchView/UpdateFixture';
+import { useFixtureContext } from '../../PitchView/FixturesContext';
 
 const KanbanDetailsPanel = ({ fixture, onClose }) => {
+  const { moveToNextFixture } = useFixtureContext();
+  
   if (!fixture) return null;
 
   return <>
@@ -16,11 +20,14 @@ const KanbanDetailsPanel = ({ fixture, onClose }) => {
         {fixture.stage && <p><strong>Stage:</strong> {fixture.stage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}</p>}
         {fixture.actualStartedTime && <p><strong>Actual Start:</strong> {fixture.actualStartedTime}</p>}
         {fixture.actualEndedTime && <p><strong>Actual End:</strong> {fixture.actualEndedTime}</p>}
-        {/* Add more details as needed, e.g., scores, referee, umpire */}
         {(fixture.score1 || fixture.score2) && (
             <p><strong>Score:</strong> {fixture.score1 || '0-00'} - {fixture.score2 || '0-00'}</p>
         )}
         {fixture.outcome && <p><strong>Outcome:</strong> {fixture.outcome}</p>}
+      </div>
+      
+      <div className="update-fixture-container">
+        <UpdateFixture moveToNextFixture={moveToNextFixture} />
       </div>
     </div>
   </>;
