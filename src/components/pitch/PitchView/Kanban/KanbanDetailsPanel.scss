@@ -26,7 +26,6 @@
   }
 
   .panel-content {
-
     h3 {
       font-size: 1.2rem;
       font-weight: 600;
@@ -46,16 +45,32 @@
     .status-started { color: #ffc107; }   // Yellow/Orange
     .status-finished { color: #28a745; }  // Green
   }
+
+  .update-fixture-container {
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    
+    .button-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    
+    .space-button {
+      width: 100%;
+      padding: 10px;
+    }
+  }
 }
 
-  .panel-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 19;
-    background-color: rgba(0, 0, 0, 0.5); // Semi-transparent overlay
-  }
+.panel-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 19;
+  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent overlay
+}
