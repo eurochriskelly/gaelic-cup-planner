@@ -4,8 +4,8 @@
   top: 0; // Stick to the very top
   z-index: 10; // Ensure it's above other content
   background-color: #799a77; // Match main background for consistency
-  padding-top: 41.472px; // Increased by 50%
-  padding-bottom: 41.472px; // Increased by 50%
+  padding-top: 13.472px; // Increased by 50%
+  padding-bottom: 3.472px; // Increased by 50%
   padding-left: 55.296px; // Increased
   padding-right: 55.296px; // Increased
   width: 100%;
@@ -16,18 +16,18 @@
   align-items: center; // Added
   gap: 1rem; // Added gap
   opacity: 1;
-  background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
+  //background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
+  background-image:  url('images/banner.png'); //repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (mo:ed from PinLogin.scss)
-  .app-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 2rem;
-  }
+  display: block;
+  height:35rem;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
 
   .logo-container {
     .whistle {
-      height: 180px;
+      height: 300px;
       width: auto;
       object-fit: contain;
     }
@@ -38,17 +38,7 @@
     flex-direction: column;
     flex-grow: 1;
     position: relative;
-    padding-top: 1rem;
-  }
-
-  .app-name {
-    font-size: 72px;
-    text-transform: uppercase;
-    margin: 0;
-    color: #f6ffd7;
-    line-height: 1;
-    border-bottom: 2px solid rgba(255,255,255,0.2);
-    padding-bottom: 0.5rem;
+    padding-top: 0;
   }
 
   .version-line {
@@ -62,19 +52,20 @@
     color: rgba(0, 0, 0, 0.3);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    padding-top: 0.5rem;
+    padding-top: 0;
   }
 
   .back-icon-span {
-    position: absolute;
-    left: 55.296px;
+    position: fixed;
+    top:1rem;
+    left: 1rem;
     cursor: pointer;
     z-index: 15;
 
     i.pi-arrow-circle-left {
       font-size: 6rem;
-      color: rgba(174, 214, 36, 0.3); /* #aed624 with 30% opacity */
-      padding: 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 0rem;
       transition: color 0.2s ease;
     }
 
