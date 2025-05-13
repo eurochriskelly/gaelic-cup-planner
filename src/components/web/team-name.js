@@ -5,7 +5,11 @@ class TeamName extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['name', 'showLogo', 'height', 'direction', 'maxchars', 'completion', 'width'];
+        return [
+            'name', 'showLogo', 'height', 'direction',
+            'maxchars', 'completion', 'width',
+            'title-margin-above', 'title-margin-below'
+        ];
     }
 
     connectedCallback() {
@@ -189,6 +193,8 @@ class TeamName extends HTMLElement {
         `;
 
         const logoMarginStyle = `margin-${isR2L ? 'left' : 'right'}: ${marginSide}; flex-shrink: 0;`;
+        const marginAbove = this.getAttribute('title-margin-above') || '';
+        const marginBelow = this.getAttribute('title-margin-below') || '';
 
         const template = document.createElement('template');
         template.innerHTML = `
@@ -198,6 +204,8 @@ class TeamName extends HTMLElement {
                     text-overflow: ellipsis;
                     display: flex;
                     align-items: center;
+                    margin-top: ${marginAbove};
+                    margin-bottom: ${marginBelow};
                 }
                 .special-name {
                     font-weight: 500;
