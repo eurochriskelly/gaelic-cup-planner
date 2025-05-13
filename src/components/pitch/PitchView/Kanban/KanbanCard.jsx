@@ -6,14 +6,10 @@ import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
 
 const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) => {
-
-  const contentWrapperStyle = {
-    backgroundColor: pitchColor,
-  };
-
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const hasScore = fixture.goals1 != null || fixture.points1 != null || fixture.goals2 != null || fixture.points2 != null;
+  const vspace = hasScore ? '2.1rem' : 0;
   return (
     <div
       draggable
@@ -26,7 +22,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
         category={displayCategory}
         stage={displayStage}
       />
-      <div className="kanban-card-content-wrapper" style={contentWrapperStyle}>
+      <div className="kanban-card-content-wrapper">
         <div className="teams-container">
           <div className="team-row">
             <team-name
@@ -35,7 +31,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
               showLogo="true"
               height="40px" // Increased from 22px to 26px (20% larger)
               maxchars="28"
-              title-margin-below={hasScore ? '1.4rem': 0}
+              title-margin-below={vspace}
             ></team-name>
             {/* Team 1 score under name, right-aligned */}
             {hasScore && (
@@ -66,13 +62,16 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
               showLogo="true"
               height="40px" // Increased from 22px to 26px (20% larger)
               maxchars="28"
-              title-margin-above={hasScore ? '1.4rem' : 0}
+              title-margin-above={vspace}
             ></team-name>
           </div>
         </div>
-
-        <p className="card-detail">Time: {fixture.plannedStart || fixture.startTime}</p>
-        <p className="card-detail">Pitch: {fixture.pitch}</p>
+        { (fixture?.lane?.current !== 'finished') &&
+        <>
+          <p className="card-detail">Time: {fixture.plannedStart || fixture.startTime}</p>
+          <p className="card-detail">Pitch: {fixture.pitch}</p>
+        </>
+        }
       </div>
     </div>
   );
