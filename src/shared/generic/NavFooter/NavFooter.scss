@@ -1,4 +1,5 @@
 @import "../../css/_colors.scss";
+// @import "../../css/_dimensions.scss";
 
 $isize: 9rem;
 
@@ -12,7 +13,9 @@ footer.NavFooter {
   background: $pc;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 1024px;
+  left: 0;
+  right: 0;
   z-index: 10000;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -40,4 +43,6 @@ footer.NavFooter {
   .bg {
     fill: none;
   }
+    margin-left: auto;
+    margin-right: auto;
 }

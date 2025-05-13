@@ -1,10 +1,8 @@
 @import "src/shared/css/_colors.scss";
 
 .updateFixture {
-  position: fixed;
-  bottom: 10rem;
-  right: 2rem;
-  left: 2rem;
+  position: absolute;
+  bottom: 0rem;
   z-index: 1000;
   //background: #788356;
   .bg {
