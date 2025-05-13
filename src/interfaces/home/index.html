@@ -18,17 +18,25 @@
           margin: 0 auto;
         }
         #content {
-          background: #ffffffaa;
+          /*background: #ffffffaa;*/
           height: 100vh;
           padding: 1rem;
         }
         .banner {
-          margin:0;
+            background-color: #efefefdd;
+          margin:1rem 0;
+        }
+        .tournament-software {
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 6rem;
         }
         h1 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 0rem;
+            margin-bottom: 1rem;
+            margin-top: 0rem;
             font-weight: 600;
             letter-spacing: -0.5px;
         }
@@ -78,29 +86,33 @@
 </head>
 <body>
   <div id="content">
-    <div class="banner" style="text-align: center; padding-bottom: 2rem;">
-        <img src="./banner.png" alt="Pitch Perfect" style="max-width: 400px;">
+    <div class="banner"
+        style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; padding-bottom: 2rem; z-index: 1000;">
+        <img src="./banner.png" alt="Pitch Perfect" style="max-width: 300px;">
+    </div>
+    <div class="tournament-software">
+
         <h1>TOURNAMENT SOFTWARE</h1>
-    </div>
+        <div class="intro">
+            <p>A comprehensive platform for planning, executing and reporting on Gaelic football, Hurling & Camogie tournaments.
+            </p>
+            <p>Currently in private beta for select tournament organizers.</p>
+            </div>
 
-    <div class="intro">
-        <p>A comprehensive platform for planning, executing and reporting on Gaelic football, Hurling & Camogie tournaments.</p>
-        <p>Currently in private beta for select tournament organizers.</p>
-    </div>
+        <div class="features">
+            <h2>Key Features:</h2>
+            <ul>
+                <li>Real-time score tracking</li>
+                <li>Automated fixtures and standings</li>
+                <li>Custom team and player management</li>
+                <li>Mobile-friendly interface</li>
+            </ul>
+        </div>
 
-    <div class="features">
-        <h2>Key Features:</h2>
-        <ul>
-            <li>Real-time score tracking</li>
-            <li>Automated fixtures and standings</li>
-            <li>Custom team and player management</li>
-            <li>Mobile-friendly interface</li>
-        </ul>
-    </div>
-
-    <div class="contact">
-        <p>For access inquiries or support:</p>
-        <p><a href="mailto:contact@pitchperfect.eu.com">contact@pitchperfect.eu.com</a></p>
+        <div class="contact">
+            <p>For access inquiries or support:</p>
+            <p><a href="mailto:contact@pitchperfect.eu.com">contact@pitchperfect.eu.com</a></p>
+        </div>
     </div>
   </div>
 </body>
