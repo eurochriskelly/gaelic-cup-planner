@@ -4,7 +4,9 @@
   width: 100%;
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
   // padding: 0.75rem; // Removed: Handled by content wrapper or FixtureBar
   margin-bottom: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -12,7 +14,6 @@
   cursor: grab; // Indicates draggable
   position: relative; // For potential pseudo-elements or absolutely positioned children
   overflow: hidden; // To make children conform to parent's border-radius
-  display: flex;
   flex-direction: column;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
@@ -21,31 +22,52 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  &.selected {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
+                &.selected {
+                  .FixtureBar {
+                    background-color: darken(#2aa3ff, 14%); // Highlight selected card
+                    color: lighten(#2aa3ff, 20%); // Highlight selected card
+                  }
   }
 
   .FixtureBar {
-    // No border-radius needed here due to parent's overflow:hidden
-    margin-bottom: 0.5rem; // Space between FixtureBar and card content
+    margin-bottom: 0;
+      // Layout for the three children
+      position: relative;
+      display: flex;
+      align-items: center;
 
-    // --- Style overrides for smaller size in KanbanCard ---
-    padding: 0.5rem 0.75rem; 
-    gap: 1rem; 
+    .fixture-id,
+      .category {
+        flex: 0 0 0;
+      }
+    
+      .stage {
+        flex: 0 0 auto;
+        margin-left: auto;
+        align-self: flex-start;
+        background: red;
+        border-radius: 100px;
+      }
+    
+      padding: 0.5rem 0.75rem;
+      gap: 1rem;
+                                background-color: black;
+                                color: white;
+                                border: none;
 
     .fixture-id,
     .category,
     .stage {
-      font-size: 0.8rem; 
+      font-size: 1.4rem;
       font-weight: 600;
-      gap: 0.25rem;
     }
     
     .icon-larger { 
         width: 1rem;
         height: 1rem;
         transform: scale(1.2);
-        margin-right: 0.25rem;
+        margin-right: 0.1rem;
     }
   }
 
@@ -69,8 +91,11 @@
       margin-bottom: 10px;
     
       .team-row {
+        display: flex;
+          flex-direction: column;
         width: 100%;
         margin-bottom: 2px;
+        position: relative; // ensure each row is a positioning context
     
         team-name {
           width: 100%;
@@ -79,12 +104,54 @@
         }
       }
     
+            .score-row {
+              display: flex;
+              justify-content: flex-end;
+              gap: 0.5rem;
+              margin: 0 0 4px; // small space below first team
+              align-self: flex-end;
+              background:#777777aa;
+              color:white;
+              margin-top: 0;
+              position: absolute;
+              font-size: 1.3rem;
+              right: 0;
+              padding: 0.1rem 0.2rem;
+            }
+      
+            // Team-1 score: lower right of first team-row
+            .team-row:first-child .score-row {
+              bottom: 0;
+            }
+      
+            // Team-2 score: upper right of last team-row
+            .team-row:last-child .score-row {
+              top: 0;
+            }
       .vs-row {
         font-size: 0.8rem;
         font-weight: 500;
         color: rgba(0, 0, 0, 0.6);
         margin: 2px 0;
         padding-left: 39px; // Increased from 30px to account for larger logo
+        font-size: 1.2rem;
+          /* font-weight: 500; */
+          color: rgba(0, 0, 0, 0.6);
+          margin: 0;
+          /* padding-left: 39px; */
+          background: #e6e6e6;
+          width: 1.8rem;
+          border: 1px dotted black;
+          border-radius: 100rem;
+          margin-left: 0.9rem;
+          text-align: center;
+          padding: 0;
+          z-index: 20;
+          display: block;
+          position: absolute;
+          top: 6.2rem;
+          color: #2c2e24;
+          font-weight: bold;
       }
   }
 
