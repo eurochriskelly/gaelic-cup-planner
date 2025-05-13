@@ -14,7 +14,6 @@ const KanbanView = () => {
   // For now, we pass it as startMatchCallback.
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
-
   const {
     filteredFixtures,
     selectedFixture,
@@ -34,14 +33,15 @@ const KanbanView = () => {
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
 
   return (
-    <div className={`kanban-view ${selectedFixture ? 'details-visible' : ''}`}>
+    <div className={`kanban-view ${selectedFixture ? 'details-visible' : ''}`} 
+         onClick={() => console.log('filtered fixtures', filteredFixtures)}>
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
         {columns.map(column => (
           <KanbanColumn
             key={column}
             title={column}
-            fixtures={filteredFixtures.filter(f => f.column === column)}
+            fixtures={filteredFixtures.filter(f => f?.lane?.current === column)}
             onDrop={(e) => onDrop(e, column)}
             onDragOver={onDragOver}
             onDragStart={onDragStart}

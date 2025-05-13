@@ -6,7 +6,7 @@ const LoginHeader = ({ version, showBackButton, onBackClick }) => {
   return (
     <div className="app-header">
       <div className="logo-container">{
-        /* <img src={whistleImage} className='whistle' /> */
+        <img src={whistleImage} className='whistle' /> 
       }</div>
       <div className="title-group">
         {showBackButton && (

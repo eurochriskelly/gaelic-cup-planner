@@ -3,7 +3,6 @@
   position: sticky; // Make header stick to top
   top: 0; // Stick to the very top
   z-index: 10; // Ensure it's above other content
-  background-color: #799a77; // Match main background for consistency
   padding-top: 13.472px; // Increased by 50%
   padding-bottom: 3.472px; // Increased by 50%
   padding-left: 55.296px; // Increased
@@ -15,19 +14,24 @@
   flex-direction: column; // Added
   align-items: center; // Added
   gap: 1rem; // Added gap
-  opacity: 1;
-  //background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
-  background-image:  url('images/banner.png'); //repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
+  background-color: #94a06e;
+  opacity: 0.8;
+  background-image:  linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177);
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  background-color: #94a06e;
+  // background-image:  url('images/banner.png'); //repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
   // Styles for the back icon span (mo:ed from PinLogin.scss)
   display: block;
-  height:35rem;
-  object-fit: cover;
-  background-repeat: no-repeat;
-  background-position: center top;
+  height: 25rem;
+  //object-fit: cover;
+  //background-position: center top;
 
   .logo-container {
+    margin-top: 3rem;
+      margin-bottom: 2rem;
     .whistle {
-      height: 300px;
+      height: 220px;
       width: auto;
       object-fit: contain;
     }

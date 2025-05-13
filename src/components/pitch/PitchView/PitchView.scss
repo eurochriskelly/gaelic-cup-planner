@@ -8,6 +8,7 @@
 
 .pitchView {
     height: 130%;
+    user-select: none;
     >div:nth-child(2) {
         position: absolute;
         margin-top: 14rem;

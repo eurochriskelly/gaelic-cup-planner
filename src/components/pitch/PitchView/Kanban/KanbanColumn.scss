@@ -29,11 +29,10 @@
 
 
 .kanban-column:first-child {
-  border-right: 4px solid #007bff;
+  border-right: 0.2rem dashed #545a174a;
 }
 .kanban-column:last-child {
-  border-left: 4px solid #007bff;
-
+  border-left: 0.2rem dashed #545a174a;
 }
 // Hide scrollbars but keep scrolling on all devices
 .kanban-column .column-content {

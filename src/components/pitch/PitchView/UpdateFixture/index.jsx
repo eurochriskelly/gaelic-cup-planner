@@ -11,8 +11,11 @@ import './UpdateFixture.scss';
 
 const UpdateFixture = ({
   moveToNextFixture,
+  fixture, // optional, depending on the context
 }) => {
-  const { nextFixture, fetchFixtures, startMatch, fixtures } = useFixtureContext();
+  const { fetchFixtures, startMatch, fixtures } = useFixtureContext();
+  let nextFixture = fixture;
+  if (!fixture) nextFixture = useFixtureContext().nextFixture;
   if (!nextFixture) return null;
 
   const [activeDrawer, setActiveDrawer] = useState(null);
