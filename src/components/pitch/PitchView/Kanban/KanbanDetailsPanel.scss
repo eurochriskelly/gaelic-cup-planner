@@ -1,17 +1,22 @@
 .kanban-details-panel {
-  position: fixed; // Or absolute, depending on layout
-  bottom: 11rem;
-  left: 2rem;
-  right: 2rem;
-  height: 40rem; // Adjust as needed
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
+  position: absolute;
+  top: 28rem;
+  bottom: 15rem;
+  left: 0;
+  right: 0;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1rem;
+  margin: 3rem 4rem;
   background-color: #ffffff;
   padding: 1rem;
   border-top: 1px solid #dee2e6;
   overflow-y: auto;
   z-index: 20; // Ensure it's above columns but below modals/alerts
   box-shadow: 0 -16px 24px -4px rgba(0, 0, 0, 0.4);
+  border-radius: 1rem;
+  margin: 3rem 4rem;
 
   .panel-title {
     font-size: 1.5rem;
@@ -47,13 +52,10 @@
   }
 
   .update-fixture-container {
-    margin-top: 20px;
-    padding: 15px;
     border-top: 1px solid #eee;
     
     .button-grid {
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
     }
     
     .space-button {
