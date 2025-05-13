@@ -14,9 +14,11 @@
   border-top: 1px solid #dee2e6;
   overflow-y: auto;
   z-index: 20; // Ensure it's above columns but below modals/alerts
-  box-shadow: 0 -16px 24px -4px rgba(0, 0, 0, 0.4);
-  border-radius: 1rem;
-  margin: 3rem 4rem;
+  display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25),
+      0 3px 3px rgba(0, 0, 0, 0.22);
 
   .panel-title {
     font-size: 1.5rem;
@@ -51,8 +53,34 @@
     .status-finished { color: #28a745; }  // Green
   }
 
+    .FixtureBar {
+      // style the header bar like cards
+      margin-bottom: 0;
+      background-color: black;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      gap: 1rem;
+  
+      .icon-larger {
+        transform: scale(1.2);
+      }
+  
+      .stage {
+        background: red;
+        border-radius: 100px;
+      }
+    }
+  
+    .details-content-wrapper {
+      // content wrapper mimics .kanban-card-content-wrapper
+      padding: 0.75rem;
+      background: #fafafa;
+      border-left: 1rem solid #ddd;
+      flex-grow: 1;
+    }
   .update-fixture-container {
     border-top: 1px solid #eee;
+    margin-top: 1rem;
     
     .button-grid {
       grid-template-columns: repeat(4, 1fr);
