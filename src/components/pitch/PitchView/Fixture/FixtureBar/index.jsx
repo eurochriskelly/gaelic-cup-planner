@@ -8,8 +8,9 @@ export default function FixtureBar({ fixtureId, category, stage }) {
           <path d="M4 5h16v2H4V5m0 4h16v2H4V9m0 4h16v2H4v-2m0 4h16v2H4v-2z" />
         </svg>
         <span>{category}</span>
-        <span className="text-gray-500">/</span>
-        <span className="text-black">{`${fixtureId}`.padStart(3, '?').slice(-3)}</span>
+        <span className="text-gray-500" style={{color: '#a387ff'}}>/</span>
+        <span className="text-gray-200">{`${fixtureId}`.padStart(3, '?').slice(-3)}</span>
+
       </div>
       <div className="stage">
         <span>{stage.substring(0,1)}</span>
