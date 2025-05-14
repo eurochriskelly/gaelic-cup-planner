@@ -142,6 +142,7 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   return {
     filteredFixtures,
     selectedFixture,
+    setSelectedFixture, // Expose setter
     errorMessage,
     selectedPitch,
     selectedTeam,
@@ -155,6 +156,6 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
     handleFixtureClick,
     handlePitchChange,
     handleTeamChange,
-    showError, // Export showError if needed by child components directly
+    showError,
   };
 };

@@ -1,10 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import ProgressIcon from "../../../../shared/icons/icon-skip.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
-import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react"; // Import cancel icon
-import OkIcon from "../../../../shared/icons/icon-ok.svg?react";
+import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
+import CardIcon from "../../../../shared/icons/icon-card.svg?react";
+import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
+import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
 import DialogUpdate from "./DialogUpdate";
 import DrawerPostpone from "./DrawerPostpone";
 import { useFixtureContext } from "../FixturesContext";
@@ -13,7 +14,10 @@ import './UpdateFixture.scss';
 
 const UpdateFixture = ({
   moveToNextFixture,
-  fixture, // optional, depending on the context
+  fixture,
+  showDetails,
+  closeDetails,
+  isDetailsMode = false
 }) => {
   const { fetchFixtures, startMatch, fixtures } = useFixtureContext();
   let nextFixture = fixture;
@@ -22,109 +26,141 @@ const UpdateFixture = ({
 
   const [activeDrawer, setActiveDrawer] = useState(null);
 
-  // Compute button states based on fixture status
-  const buttonStates = useMemo(() => {
-    console.log("Computing button states...");
-    const hasStarted = !!nextFixture.startedTime;
-    const hasResult = !!nextFixture.isResult;
-    return {
-      start: !hasStarted && !hasResult ? "enabled" : "disabled",
-      finish: hasStarted ? "enabled" : "disabled",
-      postpone: !hasStarted && !hasResult ? "enabled" : "disabled",
-    };
-  }, [nextFixture.startedTime, nextFixture.started, nextFixture.isResult]);
+  const hasStarted = !!nextFixture.startedTime;
+  const hasResult = !!nextFixture.isResult;
+  const isPlanned = nextFixture.lane?.current === 'planned';
 
-  const actions = {
-    closeDrawer: () => {
-      setActiveDrawer(null);
-      fetchFixtures();
+  // Basic buttons definition - won't change
+  const buttons = [
+    {
+      id: 'cancel',
+      Icon: CancelIcon,
+      getState: () => "enabled",
+      action: (setDrawer) => setDrawer("finish")
     },
-    reschedule: () => {
-      if (buttonStates.postpone === "disabled") return;
-      setActiveDrawer("postpone");
+    {
+      id: 'reschedule',
+      Icon: MoveIcon,
+      showOnlyWhenPlanned: true,
+      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      action: (setDrawer) => setDrawer("postpone")
     },
-    start: async () => {
-      if (buttonStates.start === "disabled") return;
-      try {
-        await startMatch(nextFixture.id);
-      } catch (error) {
-        console.error("Error starting match:", error);
+    {
+      id: 'start',
+      Icon: StartIcon,
+      showOnlyWhenPlanned: true,
+      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      action: async (_, { startMatch, nextFixture }) => {
+        try {
+          await startMatch(nextFixture.id);
+        } catch (error) {
+          console.error("Error starting match:", error);
+        }
       }
     },
-    finish: async () => {
-      if (buttonStates.finish === "disabled") return;
-      setActiveDrawer("finish"); // Same implementation as finish for now
-      moveToNextFixture();
-      await API.endMatch(nextFixture.tournamentId, nextFixture.id);
-      await fetchFixtures(true);
+    {
+      id: 'finish',
+      Icon: ScoreIcon,
+      hideWhenPlanned: true,
+      getState: (hasStarted) => hasStarted ? "enabled" : "disabled",
+      action: async (setDrawer, { moveToNextFixture, API, nextFixture, fetchFixtures }) => {
+        setDrawer("finish");
+        moveToNextFixture();
+        await API.endMatch(nextFixture.tournamentId, nextFixture.id);
+        await fetchFixtures(true);
+      }
     },
-    cancel: () => {
-      setActiveDrawer("finish"); // Same implementation as finish for now
+    {
+      id: 'forfeit',
+      Icon: CardIcon,
+      getState: () => "enabled",
+      action: (setDrawer) => setDrawer("finish")
     },
-    rescheduleMatch: async (fixtureId, targetPitch, placement) => {
-      await API.rescheduleMatch(nextFixture.tournamentId, targetPitch, nextFixture.id, fixtureId, placement);
-      await fetchFixtures();
-      setActiveDrawer(null);
-    },
-    info: () => {
-      console.log("ok clicked");
-    },
-  };
-
-  // Separate info button from main buttons
-  const mainButtons = [
-    { action: actions.reschedule, state: buttonStates.postpone, Icon: MoveIcon, showOnlyWhenPlanned: true },
-    { action: actions.start, state: buttonStates.start, Icon: StartIcon, showOnlyWhenPlanned: true },
-    { action: actions.finish, state: buttonStates.finish, Icon: ScoreIcon, hideWhenPlanned: true },
-    { action: actions.cancel, state: "enabled", Icon: CancelIcon },
+    // The last button changes based on mode
+    ...(isDetailsMode ? [
+      {
+        id: 'close',
+        Icon: CloseIcon,
+        getState: () => "enabled",
+        action: () => closeDetails && closeDetails(),
+        isInfoButton: true
+      }
+    ] : [
+      {
+        id: 'info',
+        Icon: ViewIcon,
+        getState: () => "enabled",
+        action: () => showDetails && showDetails(),
+        isInfoButton: true
+      }
+    ])
   ];
 
-  const infoButton = { action: actions.info, state: "enabled", Icon: OkIcon };
+  const handleButtonClick = (button) => {
+    const deps = { startMatch, nextFixture, moveToNextFixture, API, fetchFixtures };
+    button.action(setActiveDrawer, deps);
+  };
+
+  const getVisibleButtons = () => {
+    return buttons.filter(button => {
+      if (button.isInfoButton) return true;
+      if (button.hideWhenPlanned && isPlanned) return false;
+      if (button.showOnlyWhenPlanned && !isPlanned) return false;
+      return true;
+    });
+  };
+
+  const visibleButtons = getVisibleButtons();
+  const mainButtons = visibleButtons.filter(b => !b.isInfoButton).slice(0, 3); // Limit to max 3 buttons
+  const infoButton = visibleButtons.find(b => b.isInfoButton);
 
   return (
-    <div className="updateFixture select-none" onClick={() => console.log(nextFixture, fixtures)}>
-      {activeDrawer && <div className="drawer-overlay" onClick={actions.closeDrawer} />}
+    <div className="updateFixture select-none">
+      {activeDrawer && <div className="drawer-overlay" onClick={() => setActiveDrawer(null)} />}
       <div className="button-grid" style={{ display: activeDrawer ? "none" : "grid" }}>
-        {/* Render active buttons first */}
-        {mainButtons
-          .filter(button =>
-            (!button.hideWhenPlanned || nextFixture.lane?.current !== 'planned') &&
-            (!button.showOnlyWhenPlanned || nextFixture.lane?.current === 'planned')
-          )
-          .slice(0, 3)
-          .map(({ action, state, Icon }, index) => (
-            <button key={index} className={`space-button ${state}`} onClick={action}>
-              <Icon className="icon" />
-            </button>
-          ))}
+        {mainButtons.map((button, index) => (
+          <button
+            key={button.id}
+            className={`space-button ${button.getState(hasStarted, hasResult)}`}
+            onClick={() => handleButtonClick(button)}
+          >
+            <button.Icon className="icon" />
+          </button>
+        ))}
 
-        {/* Add placeholder divs */}
-        {[...Array(3)].map((_, i) => {
-          const activeButtonCount = mainButtons.filter(button =>
-            (!button.hideWhenPlanned || nextFixture.lane?.current !== 'planned') &&
-            (!button.showOnlyWhenPlanned || nextFixture.lane?.current === 'planned')
-          ).length;
-          return i >= activeButtonCount ? <div key={`placeholder-${i}`} className="space-button empty" /> : null;
-        })}
+        {/* Generate placeholders only if we have fewer than 3 buttons */}
+        {mainButtons.length < 3 &&
+          [...Array(3 - mainButtons.length)].map((_, i) => (
+            <div key={`empty-${i}`} className="space-button empty" />
+          ))
+        }
 
-        {/* Always render info button last */}
-        <button className={`space-button ${infoButton.state}`} onClick={infoButton.action}>
-          <infoButton.Icon className="icon" />
-        </button>
+        {infoButton && (
+          <button
+            className={`space-button ${infoButton.getState()}`}
+            onClick={() => handleButtonClick(infoButton)}
+          >
+            <infoButton.Icon className="icon" />
+          </button>
+        )}
       </div>
 
       <div className="drawers" style={{ display: activeDrawer ? "flex" : "none" }}>
         {activeDrawer === "postpone" && (
           <DrawerPostpone
-            onClose={actions.closeDrawer}
-            onSubmit={actions.rescheduleMatch}
+            onClose={() => setActiveDrawer(null)}
+            onSubmit={async (fixtureId, targetPitch, placement) => {
+              await API.rescheduleMatch(nextFixture.tournamentId, targetPitch, nextFixture.id, fixtureId, placement);
+              await fetchFixtures();
+              setActiveDrawer(null);
+            }}
             pitch={nextFixture.pitch}
           />
         )}
         {activeDrawer === "finish" && (
           <DialogUpdate
             nextFixture={nextFixture}
-            onClose={actions.closeDrawer}
+            onClose={() => setActiveDrawer(null)}
           />
         )}
       </div>

@@ -65,4 +65,38 @@
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     z-index: 1050; // High z-index to be on top
   }
+.quick-action-panel {
+  position: absolute;
+  bottom: 10rem;
+  left: 0;
+  right: 0;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  z-index: 20;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+
+  .updateFixture {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+// Adjust panel positioning when both quick actions and details are shown
+&.details-visible {
+  .kanban-board-area {
+    // Adjust padding or heights if needed when details showing
+  }
+}
+
+&.fixture-selected {
+  .kanban-board-area {
+    // Adjust padding or heights when fixture is selected
+  }
+}
 }

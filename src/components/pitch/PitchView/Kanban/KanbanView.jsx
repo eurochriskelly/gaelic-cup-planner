@@ -1,22 +1,25 @@
 import { useFixtureContext } from '../FixturesContext';
-import { useStartMatch } from '../PitchView.hooks'; // Re-using existing hook
+import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
 import KanbanColumn from './KanbanColumn';
 import KanbanFilters from './KanbanFilters';
 import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
+import UpdateFixture from '../UpdateFixture';
 import './KanbanView.scss';
+import { useState } from 'react';
 
 const KanbanView = () => {
   const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
-  // Note: useStartMatch is specific to PitchView.hooks.jsx context.
-  // It might need to be generalized or Kanban might need its own API interaction layer.
-  // For now, we pass it as startMatchCallback.
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
+
+  // New state to track if details panel should be shown
+  const [showingDetails, setShowingDetails] = useState(false);
 
   const {
     filteredFixtures,
     selectedFixture,
+    setSelectedFixture,
     errorMessage,
     selectedPitch,
     selectedTeam,
@@ -32,9 +35,18 @@ const KanbanView = () => {
     handleTeamChange,
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
 
+  // Function to show full details panel
+  const showDetailsPanel = () => {
+    setShowingDetails(true);
+  };
+
+  // Function to close details panel
+  const closeDetailsPanel = () => {
+    setShowingDetails(false);
+  };
+
   return (
-    <div className={`kanban-view ${selectedFixture ? 'details-visible' : ''}`} 
-         onClick={() => console.log('filtered fixtures', filteredFixtures)}>
+    <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
         {columns.map(column => (
@@ -51,6 +63,7 @@ const KanbanView = () => {
           />
         ))}
       </div>
+
       <KanbanFilters
         pitches={pitches}
         selectedPitch={selectedPitch}
@@ -59,7 +72,25 @@ const KanbanView = () => {
         selectedTeam={selectedTeam}
         onTeamChange={handleTeamChange}
       />
-      <KanbanDetailsPanel fixture={selectedFixture} onClose={handleFixtureClick} />
+
+      {/* Always show update fixture when a fixture is selected */}
+      {selectedFixture && (
+        <div className="quick-action-panel">
+          <UpdateFixture
+            fixture={selectedFixture}
+            showDetails={showDetailsPanel}
+            closeDetails={closeDetailsPanel}
+            isDetailsMode={showingDetails}
+          />
+        </div>
+      )}
+
+      {/* Show details panel when showingDetails is true */}
+      {selectedFixture && showingDetails && (
+        <KanbanDetailsPanel
+          fixture={selectedFixture}
+        />
+      )}
     </div>
   );
 };
