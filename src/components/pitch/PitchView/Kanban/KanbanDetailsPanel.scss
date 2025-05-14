@@ -60,8 +60,8 @@
       color: white;
       padding: 0.5rem 0.75rem;
       gap: 1rem;
-      background-color: desaturate(lighten($sc, 4%), 30%); // Highlight selected card
-        color: lighten($sc, 50%); // Highlight selected card
+      background-color: desaturate(lighten($sc, 22%), 10%); // Highlight selected card
+      color: lighten($sc, 80%); // Highlight selected card
       .icon-larger {
         transform: scale(1.2);
       }

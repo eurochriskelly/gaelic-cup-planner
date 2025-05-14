@@ -1,4 +1,3 @@
-
 class LogoBox extends HTMLElement {
     constructor() {
         super();
@@ -270,10 +269,10 @@ class LogoBox extends HTMLElement {
         let style, overlayColor, initials;
         if (title.startsWith('~')) {
             style = {
-                bg: '#ccc',  // Changed from #999 to #ccc (50% lighter)
+              bg: '#ccc',
                 color: '#000'
             };
-            overlayColor = 'rgba(0,0,0,0.1)';  // Made overlay more transparent too
+          overlayColor = 'rgba(0,0,0,0.1)';
             initials = '?';
         } else {
             style = this.getColors();
@@ -284,18 +283,27 @@ class LogoBox extends HTMLElement {
         const template = document.createElement('template');
         template.innerHTML = `
             <style>
-                .logo-box {
-                    position: relative;
+                .outer-box {
                     width: ${size};
                     height: ${size};
+                    border: 0.3rem solid ${this.getAttribute('border-color') || '#333'};
+                    border-radius: 7px;
+                    box-sizing: border-box;
+                    background: #ddd;
+                    padding: 0.13rem;
+                }
+                .logo-box {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
                     background: ${image ? 'transparent' : style.bg};
                     color: ${style.color};
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     overflow: hidden;
-                    border: 3px solid ${this.getAttribute('border-color') || '#333'};
-                    border-radius: 5px;
+                    border: 0.1rem solid #888;
+                    border-radius: 0.1rem;
                     box-sizing: border-box;
                 }
                 .overlay {
@@ -310,7 +318,7 @@ class LogoBox extends HTMLElement {
                 .text {
                     position: relative;
                     z-index: 2;
-                    font-size: calc(${size} * 0.5);
+                    font-size: calc(${size} * 0.4);
                     font-weight: bold;
                     text-transform: uppercase;
                     line-height: 1;
@@ -323,12 +331,14 @@ class LogoBox extends HTMLElement {
                     object-fit: cover;
                 }
             </style>
-            <div class="logo-box">
-                ${image 
-                    ? `<img src="${image}" alt="${initials}">`
-                    : `<div class="overlay"></div>
-                       ${this.hasAttribute('icon-only') ? '' : `<span class="text">${initials}</span>`}`
-                }
+            <div class="outer-box">
+                <div class="logo-box">
+                    ${image
+            ? `<img src="${image}" alt="${initials}">`
+            : `<div class="overlay"></div>
+                           ${this.hasAttribute('icon-only') ? '' : `<span class="text">${initials}</span>`}`
+                    }
+                </div>
             </div>
         `;
 
