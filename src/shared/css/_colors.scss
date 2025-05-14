@@ -3,6 +3,9 @@ To import, add the following to the top of your scss file:
 @import "src/shared/css/_colors.scss";
 */
 
+$menu-bg-color:  desaturate(darken(#272f0e, 10%), 20%); 
+$menu-grid-color: lighten($menu-bg-color, 13%);
+
 $primary-color: #657338;
 $mainColor: $primary-color;
 $secondary-color: #463873;
@@ -55,3 +58,10 @@ $radial2: #bdbdb2;
 //icons
 $utf-icon-category: '\1F3BD';
 $utf-icon-pitch: '\1F6A9';
+
+$cros-col: lighten($menu-bg-color, 14%);
+$cros-col2: lighten($menu-bg-color, 21%);
+$crosses: radial-gradient(circle, transparent 20%, $cros-col 20%, $cros-col 80%, transparent 80%, transparent),
+          radial-gradient(circle, transparent 20%, $cros-col 20%, $cros-col 80%, transparent 80%, transparent) 25px 25px,
+          linear-gradient($cros-col2 2px, transparent 2px) 0 -1px,
+          linear-gradient(90deg, $cros-col2 2px, $cros-col 2px) -1px 0;

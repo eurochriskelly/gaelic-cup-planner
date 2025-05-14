@@ -9,6 +9,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const hasScore = fixture.goals1 != null || fixture.points1 != null || fixture.goals2 != null || fixture.points2 != null;
+  const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
   const vspace = hasScore ? '2.1rem' : 0;
   return (
     <div
@@ -24,14 +25,15 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
       />
       <div className="kanban-card-content-wrapper">
         <div className="teams-container">
-          <div className="team-row">
+          <div className="team-row pb-1">
             <team-name
-              style={{ fontSize: '1.4em', fontWeight: 'bold' }}
+              style={teamStyle}
               name={fixture.team1 || 'TBD'}
               showLogo="true"
-              height="40px" // Increased from 22px to 26px (20% larger)
+              height="50px" // Increased from 22px to 26px (20% larger)
               maxchars="28"
               title-margin-below={vspace}
+              logo-margin-right="0.5rem"
             ></team-name>
             {/* Team 1 score under name, right-aligned */}
             {hasScore && (
@@ -49,12 +51,13 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
           <div className="team-row">
             {/* Team 2 score above name, right-aligned */}
             <team-name
-              style={{ fontSize: '1.4em', fontWeight: 'bold' }}
+              style={teamStyle}
               name={fixture.team2 || 'TBD'}
               showLogo="true"
-              height="40px" // Increased from 22px to 26px (20% larger)
+              height="50px" // Increased from 22px to 26px (20% larger)
               maxchars="28"
               title-margin-below={vspace}
+              logo-margin-right="0.5rem"
             ></team-name>
             {hasScore && (
               <div className="score-row">

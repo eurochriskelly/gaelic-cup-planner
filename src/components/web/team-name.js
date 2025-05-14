@@ -8,7 +8,8 @@ class TeamName extends HTMLElement {
         return [
             'name', 'showLogo', 'height', 'direction',
             'maxchars', 'completion', 'width',
-            'title-margin-above', 'title-margin-below'
+            'title-margin-above', 'title-margin-below',
+            'logo-margin-right'
         ];
     }
 
@@ -181,6 +182,12 @@ class TeamName extends HTMLElement {
         const logoSize = `calc(${height} * 1.4)`;
         const spacerWidth = `calc(${logoSize} * ${completion - 1} * 1.3)`;
 
+        // Use custom logo margin if provided, otherwise use calculated margin
+        const logoMarginRight = this.getAttribute('logo-margin-right');
+        const logoMarginStyle = logoMarginRight
+            ? `margin-${isR2L ? 'left' : 'right'}: ${logoMarginRight}; flex-shrink: 0;`
+            : `margin-${isR2L ? 'left' : 'right'}: ${marginSide}; flex-shrink: 0;`;
+
         const widthAttr = this.getAttribute('width');
         const containerStyle = `
             display: flex;
@@ -192,7 +199,6 @@ class TeamName extends HTMLElement {
             box-sizing: border-box;
         `;
 
-        const logoMarginStyle = `margin-${isR2L ? 'left' : 'right'}: ${marginSide}; flex-shrink: 0;`;
         const marginAbove = this.getAttribute('title-margin-above') || '';
         const marginBelow = this.getAttribute('title-margin-below') || '';
 
