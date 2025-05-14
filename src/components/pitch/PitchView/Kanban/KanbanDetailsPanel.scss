@@ -1,3 +1,4 @@
+@import "src/shared/css/_colors.scss";
 .kanban-details-panel {
   position: absolute;
   top: 9rem;
@@ -59,14 +60,21 @@
       color: white;
       padding: 0.5rem 0.75rem;
       gap: 1rem;
-      background-color: darken(#2aa3ff, 14%); // Highlight selected card
-      color: lighten(#2aa3ff, 20%); // Highlight selected card
+      background-color: desaturate(lighten($sc, 4%), 30%); // Highlight selected card
+        color: lighten($sc, 50%); // Highlight selected card
       .icon-larger {
         transform: scale(1.2);
       }
       .stage {
-        background: red;
-        border-radius: 100px;
+        position: absolute;
+          right: 0.3rem;
+          top: 1rem;
+          background: white;
+          border: 0.3rem solid #444;
+          text-align: center;
+          border-radius: 100px;
+          height: 7rem;
+          width: 7rem;
       }
     }
   
@@ -86,7 +94,7 @@
     .space-button {
       width: 85%;
       padding: 10px;
-      background: #45493a;
+      background: #45493a00;
     }
   }
 }
