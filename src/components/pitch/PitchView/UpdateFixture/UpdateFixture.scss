@@ -96,6 +96,10 @@
   padding: 0;
     gap: 0;
     padding-bottom:0; 
+  .right-side {
+      grid-column: -2; // Position in last column
+      justify-self: end;
+    }
 }
 
 .space-button {
@@ -113,6 +117,10 @@
     opacity: 0.35;
   }
   
+  &.empty {
+    background: transparent;
+    pointer-events: none;
+  }
   .icon {
     user-select: none;
     width: 90%;
