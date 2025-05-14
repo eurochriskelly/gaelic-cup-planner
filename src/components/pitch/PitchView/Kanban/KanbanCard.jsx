@@ -48,6 +48,14 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
 
           <div className="team-row">
             {/* Team 2 score above name, right-aligned */}
+            <team-name
+              style={{ fontSize: '1.4em', fontWeight: 'bold' }}
+              name={fixture.team2 || 'TBD'}
+              showLogo="true"
+              height="40px" // Increased from 22px to 26px (20% larger)
+              maxchars="28"
+              title-margin-below={vspace}
+            ></team-name>
             {hasScore && (
               <div className="score-row">
                 <gaelic-score
@@ -56,14 +64,6 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
                 ></gaelic-score>
               </div>
             )}
-            <team-name
-              style={{ fontSize: '1.4em', fontWeight: 'bold' }}
-              name={fixture.team2 || 'TBD'}
-              showLogo="true"
-              height="40px" // Increased from 22px to 26px (20% larger)
-              maxchars="28"
-              title-margin-above={vspace}
-            ></team-name>
           </div>
         </div>
         { (fixture?.lane?.current !== 'finished') &&

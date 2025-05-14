@@ -1,8 +1,11 @@
 @import "src/shared/css/_colors.scss";
 
 .updateFixture {
-  position: absolute;
-  bottom: 0rem;
+  position: fixed;
+  top: 0rem;
+  background-color: #2d3123; 
+  height: 9rem;
+  width: 100%;
   z-index: 1000;
   //background: #788356;
   .bg {
@@ -29,10 +32,10 @@
 
   button {
     padding: 1.9rem 0.8rem;
-    min-width: 160px;
+    max-width: 9rem;
     border-radius: 0.8rem;
     border: none;
-    margin: 1.5rem;
+    margin: 0;
     padding: 0;
     border-radius: 1.6rem;
     
@@ -92,7 +95,7 @@
   margin: 0 auto;
   padding: 0;
     gap: 0;
-    padding-bottom: 3rem;
+    padding-bottom:0; 
 }
 
 .space-button {

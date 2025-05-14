@@ -9,7 +9,7 @@ export default function FixtureBar({ fixtureId, category, stage }) {
         </svg>
         <span>{category}</span>
         <span className="text-gray-500">/</span>
-        <span className="text-gray-400">{`${fixtureId}`.padStart(2, '?').slice(-2)}</span>
+        <span className="text-gray-600">{`${fixtureId}`.padStart(2, '?').slice(-2)}</span>
       </div>
       
       
