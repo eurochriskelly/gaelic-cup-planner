@@ -3,6 +3,7 @@ import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import ProgressIcon from "../../../../shared/icons/icon-skip.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react"; // Import cancel icon
 import DialogUpdate from "./DialogUpdate";
 import DrawerPostpone from "./DrawerPostpone";
 import { useFixtureContext } from "../FixturesContext";
@@ -29,7 +30,6 @@ const UpdateFixture = ({
       start: !hasStarted && !hasResult ? "enabled" : "disabled",
       finish: hasStarted ? "enabled" : "disabled",
       postpone: !hasStarted && !hasResult ? "enabled" : "disabled",
-      proceed: hasResult ? "enabled" : "disabled",
     };
   }, [nextFixture.startedTime, nextFixture.started, nextFixture.isResult]);
 
@@ -50,15 +50,15 @@ const UpdateFixture = ({
         console.error("Error starting match:", error);
       }
     },
-    finish: () => {
+    finish: async () => {
       if (buttonStates.finish === "disabled") return;
-      setActiveDrawer("finish");
-    },
-    proceed: async (xx) => {
-      if (buttonStates.proceed === "disabled") return;
+      setActiveDrawer("finish"); // Same implementation as finish for now
       moveToNextFixture();
       await API.endMatch(nextFixture.tournamentId, nextFixture.id);
       await fetchFixtures(true);
+    },
+    cancel: () => {
+      setActiveDrawer("finish"); // Same implementation as finish for now
     },
     rescheduleMatch: async (fixtureId, targetPitch, placement) => {
       await API.rescheduleMatch(nextFixture.tournamentId, targetPitch, nextFixture.id, fixtureId, placement);
@@ -70,8 +70,8 @@ const UpdateFixture = ({
   const buttons = [
     { action: actions.reschedule, state: buttonStates.postpone, Icon: MoveIcon },
     { action: actions.start, state: buttonStates.start, Icon: StartIcon },
-    { action: actions.finish, state: buttonStates.finish, Icon: ScoreIcon },
-    { action: actions.proceed, state: buttonStates.proceed, Icon: ProgressIcon },
+    { action: actions.finish, state: buttonStates.finish, Icon: ScoreIcon, hideWhenPlanned: true },
+    { action: actions.cancel, state: "enabled", Icon: CancelIcon }, // Always enabled and visible
   ];
 
   return (
@@ -81,15 +81,16 @@ const UpdateFixture = ({
         className="button-grid"
         style={{ display: activeDrawer ? "none" : "grid" }}
       >
-        {buttons.map(({ action, state, Icon }, index) => (
-          <button
-            key={index}
-            className={`space-button ${state}`}
-            onClick={action}
-          >
-            <Icon className="icon" />
-          </button>
-        ))}
+        {buttons
+          .filter(button => !button.hideWhenPlanned || nextFixture.lane?.current !== 'planned')
+          .map(({ action, state, Icon }, index) => (
+            <button
+              key={index}
+              className={`space-button ${state}`}
+              onClick={action}>
+              <Icon className="icon" />
+            </button>
+          ))}
       </div>
 
       <div className="drawers" style={{ display: activeDrawer ? "flex" : "none" }}>

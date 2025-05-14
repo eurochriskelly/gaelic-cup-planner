@@ -12,6 +12,7 @@
     overflow-y: auto;
 
   .column-header {
+    user-select: none;
     font-weight: bold;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
