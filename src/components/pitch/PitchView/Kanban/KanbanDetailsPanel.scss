@@ -1,6 +1,6 @@
 .kanban-details-panel {
   position: absolute;
-  height: 60rem;
+  top: 9rem;
   bottom: 10rem;
   left: 0;
   right: 0;
@@ -19,19 +19,6 @@
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
 
-  .details-buttons-container {
-      // Add styling for buttons container at top of panel
-      border-bottom: 1px solid #eee;
-      padding: 0.5rem 0;
-  
-      .updateFixture {
-  
-        // Adjust any specific styles for the buttons in the details panel
-        .button-grid {
-          padding: 0.5rem;
-        }
-      }
-    }
   .panel-title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -65,7 +52,7 @@
     .status-finished { color: #28a745; }  // Green
   }
 
-    .FixtureBar {
+  .FixtureBar {
       // style the header bar like cards
       margin-bottom: 0;
       background-color: black;
@@ -93,15 +80,25 @@
   .update-fixture-container {
     border-top: 1px solid #eee;
     margin-top: 1rem;
-    
     .button-grid {
       grid-template-columns: repeat(4, 1fr);
     }
-    
     .space-button {
       width: 85%;
       padding: 10px;
       background: #45493a;
     }
-    }
+  }
+}
+
+.panel-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 19;
+  background-color: rgba(0, 0, 0, 0.1); // Semi-transparent overlay
 }

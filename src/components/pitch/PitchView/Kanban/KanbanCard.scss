@@ -13,7 +13,7 @@
   position: relative; // For potential pseudo-elements or absolutely positioned children
   overflow: hidden; // To make children conform to parent's border-radius
   flex-direction: column;
-  height: 15rem;
+  height: 18rem;
   background: white;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
@@ -90,6 +90,13 @@
           width: 100%;
           display: block;
           /* Ensure the web component expands properly */
+          .name-contaier {
+            margin: 0;
+          }
+          .logo-contaier {
+            margin: 0;
+            background-color: red;
+          }
         }
       }
     
@@ -121,27 +128,25 @@
         width: 6rem;
       }
       .vs-row {
-        font-size: 0.8rem;
-        font-weight: 500;
+        font-weight: 100;
         color: rgba(0, 0, 0, 0.6);
         margin: 2px 0;
         padding-left: 39px; // Increased from 30px to account for larger logo
-        font-size: 1.2rem;
-        color: rgba(0, 0, 0, 0.6);
+        font-size: 1.9rem;
         margin: 0;
         background: white;
-        width: 1.8rem;
         border: 1px dotted black;
         border-radius: 100rem;
-        margin-left: 0.9rem;
+        margin-left: 1rem;
         text-align: center;
         padding: 0;
         z-index: 20;
         display: block;
         position: absolute;
-        top: 6.2rem;
-        color: #2c2e24;
-        font-weight: bold;
+        top: 6.5rem;
+        color: lighten(#2c2e24, 10%);
+        width: 2.5rem;
+        height: 2.5rem;
       }
   }
 

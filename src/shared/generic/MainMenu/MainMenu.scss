@@ -1,7 +1,5 @@
 @import "../../css/_colors.scss";
 
-$menu-bg-color:  desaturate(darken(#272f0e, 10%), 20%); 
-$menu-grid-color: lighten($menu-bg-color, 13%);
 
 .no-select {
   user-select: none;
@@ -10,12 +8,8 @@ $menu-grid-color: lighten($menu-bg-color, 13%);
   display: grid;
     grid-template-columns: 1fr 6fr;
     font-size: 2rem;
-    opacity: 0.8;
-    background: radial-gradient(circle, transparent 20%, $menu-bg-color 20%, $menu-bg-color 80%, transparent 80%, transparent),
-      radial-gradient(circle, transparent 20%, $menu-bg-color 20%, $menu-bg-color 80%, transparent 80%, transparent) 25px 25px,
-      linear-gradient($menu-grid-color 2px, transparent 2px) 0 -1px,
-      linear-gradient(90deg, $menu-grid-color 2px, $menu-bg-color 2px) -1px 0;
-
+    opacity: 1;
+    background: $crosses;
     background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
     height: 7rem;
     text-transform: uppercase;
