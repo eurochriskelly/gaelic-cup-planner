@@ -36,7 +36,7 @@
     flex-grow: 1; // Allows columns to fill available space
     display: flex;
     justify-content: space-around;
-    gap: 0.5rem;
+    gap: 0rem;
     top: 9.5rem;
     overflow: hidden; // Prevent board from causing page scroll if columns overflow horizontally
     position: absolute; // For details panel positioning
@@ -45,14 +45,10 @@
       /* Add this to ensure full width */
       left: 0;
       /* Add this to ensure proper alignment */
-      padding: 0 4px;
+      padding: 0;
       /* Add horizontal padding instead of reducing width */
       box-sizing: border-box;
       /* Ensure padding is included in width calculation */
-    &.details-visible {
-      // Adjust height or padding if details panel is overlaying or pushing content
-      // Example: padding-bottom: 300px; if panel is fixed at bottom
-    }
   }
 
   .kanban-error-message {
