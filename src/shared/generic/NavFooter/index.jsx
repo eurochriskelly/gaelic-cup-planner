@@ -18,10 +18,10 @@ function NavFooter({ currentPath }) {
     <footer className="NavFooter h-36">
         <ScheduleIcon 
           className={getIconClass('selectPitch', [
-            `/tournament/${tournamentId}/selectPitch`,
+            `/tournament/${tournamentId}/pitch`,
             `/tournament/${tournamentId}/pitch/${pitchId?.replace(/ /g, '%20')}`,
           ])}
-          onClick={() => navigate(`/tournament/${tournamentId}/selectPitch`)}
+          onClick={() => navigate(`/tournament/${tournamentId}/pitch/*`)}
         />
         <HomeIcon 
           className={getIconClass('LandingPage', [

@@ -1,6 +1,7 @@
 import './KanbanCard.scss';
 import chroma from 'chroma-js'; // Import chroma-js
 import FixtureBar from '../Fixture/FixtureBar'; // Import FixtureBar
+import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
 import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
@@ -11,6 +12,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
   const hasScore = fixture.goals1 != null || fixture.points1 != null || fixture.goals2 != null || fixture.points2 != null;
   const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
   const vspace = hasScore ? '2.1rem' : 0;
+  
   return (
     <div
       draggable
@@ -23,6 +25,12 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
         category={displayCategory}
         stage={displayStage}
       />
+      {fixture.scheduledTime && (
+        <TimeDisplay
+          scheduledTime={fixture.scheduledTime}
+          startedTime={fixture.startedTime}
+        />
+      )}
       <div className="kanban-card-content-wrapper">
         <div className="teams-container">
           <div className="team-row pb-1">
@@ -70,8 +78,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
           </div>
         </div>
         { (fixture?.lane?.current !== 'finished') &&
-        <>
-          <p className="card-detail">Time: {fixture.plannedStart || fixture.startTime}</p>
+          <>
           <p className="card-detail">Pitch: {fixture.pitch}</p>
         </>
         }

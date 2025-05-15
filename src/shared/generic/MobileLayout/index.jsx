@@ -22,7 +22,6 @@ const MobileLayout = ({
     <section className="MobileLayout mobile lovely">
       <header>
         {pitchId && <MainMenu></MainMenu>}
-        <NavBar tabNames={tabNames} onSelect={handle.changetab} selected={selected} />
       </header>
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]

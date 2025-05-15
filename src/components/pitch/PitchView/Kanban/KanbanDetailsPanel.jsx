@@ -1,6 +1,12 @@
 import './KanbanDetailsPanel.scss';
 import FixtureBar from '../Fixture/FixtureBar';
 import { useFixtureContext } from '../../PitchView/FixturesContext';
+import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
+import ClockIcon from "../../../../shared/generic/ClockIcon";
+import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
+import '../../../../components/web/gaelic-score.js';
+import '../../../../components/web/logo-box.js';
+import '../../../../components/web/team-name.js';
 
 const KanbanDetailsPanel = ({ 
   fixture
@@ -19,6 +25,13 @@ const KanbanDetailsPanel = ({
       .replace('_', '/')
     : '';
 
+  // Check if all score values are valid 
+  const hasScores = fixture.score1 || fixture.score2;
+  const hasGoalsPoints = typeof fixture.goals1 === 'number' &&
+    typeof fixture.goals2 === 'number' &&
+    typeof fixture.points1 === 'number' &&
+    typeof fixture.points2 === 'number';
+
   return (
     <div className="kanban-details-panel">
       <FixtureBar
@@ -28,21 +41,114 @@ const KanbanDetailsPanel = ({
       />
 
       <div className="details-content-wrapper">
-        <div className="panel-content">
-          <h3>{fixture.team1 || 'TBD'} vs {fixture.team2 || 'TBD'}</h3>
-          <p><strong>ID:</strong> {fixture.id}</p>
-          <p><strong>Status:</strong> <span className={`status-${fixture.column}`}>{fixture.column}</span></p>
-          <p><strong>Planned Start:</strong> {fixture.plannedStart || fixture.startTime}</p>
-          <p><strong>Pitch:</strong> {fixture.pitch}</p>
-          {fixture.category && <p><strong>Category:</strong> {fixture.category}</p>}
-          {fixture.stage && <p><strong>Stage:</strong> {fixture.stage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}</p>}
-          {fixture.actualStartedTime && <p><strong>Actual Start:</strong> {fixture.actualStartedTime}</p>}
-          {fixture.actualEndedTime && <p><strong>Actual End:</strong> {fixture.actualEndedTime}</p>}
-          {(fixture.score1 || fixture.score2) && (
-            <p><strong>Score:</strong> {fixture.score1 || '0-00'} - {fixture.score2 || '0-00'}</p>
+        <section className="mt-7 mr-0 pr-0">
+          <div className="fixture-info-section">
+            <ClockIcon
+              scheduled={fixture.scheduledTime || fixture.plannedStart}
+              started={fixture.startedTime || fixture.actualStartedTime}
+              delay={militaryTimeDiffMins(fixture.scheduledTime || fixture.plannedStart, fixture.startedTime || fixture.actualStartedTime)}
+              played={!!fixture.startedTime || !!fixture.actualStartedTime}
+            />
+            <div className="text-4xl">
+              <span>{displayCategory}</span>
+              <span className="text-rose-500">#</span>
+              <span>{`${fixture.id}`.substr(-3)}</span>
+            </div>
+            <div className="mb-4 text-xl">
+              Stage: {displayStage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}
+            </div>
+          </div>
+
+          <div className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4" style={{ background: '#dadac4', borderColor: '#bebfb1' }}>
+            <div className="match-up">
+              <div></div>
+              <div className="team team-1">
+                <logo-box title={fixture.team1 || 'TBD'} size="140px" border-color="#e11d48"></logo-box>
+              </div>
+              <div className="text-6xl">vs.</div>
+              <div className="team team-2">
+                <logo-box title={fixture.team2 || 'TBD'} size="140px" border-color="#38bdf8"></logo-box>
+              </div>
+              <div></div>
+            </div>
+
+            <div className="match-teams">
+              <div></div>
+              <div className="text-3xl">{formatTeamName(fixture.team1 || 'TBD')}</div>
+              <div></div>
+              <div className="text-3xl">{formatTeamName(fixture.team2 || 'TBD')}</div>
+              <div></div>
+            </div>
+
+            {hasGoalsPoints ? (
+              <div className="match-scores">
+                <div></div>
+                <div className="team-score team1-score">
+                  <gaelic-score
+                    goals={fixture.goals1}
+                    points={fixture.points1}
+                    layout="over"
+                    scale="2.2"
+                    played="true"
+                  ></gaelic-score>
+                </div>
+                <div></div>
+                <div className="team-score team2-score">
+                  <gaelic-score
+                    goals={fixture.goals2}
+                    points={fixture.points2}
+                    layout="over"
+                    scale="2.2"
+                    played="true"
+                  ></gaelic-score>
+                </div>
+                <div></div>
+              </div>
+            ) : hasScores ? (
+              <div className="match-scores plain-scores">
+                <div></div>
+                <div className="team-score">{fixture.score1 || '0-00'}</div>
+                <div></div>
+                <div className="team-score">{fixture.score2 || '0-00'}</div>
+                <div></div>
+              </div>
+            ) : (
+              <div className="fixture-details">
+                <div className="details-grid">
+                  <div className="detail-item">
+                    <strong>ID:</strong> {fixture.id}
+                  </div>
+                  <div className="detail-item">
+                    <strong>Status:</strong> <span className={`status-${fixture.column}`}>{fixture.column}</span>
+                  </div>
+                  <div className="detail-item">
+                    <strong>Planned Start:</strong> {fixture.plannedStart || fixture.startTime}
+                  </div>
+                  <div className="detail-item">
+                    <strong>Pitch:</strong> {fixture.pitch}
+                  </div>
+                  {fixture.stage && (
+                    <div className="detail-item">
+                      <strong>Stage:</strong> {fixture.stage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}
+                    </div>
+                  )}
+                  {fixture.actualStartedTime && (
+                    <div className="detail-item">
+                      <strong>Actual Start:</strong> {fixture.actualStartedTime}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {fixture.umpireTeam && (
+            <div className="umpires">
+              <UmpiresIcon width="82" height="82" />
+              <team-name name={fixture.umpireTeam} show-logo="true" direction="r2l" height="35px"></team-name>
+            </div>
           )}
-          {fixture.outcome && <p><strong>Outcome:</strong> {fixture.outcome}</p>}
-        </div>
+        </section>
       </div>
     </div>
   );

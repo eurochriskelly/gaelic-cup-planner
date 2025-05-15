@@ -1,4 +1,5 @@
 @import "src/shared/css/_colors.scss";
+
 .kanban-details-panel {
   position: absolute;
   top: 9rem;
@@ -19,6 +20,83 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
+
+  .match-up {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 2fr 0.5fr;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .match-teams {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 2fr 0.5fr;
+    justify-items: center;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .match-scores {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr 1fr;
+    text-align: center;
+    height: 13rem;
+    vertical-align: middle;
+
+    &.plain-scores {
+      height: 8rem;
+      font-size: 3rem;
+      font-weight: bold;
+      
+      .team-score {
+        background-color: #cccccc55;
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+    }
+
+    .team1-score,
+    .team2-score {
+      background-color: #cccccc55;
+      border-radius: 100rem;
+      height: 12rem;
+      min-width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      gaelic-score {
+        margin: 0 auto;
+        margin-top: 19rem;
+        width: 100%;
+        transform-origin: center center !important;
+      }
+    }
+  }
+
+  .fixture-details {
+    margin-top: 2rem;
+    
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      padding: 1rem;
+
+      .detail-item {
+        font-size: 1.6rem;
+        padding: 1rem;
+        background: #ffffff99;
+        border-radius: 0.5rem;
+
+        strong {
+          color: darken($pc, 24%);
+          margin-right: 0.8rem;
+        }
+      }
+    }
+  }
 
   .panel-title {
     font-size: 1.5rem;
@@ -54,48 +132,94 @@
   }
 
   .FixtureBar {
-      // style the header bar like cards
-      margin-bottom: 0;
-      background-color: black;
-      color: white;
-      padding: 0.5rem 0.75rem;
-      gap: 1rem;
-      background-color: desaturate(lighten($sc, 22%), 10%); // Highlight selected card
-      color: lighten($sc, 80%); // Highlight selected card
-      .icon-larger {
-        transform: scale(1.2);
-      }
-      .stage {
-        position: absolute;
-          right: 0.3rem;
-          top: 1rem;
-          background: white;
-          border: 0.3rem solid #444;
-          text-align: center;
-          border-radius: 100px;
-          height: 7rem;
-          width: 7rem;
-      }
+    // style the header bar like cards
+    margin-bottom: 0;
+    background-color: black;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    gap: 1rem;
+    background-color: desaturate(lighten($sc, 22%), 10%);
+    color: lighten($sc, 80%);
+    .icon-larger {
+      transform: scale(1.2);
     }
+    .stage {
+      position: absolute;
+      right: 0.3rem;
+      top: 1rem;
+      background: lighten($sc, $amount: 60);
+      border: 0.6rem solid white;
+      text-align: center;
+      border-radius: 100px;
+      height: 9rem;
+      width: 9rem;
+    }
+  }
   
-    .details-content-wrapper {
-      // content wrapper mimics .kanban-card-content-wrapper
-      padding: 0.75rem;
-      background: #fafafa;
-      border-left: 1rem solid #ddd;
-      flex-grow: 1;
-    }
+  .details-content-wrapper {
+    padding: 0;
+    background: #ffffff;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
   .update-fixture-container {
     border-top: 1px solid #eee;
     margin-top: 1rem;
+
     .button-grid {
       grid-template-columns: repeat(4, 1fr);
     }
+    
     .space-button {
       width: 85%;
       padding: 10px;
       background: #45493a00;
     }
+  }
+
+  .fixture-info-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 2rem;
+
+    .text-4xl {
+      margin-top: 1rem;
+    }
+
+    .text-rose-500 {
+      color: #e11d48;
+    }
+  }
+
+  .umpires {
+    display: grid;
+    align-items: center;
+    height: 6rem;
+    grid-template-columns: 80px 1fr;
+    margin: 1rem auto;
+    max-width: 80%;
+    
+    rect {
+      opacity: 0;
+    }
+    text {
+      opacity: 0;
+    }
+    path {
+      fill: darken($pc, 24%);
+    }
+    team-name {
+      margin-bottom: 0.8rem;
+    }
+    font-size: 1.5rem;
+    color: darken($pc, 24%);
+    text-align: right;
+    margin: 0;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
   }
 }
 

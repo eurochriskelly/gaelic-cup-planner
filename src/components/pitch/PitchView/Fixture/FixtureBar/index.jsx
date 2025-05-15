@@ -1,6 +1,12 @@
 import './FixtureBar.scss';
 
 export default function FixtureBar({ fixtureId, category, stage }) {
+  const stageStr = stage || ''
+    .toUpperCase()
+    .replace('PLT', 'Plate')
+    .replace('CUP', 'Cup')
+    .replace('SHD', 'Shield')
+    .replace('_', '/')
   return (
     <div className="FixtureBar">
       <div className="fixture-id">
@@ -13,7 +19,7 @@ export default function FixtureBar({ fixtureId, category, stage }) {
 
       </div>
       <div className="stage">
-        <span>{stage.substring(0,1)}</span>
+        <span>{stageStr.substring(0,1)}</span>
       </div>
     </div>
   );

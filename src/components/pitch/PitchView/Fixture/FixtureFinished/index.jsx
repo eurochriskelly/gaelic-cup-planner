@@ -74,13 +74,7 @@ function FixtureFinished({
       <FixtureBar 
         fixtureId={id}
         category={category.substring(0, 9).toUpperCase()}
-        stage={stage
-          .toUpperCase()
-          .replace('PLT', 'Plate')
-          .replace('CUP', 'Cup')
-          .replace('SHD', 'Shield')
-          .replace('_', '/')
-        }
+        stage={stage }
       />
 
      <div className="fixture-pairing">

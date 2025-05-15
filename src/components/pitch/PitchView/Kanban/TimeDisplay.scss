@@ -1,0 +1,43 @@
+@import '../../../../shared/css/colors.scss';
+
+.time-display {
+  display: flex;
+  align-items: center;
+  margin: 0.3rem 0 0 0.75rem;
+  padding: 0;
+  width: fit-content;
+  left: 0;
+  
+  .clock-icon {
+    margin-right: 0.25rem;
+    circle {
+      fill: #ddd;
+    }
+  }
+  
+  .time-text {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $sc;
+    line-height: 1;
+
+    .scheduled-time {
+      white-space: nowrap;
+    }
+    
+    .started-time {
+      margin-left: 0.5rem;
+      white-space: nowrap;
+      font-style: italic;
+      font-weight: 700;
+      
+      &.ahead {
+        color: #2a9d37; // Green for ahead of schedule
+      }
+      
+      &.behind {
+        color: #d32f2f; // Red for behind schedule
+      }
+    }
+  }
+}
