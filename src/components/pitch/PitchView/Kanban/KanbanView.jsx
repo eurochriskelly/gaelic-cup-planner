@@ -53,6 +53,7 @@ const KanbanView = () => {
           <KanbanColumn
             key={column}
             title={['Planned', 'Ongoing', 'Finished'][index]}
+            columnIndex={index} // Pass the column index
             fixtures={filteredFixtures.filter(f => f?.lane?.current === column)}
             onDrop={(e) => onDrop(e, column)}
             onDragOver={onDragOver}
