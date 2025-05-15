@@ -72,19 +72,16 @@ const LandingPage = () => {
         </table>
       </header>
       <section className="icon-grid">
-
-        {/* Add heading before role cards */}
-        <h2 className="role-selection-heading">Choose your role:</h2>
-
-        {/* New: Role selection cards */}
-        <div className="role-selection">
-          {['CCO', 'Coordinator', 'Referee', 'Coach'].map((role) => (
-            <div key={role} className="role-card" onClick={() => console.log(`Selected role: ${role}`)}>
-              <span className="role-name">{role}</span>
-            </div>
-          ))}
+        <div>
+          <h2 className="role-selection-heading">Choose your role:</h2>
+          <div className="role-selection">
+            {['CCO', 'Coordinator', 'Referee', 'Coach'].map((role) => (
+              <div key={role} className="role-card" onClick={() => console.log(`Selected role: ${role}`)}>
+                <span className="role-name">{role}</span>
+              </div>
+            ))}
+          </div>
         </div>
-
         <div className="main-actions">
           <button className='icon-button' onClick={handle.disconnect}>
             <LogoutIcon className="icon" />
