@@ -19,7 +19,6 @@ import "./i18n";
 
 function App() {
   const tidFromCookie = Cookies.get("tournamentId");
-  console.log('tidFromCookie', tidFromCookie);
 
   return (
     <Provider>
@@ -29,9 +28,7 @@ function App() {
         <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
         <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
         <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
-        <Route path="/tournament/:tournamentId/pitch/:pitchId" element={
-          <PitchViewWrapper />
-        } />
+        <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Provider>
@@ -39,7 +36,13 @@ function App() {
 }
 
 function PitchViewWrapper() {
-  const { tournamentId, pitchId } = useParams();
+  const { tournamentId } = useParams();
+  console.log('how does it know the pitch id at first?')
+  let pitchId = useParams().pitchId;
+  if (!pitchId) {
+    pitchId = '*'
+  }
+
   console.log('In PitchViewWrapper - tournamentId:', tournamentId, 'pitchId:', pitchId);
 
   return (

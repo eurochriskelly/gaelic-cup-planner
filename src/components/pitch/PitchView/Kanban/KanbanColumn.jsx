@@ -17,6 +17,7 @@ const KanbanColumn = ({
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
+      <div className="column-header">{title}</div>
       <div className="column-content">
         {fixtures.map(fixture => (
           <KanbanCard

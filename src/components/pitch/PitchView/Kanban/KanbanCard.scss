@@ -18,6 +18,31 @@
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 
+  // Clock icon and scheduled time indicator
+    .scheduled-time-indicator {
+      display: flex;
+      align-items: center;
+      margin: 0.3rem 0 0 0.75rem;
+      padding: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $sc;
+      border-radius: 999px;
+      width: fit-content;
+      left: 0;
+  
+      .clock-icon {
+        margin-right: 0.25rem;
+        circle {
+          fill: #ddd;
+        }
+      }
+  
+      span {
+        line-height: 1;
+        white-space: nowrap;
+      }
+    }
   &:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
@@ -43,7 +68,6 @@
       flex: 0 0 auto;
       margin-left: auto;
       align-self: flex-start;
-      background: red;
       border-radius: 100px;
     }
   
@@ -105,17 +129,19 @@
         justify-content: flex-end;
         gap: 0.5rem;
         align-self: flex-end;
-        background:#777777aa;
-        color:white;
+        background: lighten($sc, $amount: 50);
+        color: $sc;
         margin-top: 0;
         position: absolute;
         right: 0;
-        font-size: 1.9rem;
+        font-size: 1.7rem;
         left : 4.8rem;
         padding: 0.1rem 0.2rem;
         white-space: nowrap;
         min-width: 8.7rem;
+        font-family: 'Courier New', Courier, monospace;
         text-align: center;
+        width: 100%;
       }
 
       // Team-1 score: lower right of first team-row
@@ -134,8 +160,8 @@
       .vs-row {
         font-size: 1.3rem;
         margin: 0;
-        background:#ddd; 
-        border: 0.2rem solid white;
+        background: white;
+        border: 0.2rem solid #aaa;
         border-radius: 100rem;
         margin-left: 0.6rem;
         text-align: center;
@@ -144,7 +170,7 @@
         z-index: 20;
         display: block;
         position: absolute;
-        top: 6.5rem;
+        top: 8.8rem;
         color: black; 
         width: 2.5rem;
         height: 2.5rem;

@@ -49,10 +49,10 @@ const KanbanView = () => {
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
-        {columns.map(column => (
+        {columns.map((column, index) => (
           <KanbanColumn
             key={column}
-            title={column}
+            title={['Planned', 'Ongoing', 'Finished'][index]}
             fixtures={filteredFixtures.filter(f => f?.lane?.current === column)}
             onDrop={(e) => onDrop(e, column)}
             onDragOver={onDragOver}
