@@ -302,7 +302,7 @@ class LogoBox extends HTMLElement {
                     align-items: center;
                     justify-content: center;
                     overflow: hidden;
-                    border: 0.0rem solid #888;
+                    border: 0.08rem solid #fff;
                     border-radius: 0.1rem;
                     box-sizing: border-box;
                 }
