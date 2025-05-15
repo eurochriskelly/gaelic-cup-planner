@@ -1,0 +1,15 @@
+.kanban-slot {
+  height: 19rem; // Card height is 18rem, this makes slot 0.5rem taller on top and bottom
+  margin-bottom: 0.5rem; // Combined with height, makes total space 19.5rem, same as card + card margin
+  border-radius: 0.5rem; // Match card's border-radius
+  box-sizing: border-box;
+  border: 1px dashed #cccccc; // Subtle border to define the slot area
+
+  &.gray1 {
+    background-color: #f0f0f0; // Lighter gray
+  }
+
+  &.gray2 {
+    background-color: #e0e0e0; // Darker gray
+  }
+}
