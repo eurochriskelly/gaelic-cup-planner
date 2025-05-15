@@ -5,8 +5,8 @@
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
   border-radius: 0.5rem;
-  // padding: 0.75rem; // Removed: Handled by content wrapper or FixtureBar
-  margin-bottom: 1.5rem;
+  // padding: 0.75rem; // Handled by content wrapper or FixtureBar
+  margin-bottom: 0; // Card margin is removed, slot handles spacing
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
   cursor: grab; // Indicates draggable

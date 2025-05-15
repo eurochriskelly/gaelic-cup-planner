@@ -1,9 +1,12 @@
 .kanban-slot {
   height: 19rem; // Card height is 18rem, this makes slot 0.5rem taller on top and bottom
-  margin-bottom: 0.5rem; // Combined with height, makes total space 19.5rem, same as card + card margin
+  margin-bottom: 0.5rem; // Combined with height, makes total space 19.5rem
   border-radius: 0.5rem; // Match card's border-radius
   box-sizing: border-box;
   border: 1px dashed #cccccc; // Subtle border to define the slot area
+  display: flex; // Added to allow centering of child
+  align-items: center; // Added to vertically center child (KanbanCard)
+  justify-content: center; // Added to horizontally center child (KanbanCard)
 
   &.gray1 {
     background-color: #f0f0f0; // Lighter gray
