@@ -22,17 +22,19 @@ const KanbanColumn = ({
   selectedFixture,
   getPitchColor,
   columnIndex,
+  allTournamentPitches, // New prop for all pitches in the tournament
 }) => {
   let columnSlots;
 
-  if (columnIndex === 1) { // Middle "Ongoing" column
-    const uniquePitches = Array.from(new Set(fixtures.map(f => f.pitch))).sort();
-    columnSlots = uniquePitches.map((pitch, index) => {
+  if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column, now uses allTournamentPitches
+    // Iterate over all unique pitches defined for the tournament for this column
+    columnSlots = allTournamentPitches.map((pitch, index) => {
+      // Find if there's an active fixture (from the `fixtures` prop) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
       const slotBackgroundColor = PASTEL_COLORS[index % PASTEL_COLORS.length];
       return (
         <KanbanSlot
-          key={`pitch-slot-${pitch}`}
+          key={`pitch-slot-${pitch}`} // Keyed by pitch name for stability
           slotIndex={index} // Relative index within this dynamic column
           columnIndex={columnIndex}
           slotBackgroundColor={slotBackgroundColor}

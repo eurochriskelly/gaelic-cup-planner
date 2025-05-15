@@ -54,6 +54,7 @@ const KanbanView = () => {
             key={column}
             title={['Planned', 'Ongoing', 'Finished'][index]}
             columnIndex={index} // Pass the column index
+            allTournamentPitches={index === 1 ? pitches : null} // Pass all pitches only to the "Ongoing" column
             fixtures={filteredFixtures.filter(f => f?.lane?.current === column)}
             onDrop={(e) => onDrop(e, column)}
             onDragOver={onDragOver}
