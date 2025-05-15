@@ -27,8 +27,10 @@ const KanbanColumn = ({
   let columnSlots;
 
   if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column, now uses allTournamentPitches
+    // Filter out "All Pitches" before mapping to slots
+    const actualPitches = allTournamentPitches.filter(p => p !== 'All Pitches');
     // Iterate over all unique pitches defined for the tournament for this column
-    columnSlots = allTournamentPitches.map((pitch, index) => {
+    columnSlots = actualPitches.map((pitch, index) => {
       // Find if there's an active fixture (from the `fixtures` prop) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
       const slotBackgroundColor = PASTEL_COLORS[index % PASTEL_COLORS.length];
