@@ -32,27 +32,10 @@
     flex: 1;
     overflow-y: auto; // Ensures the content (slots and cards) scrolls
     padding: 0; // Base padding, specific padding for first/last child handled below
-    position: relative; // Establishes a positioning context for absolute children
+    position: relative; // Remains useful for potential future absolutely positioned elements within content
 
-    .slots-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      // Height is determined by the sum of slot heights within it
-      z-index: 1; // Behind the cards
-      display: flex;
-      flex-direction: column;
-      // The padding of .column-content will apply to this via width: 100%
-    }
-
-    .cards-foreground {
-      position: relative; // In normal flow, but above slots-background
-      z-index: 2; // Above the slots
-      display: flex;
-      flex-direction: column;
-      // The padding of .column-content will apply to this
-    }
+    // .slots-background and .cards-foreground are removed.
+    // KanbanSlot components are now direct children of .column-content.
   }
 }
 
