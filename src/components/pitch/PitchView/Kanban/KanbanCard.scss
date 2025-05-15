@@ -192,18 +192,19 @@
       margin-bottom: 0;
     }
   }
-/* Responsive adjustments for mobile */
-@media (max-width: 576px) {
-  width: 100%;
-  /* Reinforce full width on mobile */
-  padding: 0.6rem;
 
-  .team-row team-name {
-    /* Ensure team-name components render properly on small screens */
-    max-width: 100%;
-    overflow-x: hidden;
+  /* Responsive adjustments for mobile */
+  @media (max-width: 576px) {
+    width: 100%;
+    /* Reinforce full width on mobile */
+    padding: 0.6rem;
+
+    .team-row team-name {
+      /* Ensure team-name components render properly on small screens */
+      max-width: 100%;
+      overflow-x: hidden;
+    }
   }
-}
 }
 
 /* Make sure columns also take full width */
