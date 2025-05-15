@@ -38,6 +38,7 @@ const KanbanColumn = ({
           slotIndex={index} // Relative index within this dynamic column
           columnIndex={columnIndex}
           slotBackgroundColor={slotBackgroundColor}
+          pitchName={pitch} // Pass the pitch name to the slot
         >
           {fixtureForPitchSlot && (
             <KanbanCard

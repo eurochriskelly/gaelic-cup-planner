@@ -15,4 +15,21 @@
   &.gray2 {
     background-color: #e0e0e0cc; // Darker gray
   }
+
+  .slot-pitch-name {
+    text-align: center;
+    color: #33333399; // Semi-transparent dark gray
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    user-select: none; // Prevent text selection
+
+    div:first-child {
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+    div:last-child {
+      font-size: 1.4rem;
+    }
+  }
 }
