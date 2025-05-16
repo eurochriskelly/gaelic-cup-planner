@@ -148,6 +148,19 @@
   }
 }
 
+.info-button {
+  svg {
+    path {
+      fill: lighten($sc, 30%);
+    }
+    g > path {
+      color: $sc;
+      fill: $sc;
+    }
+  }
+
+}
+
 /* DRAWERS */
 .updateFixture>div.drawers {
     position: fixed;

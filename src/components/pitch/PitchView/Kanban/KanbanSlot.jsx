@@ -1,3 +1,4 @@
+import PitchIcon from "../../../../shared/icons/icon-pitch-2.svg?react";
 import './KanbanSlot.scss';
 
 const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pitchName }) => {
@@ -28,7 +29,7 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
         children // Render the KanbanCard if it exists
       ) : pitchName ? ( // Otherwise, if pitchName is provided, display it
         <div className="slot-pitch-name">
-          <div>PITCH</div>
+          <PitchIcon width={219*0.7} height={159*0.7} />&nbsp;
           <div>{pitchName}</div>
         </div>
       ) : null}
