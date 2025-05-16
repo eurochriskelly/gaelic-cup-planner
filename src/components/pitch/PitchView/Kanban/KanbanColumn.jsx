@@ -33,7 +33,7 @@ const KanbanColumn = ({
     columnSlots = actualPitches.map((pitch, index) => {
       // Find if there's an active fixture (from the `fixtures` prop) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
-      const slotBackgroundColor = PASTEL_COLORS[index % PASTEL_COLORS.length];
+      const slotBackgroundColor = getPitchColor(pitch); // Use getPitchColor for consistent pitch colors
       return (
         <KanbanSlot
           key={`pitch-slot-${pitch}`} // Keyed by pitch name for stability
