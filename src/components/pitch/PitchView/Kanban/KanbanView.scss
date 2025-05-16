@@ -13,7 +13,6 @@
     gap: 1rem;
     flex-wrap: wrap;
     position: absolute;
-      bottom: 12rem;
 
     .filter-group {
       display: flex;
@@ -37,7 +36,7 @@
     display: flex;
     justify-content: space-around;
     gap: 0rem;
-    top: 9.5rem;
+    top: 0;
     overflow: hidden; // Prevent board from causing page scroll if columns overflow horizontally
     position: absolute; // For details panel positioning
       height: calc(100% - 20rem);

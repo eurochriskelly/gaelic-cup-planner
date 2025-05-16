@@ -14,8 +14,7 @@ const KanbanFilters = ({
         <select
           id="pitchFilter"
           value={selectedPitch}
-          onChange={onPitchChange}
-        >
+          onChange={onPitchChange}>
           {pitches.map(pitch => (
             <option key={pitch} value={pitch}>{pitch}</option>
           ))}
@@ -27,8 +26,7 @@ const KanbanFilters = ({
           <select
             id="teamFilter"
             value={selectedTeam}
-            onChange={onTeamChange}
-          >
+            onChange={onTeamChange}>
             {teams.map(team => (
               <option key={team} value={team}>{team}</option>
             ))}

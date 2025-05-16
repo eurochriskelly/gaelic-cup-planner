@@ -1,11 +1,10 @@
 /* Dialog container */
 .dialog-update {
   position: fixed;
-  top: -500px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0px;
+  left: 0;
+  bottom: 20rem;
   width: 100%; /* Full width to maximize space */
-  height: 70vh; /* Full height for mobile */
   background-color: white;
   border-radius: 0; /* No rounded edges to save space */
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -14,7 +13,6 @@
   flex-direction: column;
   padding: 0rem;
   margin: 0; /* No margins */
-  border-radius: 2rem;
 
   .drawer-header {
     background-color: #333;

@@ -78,16 +78,12 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
             )}
           </div>
         </div>
-        {(fixture?.lane?.current === 'planned') &&
+        {(fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'started') &&
           <>
             <p className="card-detail pitch-info" style={{ background: pitchColor }}>
               <PitchIcon width={38} height={38} />
               <b>{fixture.pitch}</b>
-            </p>
-          </>
-        }
-        {(fixture?.lane?.current === 'planned') &&
-          <>
+          </p>
             <p className="card-detail umpire-info">
               <div>
                 <UmpireIcon width={42} height={42} />
