@@ -5,10 +5,24 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
   // This is only applied if slotBackgroundColor is not provided.
   const colorClass = !slotBackgroundColor && (columnIndex + slotIndex) % 2 === 0 ? 'gray1' : 'gray2';
 
+  let slotStyle = {};
+  if (slotBackgroundColor) {
+    const stripeGray = '#E0E0E0'; // Light gray for the stripes
+    slotStyle = {
+      background: `repeating-linear-gradient(
+        45deg,
+        ${slotBackgroundColor},
+        ${slotBackgroundColor} 10px,
+        ${stripeGray} 10px,
+        ${stripeGray} 20px
+      )`
+    };
+  }
+
   return (
     <div
       className={`kanban-slot ${slotBackgroundColor ? '' : colorClass}`}
-      style={slotBackgroundColor ? { backgroundColor: slotBackgroundColor } : {}}
+      style={slotStyle}
     >
       {children ? (
         children // Render the KanbanCard if it exists
