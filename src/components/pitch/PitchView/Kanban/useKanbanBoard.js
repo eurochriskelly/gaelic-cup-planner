@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import API from '../../../../shared/api/endpoints.js'; // Assuming API calls will be needed
 
 // Palette of colors for pitches
