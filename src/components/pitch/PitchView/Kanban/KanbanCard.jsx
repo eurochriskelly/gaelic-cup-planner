@@ -1,7 +1,8 @@
 import './KanbanCard.scss';
-import chroma from 'chroma-js'; // Import chroma-js
 import FixtureBar from '../Fixture/FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
+import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react';
+import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react';
 import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
@@ -77,9 +78,25 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
             )}
           </div>
         </div>
-        { (fixture?.lane?.current !== 'finished') &&
+        {(fixture?.lane?.current === 'planned') &&
           <>
-          <p className="card-detail">Pitch: {fixture.pitch}</p>
+            <p className="card-detail pitch-info" style={{ background: pitchColor }}>
+              <PitchIcon width={38} height={38} />
+              <b>{fixture.pitch}</b>
+            </p>
+          </>
+        }
+        {(fixture?.lane?.current === 'planned') &&
+          <>
+            <p className="card-detail umpire-info">
+              <div>
+                <UmpireIcon width={42} height={42} />
+                <logo-box
+                  title={fixture.umpireTeam || 'TBD'}
+                  size="45px"
+                ></logo-box>
+              </div>
+            </p>
         </>
         }
       </div>

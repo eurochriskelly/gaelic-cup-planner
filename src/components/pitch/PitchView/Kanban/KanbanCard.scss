@@ -167,14 +167,14 @@
         background: white;
         border: 0.2rem solid #aaa;
         border-radius: 100rem;
-        margin-left: 0.6rem;
+        margin-left: 0.64rem;
         text-align: center;
         padding: 0;
         padding-top: 0.3rem;
         z-index: 20;
         display: block;
         position: absolute;
-        top: 8.8rem;
+        top: 9.2rem;
         color: black; 
         width: 2.5rem;
         height: 2.5rem;
@@ -194,6 +194,48 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+  .pitch-info {
+    position: absolute;
+    bottom: -0.1rem;
+    left: 0.1rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 1.0rem;
+    border: 0.1rem dotted #676767;
+    border-bottom-left-radius: 0.5rem;
+    text-transform: uppercase;
+    padding-left: 3rem;
+    svg {
+      position: absolute;
+      bottom : -0.5rem;
+      left: 0.4rem;
+      path {
+        fill: black;
+        fill-opacity: 1;
+      }
+    }
+  }
+  .umpire-info{
+    position: absolute;
+    bottom: 0.1rem;
+    right: 0.1rem;
+    padding: 0.2rem 0.4rem;
+    width: 6rem;
+    svg path {
+      fill: black;
+      fill-opacity: 1;
+    }
+    svg rect {
+      fill: white;
+      fill-opacity: 0;
+    }
+    &>div {
+      display: grid;
+      gap: -0.8rem;
+      align-items: center;
+      justify-content: center;
+      grid-template-columns: auto auto;
     }
   }
 
