@@ -36,7 +36,10 @@ const UpdateFixture = ({
       id: 'cancel',
       Icon: CancelIcon,
       getState: () => "enabled",
-      action: (setDrawer) => setDrawer("finish")
+      action: (setDrawer) => {
+        closeDetails && closeDetails()
+        setDrawer("finish")
+      }
     },
     {
       id: 'reschedule',
@@ -64,22 +67,21 @@ const UpdateFixture = ({
       hideWhenPlanned: true,
       getState: (hasStarted) => hasStarted ? "enabled" : "disabled",
       action: async (setDrawer) => {
-        console.log('Setting finish drawer');
+        closeDetails && closeDetails()
         setDrawer("finish");
-        console.log('Finish drawer set aa');
         moveToNextFixture();
-        console.log('Moving to next fixture');
         await API.endMatch(nextFixture.tournamentId, nextFixture.id);
-        console.log('Match ended');
         await fetchFixtures(true);
-        console.log('Fixtures fetched');
       }
     },
     {
       id: 'forfeit',
       Icon: CardIcon,
       getState: () => "enabled",
-      action: (setDrawer) => setDrawer("finish")
+      action: (setDrawer) => {
+        closeDetails && closeDetails()
+        setDrawer("finish")
+      }
     },
     // The last button changes based on mode
     ...(isDetailsMode ? [
@@ -127,6 +129,7 @@ const UpdateFixture = ({
           <button
             key={button.id}
             className={`space-button ${button.getState(hasStarted, hasResult)}`}
+            disabled={button.id === 'reschedule'}
             onClick={() => (console.log('click on button ', button.id)) || handleButtonClick(button)}
           >
             <button.Icon className="icon" />

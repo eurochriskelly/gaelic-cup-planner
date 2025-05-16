@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
@@ -7,7 +8,6 @@ import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
 import UpdateFixture from '../UpdateFixture';
 import './KanbanView.scss';
-import { useState } from 'react';
 
 const KanbanView = ({
   moveToNextFixture,
@@ -49,6 +49,16 @@ const KanbanView = ({
 
   return (
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
+      {!selectedFixture && (
+        <KanbanFilters
+          pitches={pitches}
+          selectedPitch={selectedPitch}
+          onPitchChange={handlePitchChange}
+          teams={teams}
+          selectedTeam={selectedTeam}
+          onTeamChange={handleTeamChange}
+        />
+      )}
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
         {columns.map((column, index) => (
@@ -68,14 +78,6 @@ const KanbanView = ({
         ))}
       </div>
 
-      <KanbanFilters
-        pitches={pitches}
-        selectedPitch={selectedPitch}
-        onPitchChange={handlePitchChange}
-        teams={teams}
-        selectedTeam={selectedTeam}
-        onTeamChange={handleTeamChange}
-      />
 
       {selectedFixture && (
         <div className="quick-action-panel">

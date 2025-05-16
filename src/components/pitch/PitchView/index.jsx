@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFixtureContext } from "./FixturesContext";
 import MobileLayout from "../../../shared/generic/MobileLayout";
-import Fixture from "./Fixture";
-import UpdateFixture from "./UpdateFixture";
 import KanbanView from "./Kanban"; // Import the new KanbanView
+import KanbanFiters from "./Kanban/KanbanFilters";
 import './PitchView.scss';
 
 const PitchView = () => {
@@ -112,13 +111,12 @@ const PitchView = () => {
       tabNames={tabNames}
     >
       <span>
-        <span className="type-pitch">{pitchId}</span>
+        <span className="type-pitch">{
+        pitchId
+        }</span>
+        <KanbanFiters />
       </span>
-      {tabNames.map((tab, i) => (
-        <div key={`tab-${i}`} className="pitchView"> {/* This div is part of MobileLayout's tab content */}
-          <KanbanView moveToNextFixture={moveToNextFixture} />
-        </div>
-      ))}
+      <KanbanView moveToNextFixture={moveToNextFixture} />
     </MobileLayout>
   );
 };

@@ -146,6 +146,12 @@
     height: 90%;
     fill: black;
   }
+/* disabled state */
+&:disabled,
+&.disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
 }
 
 .info-button {
