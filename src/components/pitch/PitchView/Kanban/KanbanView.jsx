@@ -9,7 +9,9 @@ import UpdateFixture from '../UpdateFixture';
 import './KanbanView.scss';
 import { useState } from 'react';
 
-const KanbanView = () => {
+const KanbanView = ({
+  moveToNextFixture,
+}) => {
   const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
@@ -75,10 +77,10 @@ const KanbanView = () => {
         onTeamChange={handleTeamChange}
       />
 
-      {/* Always show update fixture when a fixture is selected */}
       {selectedFixture && (
         <div className="quick-action-panel">
           <UpdateFixture
+            moveToNextFixture={moveToNextFixture}
             fixture={selectedFixture}
             showDetails={showDetailsPanel}
             closeDetails={closeDetailsPanel}

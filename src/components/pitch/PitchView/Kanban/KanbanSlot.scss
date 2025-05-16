@@ -1,3 +1,5 @@
+@import "src/shared/css/_colors.scss";
+
 .kanban-slot {
   height: 20rem; // Card height is 18rem, this makes slot 0.5rem taller on top and bottom
   padding-top: 0.5rem; // Combined with height, makes total space 19.5rem
@@ -31,5 +33,11 @@
     div:last-child {
       font-size: 1.4rem;
     }
+  }
+  .slot-pitch-name {
+      path {
+          fill:black; 
+          fill-opacity: 0.4;
+      }
   }
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useState } from "react";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
@@ -63,11 +63,16 @@ const UpdateFixture = ({
       Icon: ScoreIcon,
       hideWhenPlanned: true,
       getState: (hasStarted) => hasStarted ? "enabled" : "disabled",
-      action: async (setDrawer, { moveToNextFixture, API, nextFixture, fetchFixtures }) => {
+      action: async (setDrawer) => {
+        console.log('Setting finish drawer');
         setDrawer("finish");
+        console.log('Finish drawer set aa');
         moveToNextFixture();
+        console.log('Moving to next fixture');
         await API.endMatch(nextFixture.tournamentId, nextFixture.id);
+        console.log('Match ended');
         await fetchFixtures(true);
+        console.log('Fixtures fetched');
       }
     },
     {
@@ -122,7 +127,7 @@ const UpdateFixture = ({
           <button
             key={button.id}
             className={`space-button ${button.getState(hasStarted, hasResult)}`}
-            onClick={() => handleButtonClick(button)}
+            onClick={() => (console.log('click on button ', button.id)) || handleButtonClick(button)}
           >
             <button.Icon className="icon" />
           </button>
@@ -137,7 +142,7 @@ const UpdateFixture = ({
 
         {infoButton && (
           <button
-            className={`space-button ${infoButton.getState()}`}
+            className={`space-button info-button ${infoButton.getState()}`}
             onClick={() => handleButtonClick(infoButton)}
           >
             <infoButton.Icon className="icon" />

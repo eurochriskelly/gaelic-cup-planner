@@ -116,32 +116,7 @@ const PitchView = () => {
       </span>
       {tabNames.map((tab, i) => (
         <div key={`tab-${i}`} className="pitchView"> {/* This div is part of MobileLayout's tab content */}
-          {tab.toLowerCase() === "kanban" ? (
-            <KanbanView />
-          ) : (
-            <div className="fixturesBody">
-              <div className="fixturesArea">
-                {processedListFixtures[tab.toLowerCase()] && processedListFixtures[tab.toLowerCase()].length > 0 ? (
-                  processedListFixtures[tab.toLowerCase()].map((fixture) => {
-                    const isFocusFixture = currentFocusFixtureId && currentFocusFixtureId === fixture.id;
-                    return (
-                      <div
-                        key={fixture.id}
-                        className={isFocusFixture ? "focusFixture h-98" : ""}
-                      >
-                        <Fixture fixture={fixture} onUpdate={fetchFixtures} view={isFocusFixture ? 'next' : fixture.played ? 'finished' : 'unplayed'} />
-                        {isFocusFixture && <UpdateFixture fixture={nextFixture} moveToNextFixture={moveToNextFixture} />}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="noFixtures">
-                    No <span>{tab}</span> fixtures left to display
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+          <KanbanView moveToNextFixture={moveToNextFixture} />
         </div>
       ))}
     </MobileLayout>
