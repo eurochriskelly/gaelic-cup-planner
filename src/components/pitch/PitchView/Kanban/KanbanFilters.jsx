@@ -1,3 +1,5 @@
+import './KanbanFilters.scss';
+
 const KanbanFilters = ({
   pitches,
   selectedPitch,
@@ -9,7 +11,6 @@ const KanbanFilters = ({
   return (
     <div className="kanban-filters">
       <div className="filter-group">
-        <label htmlFor="pitchFilter">Filter by Pitch:</label>
         <select
           id="pitchFilter"
           value={selectedPitch}
@@ -20,18 +21,20 @@ const KanbanFilters = ({
           ))}
         </select>
       </div>
-      <div className="filter-group">
-        <label htmlFor="teamFilter">Filter by Team:</label>
-        <select
-          id="teamFilter"
-          value={selectedTeam}
-          onChange={onTeamChange}
-        >
-          {teams.map(team => (
-            <option key={team} value={team}>{team}</option>
-          ))}
-        </select>
-      </div>
+      {false && (
+        <div className="filter-group">
+          <label htmlFor="teamFilter">Filter by Team:</label>
+          <select
+            id="teamFilter"
+            value={selectedTeam}
+            onChange={onTeamChange}
+          >
+            {teams.map(team => (
+              <option key={team} value={team}>{team}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 };
