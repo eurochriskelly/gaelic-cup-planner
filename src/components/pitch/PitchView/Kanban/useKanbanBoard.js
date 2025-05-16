@@ -1,6 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../../../../shared/api/endpoints.js'; // Assuming API calls will be needed
+
+// Palette of colors for pitches
+const PITCH_PALETTE = [
+  '#FFDFD3', '#D3FFD3', '#D3D3FF', '#FFFFD3', '#FFD3FF',
+  '#D3FFFF', '#E8D3FF', '#FFEBD3', '#D3FFE8', '#FFD3E8',
+  '#FADADD', '#FDFD96', '#CDFADF', '#BDECB6', '#C9EBFD',
+  '#D7C9FD', '#FDC9D7', '#FDEAC9', '#C9FDEE', '#E6E6FA'
+];
 
 // Helper to determine Kanban column based on fixture status
 const getKanbanColumn = (fixture) => {
@@ -20,26 +30,28 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedPitch, setSelectedPitch] = useState('All Pitches');
   const [selectedTeam, setSelectedTeam] = useState('All Teams');
-
-  // Pastel color mapping for pitches
-  const pitchColors = {
-    // Define some default pastel colors or generate them dynamically
-    'Pitch 1': '#B3CDE0', // Pastel Blue
-    'Pitch 2': '#C1E1C1', // Pastel Green
-    'Pitch 3': '#F4C2C2', // Pastel Pink
-    'Pitch 4': '#FFE5B4', // Pastel Yellow
-    // Add more or a generator if needed
-  };
-
-  const getPitchColor = (pitch) => pitchColors[pitch] || '#E6E6E6'; // Default Pastel Gray
+  const [pitchColorMapping, setPitchColorMapping] = useState({});
 
   useEffect(() => {
+    // Dynamically create color mapping for pitches
+    const uniquePitches = [...new Set(initialFixtures.map(f => f.pitch).filter(Boolean))].sort();
+    const newMapping = {};
+    uniquePitches.forEach((pitch, index) => {
+      newMapping[pitch] = PITCH_PALETTE[index % PITCH_PALETTE.length];
+    });
+    setPitchColorMapping(newMapping);
+
+    // Process fixtures for board display
     const processedFixtures = initialFixtures.map(f => ({
       ...f,
-      column: getKanbanColumn(f),
+      column: getKanbanColumn(f), // Ensure column is determined based on fixture status
     }));
     setBoardFixtures(processedFixtures);
   }, [initialFixtures]);
+
+  const getPitchColor = useCallback((pitch) => {
+    return pitchColorMapping[pitch] || '#E6E6E6'; // Default to Pastel Gray if pitch not in mapping
+  }, [pitchColorMapping]);
 
   const pitches = ['All Pitches', ...new Set(boardFixtures.map(fixture => fixture.pitch))];
   const teams = ['All Teams', ...new Set(boardFixtures.flatMap(fixture => [fixture.team1, fixture.team2].filter(Boolean)))];

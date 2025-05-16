@@ -4,14 +4,6 @@ import './KanbanColumn.scss';
 
 const NUM_SLOTS_PER_COLUMN = 10; // Define how many slots to render per column for non-dynamic columns
 
-// Define 20 pastel colors
-const PASTEL_COLORS = [
-  '#FFDFD3', '#D3FFD3', '#D3D3FF', '#FFFFD3', '#FFD3FF',
-  '#D3FFFF', '#E8D3FF', '#FFEBD3', '#D3FFE8', '#FFD3E8',
-  '#FADADD', '#FDFD96', '#CDFADF', '#BDECB6', '#C9EBFD',
-  '#D7C9FD', '#FDC9D7', '#FDEAC9', '#C9FDEE', '#E6E6FA'
-];
-
 const KanbanColumn = ({
   title,
   fixtures, // This is the array of fixtures for this specific column
