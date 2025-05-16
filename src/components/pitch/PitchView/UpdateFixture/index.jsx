@@ -52,7 +52,12 @@ const UpdateFixture = ({
       id: 'start',
       Icon: StartIcon,
       showOnlyWhenPlanned: true,
-      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      getState: (hasStarted, hasResult, fixture) => {
+        if (isPlanned && fixture?.lane?.allowedLanes && !fixture.lane.allowedLanes.includes('started')) {
+          return "disabled";
+        }
+        return !hasStarted && !hasResult ? "enabled" : "disabled";
+      },
       action: async (_, { startMatch, nextFixture }) => {
         try {
           await startMatch(nextFixture.id);
@@ -128,8 +133,11 @@ const UpdateFixture = ({
         {mainButtons.map((button, index) => (
           <button
             key={button.id}
-            className={`space-button ${button.getState(hasStarted, hasResult)}`}
-            disabled={button.id === 'reschedule'}
+            className={`space-button ${button.id === 'start' ? button.getState(hasStarted, hasResult, nextFixture) : button.getState(hasStarted, hasResult)}`}
+            disabled={
+              button.id === 'reschedule' ||
+              (button.id === 'start' && button.getState(hasStarted, hasResult, nextFixture) === 'disabled')
+            }
             onClick={() => (console.log('click on button ', button.id)) || handleButtonClick(button)}
           >
             <button.Icon className="icon" />
