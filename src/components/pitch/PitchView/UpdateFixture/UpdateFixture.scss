@@ -2,7 +2,7 @@
 
 .updateFixture {
   position: fixed;
-  top: 0rem;
+  bottom: 11rem;
   background-color: #2d3123; 
   height: 9rem;
   width: 100%;
@@ -170,9 +170,8 @@
 /* DRAWERS */
 .updateFixture>div.drawers {
     position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    bottom: 20rem;
     width: 94%;
     max-width: 900px;
     max-height: 90vh;

@@ -20,12 +20,12 @@ const MobileLayout = ({
   const [SubHeading] = childrenArray;
   return <> 
     <section className="MobileLayout mobile lovely">
-      <header>
-        {pitchId && <MainMenu></MainMenu>}
-      </header>
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
+      <footer>
+        {pitchId && <MainMenu></MainMenu>}
+      </footer>
     </section>
     <NavFooter />
   </> 
