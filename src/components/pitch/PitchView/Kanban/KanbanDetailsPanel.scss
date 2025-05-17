@@ -202,8 +202,13 @@
     align-items: center;
     height: 6rem;
     grid-template-columns: 80px 1fr;
-    margin: 1rem auto;
-    max-width: 80%;
+    margin-top: 0rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40rem;
+    background: #eee;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
     
     rect {
       opacity: 0;
@@ -220,7 +225,6 @@
     font-size: 1.5rem;
     color: darken($pc, 24%);
     text-align: right;
-    margin: 0;
     letter-spacing: 0.1rem;
     text-transform: uppercase;
   }
