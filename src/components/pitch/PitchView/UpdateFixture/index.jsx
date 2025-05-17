@@ -19,7 +19,7 @@ const UpdateFixture = ({
   closeDetails,
   isDetailsMode = false
 }) => {
-  const { fetchFixtures, startMatch, fixtures } = useFixtureContext();
+  const { fetchFixtures, startMatch } = useFixtureContext();
   let nextFixture = fixture;
   if (!fixture) nextFixture = useFixtureContext().nextFixture;
   if (!nextFixture) return null;
@@ -76,7 +76,9 @@ const UpdateFixture = ({
         setDrawer("finish");
         moveToNextFixture();
         await API.endMatch(nextFixture.tournamentId, nextFixture.id);
+        console.log('this is good1')
         await fetchFixtures(true);
+        console.log('this is good2')
       }
     },
     {
@@ -128,8 +130,7 @@ const UpdateFixture = ({
 
   return (
     <div className="updateFixture select-none">
-      {activeDrawer && <div className="drawer-overlay" onClick={() => setActiveDrawer(null)} />}
-      <div className="button-grid" style={{ display: activeDrawer ? "none" : "grid" }}>
+      <div className="button-grid">
         {mainButtons.map((button, index) => (
           <button
             key={button.id}
@@ -176,7 +177,10 @@ const UpdateFixture = ({
         {activeDrawer === "finish" && (
           <DialogUpdate
             nextFixture={nextFixture}
-            onClose={() => setActiveDrawer(null)}
+            onClose={async () => {
+              await fetchFixtures();
+              setActiveDrawer(null)
+            }}
           />
         )}
       </div>

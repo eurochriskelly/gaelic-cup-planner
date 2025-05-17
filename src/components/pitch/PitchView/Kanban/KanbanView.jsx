@@ -61,34 +61,42 @@ const KanbanView = ({
       )}
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
-        {columns.map((column, index) => (
-          <KanbanColumn
-            key={column}
-            title={['Planned', 'Ongoing', 'Finished'][index]}
-            columnIndex={index} // Pass the column index
-            allTournamentPitches={index === 1 ? pitches : null} // Pass all pitches only to the "Ongoing" column
-            fixtures={filteredFixtures.filter(f => f?.lane?.current === column)}
-            onDrop={(e) => onDrop(e, column)}
-            onDragOver={onDragOver}
-            onDragStart={onDragStart}
-            handleFixtureClick={handleFixtureClick}
-            selectedFixture={selectedFixture}
-            getPitchColor={getPitchColor}
-          />
-        ))}
+        {columns.map((column, index) => {
+          let columnFixtures = filteredFixtures.filter(f => f?.lane?.current === column);
+          // Sort fixtures for the "Finished" column (index 2)
+          if (index === 2) {
+            columnFixtures = columnFixtures.sort((a, b) => {
+              const dateA = a.ended ? new Date(a.ended) : 0;
+              const dateB = b.ended ? new Date(b.ended) : 0;
+              return dateB - dateA; // Sort descending
+            });
+          }
+          return (
+            <KanbanColumn
+              key={column}
+              title={['Planned', 'Ongoing', 'Finished'][index]}
+              columnIndex={index} // Pass the column index
+              allTournamentPitches={index === 1 ? pitches : null} // Pass all pitches only to the "Ongoing" column
+              fixtures={columnFixtures}
+              onDrop={(e) => onDrop(e, column)}
+              onDragOver={onDragOver}
+              onDragStart={onDragStart}
+              handleFixtureClick={handleFixtureClick}
+              selectedFixture={selectedFixture}
+              getPitchColor={getPitchColor}
+            />
+          );
+        })}
       </div>
 
-
       {selectedFixture && (
-        <div className="quick-action-panel">
-          <UpdateFixture
-            moveToNextFixture={moveToNextFixture}
-            fixture={selectedFixture}
-            showDetails={showDetailsPanel}
-            closeDetails={closeDetailsPanel}
-            isDetailsMode={showingDetails}
-          />
-        </div>
+        <UpdateFixture
+          moveToNextFixture={moveToNextFixture}
+          fixture={selectedFixture}
+          showDetails={showDetailsPanel}
+          closeDetails={closeDetailsPanel}
+          isDetailsMode={showingDetails}
+        />
       )}
 
       {/* Show details panel when showingDetails is true */}

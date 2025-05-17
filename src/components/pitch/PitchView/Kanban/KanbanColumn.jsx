@@ -2,8 +2,6 @@ import KanbanCard from './KanbanCard';
 import KanbanSlot from './KanbanSlot';
 import './KanbanColumn.scss';
 
-const NUM_SLOTS_PER_COLUMN = 10; // Define how many slots to render per column for non-dynamic columns
-
 const KanbanColumn = ({
   title,
   fixtures, // This is the array of fixtures for this specific column
@@ -48,7 +46,10 @@ const KanbanColumn = ({
       );
     });
   } else { // "Planned" or "Finished" columns
-    columnSlots = Array.from({ length: NUM_SLOTS_PER_COLUMN }).map((_, slotIndex) => {
+    const numFixturesInColumn = fixtures.length;
+    const numSlots = Math.max(6, numFixturesInColumn); // Use at least 6 slots, or more if there are more fixtures
+
+    columnSlots = Array.from({ length: numSlots }).map((_, slotIndex) => {
       const fixtureForSlot = fixtures[slotIndex];
       return (
         <KanbanSlot
@@ -71,13 +72,15 @@ const KanbanColumn = ({
     });
   }
 
+  const fixtureCount = fixtures.length;
+
   return (
     <div
       className="kanban-column"
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
-      <div className="column-header">{title}</div>
+      <div className="column-header">{`${title} (${fixtureCount})`}</div>
       <div className="column-content">
         {columnSlots}
       </div>
