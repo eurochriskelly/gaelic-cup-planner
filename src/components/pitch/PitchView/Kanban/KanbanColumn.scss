@@ -20,10 +20,10 @@
     margin:0;
     margin-bottom: 0.5rem;
     text-align: center;
-    background-color: lighten(desaturate($pc, 20%), 25%);
-    color: #ffffffAA; 
+    background-color: lighten(desaturate($pc, 17%), 25%);
+    color: #ffffff88; 
     text-transform: uppercase;
-    font-size: 1.4rem;
+    font-size: 1.9rem;
     letter-spacing: 0.1em;
     border-radius: 3px;
     height: 4rem;
@@ -39,7 +39,6 @@
     // KanbanSlot components are now direct children of .column-content.
   }
 }
-
 
 // Hide scrollbars but keep scrolling on all devices
 .kanban-column .column-content {
