@@ -4,9 +4,10 @@ import { useFixtureContext } from '../../PitchView/FixturesContext';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
-import '../../../../components/web/gaelic-score.js';
-import '../../../../components/web/logo-box.js';
-import '../../../../components/web/team-name.js';
+import API from '../../../../shared/api/endpoints';
+import '../../../../components/web/gaelic-score';
+import '../../../../components/web/logo-box';
+import '../../../../components/web/team-name';
 
 const KanbanDetailsPanel = ({ 
   fixture

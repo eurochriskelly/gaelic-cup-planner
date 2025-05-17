@@ -34,11 +34,13 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
         stage={displayStage}
         number={displayNumber}
       />
-      {fixture.scheduledTime && (
+      {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
         <TimeDisplay
           scheduledTime={fixture.scheduledTime}
           startedTime={fixture.startedTime}
         />
+      ) : (
+        <div style={{height:'2.4rem'}}>&nbsp;</div>
       )}
       <div className="kanban-card-content-wrapper">
         <div className="teams-container">
@@ -86,12 +88,12 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
             )}
           </div>
         </div>
+        <p className="card-detail pitch-info" style={{ background: pitchColor }}>
+          <PitchIcon width={38} height={38} />
+          <b>{fixture.pitch}</b>
+        </p>
         {(fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'started') &&
           <>
-            <p className="card-detail pitch-info" style={{ background: pitchColor }}>
-              <PitchIcon width={38} height={38} />
-              <b>{fixture.pitch}</b>
-          </p>
             <p className="card-detail umpire-info">
               <div>
                 <UmpireIcon width={42} height={42} />
