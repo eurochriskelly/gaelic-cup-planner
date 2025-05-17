@@ -61,6 +61,7 @@ const UpdateFixture = ({
       action: async (_, { startMatch, nextFixture }) => {
         try {
           await startMatch(nextFixture.id);
+          await fetchFixtures(true);
         } catch (error) {
           console.error("Error starting match:", error);
         }
@@ -76,9 +77,7 @@ const UpdateFixture = ({
         setDrawer("finish");
         moveToNextFixture();
         await API.endMatch(nextFixture.tournamentId, nextFixture.id);
-        console.log('this is good1')
         await fetchFixtures(true);
-        console.log('this is good2')
       }
     },
     {
@@ -129,7 +128,7 @@ const UpdateFixture = ({
   const infoButton = visibleButtons.find(b => b.isInfoButton);
 
   return (
-    <div className="updateFixture select-none">
+    <div className="updateFixture select-none" onClick={() => console.log('sle fix', fixture)}>
       <div className="button-grid">
         {mainButtons.map((button, index) => (
           <button
