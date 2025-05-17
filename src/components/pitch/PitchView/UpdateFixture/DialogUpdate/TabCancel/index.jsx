@@ -32,15 +32,18 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
       .then(() => {
         console.log("Match settled without playing:", result);
         setConfirming(false);
+        onConfirm && onConfirm(); // Call onConfirm prop
       })
       .catch((error) => {
         console.error("Error updating match outcome:", error);
+        setConfirming(false); // Ensure confirming is reset on error too
       });
   };
   
   const cancelConfirmation = () => {
     setCancellationOption(null);
     setConfirming(false);
+    onClose && onClose(); // Call onClose prop
   };
 
   useEffect(() => {

@@ -62,11 +62,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    .proceedButtons {
+    /* .proceedButtons { // This class was inside .teamScore > div, likely a typo or old structure
       color: $pc-dark-20;
       width: 100%;
       margin-left: 100px;
-    }
+    */
     > div {
       font-size: 3.4rem;
       padding: 0 0.5rem;
@@ -77,25 +77,36 @@
   }
 }
 
-.drawerFinish div.proceedButtons {
+/* .drawerFinish div.proceedButtons { // These buttons are removed
   width: 100%;
   margin: 0;
   display: grid;
-  grid-template-columns: 0.7fr 0.7fr;
+  grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
   button {
     background-color: white;
-    padding: 2rem;
-    font-size: 3.4rem;
+    padding: 1.5rem;
+      font-size: 2.8rem;
     margin: 0.4rem;
-    margin-top: 6rem;
+    margin-top: 2rem;
     border-radius: 1rem;
     border: 2px solid gray;
+    cursor: pointer;
   }
-  button.enabled {
-    background-color: $sc;
+    button.enabled {
+      background-color: $sc;
     color: white;
+    border-color: $sc;
   }
+    button.cancel-button {
+      background-color: #f8f9fa;
+      color: #343a40;
+      border-color: #6c757d;
+  
 }
+
+*/
 .score-container {
   position: relative;
 }

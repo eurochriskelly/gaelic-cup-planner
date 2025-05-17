@@ -17,6 +17,7 @@ const KanbanView = ({
 
   // New state to track if details panel should be shown
   const [showingDetails, setShowingDetails] = useState(false);
+  const [detailsMode, setDetailsMode] = useState('score'); // Default mode
 
   const {
     filteredFixtures,
@@ -58,15 +59,16 @@ const KanbanView = ({
 
 
   // Function to show full details panel
-  const showDetailsPanel = () => {
-    console.log('nto showing details 3')
+  const showDetailsPanel = (mode = 'score') => {
+    setDetailsMode(mode);
     setShowingDetails(true);
   };
 
   // Function to close details panel
   const closeDetailsPanel = () => {
-    console.log('nto showing details ')
     setShowingDetails(false);
+    setDetailsMode('info'); // Reset mode to info
+    // setSelectedFixture(null); // Consider if this is still needed or handled elsewhere
   };
 
   return (
@@ -125,6 +127,9 @@ const KanbanView = ({
       {selectedFixture && showingDetails && (
         <KanbanDetailsPanel
           fixture={selectedFixture}
+          mode={detailsMode}
+          closePanel={closeDetailsPanel}
+          moveToNextFixture={moveToNextFixture} // Pass moveToNextFixture
         />
       )}
     </div>

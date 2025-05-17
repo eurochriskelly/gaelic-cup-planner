@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
@@ -11,12 +11,24 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
       setCurrentTeam(team);
       setScorePicker({ visible: true });
     },
-    saveScore: () => {
-      onProceed();
-    },
-    cancel: () => onClose(),
   };
 
+  // This effect will trigger onProceed when all scores are filled
+  useEffect(() => {
+    const s1 = scores.team1;
+    const s2 = scores.team2;
+    const isScoreSet = (value) => value !== null && value !== undefined && value !== "";
+
+    if (s1 && s2 &&
+      isScoreSet(s1.goals) && isScoreSet(s1.points) &&
+      isScoreSet(s2.goals) && isScoreSet(s2.points)) {
+      onProceed();
+    }
+  }, [scores, onProceed]);
+
+  const handleScoreSelectedForTeam = () => {
+    setScorePicker({ visible: false }); // Close the ScoreSelect sub-dialog
+  };
 
   const displayScore = (team, type) => {
     const score = scores[team][type];
@@ -75,23 +87,26 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
   };
 
   return (
-    <div className="tab-score-content">
+    <div className="tab-score-content drawerFinish">
       <div className="score-container" style={{ position: "relative" }}>
         <TeamScore id="team1" team={fixture.team1} />
         <TeamScore id="team2" team={fixture.team2} />
         {scorePicker.visible && (
+          // Overlay click no longer closes the picker directly;
+          // it's handled by onScoreCompleteForTeam or if user clicks away from panel
           <div className="scoreSelectorOverlay">
-            <ScoreSelect
-              scores={scores}
-              currentTeam={currentTeam}
-              updateScore={(newScore) => {
-                setScores({ ...scores, [currentTeam]: newScore });
-                setScorePicker({ visible: false });
-              }}
-            />
+            <div onClick={(e) => e.stopPropagation()}>
+              <ScoreSelect
+                scores={scores}
+                setScores={setScores}
+                currentTeam={currentTeam}
+                onScoreCompleteForTeam={handleScoreSelectedForTeam} // Pass callback
+              />
+            </div>
           </div>
         )}
       </div>
+      {/* Removed explicit Save/Cancel buttons */}
     </div>
   );
 };
