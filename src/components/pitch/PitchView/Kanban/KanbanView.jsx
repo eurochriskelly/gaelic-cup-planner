@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
@@ -37,13 +37,35 @@ const KanbanView = ({
     handleTeamChange,
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
 
+  // Effect to update selectedFixture when initialFixtures (from context) changes
+  useEffect(() => {
+    if (selectedFixture?.id) {
+      const updatedFixtureFromList = initialFixtures.find(f => f.id === selectedFixture.id);
+      if (updatedFixtureFromList) {
+        // Update selectedFixture with the latest data from the refreshed list
+        // This ensures that if the fixture data changed in the context,
+        // the selectedFixture state reflects these changes.
+        if (JSON.stringify(selectedFixture) !== JSON.stringify(updatedFixtureFromList)) {
+          setSelectedFixture(updatedFixtureFromList);
+        }
+      } else {
+        // Optionally, if the selected fixture is no longer in the list,
+        // you might want to clear it, e.g., setSelectedFixture(null);
+        // For now, we only update if found.
+      }
+    }
+  }, [initialFixtures, selectedFixture?.id, setSelectedFixture, selectedFixture]);
+
+
   // Function to show full details panel
   const showDetailsPanel = () => {
+    console.log('nto showing details 3')
     setShowingDetails(true);
   };
 
   // Function to close details panel
   const closeDetailsPanel = () => {
+    console.log('nto showing details ')
     setShowingDetails(false);
   };
 
