@@ -43,16 +43,15 @@ const KanbanDetailsPanel = ({
 
       <div className="details-content-wrapper">
         <section className="mt-7 mr-0 pr-0">
-          <div className="fixture-info-section">
-            <ClockIcon
-              scheduled={fixture.scheduledTime || fixture.plannedStart}
-              started={fixture.startedTime || fixture.actualStartedTime}
-              delay={militaryTimeDiffMins(fixture.scheduledTime || fixture.plannedStart, fixture.startedTime || fixture.actualStartedTime)}
-              played={!!fixture.startedTime || !!fixture.actualStartedTime}
-            />
-          </div>
+          <ClockIcon
+            scheduled={fixture.scheduledTime || fixture.plannedStart}
+            started={fixture.startedTime || fixture.actualStartedTime}
+            delay={militaryTimeDiffMins(fixture.scheduledTime || fixture.plannedStart, fixture.startedTime || fixture.actualStartedTime)}
+            played={!!fixture.startedTime || !!fixture.actualStartedTime}
+            size={100}
+          />
 
-          <div className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4" style={{ background: '#dadac4', borderColor: '#bebfb1' }}>
+          <div className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4" style={{ borderColor: '#FFFFFF00'}}>
             <div className="match-up">
               <div></div>
               <div className="team team-1">
@@ -67,9 +66,9 @@ const KanbanDetailsPanel = ({
 
             <div className="match-teams">
               <div></div>
-              <div className="text-3xl">{formatTeamName(fixture.team1 || 'TBD')}</div>
+              <div className="text-3xl" style={{ textAlign: 'center' }}>{formatTeamName(fixture.team1 || 'TBD')}</div>
               <div></div>
-              <div className="text-3xl">{formatTeamName(fixture.team2 || 'TBD')}</div>
+              <div className="text-3xl" style={{ textAlign: 'center' }}>{formatTeamName(fixture.team2 || 'TBD')}</div>
               <div></div>
             </div>
 
@@ -108,9 +107,6 @@ const KanbanDetailsPanel = ({
             ) : (
               <div className="fixture-details">
                 <div className="details-grid">
-                  <div className="detail-item">
-                    <strong>Status:</strong> <span className={`status-${fixture.column}`}>{fixture.column}</span>
-                  </div>
                   <div className="detail-item">
                     <strong>Pitch:</strong> {fixture.pitch}
                   </div>

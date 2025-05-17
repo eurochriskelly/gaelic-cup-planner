@@ -57,38 +57,51 @@ const ClockIcon = ({
   const minuteAngle = minute * 6; // 60 minutes, 360 degrees
   const hourAngle = (hour % 12) * 30 + minute * 0.5; // 12 hours, 360 degrees, plus a little for the minutes
 
+  // SVG viewBox and circle parameters
+  const vbSize = 24;
+  const vbCenter = vbSize / 2; // 12
+  const maxStrokePossible = 5; // Based on swid = 5 when started
+  // Radius calculated so that the circle + half of its max stroke width fits within vbCenter
+  const circleRadius = vbCenter - (maxStrokePossible / 2); // 12 - 2.5 = 9.5
+
+  // Hand lengths, relative to the new circleRadius
+  const minuteHandLength = circleRadius - 1.5; // e.g., 9.5 - 1.5 = 8
+  const hourHandLength = circleRadius - 4;   // e.g., 9.5 - 4 = 5.5
+
+  const minuteHandEndY = vbCenter - minuteHandLength; // 12 - 8 = 4
+  const hourHandEndY = vbCenter - hourHandLength;     // 12 - 5.5 = 6.5
+
   return (
     <span className={`ClockIcon m-0 ${layout === 'top' ? 'clock-layout-top' : 'clock-layout-side'}`}>
-      <svg width={size} height={size} viewBox="0 0 25 25">
+      <svg width={size} height={size} viewBox={`0 0 ${vbSize} ${vbSize}`}>
         <circle
-          cx="15"
-          cy="15"
-          r="7"
+          cx={vbCenter}
+          cy={vbCenter}
+          r={circleRadius}
           stroke={circleColor}
           strokeWidth={swid}
           fill={fillColor}
         ></circle>
         <path
-          d={`M 15,15 L 15,8`} // Minute hand, adjusted for length
+          d={`M ${vbCenter},${vbCenter} L ${vbCenter},${minuteHandEndY}`} // Minute hand
           stroke={strokeColor}
-          strokeWidth="1"
-          transform={`rotate(${minuteAngle} 15 15)`}
+          strokeWidth="1" // Thinner hand
+          transform={`rotate(${minuteAngle} ${vbCenter} ${vbCenter})`}
         ></path>
         <path
-          d={`M 15,15 L 15,11`} // Hour hand, shorter and thicker
+          d={`M ${vbCenter},${vbCenter} L ${vbCenter},${hourHandEndY}`} // Hour hand
           stroke={strokeColor}
-          strokeWidth="2"
-          transform={`rotate(${hourAngle} 15 15)`}
+          strokeWidth="2" // Thicker hand
+          transform={`rotate(${hourAngle} ${vbCenter} ${vbCenter})`}
         ></path>
       </svg>
       <span
         style={{
-          lineHeight: "3.5rem",
           fontWeight: timeWeight,
           color: timeColor,
         }}
       >
-        <span>{scheduled}</span>
+        <span style={{ fontSize: '4rem' }}>{scheduled}</span>
         <span>{delay ? `*` : ''}</span>
       </span>
     </span>
