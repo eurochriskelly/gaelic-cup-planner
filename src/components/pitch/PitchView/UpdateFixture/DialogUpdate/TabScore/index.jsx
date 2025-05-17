@@ -71,7 +71,6 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
     }
     return (
       <div className="teamScore" onClick={() => actions.updateScore(id)}>
-        <h4>{team}</h4>
         <div>
           <div>{showGoals}</div>
           <div> - </div>
@@ -89,8 +88,10 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
   return (
     <div className="tab-score-content drawerFinish">
       <div className="score-container" style={{ position: "relative" }}>
-        <TeamScore id="team1" team={fixture.team1} />
-        <TeamScore id="team2" team={fixture.team2} />
+        <div className="side-by-side">
+          <TeamScore id="team1" team={fixture.team1} />
+          <TeamScore id="team2" team={fixture.team2} />
+        </div>
         {scorePicker.visible && (
           // Overlay click no longer closes the picker directly;
           // it's handled by onScoreCompleteForTeam or if user clicks away from panel
