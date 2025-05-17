@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
 const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
+  const isInitialRender = useRef(true);
+  const hasUserInteracted = useRef(false);
 
   const actions = {
     updateScore: (team) => {
       setCurrentTeam(team);
       setScorePicker({ visible: true });
+      hasUserInteracted.current = true;
     },
   };
 
@@ -19,12 +22,20 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
     const s2 = scores.team2;
     const isScoreSet = (value) => value !== null && value !== undefined && value !== "";
 
-    if (s1 && s2 &&
-      isScoreSet(s1.goals) && isScoreSet(s1.points) &&
-      isScoreSet(s2.goals) && isScoreSet(s2.points)) {
-      onProceed();
+    // Only proceed automatically if this is not the initial render AND user has interacted
+    if (!isInitialRender.current && hasUserInteracted.current) {
+      if (s1 && s2 &&
+        isScoreSet(s1.goals) && isScoreSet(s1.points) &&
+        isScoreSet(s2.goals) && isScoreSet(s2.points)) {
+        onProceed();
+      }
     }
   }, [scores, onProceed]);
+
+  // Mark initial render as complete after the first render
+  useEffect(() => {
+    isInitialRender.current = false;
+  }, []);
 
   const handleScoreSelectedForTeam = () => {
     setScorePicker({ visible: false }); // Close the ScoreSelect sub-dialog
@@ -93,21 +104,40 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
           <TeamScore id="team2" team={fixture.team2} />
         </div>
         {scorePicker.visible && (
-          // Overlay click no longer closes the picker directly;
-          // it's handled by onScoreCompleteForTeam or if user clicks away from panel
           <div className="scoreSelectorOverlay">
             <div onClick={(e) => e.stopPropagation()}>
               <ScoreSelect
                 scores={scores}
                 setScores={setScores}
                 currentTeam={currentTeam}
-                onScoreCompleteForTeam={handleScoreSelectedForTeam} // Pass callback
+                onScoreCompleteForTeam={handleScoreSelectedForTeam}
               />
             </div>
           </div>
         )}
       </div>
-      {/* Removed explicit Save/Cancel buttons */}
+
+      {/* Add manual save button for existing scores */}
+      {scores.team1 && scores.team2 &&
+        scores.team1.goals !== null && scores.team1.points !== null &&
+        scores.team2.goals !== null && scores.team2.points !== null && (
+          <div className="manual-save-container" style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <button
+              onClick={onProceed}
+              className="manual-save-button"
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Save Scores
+            </button>
+          </div>
+        )}
     </div>
   );
 };

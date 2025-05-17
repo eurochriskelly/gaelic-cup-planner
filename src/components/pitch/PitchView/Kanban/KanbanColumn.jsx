@@ -80,7 +80,7 @@ const KanbanColumn = ({
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
-      <div className="column-header">{`${title} (${fixtureCount})`}</div>
+      <div className="column-header">{`${title}`}<span className="text-gray-900 ml-2">({fixtureCount})</span></div>
       <div className="column-content">
         {columnSlots}
       </div>
