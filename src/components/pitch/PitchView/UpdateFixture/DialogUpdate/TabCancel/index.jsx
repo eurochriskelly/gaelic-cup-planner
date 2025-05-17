@@ -65,7 +65,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                     <div className="non-played-outcome">
                       <div>Click <b>YES</b> to confirm</div>
                       <div className="p-8">
-                        <span className="decision walkover">Walkover</span> 
+                        <span className="decision walkover bg-rose-400">Walkover</span> 
                         <span>for</span>
                         <span>{cancellationOption === 'team1_forfeit' ? team1 : team2}</span>
                       </div>
@@ -78,15 +78,15 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
                     </div>
                   )}
                 </div>
-                <div className="flex gap-4 bg-gray-500 p-9 text-9xl">
+                <div className="flex gap-4 text-9xl">
                   <button
-                    className="btn btn-primary flex-1 py-4 text-3xl text-white mr-1"
+                    className="btn btn-primary flex-1 py-8 text-3xl text-green-700 mr-1"
                     onClick={handleFinalConfirm}
                   >
                     Yes
                   </button>
                   <button
-                    className="btn btn-secondary flex-1 py-4 text-3xl text-white"
+                    className="btn btn-secondary flex-1 py-8 text-3xl text-rose-500"
                     onClick={cancelConfirmation}
                   >
                     No

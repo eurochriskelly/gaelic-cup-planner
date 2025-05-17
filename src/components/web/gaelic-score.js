@@ -1,6 +1,10 @@
 class GaelicScore extends HTMLElement {
   static get observedAttributes() {
-    return ['goals', 'points', 'layout', 'scale', 'goalsagainst', 'pointsagainst', 'played', 'bold'];
+    return [
+      'goals', 'points', 'layout', 'scale',
+      'goalsagainst', 'pointsagainst', 'played', 
+      'bold'
+    ];
   }
 
   constructor() {
@@ -201,7 +205,7 @@ class GaelicScore extends HTMLElement {
 
           .unplayed {
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: bold;
             white-space: nowrap;
             color: #AAA;

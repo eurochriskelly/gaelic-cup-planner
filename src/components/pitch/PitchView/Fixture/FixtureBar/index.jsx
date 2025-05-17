@@ -129,7 +129,7 @@ function StageDisplay({ stage, number }) {
 
   let groupNumberClass = '';
   if (stage === "GROUP" && number >= 1 && number <= 5) {
-    groupNumberClass = `group-number-${number}`;
+    groupNumberClass = `group-number group-number-${number}`;
   }
 
   return (
@@ -137,8 +137,7 @@ function StageDisplay({ stage, number }) {
       <div>
         {stage === "GROUP" ? (
           <>
-            <span>Gp.</span>
-            <span className={groupNumberClass}>{number}</span>
+            <span className={groupNumberClass}>Gp.{number}</span>
           </>
         ) : (
           mainStrText

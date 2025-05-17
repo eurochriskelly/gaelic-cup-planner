@@ -38,9 +38,15 @@ const UpdateFixture = ({
       getState: () => "enabled",
       action: async (setDrawer) => {
         showDetails && showDetails('forfeit');
-        await startMatch(fixture.id);
+        if (!fixture.started) {
+          console.log("Starting match", fixture.id);
+          await startMatch(fixture.id);
+        }
         moveToNextFixture();
-        await API.endMatch(nextFixture.tournamentId, nextFixture.id);
+        if (!fixture.ended) {
+          console.log("Ending match", fixture.id);
+          await API.endMatch(fixture.tournamentId, fixture.id);
+        }
         await fetchFixtures(true);
       }
     },

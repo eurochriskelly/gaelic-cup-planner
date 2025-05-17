@@ -37,13 +37,10 @@ function App() {
 
 function PitchViewWrapper() {
   const { tournamentId } = useParams();
-  console.log('how does it know the pitch id at first?')
   let pitchId = useParams().pitchId;
   if (!pitchId) {
     pitchId = '*'
   }
-
-  console.log('In PitchViewWrapper - tournamentId:', tournamentId, 'pitchId:', pitchId);
 
   return (
     <FixtureProvider tournamentId={tournamentId} pitchId={pitchId}>

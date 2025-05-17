@@ -50,7 +50,9 @@
     
       &.group-stage {
         background-color: #daebba;
-    
+        .group-number {
+          font-weight: bold;
+        }
         // Default text color will be inherited or from text-gray-500
         // Styles for the number part of Gp.X
         >div:first-child {

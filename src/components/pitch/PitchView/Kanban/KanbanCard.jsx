@@ -60,6 +60,9 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
                 <gaelic-score
                   goals={fixture.goals1 ?? 0}
                   points={fixture.points1 ?? 0}
+                  goalsagainst={fixture.goals2 ?? 0}
+                  pointsagainst={fixture.points2 ?? 0}
+                  played={fixture.outcome === 'played'}
                 ></gaelic-score>
               </div>
             )}
@@ -83,6 +86,9 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
                 <gaelic-score
                   goals={fixture.goals2 ?? 0}
                   points={fixture.points2 ?? 0}
+                  goalsagainst={fixture.goals1 ?? 0}
+                  pointsagainst={fixture.points1 ?? 0}
+                  played={fixture.outcome === 'played'}
                 ></gaelic-score>
               </div>
             )}
