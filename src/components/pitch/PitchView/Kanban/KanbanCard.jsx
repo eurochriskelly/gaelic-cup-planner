@@ -10,6 +10,7 @@ import '../../../../components/web/gaelic-score.js';
 const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
+  const displayNumber = fixture?.groupNumber || '0';
   const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
   const hasScore = typeof fixture.goals1 === 'number' &&
     typeof fixture.goals2 === 'number' &&
@@ -31,6 +32,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
         fixtureId={fixture.id}
         category={displayCategory}
         stage={displayStage}
+        number={displayNumber}
       />
       {fixture.scheduledTime && (
         <TimeDisplay

@@ -138,8 +138,10 @@
     color: white;
     padding: 0.5rem 0.75rem;
     gap: 1rem;
+    font-size: 4rem;
     background-color: desaturate(lighten($sc, 22%), 10%);
     color: lighten($sc, 80%);
+    height: 6rem;
     .icon-larger {
       transform: scale(1.2);
     }
@@ -147,12 +149,13 @@
       position: absolute;
       right: 0.3rem;
       top: 1rem;
+      font-size: 4rem;
       background: lighten($sc, $amount: 60);
       border: 0.6rem solid white;
       text-align: center;
       border-radius: 100px;
-      height: 9rem;
-      width: 9rem;
+      height: 12rem;
+      width: 12rem;
     }
   }
   
