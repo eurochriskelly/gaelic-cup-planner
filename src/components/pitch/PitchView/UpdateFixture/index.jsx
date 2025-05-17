@@ -36,9 +36,12 @@ const UpdateFixture = ({
       id: 'cancel',
       Icon: CancelIcon,
       getState: () => "enabled",
-      action: (setDrawer) => {
-        closeDetails && closeDetails()
-        setDrawer("finish")
+      action: async (setDrawer) => {
+        showDetails && showDetails('forfeit');
+        await startMatch(fixture.id);
+        moveToNextFixture();
+        await API.endMatch(nextFixture.tournamentId, nextFixture.id);
+        await fetchFixtures(true);
       }
     },
     {
@@ -72,21 +75,20 @@ const UpdateFixture = ({
       Icon: ScoreIcon,
       hideWhenPlanned: true,
       getState: (hasStarted) => hasStarted ? "enabled" : "disabled",
-      action: async (setDrawer) => {
-        closeDetails && closeDetails()
-        setDrawer("finish");
-        moveToNextFixture();
-        await API.endMatch(nextFixture.tournamentId, nextFixture.id);
-        await fetchFixtures(true);
+      action: async () => { // Removed setDrawer from params as it's not used directly
+        showDetails && showDetails('score');
+      // The rest of the logic (API calls, fetchFixtures, moveToNextFixture)
+      // will be handled by the ScoreEntryWrapper in KanbanDetailsPanel
       }
     },
     {
-      id: 'forfeit',
+      id: 'cards', // Renamed from 'forfeit' based on Icon and intended new functionality
       Icon: CardIcon,
       getState: () => "enabled",
-      action: (setDrawer) => {
-        closeDetails && closeDetails()
-        setDrawer("finish")
+      action: () => { // Removed setDrawer
+        // closeDetails && closeDetails(); // Panel will manage its own visibility
+        showDetails && showDetails('cards'); // Show details panel in 'cards' mode
+      // setDrawer("finish") // No longer managing drawer here
       }
     },
     // The last button changes based on mode
@@ -103,7 +105,7 @@ const UpdateFixture = ({
         id: 'info',
         Icon: ViewIcon,
         getState: () => "enabled",
-        action: () => showDetails && showDetails(),
+        action: () => showDetails && showDetails('info'),
         isInfoButton: true
       }
     ])

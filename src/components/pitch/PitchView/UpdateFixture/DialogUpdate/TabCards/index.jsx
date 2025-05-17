@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../../../../../../shared/api/endpoints";
+// API import removed, as parent will handle API calls
 import CardButton from "./CardButton";
 import './TabCards.scss';
 
@@ -7,9 +7,9 @@ const TabCards = ({
   team1, 
   team2, 
   cardedPlayers, 
-  setCardedPlayer,
-  fixture,
-  onClose
+  setCardedPlayer, // This will update the state in CardEntryWrapper
+  fixture // fixture might still be needed for context, e.g. tournamentId, fixture.id if API was here
+  // onSaveComplete and onCancel props removed
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
@@ -20,21 +20,7 @@ const TabCards = ({
     playerName: ''
   });
 
-  const handleSaveCards = () => {
-    const playersToUpdate = [
-      ...cardedPlayers.team1,
-      ...cardedPlayers.team2,
-    ];
-    
-    API.updateCardedPlayers(fixture.tournamentId, fixture.id, playersToUpdate)
-      .then(() => {
-        console.log("Successfully updated carded players");
-        onClose();
-      })
-      .catch(error => {
-        console.error("Error updating carded players:", error);
-      });
-  };
+  // handleSaveCards function (previously handleSaveCardsAndClose) is removed as API call moves to parent.
 
   const actions = {
     addOrUpdateCard: () => {
@@ -47,16 +33,15 @@ const TabCards = ({
         id: editingCard ? editingCard.id : null, 
         team: formData.team,
         cardColor: formData.cardColor,
-        playerNumber: +(formData.playerNumber),
+        playerNumber: parseInt(formData.playerNumber, 10), // Ensure number
         playerName: formData.playerName || 'Not provided',
-        confirmed: true
+        confirmed: true // Assuming cards added this way are confirmed
       };
-      setCardedPlayer(card);
+      setCardedPlayer(card); // This updates the state in CardEntryWrapper
       resetForm();
     },
     removeCard: (team, id) => {
-      const teamKey = team === team1 ? 'team1' : 'team2';
-      setCardedPlayer({ id, action: 'delete' });
+      setCardedPlayer({ id, team, action: 'delete' });
     },
     editCard: (card) => {
       setEditingCard(card);
@@ -140,12 +125,14 @@ const TabCards = ({
           </button>
         )}
       </div>
-      {cards.length > 0 ? (
+      {/* Ensure cards is an array before mapping */}
+      {(cards || []).length > 0 ? (
         <div className="cards-list">
-          {cards.map(card => (
-            <div key={card.id} className="card-entry">
+          {(cards || []).map(card => ( // Check if card.id exists
+            <div key={card.id || `temp-${card.playerNumber}-${card.team}`} className="card-entry">
               <div className={`card-indicator card-${card.cardColor}`}>
-                [{card.cardColor.charAt(0).toUpperCase()}]
+                {/* Ensure cardColor exists */}
+                {card.cardColor ? card.cardColor.charAt(0).toUpperCase() : ''}
               </div>
               <span className="card-number">#{card.playerNumber}</span>
               <span className="card-name">{card.playerName}</span>
@@ -180,6 +167,7 @@ const TabCards = ({
           {renderTeamSection(team2, cardedPlayers.team2, 'team2')}
         </div>
       )}
+      {/* Removed main Save & Close / Cancel buttons from the bottom */}
     </div>
   );
 };
