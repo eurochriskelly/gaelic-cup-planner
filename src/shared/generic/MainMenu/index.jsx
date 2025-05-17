@@ -29,11 +29,9 @@ const MainMenu = ({
     },
   };
   return (
-    <div className="MainMenu no-select" style={{ height }}>
-      <span style={{height: "100px", fontSize: "9rem"}} onClick={handle.hamburger} >
-        <PitchIcon width={219} height={159} />&nbsp;
+    <div className="MainMenu no-select" style={{ height, width: "1024px" }}>
+      <span style={{height: "100px", fontSize: "9rem"}}>
       </span>
-      <span className="title">{pitchId.replace(/_/g, ' ')}</span>
     </div>
   );
 };

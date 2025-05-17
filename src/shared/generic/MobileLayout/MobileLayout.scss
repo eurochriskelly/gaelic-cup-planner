@@ -33,7 +33,11 @@ section.MobileLayout {
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
-  background: radial-gradient(circle at top center, $rcol, $radial2 50%);
+  background-color: #494c44;
+  opacity: 0.8;
+  background-image:  linear-gradient(#7d8371 4.2px, transparent 4.2px), linear-gradient(90deg, #7d8371 4.2px, transparent 4.2px), linear-gradient(#7d8371 2.1px, transparent 2.1px), linear-gradient(90deg, #7d8371 2.1px, #494c44 2.1px);
+  background-size: 105px 105px, 105px 105px, 21px 21px, 21px 21px;
+  background-position: -4.2px -4.2px, -4.2px -4.2px, -2.1px -2.1px, -2.1px -2.1px;
 
   * {
     font-family: Arial, Helvetica, sans-serif;
@@ -64,7 +68,7 @@ section.MobileLayout {
   >footer:first-child {
     height: 11rem;
   }
-  >footer{
+  >footer.options{
     position:absolute;
     bottom: 11rem;
   }

@@ -10,10 +10,16 @@ import '../../../../components/web/gaelic-score.js';
 const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
-  const hasScore = fixture.goals1 != null || fixture.points1 != null || fixture.goals2 != null || fixture.points2 != null;
   const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
+  const hasScore = typeof fixture.goals1 === 'number' &&
+    typeof fixture.goals2 === 'number' &&
+    typeof fixture.points1 === 'number' &&
+    typeof fixture.points2 === 'number' &&
+    !isNaN(fixture.goals1) &&
+    !isNaN(fixture.goals2) &&
+    !isNaN(fixture.points1) &&
+    !isNaN(fixture.points2);
   const vspace = hasScore ? '2.1rem' : 0;
-  
   return (
     <div
       draggable

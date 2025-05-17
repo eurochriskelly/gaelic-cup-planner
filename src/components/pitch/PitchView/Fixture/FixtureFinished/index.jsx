@@ -111,7 +111,6 @@ function FixtureFinished({
 
       {isDialogOpen && (
         <>
-          <div className="drawer-overlay" onClick={handleCloseDialog} />
           <div className="updateFixture">
             <div className="drawers">
               <DialogUpdate
