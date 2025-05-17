@@ -20,7 +20,6 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 2.95rem;
     font-weight: 500;
     
     svg {
@@ -42,7 +41,58 @@
     height: 5rem;
     width: 5rem;
     border: 0.2rem solid #ffffff;
-    background: #ddd;
+    font-size: 5.95rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    
+      &.group-stage {
+        background-color: #daebba;
+    
+        // Default text color will be inherited or from text-gray-500
+        // Styles for the number part of Gp.X
+        >div:first-child {
+          .group-number-1 {
+            color: #D32F2F;
+          }
+    
+          .group-number-2 {
+            color: #0a56a3;
+          }
+    
+          .group-number-3 {
+            color: #388E3C;
+          }
+    
+          .group-number-4 {
+            color: #7B1FA2;
+          }
+    
+          .group-number-5 {
+            color: #F57C00;
+          }
+        }
+      }
+    
+      &.other-stage {
+        background-color: #e4caef;
+        // Default text color will be inherited or from text-gray-500
+      }
+    
+      // Target the first div child (mainStr) for specific font colors
+      &.cup-main>div:first-child {
+        color: #055702; // DarkGoldenRod for "Cup"
+      }
+    
+      &.shield-main>div:first-child {
+        color: #830505; // DimGray for "Shield"
+      }
+    
+      &.plate-main>div:first-child {
+        color: #02197f; // SaddleBrown for "Plate"
+      }
   }
 }
 

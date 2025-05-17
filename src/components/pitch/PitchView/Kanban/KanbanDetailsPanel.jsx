@@ -38,6 +38,7 @@ const KanbanDetailsPanel = ({
         fixtureId={fixture.id}
         category={displayCategory}
         stage={displayStage}
+        number={fixture.groupNumber || '0'}
       />
 
       <div className="details-content-wrapper">
@@ -49,14 +50,6 @@ const KanbanDetailsPanel = ({
               delay={militaryTimeDiffMins(fixture.scheduledTime || fixture.plannedStart, fixture.startedTime || fixture.actualStartedTime)}
               played={!!fixture.startedTime || !!fixture.actualStartedTime}
             />
-            <div className="text-4xl">
-              <span>{displayCategory}</span>
-              <span className="text-rose-500">#</span>
-              <span>{`${fixture.id}`.substr(-3)}</span>
-            </div>
-            <div className="mb-4 text-xl">
-              Stage: {displayStage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}
-            </div>
           </div>
 
           <div className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4" style={{ background: '#dadac4', borderColor: '#bebfb1' }}>
@@ -116,22 +109,11 @@ const KanbanDetailsPanel = ({
               <div className="fixture-details">
                 <div className="details-grid">
                   <div className="detail-item">
-                    <strong>ID:</strong> {fixture.id}
-                  </div>
-                  <div className="detail-item">
                     <strong>Status:</strong> <span className={`status-${fixture.column}`}>{fixture.column}</span>
-                  </div>
-                  <div className="detail-item">
-                    <strong>Planned Start:</strong> {fixture.plannedStart || fixture.startTime}
                   </div>
                   <div className="detail-item">
                     <strong>Pitch:</strong> {fixture.pitch}
                   </div>
-                  {fixture.stage && (
-                    <div className="detail-item">
-                      <strong>Stage:</strong> {fixture.stage}{fixture.groupNumber ? ` (Group ${fixture.groupNumber})` : ''}
-                    </div>
-                  )}
                   {fixture.actualStartedTime && (
                     <div className="detail-item">
                       <strong>Actual Start:</strong> {fixture.actualStartedTime}
