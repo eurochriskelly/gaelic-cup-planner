@@ -130,7 +130,7 @@ const UpdateFixture = ({
   const infoButton = visibleButtons.find(b => b.isInfoButton);
 
   return (
-    <div className="updateFixture select-none" onClick={() => console.log('sle fix', fixture)}>
+    <div className="updateFixture select-none">
       <div className="button-grid">
         {mainButtons.map((button, index) => (
           <button

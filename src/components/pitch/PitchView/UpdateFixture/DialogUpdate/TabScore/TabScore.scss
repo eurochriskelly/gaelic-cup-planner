@@ -38,14 +38,6 @@
 
 .teamScore {
   cursor: pointer;
-  > h4 {
-    text-align: center;
-    font-size: 3rem;
-    color: $sc-dark-20;
-    letter-spacing: 0.2rem;
-    margin: 3rem 0 0 0;
-    text-transform: uppercase;
-  }
   .grayed-score {
     color: lighten($sc-light-40, 10%);
     font-weight: normal;
@@ -57,10 +49,12 @@
     background-color: $sc-light-40;
     border: 1px solid #ccc;
     border-radius: 1rem;
-    margin: 0.7rem 6em;
-    height: 11rem;
+    margin: 1.7rem 1em;
+    height: 15rem;
     display: flex;
     align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
     justify-content: center;
     /* .proceedButtons { // This class was inside .teamScore > div, likely a typo or old structure
       color: $pc-dark-20;
@@ -77,38 +71,23 @@
   }
 }
 
-/* .drawerFinish div.proceedButtons { // These buttons are removed
-  width: 100%;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding: 1rem;
-  button {
-    background-color: white;
-    padding: 1.5rem;
-      font-size: 2.8rem;
-    margin: 0.4rem;
-    margin-top: 2rem;
-    border-radius: 1rem;
-    border: 2px solid gray;
-    cursor: pointer;
-  }
-    button.enabled {
-      background-color: $sc;
-    color: white;
-    border-color: $sc;
-  }
-    button.cancel-button {
-      background-color: #f8f9fa;
-      color: #343a40;
-      border-color: #6c757d;
-  
-}
-
-*/
 .score-container {
-  position: relative;
+  position: absolute;
+  top: 10rem;
+  .side-by-side {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    margin: 0 1rem;
+    > div:first-child {
+      padding:0;
+      margin: 0;
+    }
+    > div {
+      width: 25rem;
+    }
+  }
 }
 
 .scoreSelectorOverlay {
