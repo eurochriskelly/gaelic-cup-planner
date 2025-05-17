@@ -1,4 +1,9 @@
 import { useState } from "react";
+import DialogUpdate from "./DialogUpdate";
+import DrawerPostpone from "./DrawerPostpone";
+import { useFixtureContext } from "../FixturesContext";
+import API from "../../../../shared/api/endpoints";
+// icons
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
@@ -6,10 +11,6 @@ import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 import CardIcon from "../../../../shared/icons/icon-card.svg?react";
 import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
 import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
-import DialogUpdate from "./DialogUpdate";
-import DrawerPostpone from "./DrawerPostpone";
-import { useFixtureContext } from "../FixturesContext";
-import API from "../../../../shared/api/endpoints";
 import './UpdateFixture.scss';
 
 const UpdateFixture = ({
