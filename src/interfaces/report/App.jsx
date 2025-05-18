@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { Provider} from "../../shared/js/Provider";
-import LandingPage from "./components/LandingPage";
-import PlannerPage from "./components/PlannerPage";
+import Sandbox from "./pages/sandbox";
+import PlannerPage from "./pages/planner";
+import LandingPage from "./pages/landing";
 import { TournamentProvider } from "./TournamentContext";
 import { PrimeReactProvider } from 'primereact/api';
 
@@ -18,9 +19,10 @@ function App() {
         <TournamentProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/planning/:id/matches" element={<PlannerPage />} />
             <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-            <Route path="*" element={<LandingPage />} />
+            <Route path="/planning/:id/matches" element={<PlannerPage />} />
+            <Route path="/execution/:id/recent" element={<LandingPage />} />
+            <Route path="*" element={<Sandbox />} />
           </Routes>
         </TournamentProvider>
       </Provider>
