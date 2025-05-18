@@ -61,6 +61,16 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
         setHasImported(false);
     };
 
+    useEffect(() => {
+        if (!isOpen) {
+            // Reset all state when dialog is closed
+            setFixturesText('');
+            setTableData([]);
+            setColumns([]);
+            setHasImported(false);
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
