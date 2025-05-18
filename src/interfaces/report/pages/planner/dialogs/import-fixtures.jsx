@@ -40,6 +40,22 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
                         Cancel
                     </button>
                     <button
+                        onClick={() => {
+                            try {
+                                const result = processPastedFixtures(fixturesText);
+                                console.log('Fixture check successful:', result);
+                                alert('Fixtures are valid and ready to import!');
+                            } catch (error) {
+                                console.error('Error checking fixtures:', error);
+                                alert(`Error in fixtures: ${error.message}`);
+                            }
+                        }}
+                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                        disabled={!fixturesText.trim()}
+                    >
+                        Check
+                    </button>
+                    <button
                         onClick={handleImport}
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         disabled={!fixturesText.trim()}
