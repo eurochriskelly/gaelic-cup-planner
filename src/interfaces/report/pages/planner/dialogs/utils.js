@@ -19,12 +19,12 @@ function normalizeMatchString(match) {
 }
 
 
-const getCategories = (matches: string[]) => [...new Set(matches.map(match => {
+const getCategories = (matches) => [...new Set(matches.map(match => {
   const normalizedMatch = normalizeMatchString(match);
   return normalizedMatch.split('.')[0];
 }))];
 
-const computeMatchIds = (matches: string[], categories: string[]) =>
+const computeMatchIds = (matches, categories) =>
   matches.map(match => {
     const normalizedMatch = normalizeMatchString(match);
     const [cat, numStr] = normalizedMatch.split('.');
@@ -50,7 +50,7 @@ const computeStageColumn = (stages) =>
     const slashMatch = second.match(/^(\d+)\/(\d+)$/);
     if (slashMatch) {
       const [, a, b] = slashMatch;
-      const toOrdinal = (n: number) => {
+      const toOrdinal = (n) => {
         const rem10 = n % 10, rem100 = n % 100;
         if (rem10 === 1 && rem100 !== 11) return `${n}st`;
         if (rem10 === 2 && rem100 !== 12) return `${n}nd`;
@@ -106,10 +106,10 @@ const parseTeamColumn = (
   const poolIdKey = overrideKeys?.poolIdKey ?? `pool${index}Id`;
   const positionKey = overrideKeys?.positionKey ?? `position${index}`;
 
-  const team: string[] = [];
-  const pool: string[] = [];
-  const poolId: string[] = [];
-  const position: string[] = [];
+  const team = [];
+  const pool = [];
+  const poolId = [];
+  const position = [];
 
   input.forEach((val, i) => {
     const stage = stageCol[i].toLowerCase();
@@ -200,7 +200,7 @@ const normalizeDurationColumn = (rawDurations) =>
 
 
 const toCSV = (data, headers) => {
-  const rows: string[] = [];
+  const rows = [];
   // Header
   rows.push(headers.join(';'));
   // Rows
@@ -212,7 +212,7 @@ const toCSV = (data, headers) => {
   return rows.join('\n');
 };
 
-export const processPastedFixtures = (tsvData: string) => {
+export const processPastedFixtures = (tsvData) => {
   console.log('--- Raw TSV Data ---');
   console.log(tsvData);
   const lines = tsvData.split('\n').filter(line => line.trim());
@@ -221,15 +221,15 @@ export const processPastedFixtures = (tsvData: string) => {
   }
 
   // --- Step 1: Clean Headers ---
-  const originalHeaders = lines.shift()!.split('\t').map(x => x.trim());
+  const originalHeaders = lines.shift().split('\t').map(x => x.trim());
   const headers = originalHeaders.map(h => h.toUpperCase());
   console.log('Cleaned Headers:', headers);
 
   // Initialize data structure with uppercase headers
-  const data: FixtureData = headers.reduce((acc, header) => {
+  const data = headers.reduce((acc, header) => {
     acc[header] = [];
     return acc;
-  }, {} as FixtureData);
+  }, {});
 
   // Populate data using original headers for indexing but uppercase for keys
   lines.forEach(line => {
