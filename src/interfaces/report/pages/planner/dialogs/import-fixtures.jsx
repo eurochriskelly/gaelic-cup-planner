@@ -3,7 +3,7 @@ import { processPastedFixtures } from './utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-function ImportFixturesDialog({ isOpen, onClose, onImport }) {
+export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
     const [fixturesText, setFixturesText] = useState('');
     const [tableData, setTableData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -164,7 +164,6 @@ function ImportFixturesDialog({ isOpen, onClose, onImport }) {
     );
 }
 
-export default ImportFixturesDialog;
 
 function SampleFormat() {
     return (
