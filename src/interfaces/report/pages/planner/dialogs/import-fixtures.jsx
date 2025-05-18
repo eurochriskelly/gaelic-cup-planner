@@ -7,6 +7,7 @@ function ImportFixturesDialog({ isOpen, onClose, onImport }) {
     const [fixturesText, setFixturesText] = useState('');
     const [tableData, setTableData] = useState([]);
     const [columns, setColumns] = useState([]);
+    const [hasImported, setHasImported] = useState(false);
 
     useEffect(() => {
         if (!fixturesText.trim()) {
@@ -46,12 +47,18 @@ function ImportFixturesDialog({ isOpen, onClose, onImport }) {
             const result = processPastedFixtures(fixturesText);
             console.log('Processed fixtures:', result);
             onImport(fixturesText);
-            setFixturesText('');
-            onClose();
+            setHasImported(true);
         } catch (error) {
             console.error('Error processing fixtures:', error);
             alert(`Error processing fixtures: ${error.message}`);
         }
+    };
+
+    const handleStartOver = () => {
+        setFixturesText('');
+        setTableData([]);
+        setColumns([]);
+        setHasImported(false);
     };
 
     if (!isOpen) return null;
@@ -61,12 +68,14 @@ function ImportFixturesDialog({ isOpen, onClose, onImport }) {
             <div className="bg-white rounded-lg shadow-xl p-6 max-w-5xl w-full">
                 <h2 className="text-2xl font-bold mb-4">Import Fixtures</h2>
                 <div>
-                    <textarea
-                        className="w-full h-32 p-4 border rounded-md mb-4"
-                        placeholder="Paste TSV data here (first row should be headers)..."
-                        value={fixturesText}
-                        onChange={(e) => setFixturesText(e.target.value)}
-                    />
+                    {!hasImported && (
+                        <textarea
+                            className="w-full h-32 p-4 border rounded-md mb-4"
+                            placeholder="Paste TSV data here (first row should be headers)..."
+                            value={fixturesText}
+                            onChange={(e) => setFixturesText(e.target.value)}
+                        />
+                    )}
                     {tableData.length > 0 ? (
                         <div className="mt-4">
                             <h3 className="text-lg font-semibold mb-2">Preview</h3>
@@ -92,12 +101,21 @@ function ImportFixturesDialog({ isOpen, onClose, onImport }) {
                     )}
                 </div>
                 <div className="flex justify-end gap-3">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                    >
-                        Cancel
-                    </button>
+                    {hasImported ? (
+                        <button
+                            onClick={handleStartOver}
+                            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                        >
+                            Start Over
+                        </button>
+                    ) : (
+                        <button
+                            onClick={onClose}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                        >
+                            Cancel
+                        </button>
+                    )}
                     <button
                         onClick={() => {
                             try {
