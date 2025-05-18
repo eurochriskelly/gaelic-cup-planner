@@ -1,5 +1,4 @@
-type FixtureData = Record<string, string[]>;
-const II = (msg: string) => console.log(`II ${new Date().toISOString()}: ${msg}`);
+const II = (msg) => console.log(`II ${new Date().toISOString()}: ${msg}`);
 
 const groupTypes = new Set(['gp', 'grp', 'group', 'pool', 'ple', 'poule']);
 
@@ -9,7 +8,7 @@ const groupTypes = new Set(['gp', 'grp', 'group', 'pool', 'ple', 'poule']);
  * @param match The raw match string.
  * @returns The normalized match string.
  */
-function normalizeMatchString(match: string): string {
+function normalizeMatchString(match) {
   // Check if it's like C1, H12 (letters followed directly by numbers without a dot)
   const shortFormatMatch = match.match(/^([a-zA-Z]+)(\d+)$/);
   if (shortFormatMatch && !match.includes('.')) {
@@ -39,7 +38,7 @@ const computeMatchIds = (matches: string[], categories: string[]) =>
     return ((catIndex + 1) * 100 + num).toString();
   });
 
-const computeStageColumn = (stages: string[]) =>
+const computeStageColumn = (stages) =>
   stages.map(stageRaw => {
     const parts = stageRaw.includes('.')
       ? stageRaw.toLowerCase().split('.')
@@ -74,7 +73,7 @@ const computeStageColumn = (stages: string[]) =>
     return `${first}_${second}`;
   });
 
-const computeGroupColumn = (stages: string[]) =>
+const computeGroupColumn = (stages) =>
   stages.map(stageRaw => {
     const parts = stageRaw.toLowerCase().split('.');
     const first = parts[0];
@@ -85,7 +84,7 @@ const computeGroupColumn = (stages: string[]) =>
     return numMatch ? numMatch[0] : "1";
   });
 
-const populateCategoryColumn = (data: FixtureData, categories: string[]): string[] => {
+const populateCategoryColumn = (data, categories) => {
   if (data["CATEGORY"]) return data["CATEGORY"];
   if (data["COMPETITION"]) return data["COMPETITION"];
   // fallback: infer from MATCH column
@@ -93,11 +92,11 @@ const populateCategoryColumn = (data: FixtureData, categories: string[]): string
 };
 
 const parseTeamColumn = (
-  colName: string,
-  index: number | string,
-  data: FixtureData,
-  categories: string[],
-  overrideKeys?: { teamKey?: string; poolKey?: string; poolIdKey?: string; positionKey?: string }
+  colName,
+  index,
+  data,
+  categories,
+  overrideKeys
 ) => {
   const input = data[colName];
   const stageCol = data["stage"];
@@ -193,14 +192,14 @@ const parseTeamColumn = (
   data[positionKey] = position;
 };
 
-const normalizeDurationColumn = (rawDurations: string[]): string[] =>
+const normalizeDurationColumn = (rawDurations) =>
   rawDurations.map(val => {
     const cleaned = val.replace(/[^\d]/g, ''); // remove non-digits
     return cleaned || '20'; // default to 20 if empty
   });
 
 
-const toCSV = (data: FixtureData, headers: string[]): string => {
+const toCSV = (data, headers) => {
   const rows: string[] = [];
   // Header
   rows.push(headers.join(';'));
