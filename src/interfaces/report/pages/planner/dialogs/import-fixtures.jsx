@@ -1,8 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { processPastedFixtures } from './utils';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
     const [fixturesText, setFixturesText] = useState('');
+    const [tableData, setTableData] = useState([]);
+    const [columns, setColumns] = useState([]);
+
+    useEffect(() => {
+        if (!fixturesText.trim()) {
+            setTableData([]);
+            setColumns([]);
+            return;
+        }
+
+        try {
+            const lines = fixturesText.split('\n').filter(line => line.trim());
+            if (lines.length < 2) return; // Need at least header + 1 row
+            
+            const headers = lines[0].split('\t').map(h => h.trim());
+            const rows = lines.slice(1).map(line => {
+                const values = line.split('\t');
+                const row = {};
+                headers.forEach((header, i) => {
+                    row[header] = values[i]?.trim() || '';
+                });
+                return row;
+            });
+
+            setColumns(headers.map(header => ({
+                field: header,
+                header: header
+            })));
+            setTableData(rows);
+        } catch (error) {
+            console.error('Error parsing TSV:', error);
+            setTableData([]);
+            setColumns([]);
+        }
+    }, [fixturesText]);
 
     const handleImport = () => {
         try {
@@ -25,12 +62,34 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
                 <h2 className="text-2xl font-bold mb-4">Import Fixtures</h2>
                 <div>
                     <textarea
-                        className="w-full h-64 p-4 border rounded-md mb-4"
-                        placeholder="Paste your fixtures here..."
+                        className="w-full h-32 p-4 border rounded-md mb-4"
+                        placeholder="Paste TSV data here (first row should be headers)..."
                         value={fixturesText}
                         onChange={(e) => setFixturesText(e.target.value)}
                     />
-                    <SampleFormat />
+                    {tableData.length > 0 ? (
+                        <div className="mt-4">
+                            <h3 className="text-lg font-semibold mb-2">Preview</h3>
+                            <div className="border rounded-md overflow-hidden">
+                                <DataTable 
+                                    value={tableData}
+                                    scrollable 
+                                    scrollHeight="300px"
+                                    className="p-datatable-sm"
+                                >
+                                    {columns.map(col => (
+                                        <Column 
+                                            key={col.field} 
+                                            field={col.field} 
+                                            header={col.header} 
+                                        />
+                                    ))}
+                                </DataTable>
+                            </div>
+                        </div>
+                    ) : (
+                        <SampleFormat />
+                    )}
                 </div>
                 <div className="flex justify-end gap-3">
                     <button
