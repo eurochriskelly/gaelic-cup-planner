@@ -25,7 +25,7 @@ const getCategories = (matches) => [...new Set(matches.map(match => {
 }))];
 
 const computeMatchIds = (matches, categories) =>
-  matches.map(match => {
+  matches?.map(match => {
     const normalizedMatch = normalizeMatchString(match);
     const [cat, numStr] = normalizedMatch.split('.');
     const num = parseInt(numStr, 10);
@@ -246,10 +246,10 @@ export const processPastedFixtures = (tsvData) => {
 
   console.log('--- Data after Header Cleaning ---');
   console.log(JSON.stringify(data, null, 2)); // Print the data structure
+  let categories = [];
   try {
     // --- Proceed with existing parsing logic using uppercase headers ---
-
-    const categories = getCategories(data["MATCH"]); // Assumes MATCH header exists and is uppercase
+    categories = getCategories(data["MATCH"]); // Assumes MATCH header exists and is uppercase
     console.log('Derived Categories:', categories);
     data["matchId"] = computeMatchIds(data["MATCH"], categories);
     data["stage"] = computeStageColumn(data["STAGE"]);
