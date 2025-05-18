@@ -1,12 +1,20 @@
 import { useState } from 'react';
+import { processPastedFixtures } from './utils';
 
 export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
     const [fixturesText, setFixturesText] = useState('');
 
     const handleImport = () => {
-        onImport(fixturesText);
-        setFixturesText('');
-        onClose();
+        try {
+            const result = processPastedFixtures(fixturesText);
+            console.log('Processed fixtures:', result);
+            onImport(fixturesText);
+            setFixturesText('');
+            onClose();
+        } catch (error) {
+            console.error('Error processing fixtures:', error);
+            alert(`Error processing fixtures: ${error.message}`);
+        }
     };
 
     if (!isOpen) return null;
