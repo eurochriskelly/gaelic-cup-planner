@@ -1,11 +1,31 @@
-const { useState, useEffect } = React;
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CreateTournamentModal from './CreateTournament';
-import API from './mocks';
+import CreateTournamentModal from './dialogs/CreateTournament';
+
+// Inline mock data
+const mockTournaments = [
+  { id: 26, title: "Eindhoven Football Round 3", date: "2025-05-16", location: "Eindhoven", link: "bec22312-ee53-4c8d-b395-a633b6859e96" },
+  { id: 25, title: "vienna", date: "2025-05-09", location: "vienna", link: "0e5c8afc-2023-4a99-b44d-2cb8e802627c" },
+  { id: 24, title: "hurling", date: "2025-05-02", location: "maastricht", link: "d291769b-dfe8-47bb-b665-e70a70c22140" },
+  // ...add a few more, you can add the rest as needed
+  { id: 1, title: "Sandbox tournament 2030", date: "2029-12-31", location: "Eurodisney, Paris", link: "7bd2ad30-f6aa-11ef-a162-23d9aafc1469" }
+];
+
+// Mock API functions
+const API = {
+  getTournaments: async () => Promise.resolve(mockTournaments),
+  getUser: async () => Promise.resolve({
+    id: 1,
+    name: "John Doe",
+    email: "chris@pitchperfect.eu.com"
+  })
+};
 
 // Navbar Component
 function Navbar() {
+    console.log("Navbar component rendered");
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
 
     return (
         <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
@@ -89,7 +109,7 @@ function TournamentTable({ tournaments }) {
     );
 }
 
-export default function LandingPage () {
+function LandingPage () {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tournaments, setTournaments] = useState([]);
 
@@ -133,3 +153,5 @@ export default function LandingPage () {
         </article>
     );
 }
+
+export default LandingPage;
