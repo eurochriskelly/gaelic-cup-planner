@@ -103,10 +103,29 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
                             try {
                                 const result = processPastedFixtures(fixturesText);
                                 console.log('Fixture check successful:', result);
-                                alert('Fixtures are valid and ready to import!');
+                                
+                                // Convert CSV back to table data
+                                const csvLines = result.csv.split('\n');
+                                const csvHeaders = csvLines[0].split(';');
+                                const csvRows = csvLines.slice(1).map(line => {
+                                    const values = line.split(';');
+                                    const row = {};
+                                    csvHeaders.forEach((header, i) => {
+                                        row[header] = values[i] || '';
+                                    });
+                                    return row;
+                                });
+
+                                setColumns(csvHeaders.map(header => ({
+                                    field: header,
+                                    header: header
+                                })));
+                                setTableData(csvRows);
                             } catch (error) {
                                 console.error('Error checking fixtures:', error);
                                 alert(`Error in fixtures: ${error.message}`);
+                                setTableData([]);
+                                setColumns([]);
                             }
                         }}
                         className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
