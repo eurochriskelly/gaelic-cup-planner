@@ -13,6 +13,7 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
         if (!fixturesText.trim()) {
             setTableData([]);
             setColumns([]);
+            setHasImported(false);
             return;
         }
 
@@ -35,10 +36,12 @@ export default function ImportFixturesDialog({ isOpen, onClose, onImport }) {
                 header: header
             })));
             setTableData(rows);
+            setHasImported(true); // Hide textarea when valid TSV is pasted
         } catch (error) {
             console.error('Error parsing TSV:', error);
             setTableData([]);
             setColumns([]);
+            setHasImported(false);
         }
     }, [fixturesText]);
 
