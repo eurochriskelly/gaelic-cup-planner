@@ -1,6 +1,7 @@
 const II = (msg) => console.log(`II ${new Date().toISOString()}: ${msg}`);
 
 const groupTypes = new Set(['gp', 'grp', 'group', 'pool', 'ple', 'poule']);
+let warnings = [];
 
 /**
  * Normalizes match strings like 'C1' or 'H12' to 'C.1' or 'H.12'.
@@ -18,7 +19,6 @@ function normalizeMatchString(match) {
   return match;
 }
 
-
 const getCategories = (matches) => [...new Set(matches.map(match => {
   const normalizedMatch = normalizeMatchString(match);
   return normalizedMatch.split('.')[0];
@@ -32,8 +32,9 @@ const computeMatchIds = (matches, categories) =>
     // Find category index ignoring case, default to 0 if not found
     let catIndex = categories.findIndex(c => c.toLowerCase() === cat?.toLowerCase());
     if (catIndex === -1) {
-        console.warn(`Category '${cat}' from match '${match}' not found in derived categories: [${categories.join(', ')}]. Defaulting to index 0.`);
-        catIndex = 0; // Assign to the first category as a fallback
+      const warningMsg = `Category '${cat}' from match '${match}' not found in derived categories: [${categories.join(', ')}]. Defaulting to index 0.`;
+      warnings.push({ type: 'CategoryNotFound', message: warningMsg });
+      catIndex = 0; // Assign to the first category as a fallback
     }
     return ((catIndex + 1) * 100 + num).toString();
   });
@@ -122,10 +123,10 @@ const parseTeamColumn = (
         poolId.push(match[2]); // N
         position.push(match[3]); // M
         console.log(`Parsed special team format:`, {
-          input: val, 
-          pool: match[1], 
-          poolId: match[2], 
-          position: match[3] 
+          input: val,
+          pool: match[1],
+          poolId: match[2],
+          position: match[3]
         });
       } else {
         console.warn(`Failed to parse special team format: ${val}`);
@@ -164,9 +165,10 @@ const parseTeamColumn = (
         const num = parseInt(numStr, 10);
         // Find category index ignoring case, default to 0 if not found
         let catIndex = categories.findIndex(c => c.toLowerCase() === cat?.toLowerCase());
-         if (catIndex === -1) {
-            console.warn(`Category '${cat}' from reference '${val}' not found in derived categories: [${categories.join(', ')}]. Defaulting to index 0.`);
-            catIndex = 0; // Assign to the first category as a fallback
+        if (catIndex === -1) {
+          const warningMsg = `Category '${cat}' from reference '${val}' not found in derived categories: [${categories.join(', ')}]. Defaulting to index 0.`;
+          warnings.push({ type: 'CategoryNotFound', message: warningMsg });
+          catIndex = 0; // Assign to the first category as a fallback
         }
         const matchId = (catIndex + 1) * 100 + num;
         pool.push("match");
@@ -213,6 +215,7 @@ const toCSV = (data, headers) => {
 };
 
 export const processPastedFixtures = (tsvData) => {
+  warnings = []; // Reset warnings for each new import
   console.log('--- Raw TSV Data ---');
   console.log(tsvData);
   const lines = tsvData.split('\n').filter(line => line.trim());
@@ -237,9 +240,10 @@ export const processPastedFixtures = (tsvData) => {
     originalHeaders.forEach((_originalHeader, i) => {
       const headerKey = headers[i]; // Use the uppercase header
       if (headerKey) { // Ensure header exists
-          data[headerKey].push(values[i]?.trim() || '');
+        data[headerKey].push(values[i]?.trim() || '');
       } else {
-          console.warn(`Skipping value at index ${i} due to missing header mapping: "${values[i]}"`);
+        const warningMsg = `Skipping value at index ${i} due to missing header mapping: "${values[i]}"`;
+        warnings.push({ type: 'MissingHeader', message: warningMsg });
       }
     });
   });
@@ -254,7 +258,7 @@ export const processPastedFixtures = (tsvData) => {
     data["matchId"] = computeMatchIds(data["MATCH"], categories);
     data["stage"] = computeStageColumn(data["STAGE"]);
     data["group"] = computeGroupColumn(data["STAGE"]);
-   
+
     parseTeamColumn("TEAM1", 1, data, categories);
     parseTeamColumn("TEAM2", 2, data, categories);
     parseTeamColumn("UMPIRES", "U", data, categories, {
