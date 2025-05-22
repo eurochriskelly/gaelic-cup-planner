@@ -2,14 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import API from '../../../../shared/api/endpoints.js'; // Assuming API calls will be needed
 
-// Palette of colors for pitches
-const PITCH_PALETTE = [
-  '#FFDFD3', '#D3FFD3', '#D3D3FF', '#FFFFD3', '#FFD3FF',
-  '#D3FFFF', '#E8D3FF', '#FFEBD3', '#D3FFE8', '#FFD3E8',
-  '#FADADD', '#FDFD96', '#CDFADF', '#BDECB6', '#C9EBFD',
-  '#D7C9FD', '#FDC9D7', '#FDEAC9', '#C9FDEE', '#E6E6FA'
-];
-
 // Helper to determine Kanban column based on fixture status
 const getKanbanColumn = (fixture) => {
   if (fixture.played || fixture.actualEndedTime) {
@@ -28,7 +20,7 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedPitch, setSelectedPitch] = useState('All Pitches');
   const [selectedTeam, setSelectedTeam] = useState('All Teams');
-  const [pitchColorMapping, setPitchColorMapping] = useState({});
+  // const [pitchColorMapping, setPitchColorMapping] = useState({}); // Removed
   const [maximizedColumnKey, setMaximizedColumnKey] = useState(null); // null, 'planned', 'started', 'finished'
 
   const toggleMaximizeColumn = useCallback((key) => {
@@ -36,14 +28,6 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   }, []);
 
   useEffect(() => {
-    // Dynamically create color mapping for pitches
-    const uniquePitches = [...new Set(initialFixtures.map(f => f.pitch).filter(Boolean))].sort();
-    const newMapping = {};
-    uniquePitches.forEach((pitch, index) => {
-      newMapping[pitch] = PITCH_PALETTE[index % PITCH_PALETTE.length];
-    });
-    setPitchColorMapping(newMapping);
-
     // Process fixtures for board display
     const processedFixtures = initialFixtures.map(f => ({
       ...f,
@@ -52,9 +36,9 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
     setBoardFixtures(processedFixtures);
   }, [initialFixtures]);
 
-  const getPitchColor = useCallback((pitch) => {
-    return pitchColorMapping[pitch] || '#E6E6E6'; // Default to Pastel Gray if pitch not in mapping
-  }, [pitchColorMapping]);
+  // const getPitchColor = useCallback((pitch) => { // Removed
+  //   return pitchColorMapping[pitch] || '#E6E6E6'; // Default to Pastel Gray if pitch not in mapping
+  // }, [pitchColorMapping]); // Removed
 
   const pitches = ['All Pitches', ...new Set(boardFixtures.map(fixture => fixture.pitch))];
   const teams = ['All Teams', ...new Set(boardFixtures.flatMap(fixture => [fixture.team1, fixture.team2].filter(Boolean)))];
@@ -164,7 +148,7 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
     pitches,
     teams,
     columns,
-    getPitchColor,
+    // getPitchColor, // Removed
     onDragStart,
     onDrop,
     onDragOver,

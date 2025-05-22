@@ -10,7 +10,7 @@ const KanbanColumn = ({
   onDragStart,
   handleFixtureClick,
   selectedFixture,
-  getPitchColor,
+  // getPitchColor, // Removed
   columnIndex,
   allTournamentPitches, // New prop for all pitches in the tournament
   allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
@@ -44,7 +44,7 @@ const KanbanColumn = ({
     columnSlots = actualPitches.map((pitch, index) => {
       // Find if there's an active fixture (from the `fixtures` prop - which are 'started' fixtures) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
-      const slotBackgroundColor = getPitchColor(pitch); // Use getPitchColor for consistent pitch colors
+      // const slotBackgroundColor = getPitchColor(pitch); // Removed
 
       let showWarning = false;
       if (!fixtureForPitchSlot && allPlannedFixtures) {
@@ -57,7 +57,7 @@ const KanbanColumn = ({
           key={`pitch-slot-${pitch}`} // Keyed by pitch name for stability
           slotIndex={index} // Relative index within this dynamic column
           columnIndex={columnIndex}
-          slotBackgroundColor={slotBackgroundColor}
+          // slotBackgroundColor={slotBackgroundColor} // Removed
           pitchName={pitch} // Pass the pitch name to the slot
           showWarningIcon={showWarning} // Pass warning status
           isMatchInProgress={!!fixtureForPitchSlot} // Explicitly pass if match is in progress
@@ -69,7 +69,7 @@ const KanbanColumn = ({
               onDragStart={(e) => onDragStart(e, fixtureForPitchSlot.id)}
               onClick={() => handleFixtureClick(fixtureForPitchSlot)}
               isSelected={selectedFixture && selectedFixture.id === fixtureForPitchSlot.id}
-              pitchColor={getPitchColor(fixtureForPitchSlot.pitch)} // This might be redundant if slot color indicates pitch
+              // pitchColor={getPitchColor(fixtureForPitchSlot.pitch)} // Removed
             />
           )}
         </KanbanSlot>
@@ -94,7 +94,7 @@ const KanbanColumn = ({
               onDragStart={(e) => onDragStart(e, fixtureForSlot.id)}
               onClick={() => handleFixtureClick(fixtureForSlot)}
               isSelected={selectedFixture && selectedFixture.id === fixtureForSlot.id}
-              pitchColor={getPitchColor(fixtureForSlot.pitch)}
+              // pitchColor={getPitchColor(fixtureForSlot.pitch)} // Removed
             />
           )}
         </KanbanSlot>

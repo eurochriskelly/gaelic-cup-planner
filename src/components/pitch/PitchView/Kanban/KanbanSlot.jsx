@@ -8,7 +8,7 @@ const WarningIcon = () => (
   </svg>
 );
 
-const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pitchName, showWarningIcon, isMatchInProgress }) => {
+const KanbanSlot = ({ slotIndex, columnIndex, children, pitchName, showWarningIcon, isMatchInProgress }) => {
   const isOngoingColumn = columnIndex === 1;
   // In Ongoing column, `children` (KanbanCard) implies a match is in progress.
   // `isMatchInProgress` prop makes this explicit.
@@ -20,14 +20,13 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
 
   if (isOngoingColumn) {
     // Styles for Ongoing column slots
-    if (slotBackgroundColor) {
-      // Apply striped background to the entire slot if it's an ongoing column with a pitch color
-      const stripeGray = '#E0E0E0'; // Light gray for the stripes
-      effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${slotBackgroundColor}, ${slotBackgroundColor} 10px, ${stripeGray} 10px, ${stripeGray} 20px)`;
-      
-      // Make the header background transparent so the slot's striped background shows through
-      headerStyle.backgroundColor = 'transparent';
-    }
+    // Always apply standard green striped background for ongoing slots
+    const desaturatedGreen1 = '#A2AD8A'; // Darker desaturated green
+    const desaturatedGreen2 = '#B9C2A5'; // Lighter desaturated green
+    effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${desaturatedGreen1}, ${desaturatedGreen1} 10px, ${desaturatedGreen2} 10px, ${desaturatedGreen2} 20px)`;
+    
+    // Make the header background transparent so the slot's striped background shows through
+    headerStyle.backgroundColor = 'transparent';
   } else {
     // Styles for Planned or Finished column slots
     if (!children) { // Empty planned/finished slot
