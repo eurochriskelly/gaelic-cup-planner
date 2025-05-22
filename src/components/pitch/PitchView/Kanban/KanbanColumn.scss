@@ -20,8 +20,8 @@
     margin:0;
     margin-bottom: 0.5rem;
     text-align: center;
-    background-color: lighten(desaturate($pc, 17%), 25%);
-    color: #ffffff88; 
+    background-color: desaturate($pc, 17%);
+    color: #ffffff; 
     text-transform: uppercase;
     font-size: 1.9rem;
     letter-spacing: 0.1em;
