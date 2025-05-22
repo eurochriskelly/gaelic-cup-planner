@@ -111,7 +111,7 @@ const KanbanColumn = ({
       onDragOver={onDragOver}
     >
       <div className="column-header">
-        <span>{`${title}`}<span className="text-gray-900 ml-2">({fixtureCount})</span></span>
+        <span>{`${title}`}<span className="text-black ml-2">({fixtureCount})</span></span>
         {onToggleMaximize && (
           <button
             type="button"
