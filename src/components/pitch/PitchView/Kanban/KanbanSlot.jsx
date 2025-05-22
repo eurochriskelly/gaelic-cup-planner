@@ -43,8 +43,8 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
           <div className="slot-status-text">
             {showWarningIcon && <WarningIcon />}
             {showWarningIcon 
-                ? <span class="warn">NO ACTIVE MATCH</span>
-                : <span class="no-warn">NO MORE MATCHES</span>
+                ? <span className="warn">NO ACTIVE MATCH</span>
+                : <span className="no-warn">NO MORE MATCHES</span>
               }
           </div>
         </div>
