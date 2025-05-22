@@ -95,7 +95,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
           </div>
         </div>
         <p className="card-detail pitch-info" style={{ background: pitchColor }}>
-          <PitchIcon width={38} height={38} />
+          <PitchIcon width={48} height={48} />
           <b>{fixture.pitch}</b>
         </p>
         {(fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'started') &&
