@@ -25,8 +25,8 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
       const stripeGray = '#E0E0E0'; // Light gray for the stripes
       effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${slotBackgroundColor}, ${slotBackgroundColor} 10px, ${stripeGray} 10px, ${stripeGray} 20px)`;
       
-      // The header within an ongoing slot also gets the solid background color
-      headerStyle.backgroundColor = slotBackgroundColor;
+      // Make the header background transparent so the slot's striped background shows through
+      headerStyle.backgroundColor = 'transparent';
     }
   } else {
     // Styles for Planned or Finished column slots
