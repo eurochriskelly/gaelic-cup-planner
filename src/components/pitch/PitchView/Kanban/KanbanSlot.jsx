@@ -29,8 +29,11 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
         children // Render the KanbanCard if it exists
       ) : pitchName ? ( // Otherwise, if pitchName is provided, display it
         <div className="slot-pitch-name">
-          <PitchIcon width={219*0.4} height={159*0.4} />&nbsp;
-          <div>{pitchName}</div>
+          <div className="pitch-identifier">
+            <PitchIcon width={219*0.4} height={159*0.4} />
+            <span>{pitchName}</span>
+          </div>
+          <div className="slot-status-text">NO ACTIVE MATCH</div>
         </div>
       ) : null}
     </div>
