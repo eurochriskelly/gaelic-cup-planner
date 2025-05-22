@@ -44,9 +44,18 @@
     }
 
     .slot-status-text {
-      font-size: 1rem; // "NO ACTIVE MATCH" text
-      font-weight: normal;
+      display: flex; // To align icon and text
+      align-items: center;
+      font-size: 1.4rem; // "NO ACTIVE MATCH" text
+      font-weight: bold;
       color: #555555cc; // Slightly different color for status
+      .warning-icon {
+        fill: red;
+        margin-right: 0.3rem; // Space between icon and text
+      }
+      .warn {
+        color: red;
+      }
     }
   }
 }
