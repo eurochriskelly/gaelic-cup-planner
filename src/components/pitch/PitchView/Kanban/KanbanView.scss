@@ -32,22 +32,41 @@
   }
 
   .kanban-board-area {
-    flex-grow: 1; // Allows columns to fill available space
+    flex-grow: 1;
     display: flex;
-    justify-content: space-around;
-    gap: 0rem;
+    gap: 0rem; // No gap between the two main visual columns
     top: 0;
-    overflow: hidden; // Prevent board from causing page scroll if columns overflow horizontally
-    position: absolute; // For details panel positioning
-      height: calc(100% - 20rem);
-      width: 100%;
-      /* Add this to ensure full width */
-      left: 0;
-      /* Add this to ensure proper alignment */
-      padding: 0;
-      /* Add horizontal padding instead of reducing width */
-      box-sizing: border-box;
-      /* Ensure padding is included in width calculation */
+    overflow: hidden;
+    position: absolute;
+    height: calc(100% - 20rem); // Available height for the board
+    width: 100%;
+    left: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    .kanban-visual-column {
+      flex: 1; // Each visual column takes 50% of the width
+      display: flex;
+      flex-direction: column; // Children (KanbanColumn) will stack if multiple, or take full height if single
+      min-width: 0; // Prevents flex items from overflowing
+      height: 100%; // Visual columns take full height of the board area
+
+      &.kanban-column-stacked {
+        // Styles for the second visual column which stacks Ongoing and Finished
+        .kanban-column { // Targeting KanbanColumn components within this stacked visual column
+          &:first-child { // This will be the "Ongoing" KanbanColumn
+            flex-grow: 1; // Takes up available vertical space
+            min-height: 0; // Important for flex children to shrink correctly
+          }
+          &:last-child { // This will be the "Finished" KanbanColumn
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 24rem; // Approx height for one card (slot 20rem) + header (4rem)
+            // The internal .column-content of KanbanColumn is already overflow-y: auto
+          }
+        }
+      }
+    }
   }
 
   .kanban-error-message {

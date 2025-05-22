@@ -53,10 +53,10 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
   &.selected {
     .FixtureBar {
-      background-color: desaturate(lighten($sc, 22%), 10%); // Highlight selected card
       color: lighten($sc, 80%); // Highlight selected card
+      background-color: saturate(darken($sc, 5%), 30%);
     }
-    border: 0.4rem solid #1f0082; // Highlight selected card
+    border: 0.4rem solid saturate(darken($sc, 5%), 30%);
   }
 
   .FixtureBar {

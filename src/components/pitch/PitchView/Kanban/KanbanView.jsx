@@ -85,32 +85,68 @@ const KanbanView = ({
       )}
       <KanbanErrorMessage message={errorMessage} />
       <div className="kanban-board-area">
-        {columns.map((column, index) => {
-          let columnFixtures = filteredFixtures.filter(f => f?.lane?.current === column);
-          // Sort fixtures for the "Finished" column (index 2)
-          if (index === 2) {
-            columnFixtures = columnFixtures.sort((a, b) => {
+        {(() => {
+          const plannedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'planned');
+          const startedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'started');
+          const finishedFixtures = filteredFixtures
+            .filter(f => f?.lane?.current === 'finished')
+            .sort((a, b) => {
               const dateA = a.ended ? new Date(a.ended) : 0;
               const dateB = b.ended ? new Date(b.ended) : 0;
-              return dateB - dateA; // Sort descending
+              return dateB - dateA; // Sort descending, most recent first
             });
-          }
+
           return (
-            <KanbanColumn
-              key={column}
-              title={['Planned', 'Ongoing', 'Finished'][index]}
-              columnIndex={index} // Pass the column index
-              allTournamentPitches={index === 1 ? pitches : null} // Pass all pitches only to the "Ongoing" column
-              fixtures={columnFixtures}
-              onDrop={(e) => onDrop(e, column)}
-              onDragOver={onDragOver}
-              onDragStart={onDragStart}
-              handleFixtureClick={handleFixtureClick}
-              selectedFixture={selectedFixture}
-              getPitchColor={getPitchColor}
-            />
+            <>
+              {/* Visual Column 1: Planned */}
+              <div className="kanban-visual-column">
+                <KanbanColumn
+                  key="planned"
+                  title="Planned"
+                  columnIndex={0} // Logical index for 'planned'
+                  fixtures={plannedFixtures}
+                  onDrop={(e) => onDrop(e, 'planned')}
+                  onDragOver={onDragOver}
+                  onDragStart={onDragStart}
+                  handleFixtureClick={handleFixtureClick}
+                  selectedFixture={selectedFixture}
+                  getPitchColor={getPitchColor}
+                  allTournamentPitches={null}
+                />
+              </div>
+
+              {/* Visual Column 2: Stacked Ongoing and Finished */}
+              <div className="kanban-visual-column kanban-column-stacked">
+                <KanbanColumn
+                  key="started"
+                  title="Ongoing"
+                  columnIndex={1} // Logical index for 'started'
+                  fixtures={startedFixtures}
+                  onDrop={(e) => onDrop(e, 'started')}
+                  onDragOver={onDragOver}
+                  onDragStart={onDragStart}
+                  handleFixtureClick={handleFixtureClick}
+                  selectedFixture={selectedFixture}
+                  getPitchColor={getPitchColor}
+                  allTournamentPitches={pitches} // Pass all pitches to the "Ongoing" column
+                />
+                <KanbanColumn
+                  key="finished"
+                  title="Finished"
+                  columnIndex={2} // Logical index for 'finished'
+                  fixtures={finishedFixtures}
+                  onDrop={(e) => onDrop(e, 'finished')}
+                  onDragOver={onDragOver}
+                  onDragStart={onDragStart}
+                  handleFixtureClick={handleFixtureClick}
+                  selectedFixture={selectedFixture}
+                  getPitchColor={getPitchColor}
+                  allTournamentPitches={null}
+                />
+              </div>
+            </>
           );
-        })}
+        })()}
       </div>
 
       {selectedFixture && (
