@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import './TimeDisplay.scss';
 
-const TimeDisplay = ({ scheduledTime, startedTime }) => {
+const TimeDisplay = ({ 
+  scheduledTime,
+  startedTime = null
+}) => {
   // Function to calculate the time difference and return a friendly format
   const getTimeDifference = () => {
     if (!scheduledTime || !startedTime) return null;
@@ -70,8 +73,5 @@ TimeDisplay.propTypes = {
   startedTime: PropTypes.string
 };
 
-TimeDisplay.defaultProps = {
-  startedTime: null
-};
 
 export default TimeDisplay;

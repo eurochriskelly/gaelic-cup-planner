@@ -10,8 +10,9 @@
     border-radius: 4px;
     padding: 0.1rem;
     box-sizing: border-box;
-    height: 100%;
-    // overflow-y: auto; // This will be on .column-content now or managed by its children structure
+    // height: 100%; // Removed: This was preventing "Ongoing" column from shrinking to content height.
+                     // Flex properties (flex:1 on this element, and specific flex-basis on "Ongoing") will manage height.
+    // overflow-y: auto; // This is on .column-content
 
   .column-header {
     user-select: none;
@@ -20,13 +21,35 @@
     margin:0;
     margin-bottom: 0.5rem;
     text-align: center;
-    background-color: lighten(desaturate($pc, 17%), 25%);
-    color: #ffffff88; 
+    background-color: lighten(saturate($pc, 37%), 10%);
+    color: black; 
     text-transform: uppercase;
     font-size: 1.9rem;
     letter-spacing: 0.1em;
     border-radius: 3px;
     height: 4rem;
+    display: flex; // Added for aligning title and button
+    justify-content: space-between; // Pushes title to left, button to right
+    align-items: center; // Vertically aligns items
+    border-bottom: 0.3rem solid #ffffff8a;
+    border-left: 0.2rem solid #0000008a;
+    border-top:none;
+
+    .column-maximize-button {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.2rem; // Smaller font size for the button
+      margin-left: 0.5rem; // Space between title count and button
+      line-height: 1; // Ensure text fits well
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
   }
 
   .column-content {

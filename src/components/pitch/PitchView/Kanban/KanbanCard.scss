@@ -14,8 +14,8 @@
   flex-direction: column;
   height: 19rem;
   background: white;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
+  // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
   border-radius: 0.8rem;
   border: 0.4rem solid #74824815;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
@@ -53,10 +53,10 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
   &.selected {
     .FixtureBar {
-      background-color: desaturate(lighten($sc, 22%), 10%); // Highlight selected card
       color: lighten($sc, 80%); // Highlight selected card
+      background-color: saturate(darken($sc, 5%), 30%);
     }
-    border: 0.4rem solid #1f0082; // Highlight selected card
+    border: 0.4rem solid saturate(darken($sc, 5%), 30%);
   }
 
   .FixtureBar {
@@ -76,14 +76,14 @@
     }
   
     padding: 0.5rem 0.75rem;
-    background-color: #b0b0b0;
+    background-color: darken(#b0b0b0, 22%);
     color: white;
     border: none;
 
     .fixture-id,
     .category,
     .stage {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 600;
     }
     
@@ -201,11 +201,9 @@
     bottom: -0.1rem;
     left: 0.1rem;
     padding: 0.2rem 0.4rem;
-    font-size: 1.0rem;
-    border: 0.1rem dotted #676767;
-    border-bottom-left-radius: 0.5rem;
+    font-size: 1.5rem;
     text-transform: uppercase;
-    padding-left: 3rem;
+    padding-left: 4rem;
     svg {
       position: absolute;
       bottom : -0.5rem;
