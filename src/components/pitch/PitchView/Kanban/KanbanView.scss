@@ -43,38 +43,35 @@
     left: 0;
     padding: 0;
     box-sizing: border-box;
-    // Default state: two visual columns
-    .planned-column-container, .stacked-column-container {
-      flex: 1;
-      display: flex; // Keep display flex for children
-      flex-direction: column;
-      min-width: 0;
-      height: 100%;
-    }
 
-    .kanban-visual-column { // Common styles for visual columns if any
-      // flex: 1; // This is now on specific container classes by default
-      // display: flex; // This is now on specific container classes by default
-      // flex-direction: column; // This is now on specific container classes by default
+    .kanban-visual-column { // Styles for all visual column containers (e.g., .planned-column-container, .stacked-column-container)
+      flex: 1; // Each visual column takes up its share of width
+      display: flex;
+      flex-direction: column;
       min-width: 0; // Prevents flex items from overflowing
       height: 100%; // Visual columns take full height of the board area
 
+      // Specific styles for the KanbanColumn component within the "Planned" visual column
+      &.planned-column-container {
+        .kanban-column { // The KanbanColumn component itself
+          height: 100%; // Ensure the "Planned" column takes the full height of its container for scrolling
+        }
+      }
+
+      // Specific styles for KanbanColumn components within the "Stacked" visual column
       &.kanban-column-stacked {
-        // Styles for the second visual column which stacks Ongoing and Finished
-        .kanban-column { // Targeting KanbanColumn components within this stacked visual column
-          &:first-child { // This will be the "Ongoing" KanbanColumn (data-column-key="started")
-            flex-grow: 0;    // Don't grow to fill space by default, let content decide height
-            flex-shrink: 1;  // Allow shrinking if space is tight
+        .kanban-column { // Targeting KanbanColumn components (Ongoing and Finished)
+          &:first-child { // This is the "Ongoing" KanbanColumn
+            flex-grow: 0;    // Don't grow to fill space by default
+            flex-shrink: 1;  // Allow shrinking
             flex-basis: auto; // Height is based on content
             min-height: 0;   // Can shrink to nothing if no content
-            // Its .column-content is already overflow-y: auto, so it will scroll if content exceeds allocated height
           }
-          &:last-child { // This will be the "Finished" KanbanColumn (data-column-key="finished")
+          &:last-child { // This is the "Finished" KanbanColumn
             flex-grow: 1;    // Grow to take available remaining vertical space
             flex-shrink: 1;  // Can shrink
-            min-height: 24rem; // Crucial: always reserve space for at least one card + header
-            height: 0;       // Setting height to 0 with flex-grow:1 and min-height ensures min-height is respected and it grows correctly.
-            // Its .column-content is already overflow-y: auto
+            min-height: 24rem; // Always reserve space for at least one card + header
+            height: 0;       // Works with flex-grow and min-height to manage size
           }
         }
       }
