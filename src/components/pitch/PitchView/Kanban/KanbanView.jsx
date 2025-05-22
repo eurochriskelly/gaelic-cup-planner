@@ -132,6 +132,7 @@ const KanbanView = ({
                   title="Ongoing"
                   columnIndex={1} // Logical index for 'started'
                   fixtures={startedFixtures}
+                  allPlannedFixtures={plannedFixtures} // Pass planned fixtures for warning icon logic
                   isCurrentlyMaximized={maximizedColumnKey === 'started'}
                   onToggleMaximize={toggleMaximizeColumn}
                   onDrop={(e) => onDrop(e, 'started')}

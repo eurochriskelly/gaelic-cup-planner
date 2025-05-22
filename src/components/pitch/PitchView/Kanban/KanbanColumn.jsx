@@ -13,14 +13,15 @@ const KanbanColumn = ({
   getPitchColor,
   columnIndex,
   allTournamentPitches, // New prop for all pitches in the tournament
+  allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
   // Props for maximization
-  columnKey, 
+  columnKey,
   isCurrentlyMaximized,
   onToggleMaximize,
 }) => {
   let columnSlots;
 
-  if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column, now uses allTournamentPitches
+  if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column
     // Filter out "All Pitches" before mapping to slots
     let actualPitches = allTournamentPitches.filter(p => p !== 'All Pitches');
 
@@ -41,9 +42,16 @@ const KanbanColumn = ({
 
     // Iterate over all unique pitches defined for the tournament for this column
     columnSlots = actualPitches.map((pitch, index) => {
-      // Find if there's an active fixture (from the `fixtures` prop) for this specific pitch
+      // Find if there's an active fixture (from the `fixtures` prop - which are 'started' fixtures) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
       const slotBackgroundColor = getPitchColor(pitch); // Use getPitchColor for consistent pitch colors
+
+      let showWarning = false;
+      if (!fixtureForPitchSlot && allPlannedFixtures) {
+        // If slot is empty, check if there are any planned fixtures for this pitch
+        showWarning = allPlannedFixtures.some(pf => pf.pitch === pitch);
+      }
+
       return (
         <KanbanSlot
           key={`pitch-slot-${pitch}`} // Keyed by pitch name for stability
@@ -51,6 +59,7 @@ const KanbanColumn = ({
           columnIndex={columnIndex}
           slotBackgroundColor={slotBackgroundColor}
           pitchName={pitch} // Pass the pitch name to the slot
+          showWarningIcon={showWarning} // Pass warning status
         >
           {fixtureForPitchSlot && (
             <KanbanCard
