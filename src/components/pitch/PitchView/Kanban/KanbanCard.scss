@@ -76,14 +76,14 @@
     }
   
     padding: 0.5rem 0.75rem;
-    background-color: #b0b0b0;
+    background-color: darken(#b0b0b0, 22%);
     color: white;
     border: none;
 
     .fixture-id,
     .category,
     .stage {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 600;
     }
     
@@ -202,8 +202,6 @@
     left: 0.1rem;
     padding: 0.2rem 0.4rem;
     font-size: 1.5rem;
-    border: 0.1rem dotted #676767;
-    border-bottom-left-radius: 0.5rem;
     text-transform: uppercase;
     padding-left: 4rem;
     svg {

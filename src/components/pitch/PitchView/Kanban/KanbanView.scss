@@ -55,6 +55,7 @@
       &.planned-column-container {
         .kanban-column { // The KanbanColumn component itself
           height: 100%; // Ensure the "Planned" column takes the full height of its container for scrolling
+          border-right: 0.3rem solid #000000a8;
         }
       }
 

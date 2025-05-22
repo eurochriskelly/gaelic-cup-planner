@@ -21,8 +21,8 @@
     margin:0;
     margin-bottom: 0.5rem;
     text-align: center;
-    background-color: desaturate($pc, 17%);
-    color: #ffffff; 
+    background-color: lighten(saturate($pc, 37%), 10%);
+    color: black; 
     text-transform: uppercase;
     font-size: 1.9rem;
     letter-spacing: 0.1em;
@@ -31,6 +31,9 @@
     display: flex; // Added for aligning title and button
     justify-content: space-between; // Pushes title to left, button to right
     align-items: center; // Vertically aligns items
+    border-bottom: 0.3rem solid #ffffff8a;
+    border-left: 0.2rem solid #0000008a;
+    border-top:none;
 
     .column-maximize-button {
       background-color: rgba(255, 255, 255, 0.2);
