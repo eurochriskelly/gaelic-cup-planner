@@ -32,22 +32,95 @@
   }
 
   .kanban-board-area {
-    flex-grow: 1; // Allows columns to fill available space
+    flex-grow: 1;
     display: flex;
-    justify-content: space-around;
-    gap: 0rem;
+    gap: 0rem; // No gap between the two main visual columns
     top: 0;
-    overflow: hidden; // Prevent board from causing page scroll if columns overflow horizontally
-    position: absolute; // For details panel positioning
-      height: calc(100% - 20rem);
-      width: 100%;
-      /* Add this to ensure full width */
-      left: 0;
-      /* Add this to ensure proper alignment */
-      padding: 0;
-      /* Add horizontal padding instead of reducing width */
-      box-sizing: border-box;
-      /* Ensure padding is included in width calculation */
+    overflow: hidden;
+    position: absolute;
+    height: calc(100% - 20rem); // Available height for the board
+    width: 100%;
+    left: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    .kanban-visual-column { // Styles for all visual column containers (e.g., .planned-column-container, .stacked-column-container)
+      flex: 1; // Each visual column takes up its share of width
+      display: flex;
+      flex-direction: column;
+      min-width: 0; // Prevents flex items from overflowing
+      height: 100%; // Visual columns take full height of the board area
+
+      // Specific styles for the KanbanColumn component within the "Planned" visual column
+      &.planned-column-container {
+        .kanban-column { // The KanbanColumn component itself
+          height: 100%; // Ensure the "Planned" column takes the full height of its container for scrolling
+          border-right: 0.3rem solid #000000a8;
+        }
+      }
+
+      // Specific styles for KanbanColumn components within the "Stacked" visual column
+      &.kanban-column-stacked {
+        .kanban-column { // Targeting KanbanColumn components (Ongoing and Finished)
+          &:first-child { // This is the "Ongoing" KanbanColumn
+            flex-grow: 0;    // Don't grow to fill space by default
+            flex-shrink: 1;  // Allow shrinking
+            flex-basis: auto; // Height is based on content
+            min-height: 0;   // Can shrink to nothing if no content
+          }
+          &:last-child { // This is the "Finished" KanbanColumn
+            flex-grow: 1;    // Grow to take available remaining vertical space
+            flex-shrink: 1;  // Can shrink
+            min-height: 24rem; // Always reserve space for at least one card + header
+            height: 0;       // Works with flex-grow and min-height to manage size
+          }
+        }
+      }
+    }
+
+    // Maximized states
+    &.maximized-planned {
+      .planned-column-container {
+        flex-basis: 100%; // Takes full width
+      }
+      .stacked-column-container {
+        display: none; // Hide the other visual column
+      }
+    }
+
+    &.maximized-started {
+      .planned-column-container {
+        display: none; // Hide the other visual column
+      }
+      .stacked-column-container {
+        flex-basis: 100%; // Takes full width
+        .kanban-column[data-column-key="started"] {
+          flex-grow: 1; // Ensure it takes full available height in the stacked container
+          height: 100%; // Override any fixed height
+          min-height: 0; // Important for flex children
+        }
+        .kanban-column[data-column-key="finished"] {
+          display: none; // Hide the sibling column within the stacked container
+        }
+      }
+    }
+
+    &.maximized-finished {
+      .planned-column-container {
+        display: none; // Hide the other visual column
+      }
+      .stacked-column-container {
+        flex-basis: 100%; // Takes full width
+        .kanban-column[data-column-key="started"] {
+          display: none; // Hide the sibling column within the stacked container
+        }
+        .kanban-column[data-column-key="finished"] {
+          flex-grow: 1; // Ensure it takes full available height
+          height: 100%; // Override its default fixed height (24rem)
+          min-height: 0; // Important for flex children
+        }
+      }
+    }
   }
 
   .kanban-error-message {

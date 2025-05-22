@@ -3,7 +3,7 @@
 .updateFixture {
   position: fixed;
   bottom: 11rem;
-  background-color: #2d3123; 
+  background-color: saturate(darken($sc, 10%), 10%);
   height: 9rem;
   width: 100%;
   z-index: 1000;

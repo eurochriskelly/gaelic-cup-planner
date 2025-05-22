@@ -7,7 +7,7 @@ import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
 
-const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) => {
+const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const displayNumber = fixture?.groupNumber || '0';
@@ -94,13 +94,15 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
             )}
           </div>
         </div>
-        <p className="card-detail pitch-info" style={{ background: pitchColor }}>
-          <PitchIcon width={38} height={38} />
-          <b>{fixture.pitch}</b>
-        </p>
+        {(fixture?.lane?.current === 'planned') &&
+            <div className="card-detail pitch-info">
+              <PitchIcon width={48} height={48} />
+              <b>{fixture.pitch}</b>
+            </div>
+        }
         {(fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'started') &&
           <>
-            <p className="card-detail umpire-info">
+            <div className="card-detail umpire-info">
               <div>
                 <UmpireIcon width={42} height={42} />
                 <logo-box
@@ -108,7 +110,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) =
                   size="45px"
                 ></logo-box>
               </div>
-            </p>
+            </div>
         </>
         }
       </div>

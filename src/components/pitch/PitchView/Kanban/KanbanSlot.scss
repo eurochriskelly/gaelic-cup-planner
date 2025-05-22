@@ -1,42 +1,92 @@
 @import "src/shared/css/_colors.scss";
 
 .kanban-slot {
-  height: 20rem; 
-  padding-top: 0;
-  padding-bottom: 0;
-  box-sizing: border-box;
-  display: flex; // Added to allow centering of child
-  align-items: center; // Added to vertically center child (KanbanCard)
-  justify-content: center; // Added to horizontally center child (KanbanCard)
+  // padding-top: 0.3rem; // Removed, header/card will manage internal padding
+  // padding-bottom: 0.3rem; // Removed
+  margin: 0.3rem 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 5rem; // Ensure all slots have a minimum base height, card height will expand this
 
   &.gray1 {
-    background-color:#44493496; // Lighter gray
+    background-color:#44493496; // Lighter gray for empty Planned/Finished
   }
 
   &.gray2 {
-    background-color: #44493466; // Darker gray
+    background-color: #44493466; // Darker gray for empty Planned/Finished
   }
 
-  .slot-pitch-name {
-    text-align: center;
-    color: #33333399; // Semi-transparent dark gray
+  .slot-pitch-name { // Header for Ongoing slots
+    width: 100%;
+    display: flex;
+    justify-content: space-between; // Pushes pitch identifier to left, status to right
+    align-items: center;
+    padding: 0.5rem; // Padding for the header itself
+    box-sizing: border-box;
+    color: #333333aa; // Default text color for header
     font-weight: bold;
     font-size: 1.2rem;
-    line-height: 1.4;
+    // background-color is applied via inline style for ongoing slots with a pitchColor
+    // border-bottom: 1px solid rgba(0,0,0,0.1); // Optional: if a card is below
+    text-transform: uppercase;
     user-select: none; // Prevent text selection
 
-    div:first-child {
-      font-size: 1rem;
-      text-transform: uppercase;
+    .pitch-identifier {
+      display: flex; // For aligning icon and text
+      align-items: center;
+      
+      svg {
+        margin-right: 0.5rem; // Space between icon and text
+        path {
+          fill: black;
+          fill-opacity: 0.7;
+        }
+      }
+
+      span {
+        font-size: 1.5rem; // Pitch name text
+      }
     }
-    div:last-child {
-      font-size: 1.4rem;
+
+    .slot-status-text {
+      display: flex; // To align icon and text
+      align-items: center;
+      font-size: 1.4rem; // "NO ACTIVE MATCH" text
+      font-weight: bold;
+      color: #555555cc; // Default status text color
+
+      .warning-icon {
+        fill: red;
+        margin-right: 0.3rem;
+      }
+      .warn { // For "NO ACTIVE MATCH" when warning is active
+        color: red; // Text color for warning
+        display: flex; // To align icon and text if icon is direct child
+        align-items: center;
+      }
+      .no-warn { // For "NO ACTIVE MATCH" or "NO MORE MATCHES" when no warning
+        // Standard color inherited from .slot-status-text
+      }
+      .status-in-progress {
+        color: $sc; // Use secondary color for "MATCH IN PROGRESS"
+        font-weight: bold;
+      }
     }
   }
-  .slot-pitch-name {
-      path {
-          fill:black; 
-          fill-opacity: 0.4;
-      }
+
+  .slot-card-container {
+    // Container for the KanbanCard when it's present below the header
+    padding: 0.5rem; // Add padding around the card container
+    // This padding will be between the slot's background and the card itself.
+    // The card itself has a height of 19rem.
+  }
+
+  .empty-planned-finished-slot-placeholder {
+    flex-grow: 1; // Allow it to take up space if slot can grow
+    min-height: 19rem; // Match KanbanCard height for consistent empty slot size
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // border: 1px dashed #ccc; // Optional: visual cue for empty draggable area
   }
 }
