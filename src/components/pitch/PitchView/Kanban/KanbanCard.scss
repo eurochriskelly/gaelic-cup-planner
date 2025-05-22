@@ -14,8 +14,8 @@
   flex-direction: column;
   height: 19rem;
   background: white;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
+  // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
   border-radius: 0.8rem;
   border: 0.4rem solid #74824815;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)

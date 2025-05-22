@@ -76,9 +76,8 @@
 
   .slot-card-container {
     // Container for the KanbanCard when it's present below the header
-    // The KanbanCard itself has margin-left and margin-right.
-    // If the card needs to be centered or have specific spacing within the slot:
-    // padding: 0.5rem 0; // Example: add some vertical spacing around the card
+    padding: 0.5rem; // Add padding around the card container
+    // This padding will be between the slot's background and the card itself.
     // The card itself has a height of 19rem.
   }
 
