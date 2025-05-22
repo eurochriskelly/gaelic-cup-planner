@@ -1,13 +1,8 @@
 @import "src/shared/css/_colors.scss";
 
 .kanban-slot {
-  height: 20rem; 
-  padding-top: 0;
-  padding-bottom: 0;
-  box-sizing: border-box;
-  display: flex; // Added to allow centering of child
-  align-items: center; // Added to vertically center child (KanbanCard)
-  justify-content: center; // Added to horizontally center child (KanbanCard)
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 
   &.gray1 {
     background-color:#44493496; // Lighter gray
@@ -18,25 +13,30 @@
   }
 
   .slot-pitch-name {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
     text-align: center;
-    color: #33333399; // Semi-transparent dark gray
+    color: #333333aa; // Semi-transparent dark gray
     font-weight: bold;
     font-size: 1.2rem;
-    line-height: 1.4;
+    text-transform: uppercase;
     user-select: none; // Prevent text selection
 
     div:first-child {
       font-size: 1rem;
       text-transform: uppercase;
+      display: inline;
     }
     div:last-child {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
+      display: inline;
     }
   }
   .slot-pitch-name {
       path {
           fill:black; 
-          fill-opacity: 0.4;
+          fill-opacity: 0.7;
       }
   }
 }
