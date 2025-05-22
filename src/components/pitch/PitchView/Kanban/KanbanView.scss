@@ -43,11 +43,19 @@
     left: 0;
     padding: 0;
     box-sizing: border-box;
+    // Default state: two visual columns
+    .planned-column-container, .stacked-column-container {
+      flex: 1;
+      display: flex; // Keep display flex for children
+      flex-direction: column;
+      min-width: 0;
+      height: 100%;
+    }
 
-    .kanban-visual-column {
-      flex: 1; // Each visual column takes 50% of the width
-      display: flex;
-      flex-direction: column; // Children (KanbanColumn) will stack if multiple, or take full height if single
+    .kanban-visual-column { // Common styles for visual columns if any
+      // flex: 1; // This is now on specific container classes by default
+      // display: flex; // This is now on specific container classes by default
+      // flex-direction: column; // This is now on specific container classes by default
       min-width: 0; // Prevents flex items from overflowing
       height: 100%; // Visual columns take full height of the board area
 
@@ -64,6 +72,50 @@
             height: 24rem; // Approx height for one card (slot 20rem) + header (4rem)
             // The internal .column-content of KanbanColumn is already overflow-y: auto
           }
+        }
+      }
+    }
+
+    // Maximized states
+    &.maximized-planned {
+      .planned-column-container {
+        flex-basis: 100%; // Takes full width
+      }
+      .stacked-column-container {
+        display: none; // Hide the other visual column
+      }
+    }
+
+    &.maximized-started {
+      .planned-column-container {
+        display: none; // Hide the other visual column
+      }
+      .stacked-column-container {
+        flex-basis: 100%; // Takes full width
+        .kanban-column[data-column-key="started"] {
+          flex-grow: 1; // Ensure it takes full available height in the stacked container
+          height: 100%; // Override any fixed height
+          min-height: 0; // Important for flex children
+        }
+        .kanban-column[data-column-key="finished"] {
+          display: none; // Hide the sibling column within the stacked container
+        }
+      }
+    }
+
+    &.maximized-finished {
+      .planned-column-container {
+        display: none; // Hide the other visual column
+      }
+      .stacked-column-container {
+        flex-basis: 100%; // Takes full width
+        .kanban-column[data-column-key="started"] {
+          display: none; // Hide the sibling column within the stacked container
+        }
+        .kanban-column[data-column-key="finished"] {
+          flex-grow: 1; // Ensure it takes full available height
+          height: 100%; // Override its default fixed height (24rem)
+          min-height: 0; // Important for flex children
         }
       }
     }

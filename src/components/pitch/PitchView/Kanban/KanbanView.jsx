@@ -36,6 +36,8 @@ const KanbanView = ({
     handleFixtureClick,
     handlePitchChange,
     handleTeamChange,
+    maximizedColumnKey, // New state from hook
+    toggleMaximizeColumn, // New function from hook
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
 
   // Effect to update selectedFixture when initialFixtures (from context) changes
@@ -84,7 +86,11 @@ const KanbanView = ({
         />
       )}
       <KanbanErrorMessage message={errorMessage} />
-      <div className="kanban-board-area">
+      <div className={`kanban-board-area ${
+        maximizedColumnKey === 'planned' ? 'maximized-planned' :
+        maximizedColumnKey === 'started' ? 'maximized-started' :
+        maximizedColumnKey === 'finished' ? 'maximized-finished' : ''
+      }`}>
         {(() => {
           const plannedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'planned');
           const startedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'started');
@@ -99,12 +105,15 @@ const KanbanView = ({
           return (
             <>
               {/* Visual Column 1: Planned */}
-              <div className="kanban-visual-column">
+              <div className="kanban-visual-column planned-column-container">
                 <KanbanColumn
                   key="planned"
+                  columnKey="planned"
                   title="Planned"
                   columnIndex={0} // Logical index for 'planned'
                   fixtures={plannedFixtures}
+                  isCurrentlyMaximized={maximizedColumnKey === 'planned'}
+                  onToggleMaximize={toggleMaximizeColumn}
                   onDrop={(e) => onDrop(e, 'planned')}
                   onDragOver={onDragOver}
                   onDragStart={onDragStart}
@@ -116,12 +125,15 @@ const KanbanView = ({
               </div>
 
               {/* Visual Column 2: Stacked Ongoing and Finished */}
-              <div className="kanban-visual-column kanban-column-stacked">
+              <div className="kanban-visual-column kanban-column-stacked stacked-column-container">
                 <KanbanColumn
                   key="started"
+                  columnKey="started"
                   title="Ongoing"
                   columnIndex={1} // Logical index for 'started'
                   fixtures={startedFixtures}
+                  isCurrentlyMaximized={maximizedColumnKey === 'started'}
+                  onToggleMaximize={toggleMaximizeColumn}
                   onDrop={(e) => onDrop(e, 'started')}
                   onDragOver={onDragOver}
                   onDragStart={onDragStart}
@@ -132,9 +144,12 @@ const KanbanView = ({
                 />
                 <KanbanColumn
                   key="finished"
+                  columnKey="finished"
                   title="Finished"
                   columnIndex={2} // Logical index for 'finished'
                   fixtures={finishedFixtures}
+                  isCurrentlyMaximized={maximizedColumnKey === 'finished'}
+                  onToggleMaximize={toggleMaximizeColumn}
                   onDrop={(e) => onDrop(e, 'finished')}
                   onDragOver={onDragOver}
                   onDragStart={onDragStart}

@@ -29,6 +29,11 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   const [selectedPitch, setSelectedPitch] = useState('All Pitches');
   const [selectedTeam, setSelectedTeam] = useState('All Teams');
   const [pitchColorMapping, setPitchColorMapping] = useState({});
+  const [maximizedColumnKey, setMaximizedColumnKey] = useState(null); // null, 'planned', 'started', 'finished'
+
+  const toggleMaximizeColumn = useCallback((key) => {
+    setMaximizedColumnKey(prevKey => (prevKey === key ? null : key));
+  }, []);
 
   useEffect(() => {
     // Dynamically create color mapping for pitches
@@ -167,5 +172,7 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
     handlePitchChange,
     handleTeamChange,
     showError,
+    maximizedColumnKey,
+    toggleMaximizeColumn,
   };
 };

@@ -13,6 +13,10 @@ const KanbanColumn = ({
   getPitchColor,
   columnIndex,
   allTournamentPitches, // New prop for all pitches in the tournament
+  // Props for maximization
+  columnKey, 
+  isCurrentlyMaximized,
+  onToggleMaximize,
 }) => {
   let columnSlots;
 
@@ -77,10 +81,23 @@ const KanbanColumn = ({
   return (
     <div
       className="kanban-column"
+      data-column-key={columnKey} // For CSS targeting
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
-      <div className="column-header">{`${title}`}<span className="text-gray-900 ml-2">({fixtureCount})</span></div>
+      <div className="column-header">
+        <span>{`${title}`}<span className="text-gray-900 ml-2">({fixtureCount})</span></span>
+        {onToggleMaximize && (
+          <button
+            type="button"
+            className="column-maximize-button"
+            onClick={() => onToggleMaximize(columnKey)}
+            aria-label={isCurrentlyMaximized ? `Restore ${title} column` : `Focus ${title} column`}
+          >
+            {isCurrentlyMaximized ? 'Restore' : 'Focus'}
+          </button>
+        )}
+      </div>
       <div className="column-content">
         {columnSlots}
       </div>
