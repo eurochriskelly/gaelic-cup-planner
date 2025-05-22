@@ -21,12 +21,10 @@ const KanbanSlot = ({ slotIndex, columnIndex, children, slotBackgroundColor, pit
   if (isOngoingColumn) {
     // Styles for Ongoing column slots
     if (slotBackgroundColor) {
-      if (hasActiveMatchInOngoing) { // Active ongoing slot
-        effectiveSlotStyle.backgroundColor = slotBackgroundColor; // Solid color for the entire slot
-      } else { // Empty ongoing slot
-        const stripeGray = '#E0E0E0'; // Light gray for the stripes
-        effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${slotBackgroundColor}, ${slotBackgroundColor} 10px, ${stripeGray} 10px, ${stripeGray} 20px)`;
-      }
+      // Apply striped background to the entire slot if it's an ongoing column with a pitch color
+      const stripeGray = '#E0E0E0'; // Light gray for the stripes
+      effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${slotBackgroundColor}, ${slotBackgroundColor} 10px, ${stripeGray} 10px, ${stripeGray} 20px)`;
+      
       // The header within an ongoing slot also gets the solid background color
       headerStyle.backgroundColor = slotBackgroundColor;
     }
