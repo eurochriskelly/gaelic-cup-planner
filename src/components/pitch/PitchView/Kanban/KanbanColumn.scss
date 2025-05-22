@@ -10,8 +10,9 @@
     border-radius: 4px;
     padding: 0.1rem;
     box-sizing: border-box;
-    height: 100%;
-    // overflow-y: auto; // This will be on .column-content now or managed by its children structure
+    // height: 100%; // Removed: This was preventing "Ongoing" column from shrinking to content height.
+                     // Flex properties (flex:1 on this element, and specific flex-basis on "Ongoing") will manage height.
+    // overflow-y: auto; // This is on .column-content
 
   .column-header {
     user-select: none;
