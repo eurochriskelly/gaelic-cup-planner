@@ -1,28 +1,33 @@
 @import "src/shared/css/_colors.scss";
 
 .kanban-slot {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
+  // padding-top: 0.3rem; // Removed, header/card will manage internal padding
+  // padding-bottom: 0.3rem; // Removed
   margin: 0.3rem 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 5rem; // Ensure all slots have a minimum base height, card height will expand this
 
   &.gray1 {
-    background-color:#44493496; // Lighter gray
+    background-color:#44493496; // Lighter gray for empty Planned/Finished
   }
 
   &.gray2 {
-    background-color: #44493466; // Darker gray
+    background-color: #44493466; // Darker gray for empty Planned/Finished
   }
 
-  .slot-pitch-name {
+  .slot-pitch-name { // Header for Ongoing slots
     width: 100%;
-    display: flex; // Use flexbox for alignment
+    display: flex;
     justify-content: space-between; // Pushes pitch identifier to left, status to right
-    align-items: center; // Vertically align items
-    padding: 0 0.5rem; // Add some horizontal padding
+    align-items: center;
+    padding: 0.5rem; // Padding for the header itself
     box-sizing: border-box;
-    color: #333333aa; // Semi-transparent dark gray
+    color: #333333aa; // Default text color for header
     font-weight: bold;
     font-size: 1.2rem;
+    // background-color is applied via inline style for ongoing slots with a pitchColor
+    // border-bottom: 1px solid rgba(0,0,0,0.1); // Optional: if a card is below
     text-transform: uppercase;
     user-select: none; // Prevent text selection
 
@@ -48,14 +53,41 @@
       align-items: center;
       font-size: 1.4rem; // "NO ACTIVE MATCH" text
       font-weight: bold;
-      color: #555555cc; // Slightly different color for status
+      color: #555555cc; // Default status text color
+
       .warning-icon {
         fill: red;
-        margin-right: 0.3rem; // Space between icon and text
+        margin-right: 0.3rem;
       }
-      .warn {
-        color: red;
+      .warn { // For "NO ACTIVE MATCH" when warning is active
+        color: red; // Text color for warning
+        display: flex; // To align icon and text if icon is direct child
+        align-items: center;
+      }
+      .no-warn { // For "NO ACTIVE MATCH" or "NO MORE MATCHES" when no warning
+        // Standard color inherited from .slot-status-text
+      }
+      .status-in-progress {
+        color: $sc; // Use secondary color for "MATCH IN PROGRESS"
+        font-weight: bold;
       }
     }
+  }
+
+  .slot-card-container {
+    // Container for the KanbanCard when it's present below the header
+    // The KanbanCard itself has margin-left and margin-right.
+    // If the card needs to be centered or have specific spacing within the slot:
+    // padding: 0.5rem 0; // Example: add some vertical spacing around the card
+    // The card itself has a height of 19rem.
+  }
+
+  .empty-planned-finished-slot-placeholder {
+    flex-grow: 1; // Allow it to take up space if slot can grow
+    min-height: 19rem; // Match KanbanCard height for consistent empty slot size
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // border: 1px dashed #ccc; // Optional: visual cue for empty draggable area
   }
 }

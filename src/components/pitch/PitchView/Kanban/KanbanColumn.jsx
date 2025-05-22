@@ -60,6 +60,7 @@ const KanbanColumn = ({
           slotBackgroundColor={slotBackgroundColor}
           pitchName={pitch} // Pass the pitch name to the slot
           showWarningIcon={showWarning} // Pass warning status
+          isMatchInProgress={!!fixtureForPitchSlot} // Explicitly pass if match is in progress
         >
           {fixtureForPitchSlot && (
             <KanbanCard
