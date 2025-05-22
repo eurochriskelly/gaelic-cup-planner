@@ -22,7 +22,23 @@ const KanbanColumn = ({
 
   if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column, now uses allTournamentPitches
     // Filter out "All Pitches" before mapping to slots
-    const actualPitches = allTournamentPitches.filter(p => p !== 'All Pitches');
+    let actualPitches = allTournamentPitches.filter(p => p !== 'All Pitches');
+
+    // Sort pitches: empty slots first, then active slots. Maintain alphabetical order within groups.
+    actualPitches.sort((pitchA, pitchB) => {
+      const isPitchAEmpty = !fixtures.find(f => f.pitch === pitchA);
+      const isPitchBEmpty = !fixtures.find(f => f.pitch === pitchB);
+
+      if (isPitchAEmpty && !isPitchBEmpty) {
+        return -1; // Pitch A (empty) comes before Pitch B (active)
+      }
+      if (!isPitchAEmpty && isPitchBEmpty) {
+        return 1;  // Pitch B (empty) comes before Pitch A (active)
+      }
+      // If both are empty or both are active, maintain original relative (alphabetical) order
+      return 0; 
+    });
+
     // Iterate over all unique pitches defined for the tournament for this column
     columnSlots = actualPitches.map((pitch, index) => {
       // Find if there's an active fixture (from the `fixtures` prop) for this specific pitch
