@@ -7,7 +7,7 @@ import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
 
-const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, pitchColor }) => {
+const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const displayNumber = fixture?.groupNumber || '0';
