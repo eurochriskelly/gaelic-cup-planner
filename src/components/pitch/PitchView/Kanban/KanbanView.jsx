@@ -6,8 +6,21 @@ import KanbanColumn from './KanbanColumn';
 import KanbanFilters from './KanbanFilters';
 import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
+import { useMemo } from 'react'; // Import useMemo
 import UpdateFixture from '../UpdateFixture';
 import './KanbanView.scss';
+
+// Helper function to determine fixture status (similar to useKanbanBoard.js)
+const getKanbanColumnLogic = (fixture) => {
+  if (!fixture) return 'planned'; // Default for safety, though fixtures should be valid
+  if (fixture.played || fixture.actualEndedTime) {
+    return 'finished';
+  }
+  if (fixture.actualStartedTime && !fixture.actualEndedTime) {
+    return 'started';
+  }
+  return 'planned';
+};
 
 const KanbanView = ({
   moveToNextFixture,
@@ -39,6 +52,26 @@ const KanbanView = ({
     maximizedColumnKey, // New state from hook
     toggleMaximizeColumn, // New function from hook
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
+
+  const relevantPitchNamesForOngoing = useMemo(() => {
+    const pitchNames = new Set();
+    if (initialFixtures && initialFixtures.length > 0) {
+      initialFixtures.forEach(fixture => {
+        const status = getKanbanColumnLogic(fixture);
+        if ((status === 'planned' || status === 'started') && fixture.pitch) {
+          pitchNames.add(fixture.pitch);
+        }
+      });
+    }
+    return Array.from(pitchNames).sort();
+  }, [initialFixtures]);
+
+  const globalPlannedFixtures = useMemo(() => {
+    if (initialFixtures && initialFixtures.length > 0) {
+      return initialFixtures.filter(fixture => getKanbanColumnLogic(fixture) === 'planned');
+    }
+    return [];
+  }, [initialFixtures]);
 
   // Effect to update selectedFixture when initialFixtures (from context) changes
   useEffect(() => {
@@ -132,7 +165,7 @@ const KanbanView = ({
                   title="Ongoing"
                   columnIndex={1} // Logical index for 'started'
                   fixtures={startedFixtures}
-                  allPlannedFixtures={plannedFixtures} // Pass planned fixtures for warning icon logic
+                  allPlannedFixtures={globalPlannedFixtures} // Use globally planned fixtures for warning icon
                   isCurrentlyMaximized={maximizedColumnKey === 'started'}
                   onToggleMaximize={toggleMaximizeColumn}
                   onDrop={(e) => onDrop(e, 'started')}
@@ -141,7 +174,7 @@ const KanbanView = ({
                   handleFixtureClick={handleFixtureClick}
                   selectedFixture={selectedFixture}
                   getPitchColor={getPitchColor}
-                  allTournamentPitches={pitches} // Pass all pitches to the "Ongoing" column
+                  allTournamentPitches={relevantPitchNamesForOngoing} // Pass filtered list of pitches
                 />
                 <KanbanColumn
                   key="finished"
