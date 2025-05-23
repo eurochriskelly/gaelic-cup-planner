@@ -55,8 +55,12 @@ const KanbanView = ({
 
   const relevantPitchNamesForOngoing = useMemo(() => {
     const pitchNames = new Set();
-    if (initialFixtures && initialFixtures.length > 0) {
-      initialFixtures.forEach(fixture => {
+    // Use filteredFixtures to determine relevant pitches for the "Ongoing" column display
+    if (filteredFixtures && filteredFixtures.length > 0) {
+      filteredFixtures.forEach(fixture => {
+        // The getKanbanColumnLogic determines the true state (planned, started, finished)
+        // For the "Ongoing" column, we are interested in pitches that have fixtures
+        // that are either 'planned' or 'started' *within the current filtered view*.
         const status = getKanbanColumnLogic(fixture);
         if ((status === 'planned' || status === 'started') && fixture.pitch) {
           pitchNames.add(fixture.pitch);
@@ -64,9 +68,10 @@ const KanbanView = ({
       });
     }
     return Array.from(pitchNames).sort();
-  }, [initialFixtures]);
+  }, [filteredFixtures]); // Depend on filteredFixtures
 
   const globalPlannedFixtures = useMemo(() => {
+    // For the warning icon, we still need to know about all planned fixtures globally
     if (initialFixtures && initialFixtures.length > 0) {
       return initialFixtures.filter(fixture => getKanbanColumnLogic(fixture) === 'planned');
     }
