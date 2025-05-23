@@ -78,3 +78,16 @@
     }
   }
 }
+
+.app-header::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute; /* Position relative to the header */
+  top: 0; /* Cover the top edge of the header */
+  left: 0; /* Cover the left edge of the header */
+  width: 100%; /* Make it the full width of the header */
+  height: 100%; /* Make it the full height of the header */
+  background: linear-gradient(180deg, transparent 0%, rgba(144, 159, 102, 0.867) 100%); /* Gradient from transparent at top to green at bottom */
+  z-index: -1; /* Place the pseudo-element behind the header's content */
+  pointer-events: none; /* Allows interaction with elements below the gradient */
+}
+

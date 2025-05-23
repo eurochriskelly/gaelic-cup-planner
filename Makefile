@@ -1,68 +1,58 @@
-.PHONY: help build dev
+SHELL := bash
+.ONESHELL:
+
+ENV := $(firstword $(filter production acceptance test,$(MAKECMDGOALS)))
+
+.PHONY: help build production acceptance test dev-mobile dev-desktop story home
+
+production:
+acceptance:
+test:
 
 define banner
-	printf "\n\033[1;37m==============================================\n"
-	printf "  $(1)\n" 
-	printf "==============================================\033[0m\n\n"
+	printf "\n\033[1;37m== %s ==\033[0m\n" "$(1)"
 endef
 
 help:
-	$(call banner,"Available commands:")
-	@echo "  make help           - Show this help message"
-	@echo "  make build          - Build mobile, desktop and storybook"
-	@echo "  make dev-mobile     - Run development servers (kills existing ones first)"
-	@echo "  make dev-desktop    - Run development servers for desktop"
-	@echo "  make story          - Run storybook"
+	$(call banner,Commands)
+	@echo "make build [production|acceptance|test]   Build all targets"
+	@echo "make dev-mobile                          Start mobile dev server"
+	@echo "make dev-desktop                         Start desktop dev server"
+	@echo "make story                               Run Storybook"
+	@echo "make home                                Serve home interface"
 
 build:
-	@read -p "Enter environment (production/acceptance/test): " input_env; \
-	echo "DEBUG: Initial input_env: [$$input_env]"; \
-	SELECTED_ENV=""; \
-	case "$$input_env" in \
-		production|acceptance|test) \
-			SELECTED_ENV="$$input_env"; \
-			echo "DEBUG: Inside case, SELECTED_ENV set to: [$$SELECTED_ENV]"; \
-			;; \
-		*) \
-			echo "Error: Environment must be one of: production, acceptance, test"; \
-			exit 1; \
-			;; \
-	esac; \
-	echo "INFO: Selected environment for build: [$$SELECTED_ENV]"; \
-	if [ -z "$$SELECTED_ENV" ]; then \
-		echo "ERROR: SELECTED_ENV is empty after case statement. Exiting."; \
-		exit 1; \
-	fi; \
-	$(call banner,"BUILDING MOBILE for $$SELECTED_ENV")
-	echo "INFO: Makefile is setting BUILD_ENV=$$SELECTED_ENV for the mobile build."
-	echo "INFO: Vite config should use this for output: dist/$$SELECTED_ENV/mobile"
-	bash scripts/bump.sh --release
-	BUILD_ENV="$$SELECTED_ENV" npm run build:mobile
-	bash scripts/bump.sh --release-candidate
-	$(call banner,"BUILDING DESKTOP for $$SELECTED_ENV")
-	echo "INFO: Makefile is setting BUILD_ENV=$$SELECTED_ENV for the desktop build."
-	echo "INFO: Vite config should use this for output: dist/$$SELECTED_ENV/desktop"
-	BUILD_ENV="$$SELECTED_ENV" npm run build:desktop
-	$(call banner,"BUILDING STORYBOOK for $$SELECTED_ENV")
-	echo "INFO: Makefile is setting BUILD_ENV=$$SELECTED_ENV for the Storybook build."
-	echo "INFO: Storybook output is typically 'storybook-static' and may not be affected by BUILD_ENV unless configured in .storybook/main.js."
-	BUILD_ENV="$$SELECTED_ENV" npm run build-storybook
-	$(call banner,"BUILD COMPLETE for $$SELECTED_ENV")
+	@if [ -z "$(ENV)" ]; then \
+	  echo "Usage: make build [production|acceptance|test]"; \
+	  exit 1; \
+	fi
+	@if [ "$(ENV)" = "production" ]; then \
+	  bash scripts/bump.sh --release; \
+	elif [ "$(ENV)" = "acceptance" ]; then \
+	  bash scripts/bump.sh --release-candidate; \
+	fi
+	$(call banner,Building $(ENV))
+	@BUILD_ENV=$(ENV) npm run build:mobile
+	@if [ "$(ENV)" = "production" ]; then \
+	  bash scripts/bump.sh --release-candidate; \
+	fi
+	$(call banner,Building desktop $(ENV))
+	@BUILD_ENV=$(ENV) npm run build:desktop
+	$(call banner,Building storybook $(ENV))
+	@BUILD_ENV=$(ENV) npm run build-storybook
+	$(call banner,Done $(ENV))
 
 dev-mobile:
-	$(call banner,"STARTING DEV SERVER: mobile")
-	@echo "Mobile server on port 5173"
+	$(call banner,Dev mobile)
 	@npm run dev:mobile
 
 dev-desktop:
-	$(call banner,"STARTING DEV SERVER: mobile")
-	@echo "Mobile server on port 5173"
-	@npm run dev:mobile
+	$(call banner,Dev desktop)
+	@npm run dev:desktop
+
+story:
+	$(call banner,Storybook)
+	@npm run storybook
 
 home:
 	@httpster -p 5175 -d src/interfaces/home
-
-story:
-	$(call banner,"STARTING DEV SERVER: mobile")
-	@echo "Mobile server on port 5173"
-	@npm run storybook
