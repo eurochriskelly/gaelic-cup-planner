@@ -41,7 +41,9 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
           </div>
           <div className="slot-status-text">
             {isMatchInProgress ? (
-              <span className="status-in-progress">MATCH IN PROGRESS</span>
+              <span className="status-in-progress">
+                {columnKey === 'queued' ? "READY" : "MATCH IN PROGRESS"}
+              </span>
             ) : showWarningIcon ? ( // showWarningIcon is true for empty 'started' slots with other planned matches
               <>
                 <WarningIcon />
