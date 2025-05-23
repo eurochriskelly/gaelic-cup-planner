@@ -54,17 +54,17 @@
       &.kanban-visual-column-left {
         border-right: 0.3rem solid #000000a8; // Separator between left and right visual columns
         .kanban-column[data-column-key="queued"] { // NEXT column
-          flex-grow: 1;
+          flex-grow: 0;    // Height based on content (pitch slots)
           flex-shrink: 1;
-          min-height: 24rem; // Min height for a few slots
-          height: 0; // Works with flex-grow
+          flex-basis: auto;
+          min-height: 10rem;  // Min height for a couple of slots even if empty
           border-bottom: 0.3rem solid #000000a8; // Separator between Next and Planned
         }
         .kanban-column[data-column-key="planned"] { // PLANNED column
-          flex-grow: 0;    // Does not grow beyond its content needs
-          flex-shrink: 0;  // Does not shrink below its min-height or content
-          flex-basis: auto; // Height is based on content
-          min-height: 24rem; // Ensure it has space for at least one card + header
+          flex-grow: 1;    // Takes remaining vertical space
+          flex-shrink: 1;
+          min-height: 24rem; // Always reserve space for at least one card + header
+          height: 0; // Works with flex-grow
         }
       }
 
