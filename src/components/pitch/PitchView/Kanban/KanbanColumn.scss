@@ -72,10 +72,3 @@
   display: none;               // Chrome, Safari, Opera
 }
 
-// Adjust padding for first and last columns
-.kanban-column:first-child .column-content {
-  padding-left: 0.5rem;
-}
-.kanban-column:last-child .column-content {
-  padding-right: 0.5rem;
-}

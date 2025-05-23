@@ -1,5 +1,15 @@
 @import "src/shared/css/_colors.scss";
 
+.pitch-slot {
+  border: 0.5rem solid #a1ac87;
+  margin-bottom: 0.5rem;
+  .kanban-card:not(.selected) {
+    // special case with no border
+    border-color:#44493496;
+    border-style:inset;
+  }
+}
+
 .kanban-slot {
   // padding-top: 0.3rem; // Removed, header/card will manage internal padding
   // padding-bottom: 0.3rem; // Removed

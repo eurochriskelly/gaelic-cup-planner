@@ -1,5 +1,8 @@
 @import '../../../../shared/css/colors.scss'; // Assuming you have a variables file
 
+$bwid: 0.6rem;
+$bcol: saturate(lighten($sc, 5%), 30%);
+
 .kanban-card {
   width: 100%;
   /* Ensure the card takes full width of its container */
@@ -17,7 +20,7 @@
   // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
   // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
   border-radius: 0.8rem;
-  border: 0.4rem solid #74824815;
+  border: $bwid solid #74824815;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 
@@ -52,11 +55,7 @@
 
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
   &.selected {
-    .FixtureBar {
-      color: lighten($sc, 80%); // Highlight selected card
-      background-color: saturate(darken($sc, 5%), 30%);
-    }
-    border: 0.4rem solid saturate(darken($sc, 5%), 30%);
+    border: $bwid solid $bcol;
   }
 
   .FixtureBar {
