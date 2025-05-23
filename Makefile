@@ -25,12 +25,18 @@ build:
 			;; \
 	esac; \
 	$(call banner,"BUILDING MOBILE for $$env")
+	@echo "INFO: Makefile is setting ENV=$$env for the mobile build."
+	@echo "INFO: Vite config should use this for output: dist/$$env/mobile"
 	bash scripts/bump.sh --release
 	ENV=$$env npm run build:mobile
 	bash scripts/bump.sh --release-candidate
 	$(call banner,"BUILDING DESKTOP for $$env")
+	@echo "INFO: Makefile is setting ENV=$$env for the desktop build."
+	@echo "INFO: Vite config should use this for output: dist/$$env/desktop"
 	ENV=$$env npm run build:desktop
 	$(call banner,"BUILDING STORYBOOK for $$env")
+	@echo "INFO: Makefile is setting ENV=$$env for the Storybook build."
+	@echo "INFO: Storybook output is typically 'storybook-static' and may not be affected by ENV unless configured in .storybook/main.js."
 	ENV=$$env npm run build-storybook
 	$(call banner,"BUILD COMPLETE for $$env")
 
