@@ -15,15 +15,24 @@ help:
 	@echo "  make story          - Run storybook"
 
 build:
-	$(call banner,"BUILDING MOBILE")
+	@read -p "Enter environment (production/acceptance/test): " env; \
+	case "$$env" in \
+		production|acceptance|test) \
+			;; \
+		*) \
+			echo "Error: Environment must be one of: production, acceptance, test"; \
+			exit 1; \
+			;; \
+	esac; \
+	$(call banner,"BUILDING MOBILE for $$env")
 	bash scripts/bump.sh --release
-	npm run build:mobile
+	ENV=$$env npm run build:mobile
 	bash scripts/bump.sh --release-candidate
-	$(call banner,"BUILDING DESKTOP")
-	npm run build:desktop
-	$(call banner,"BUILDING STORYBOOK")
-	npm run build-storybook
-	$(call banner,"BUILD COMPLETE")
+	$(call banner,"BUILDING DESKTOP for $$env")
+	ENV=$$env npm run build:desktop
+	$(call banner,"BUILDING STORYBOOK for $$env")
+	ENV=$$env npm run build-storybook
+	$(call banner,"BUILD COMPLETE for $$env")
 
 dev-mobile:
 	$(call banner,"STARTING DEV SERVER: mobile")
