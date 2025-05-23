@@ -17,6 +17,7 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
 
   if (isDynamicSlotColumn) {
     // Styles for "Next" (queued) or "Ongoing" (started) column slots
+    slotClasses.push('pitch-slot')
     const desaturatedGreen1 = '#A2AD8A'; // Darker desaturated green
     const desaturatedGreen2 = '#B9C2A5'; // Lighter desaturated green
     effectiveSlotStyle.background = `repeating-linear-gradient(45deg, ${desaturatedGreen1}, ${desaturatedGreen1} 10px, ${desaturatedGreen2} 10px, ${desaturatedGreen2} 20px)`;

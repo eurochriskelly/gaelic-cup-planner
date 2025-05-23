@@ -1,5 +1,4 @@
 import { func } from 'prop-types';
-import { func } from 'prop-types';
 import './FixtureBar.scss';
 
 export default function FixtureBar({ fixtureId, category, stage, number, competitionOffset }) {
