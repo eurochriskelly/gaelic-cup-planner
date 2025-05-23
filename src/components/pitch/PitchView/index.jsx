@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFixtureContext } from "./FixturesContext";
 import MobileLayout from "../../../shared/generic/MobileLayout";
-import KanbanView from "./Kanban"; // Import the new KanbanView
+import Kanban from "./Kanban"; // Import the new KanbanView
 import KanbanFiters from "./Kanban/KanbanFilters";
 import './PitchView.scss';
 
@@ -116,7 +116,7 @@ const PitchView = () => {
         }</span>
         <KanbanFiters />
       </span>
-      <KanbanView moveToNextFixture={moveToNextFixture} />
+      <Kanban moveToNextFixture={moveToNextFixture} />
     </MobileLayout>
   );
 };

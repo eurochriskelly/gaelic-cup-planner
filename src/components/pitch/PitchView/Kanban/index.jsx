@@ -8,7 +8,7 @@ import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
 import { useMemo } from 'react'; // Import useMemo
 import UpdateFixture from '../UpdateFixture';
-import './KanbanView.scss';
+import './Kanban.scss';
 
 // Helper function to determine fixture status (similar to useKanbanBoard.js)
 const getKanbanColumnLogic = (fixture) => {
@@ -22,7 +22,7 @@ const getKanbanColumnLogic = (fixture) => {
   return 'planned';
 };
 
-const KanbanView = ({
+const Kanban = ({
   moveToNextFixture,
 }) => {
   const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
@@ -226,4 +226,4 @@ const KanbanView = ({
   );
 };
 
-export default KanbanView;
+export default Kanban;
