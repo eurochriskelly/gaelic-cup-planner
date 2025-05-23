@@ -20,10 +20,11 @@ const KanbanColumn = ({
   onToggleMaximize,
 }) => {
   let columnSlots;
+  const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
 
-  if (columnIndex === 1 && allTournamentPitches && allTournamentPitches.length > 0) { // Middle "Ongoing" column
-    // Filter out "All Pitches" before mapping to slots
-    let actualPitches = allTournamentPitches.filter(p => p !== 'All Pitches');
+  if (isDynamicColumn && allTournamentPitches) { // "Next" (queued) or "Ongoing" (started) column
+    // Filter out "All Pitches" before mapping to slots, ensure allTournamentPitches is an array
+    let actualPitches = Array.isArray(allTournamentPitches) ? allTournamentPitches.filter(p => p !== 'All Pitches') : [];
 
     // Sort pitches: empty slots first, then active slots. Maintain alphabetical order within groups.
     actualPitches.sort((pitchA, pitchB) => {
@@ -37,30 +38,28 @@ const KanbanColumn = ({
         return 1;  // Pitch B (empty) comes before Pitch A (active)
       }
       // If both are empty or both are active, maintain original relative (alphabetical) order
-      return 0; 
+      return pitchA.localeCompare(pitchB); // Added explicit sort for stability
     });
 
     // Iterate over all unique pitches defined for the tournament for this column
     columnSlots = actualPitches.map((pitch, index) => {
-      // Find if there's an active fixture (from the `fixtures` prop - which are 'started' fixtures) for this specific pitch
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
-      // const slotBackgroundColor = getPitchColor(pitch); // Removed
-
       let showWarning = false;
-      if (!fixtureForPitchSlot && allPlannedFixtures) {
-        // If slot is empty, check if there are any planned fixtures for this pitch
+      // Warning logic primarily for 'started' (Ongoing) column if slot is empty but matches are planned for that pitch.
+      // For 'queued' (Next) column, an empty slot means nothing is queued for that pitch.
+      if (columnKey === 'started' && !fixtureForPitchSlot && allPlannedFixtures) {
         showWarning = allPlannedFixtures.some(pf => pf.pitch === pitch);
       }
 
       return (
         <KanbanSlot
-          key={`pitch-slot-${pitch}`} // Keyed by pitch name for stability
-          slotIndex={index} // Relative index within this dynamic column
-          columnIndex={columnIndex}
-          // slotBackgroundColor={slotBackgroundColor} // Removed
-          pitchName={pitch} // Pass the pitch name to the slot
-          showWarningIcon={showWarning} // Pass warning status
-          isMatchInProgress={!!fixtureForPitchSlot} // Explicitly pass if match is in progress
+          key={`pitch-slot-${columnKey}-${pitch}`} // Keyed by columnKey and pitch name
+          slotIndex={index}
+          columnIndex={columnIndex} // Pass logical index for striping in non-dynamic slots
+          columnKey={columnKey} // Pass columnKey for dynamic slot styling/logic
+          pitchName={pitch}
+          showWarningIcon={showWarning}
+          isMatchInProgress={!!fixtureForPitchSlot}
         >
           {fixtureForPitchSlot && (
             <KanbanCard
@@ -69,23 +68,30 @@ const KanbanColumn = ({
               onDragStart={(e) => onDragStart(e, fixtureForPitchSlot.id)}
               onClick={() => handleFixtureClick(fixtureForPitchSlot)}
               isSelected={selectedFixture && selectedFixture.id === fixtureForPitchSlot.id}
-              // pitchColor={getPitchColor(fixtureForPitchSlot.pitch)} // Removed
             />
           )}
         </KanbanSlot>
       );
     });
-  } else { // "Planned" or "Finished" columns
+     // If actualPitches is empty, columnSlots will be empty. This is intended.
+     // For "Next" to have a minimum of 4 slots even if empty, further logic would be needed here
+     // or `allTournamentPitches` for "Next" would need to guarantee 4 pitch names.
+     // Current implementation matches "Ongoing" behavior.
+  } else { // "Planned" or "Finished" columns (static slot generation)
     const numFixturesInColumn = fixtures.length;
-    const numSlots = Math.max(6, numFixturesInColumn); // Use at least 6 slots, or more if there are more fixtures
+    // Ensure at least 6 slots for "Planned", and for "Finished" to give it some body
+    const minSlots = (columnKey === 'planned' || columnKey === 'finished') ? Math.max(6, numFixturesInColumn) : numFixturesInColumn;
+    const numSlots = Math.max(minSlots, numFixturesInColumn);
+
 
     columnSlots = Array.from({ length: numSlots }).map((_, slotIndex) => {
       const fixtureForSlot = fixtures[slotIndex];
       return (
         <KanbanSlot
-          key={`slot-${columnIndex}-${slotIndex}`}
+          key={`slot-${columnKey}-${slotIndex}`} // Keyed by columnKey and slotIndex
           slotIndex={slotIndex}
-          columnIndex={columnIndex}
+          columnIndex={columnIndex} // Pass logical index for striping
+          columnKey={columnKey} // Pass columnKey
         >
           {fixtureForSlot && (
             <KanbanCard
@@ -94,7 +100,6 @@ const KanbanColumn = ({
               onDragStart={(e) => onDragStart(e, fixtureForSlot.id)}
               onClick={() => handleFixtureClick(fixtureForSlot)}
               isSelected={selectedFixture && selectedFixture.id === fixtureForSlot.id}
-              // pitchColor={getPitchColor(fixtureForSlot.pitch)} // Removed
             />
           )}
         </KanbanSlot>
