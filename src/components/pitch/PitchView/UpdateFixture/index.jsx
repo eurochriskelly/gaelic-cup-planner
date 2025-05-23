@@ -29,7 +29,7 @@ const UpdateFixture = ({
 
   const hasStarted = !!nextFixture.startedTime;
   const hasResult = !!nextFixture.isResult;
-  const isPlanned = nextFixture.lane?.current === 'planned';
+  const isPlanned = nextFixture.lane?.current === 'planned' || nextFixture.lane?.current === 'queued';
 
   // Basic buttons definition - won't change
   const buttons = [
