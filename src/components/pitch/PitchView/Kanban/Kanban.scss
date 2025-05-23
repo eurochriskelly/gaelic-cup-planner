@@ -44,80 +44,81 @@
     padding: 0;
     box-sizing: border-box;
 
-    .kanban-visual-column { // Styles for all visual column containers (e.g., .planned-column-container, .stacked-column-container)
-      flex: 1; // Each visual column takes up its share of width
+    .kanban-visual-column {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      min-width: 0; // Prevents flex items from overflowing
-      height: 100%; // Visual columns take full height of the board area
+      min-width: 0;
+      height: 100%;
 
-      // Specific styles for the KanbanColumn component within the "Planned" visual column
-      &.planned-column-container {
-        .kanban-column { // The KanbanColumn component itself
-          height: 100%; // Ensure the "Planned" column takes the full height of its container for scrolling
-          border-right: 0.3rem solid #000000a8;
+      &.kanban-visual-column-left {
+        border-right: 0.3rem solid #000000a8; // Separator between left and right visual columns
+        .kanban-column[data-column-key="queued"] { // NEXT column
+          flex-grow: 1;
+          flex-shrink: 1;
+          min-height: 24rem; // Min height for a few slots
+          height: 0; // Works with flex-grow
+          border-bottom: 0.3rem solid #000000a8; // Separator between Next and Planned
+        }
+        .kanban-column[data-column-key="planned"] { // PLANNED column
+          flex-grow: 0;    // Does not grow beyond its content needs
+          flex-shrink: 0;  // Does not shrink below its min-height or content
+          flex-basis: auto; // Height is based on content
+          min-height: 24rem; // Ensure it has space for at least one card + header
         }
       }
 
-      // Specific styles for KanbanColumn components within the "Stacked" visual column
-      &.kanban-column-stacked {
-        .kanban-column { // Targeting KanbanColumn components (Ongoing and Finished)
-          &:first-child { // This is the "Ongoing" KanbanColumn
-            flex-grow: 0;    // Don't grow to fill space by default
-            flex-shrink: 1;  // Allow shrinking
-            flex-basis: auto; // Height is based on content
-            min-height: 0;   // Can shrink to nothing if no content
-          }
-          &:last-child { // This is the "Finished" KanbanColumn
-            flex-grow: 1;    // Grow to take available remaining vertical space
-            flex-shrink: 1;  // Can shrink
-            min-height: 24rem; // Always reserve space for at least one card + header
-            height: 0;       // Works with flex-grow and min-height to manage size
-          }
+      &.kanban-visual-column-right {
+        .kanban-column[data-column-key="started"] { // ONGOING column
+          flex-grow: 0;    // Height based on content (pitch slots)
+          flex-shrink: 1;
+          flex-basis: auto;
+          min-height: 10rem;  // Min height for a couple of slots even if empty
+          border-bottom: 0.3rem solid #000000a8; // Separator between Ongoing and Finished
+        }
+        .kanban-column[data-column-key="finished"] { // FINISHED column
+          flex-grow: 1;    // Takes remaining vertical space
+          flex-shrink: 1;
+          min-height: 24rem; // Always reserve space for at least one card + header
+          height: 0;
         }
       }
     }
 
     // Maximized states
+    &.maximized-queued {
+      .kanban-visual-column-left {
+        flex-basis: 100%;
+        .kanban-column[data-column-key="queued"] { height: 100%; min-height: 0; }
+        .kanban-column[data-column-key="planned"] { display: none; }
+      }
+      .kanban-visual-column-right { display: none; }
+    }
+
     &.maximized-planned {
-      .planned-column-container {
-        flex-basis: 100%; // Takes full width
+      .kanban-visual-column-left {
+        flex-basis: 100%;
+        .kanban-column[data-column-key="queued"] { display: none; }
+        .kanban-column[data-column-key="planned"] { height: 100%; min-height: 0; }
       }
-      .stacked-column-container {
-        display: none; // Hide the other visual column
-      }
+      .kanban-visual-column-right { display: none; }
     }
 
     &.maximized-started {
-      .planned-column-container {
-        display: none; // Hide the other visual column
-      }
-      .stacked-column-container {
-        flex-basis: 100%; // Takes full width
-        .kanban-column[data-column-key="started"] {
-          flex-grow: 1; // Ensure it takes full available height in the stacked container
-          height: 100%; // Override any fixed height
-          min-height: 0; // Important for flex children
-        }
-        .kanban-column[data-column-key="finished"] {
-          display: none; // Hide the sibling column within the stacked container
-        }
+      .kanban-visual-column-left { display: none; }
+      .kanban-visual-column-right {
+        flex-basis: 100%;
+        .kanban-column[data-column-key="started"] { height: 100%; min-height: 0; }
+        .kanban-column[data-column-key="finished"] { display: none; }
       }
     }
 
     &.maximized-finished {
-      .planned-column-container {
-        display: none; // Hide the other visual column
-      }
-      .stacked-column-container {
-        flex-basis: 100%; // Takes full width
-        .kanban-column[data-column-key="started"] {
-          display: none; // Hide the sibling column within the stacked container
-        }
-        .kanban-column[data-column-key="finished"] {
-          flex-grow: 1; // Ensure it takes full available height
-          height: 100%; // Override its default fixed height (24rem)
-          min-height: 0; // Important for flex children
+      .kanban-visual-column-left { display: none; }
+      .kanban-visual-column-right {
+        flex-basis: 100%;
+        .kanban-column[data-column-key="started"] { display: none; }
+        .kanban-column[data-column-key="finished"] { height: 100%; min-height: 0; }
         }
       }
     }
