@@ -53,7 +53,7 @@ export default defineConfig({
     port: 5174
   },
   build: {
-    outDir: resolve(__dirname, 'dist/desktop'),
+    outDir: resolve(__dirname, process.env.ENV ? `dist/${process.env.ENV}/desktop` : 'dist/desktop'),
   },
   esbuild: {
     jsxInject: `import React from 'react'`,
