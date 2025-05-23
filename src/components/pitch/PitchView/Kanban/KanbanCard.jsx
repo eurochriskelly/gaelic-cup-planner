@@ -33,6 +33,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
         category={displayCategory}
         stage={displayStage}
         number={displayNumber}
+        competitionOffset={fixture?.competition?.offset}
       />
       {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
         <TimeDisplay
