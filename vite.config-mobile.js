@@ -59,7 +59,7 @@ export default defineConfig({
     ]
   },
   build: {
-    outDir: resolve(__dirname, 'dist/mobile'),
+    outDir: resolve(__dirname, process.env.ENV ? `dist/${process.env.ENV}/mobile` : 'dist/mobile'),
   },
   esbuild: {
     jsxInject: `import React from 'react'`,
