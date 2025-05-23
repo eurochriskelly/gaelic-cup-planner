@@ -1,9 +1,14 @@
 import { func } from 'prop-types';
+import { func } from 'prop-types';
 import './FixtureBar.scss';
 
-export default function FixtureBar({ fixtureId, category, stage, number }) {
+export default function FixtureBar({ fixtureId, category, stage, number, competitionOffset }) {
+  const fixtureBarClasses = `FixtureBar ${
+    competitionOffset !== undefined && competitionOffset !== null ? `competition-col-${competitionOffset}` : ''
+  }`;
+
   return (
-    <div className="FixtureBar">
+    <div className={fixtureBarClasses.trim()}>
       <div className="fixture-id">
         <svg className="icon-larger" viewBox="0 0 24 24" width="24" height="24">
           <path d="M4 5h16v2H4V5m0 4h16v2H4V9m0 4h16v2H4v-2m0 4h16v2H4v-2z" />
