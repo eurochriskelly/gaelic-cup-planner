@@ -55,7 +55,7 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
               // If 'queued' (Next): "AVAILABLE" or "READY FOR MATCH" (or simply "NO ACTIVE MATCH" if preferred)
               <span className="no-warn">
                 {columnKey === 'started' ? "NO MORE MATCHES" : 
-                 columnKey === 'queued' ? "AVAILABLE FOR NEXT MATCH" : 
+                 columnKey === 'queued' ? "NO MATCH READY" : 
                  "NO ACTIVE MATCH" /* Fallback, though should be covered by dynamicSlotColumn */}
               </span>
             )}
