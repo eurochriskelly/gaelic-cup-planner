@@ -278,35 +278,32 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
 
     const persistCardChanges = async () => {
-      console.log('Peersiisssting')
+      console.log('Persisting changes to EXISTING cards...');
       const playersToUpdate = [
         ...(cardedPlayers.team1 || []),
         ...(cardedPlayers.team2 || []),
-      ].map(card => ({ // Ensure structure matches API expectation, remove temporary IDs if necessary
-        ...card,
-        id: typeof card.id === 'number' && card.id > 1000000 ? null : card.id // Example: nullify temporary IDs
+      ]
+      // Filter out cards with temporary IDs (i.e., only process cards that should already exist on backend)
+      .filter(card => !(typeof card.id === 'number' && card.id > 1000000))
+      .map(card => ({ // For existing cards, map them as they are (they have real IDs)
+        ...card
       }));
 
       try {
-        console.log("Auto-saving carded players:", playersToUpdate);
-        for (const player of playersToUpdate) {
-          // If the player has a temporary ID (e.g., from Date.now()),
-          // it might need to be handled differently or sent as null
-          // depending on how API.updateCardedPlayer handles new vs existing cards.
-          // Assuming API.updateCardedPlayer can handle creating a new card if id is null
-          // or updating if id is present.
-          const payload = { ...player };
-          if (typeof player.id === 'number' && player.id > 1000000) {
-            // This indicates a temporary ID used for local state management.
-            // The backend might expect 'id' to be null for new entries.
-            payload.id = null;
+        // Only proceed if there are actual existing cards to update.
+        if (playersToUpdate.length > 0) {
+          console.log("Auto-saving updates to existing carded players:", playersToUpdate);
+          for (const player of playersToUpdate) {
+            // Payload is just the player object, as it has a real ID
+            await API.updateCardedPlayer(fixture.tournamentId, fixture.id, player);
           }
-          await API.updateCardedPlayer(fixture.tournamentId, fixture.id, payload);
+          console.log("Successfully auto-saved updates to existing carded players");
         }
-        console.log("Successfully auto-saved carded players");
+        
+        // fetchFixtures is still called, which is good for overall consistency.
         await fetchFixtures(true); // Refresh fixtures after successful save
       } catch (error) {
-        console.error("Error auto-saving carded players:", error);
+        console.error("Error auto-saving updates to existing carded players:", error);
       }
     };
 
