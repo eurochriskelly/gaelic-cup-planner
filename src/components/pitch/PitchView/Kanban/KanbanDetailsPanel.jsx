@@ -269,7 +269,20 @@ function CardEntryWrapper({ fixture, closePanel }) {
     return { team1: [], team2: [] };
   });
 
-  const isInitialMount = useRef(true); // Ref to track initial mount
+  const isInitialMount = useRef(true); // Ref to track initial mount for debounced effect
+  const syncedCardedPlayersRef = useRef({ team1: [], team2: [] });
+
+  // Effect to initialize/update syncedCardedPlayersRef when fixture.cardedPlayers (the source of truth) changes
+  useEffect(() => {
+    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
+      syncedCardedPlayersRef.current = {
+        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+      };
+    } else {
+      syncedCardedPlayersRef.current = { team1: [], team2: [] };
+    }
+  }, [fixture.cardedPlayers, fixture.team1, fixture.team2]);
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -278,43 +291,74 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
 
     const persistCardChanges = async () => {
-      console.log('Persisting changes to EXISTING cards...');
-      const playersToUpdate = [
-        ...(cardedPlayers.team1 || []),
-        ...(cardedPlayers.team2 || []),
-      ]
-      // Filter out cards with temporary IDs (i.e., only process cards that should already exist on backend)
-      .filter(card => !(typeof card.id === 'number' && card.id > 1000000))
-      .map(card => ({ // For existing cards, map them as they are (they have real IDs)
-        ...card
-      }));
+      console.log('Debounced persistCardChanges triggered...');
+      const currentCardsTeam1 = cardedPlayers.team1 || [];
+      const currentCardsTeam2 = cardedPlayers.team2 || [];
+      const syncedCardsTeam1 = syncedCardedPlayersRef.current.team1 || [];
+      const syncedCardsTeam2 = syncedCardedPlayersRef.current.team2 || [];
 
-      try {
-        // Only proceed if there are actual existing cards to update.
-        if (playersToUpdate.length > 0) {
-          console.log("Auto-saving updates to existing carded players:", playersToUpdate);
+      const playersToUpdate = [];
+
+      const findAndCompareCard = (currentCard, syncedTeamCards) => {
+        // Only consider cards with real IDs (not temporary ones) for update
+        if (!currentCard.id || (typeof currentCard.id === 'number' && currentCard.id > 1000000)) {
+          return null;
+        }
+        const syncedCard = syncedTeamCards.find(sc => sc.id === currentCard.id);
+
+        if (!syncedCard) {
+          // This card is in current state with a real ID but not in our last synced snapshot.
+          // This could happen if it was just added and syncedRef hasn't updated yet.
+          // For an auto-save of *modifications*, we should only update cards that were previously known (synced).
+          // Additions are handled by TabCards' explicit save.
+          return null;
+        }
+
+        // Compare relevant editable properties
+        if (currentCard.player !== syncedCard.player ||
+            currentCard.cardType !== syncedCard.cardType ||
+            currentCard.notes !== syncedCard.notes ||
+            currentCard.number !== syncedCard.number // Assuming 'number' (jersey) is editable
+           ) {
+          return currentCard; // This card has changed
+        }
+        return null; // No changes detected for this card
+      };
+
+      currentCardsTeam1.forEach(cc => {
+        const changedCard = findAndCompareCard(cc, syncedCardsTeam1);
+        if (changedCard) playersToUpdate.push(changedCard);
+      });
+      currentCardsTeam2.forEach(cc => {
+        const changedCard = findAndCompareCard(cc, syncedCardsTeam2);
+        if (changedCard) playersToUpdate.push(changedCard);
+      });
+
+      if (playersToUpdate.length > 0) {
+        try {
+          console.log("Auto-saving updates to specific carded players:", playersToUpdate);
           for (const player of playersToUpdate) {
-            // Payload is just the player object, as it has a real ID
             await API.updateCardedPlayer(fixture.tournamentId, fixture.id, player);
           }
-          console.log("Successfully auto-saved updates to existing carded players");
+          console.log("Successfully auto-saved updates to specific carded players.");
+          // After successful updates, fetchFixtures will refresh the data,
+          // which in turn will update fixture.cardedPlayers prop,
+          // and the other useEffect will update syncedCardedPlayersRef.current.
+          await fetchFixtures(true);
+        } catch (error) {
+          console.error("Error auto-saving updates to specific carded players:", error);
+          // If an error occurs, syncedCardedPlayersRef is not updated with these changes,
+          // allowing a retry on the next trigger if the data is still different.
         }
-        
-        // fetchFixtures is still called, which is good for overall consistency.
-        await fetchFixtures(true); // Refresh fixtures after successful save
-      } catch (error) {
-        console.error("Error auto-saving updates to existing carded players:", error);
+      } else {
+        console.log("No actual card changes detected for auto-save.");
       }
     };
 
-    // Simple debounce implementation
-    const timerId = setTimeout(() => {
-      persistCardChanges();
-    }, 1000); // Debounce API call by 1 second
-
+    const timerId = setTimeout(persistCardChanges, 1000); // Debounce API call by 1 second
     return () => clearTimeout(timerId); // Cleanup timeout
 
-  }, [cardedPlayers, fixture.id, fixture.tournamentId, fetchFixtures]);
+  }, [cardedPlayers, fixture.id, fixture.tournamentId, fetchFixtures]); // Dependencies remain the same
 
 
   const handleSetCardedPlayer = (cardUpdate) => {
