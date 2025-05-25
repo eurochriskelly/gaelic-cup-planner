@@ -361,43 +361,78 @@ function CardEntryWrapper({ fixture, closePanel }) {
   }, [cardedPlayers, fixture.id, fixture.tournamentId, fetchFixtures]); // Dependencies remain the same
 
 
-  const handleSetCardedPlayer = (cardUpdate) => {
-    setCardedPlayers(prev => {
-      const teamKey = cardUpdate.team === fixture.team1 ? 'team1' : 'team2';
-      let teamCards = [...(prev[teamKey] || [])];
-      const existingCardIndex = teamCards.findIndex(c => c.id === cardUpdate.id);
+  const handleSetCardedPlayer = async (cardDataFromTab) => {
+    const { tournamentId, id: fixtureId, team1: fixtureTeam1Name } = fixture;
 
-      if (cardUpdate.action === 'delete') {
-        if (existingCardIndex !== -1) {
-          teamCards.splice(existingCardIndex, 1);
-          // Note: The API call to delete the card on the backend should be triggered
-          // by TabCards or explicitly here, followed by fetchFixtures if needed.
+    if (cardDataFromTab.action === 'delete') {
+      const cardIdToDelete = cardDataFromTab.id;
+      // Check if the card to delete has a real ID (i.e., it exists on the backend)
+      const isRealCard = cardIdToDelete && !(typeof cardIdToDelete === 'number' && cardIdToDelete > 1000000);
+
+      if (isRealCard) {
+        try {
+          await API.deleteCardedPlayer(tournamentId, fixtureId, cardDataFromTab); // API expects card object
+          // Update local state by removing the card
+          setCardedPlayers(prev => {
+            const teamKey = cardDataFromTab.team === fixtureTeam1Name ? 'team1' : 'team2';
+            const newTeamCards = (prev[teamKey] || []).filter(c => c.id !== cardIdToDelete);
+            return { ...prev, [teamKey]: newTeamCards };
+          });
+          await fetchFixtures(true); // Refresh all fixture data
+        } catch (error) {
+          console.error('Error deleting card from backend:', error);
+          // TODO: Optionally show an error message to the user
         }
-      } else if (existingCardIndex !== -1) {
-        // Card with cardUpdate.id already exists in local state. Update it.
-        // This handles updates to existing cards, whether they have real or temporary IDs.
-        teamCards[existingCardIndex] = { ...teamCards[existingCardIndex], ...cardUpdate };
       } else {
-        // Card with cardUpdate.id does not exist in local state. This means it's a new card to be added.
-        // It could be:
-        // 1. A card freshly created in the UI, where cardUpdate.id might be undefined or a new temporary ID.
-        // 2. A card that was just saved to the server, and cardUpdate includes the new real ID from the server.
-
-        if (cardUpdate.id && !(typeof cardUpdate.id === 'number' && cardUpdate.id > 1000000)) {
-          // Case 2: cardUpdate.id is a real ID (e.g., 123 from the server).
-          // Since it wasn't found by findIndex, it's genuinely new to the local list. Add it.
-          // cardUpdate should contain all necessary details including the real ID.
-          teamCards.push({ ...cardUpdate });
-        } else {
-          // Case 1: cardUpdate.id is undefined, or it's a temporary ID (e.g., from Date.now()).
-          // This is for a card being added locally for the first time, before server confirmation,
-          // or if TabCards passes a temporary ID directly.
-          // Assign a new temporary Date.now() ID to ensure it's unique for local list management.
-          teamCards.push({ ...cardUpdate, id: Date.now() });
-        }
+        // Card has no real ID (was temporary and not saved to backend), just remove from local state
+        setCardedPlayers(prev => {
+          const teamKey = cardDataFromTab.team === fixtureTeam1Name ? 'team1' : 'team2';
+          const newTeamCards = (prev[teamKey] || []).filter(c => c.id !== cardIdToDelete); // cardIdToDelete is temp ID
+          return { ...prev, [teamKey]: newTeamCards };
+        });
       }
-      return { ...prev, [teamKey]: teamCards };
-    });
+      return;
+    }
+
+    // --- Add or Update card ---
+    const isExistingCardWithRealId = cardDataFromTab.id && !(typeof cardDataFromTab.id === 'number' && cardDataFromTab.id > 1000000);
+    
+    const payload = { ...cardDataFromTab };
+    delete payload.action; // 'action' is not part of the card model for backend update/create
+
+    if (!isExistingCardWithRealId) {
+      // This is a new card being added.
+      // Remove temporary ID if TabCards assigned one; backend will assign the real ID.
+      // This assumes API.updateCardedPlayer can create if ID is missing in payload.
+      delete payload.id; 
+    }
+
+    try {
+      // API.updateCardedPlayer is assumed to handle both create (if no ID in payload) and update.
+      const savedCard = await API.updateCardedPlayer(tournamentId, fixtureId, payload);
+
+      setCardedPlayers(prev => {
+        const teamKey = savedCard.team === fixtureTeam1Name ? 'team1' : 'team2';
+        let teamCards = [...(prev[teamKey] || [])];
+
+        if (isExistingCardWithRealId) {
+          // It was an update to an existing card
+          teamCards = teamCards.map(c => c.id === savedCard.id ? savedCard : c);
+        } else {
+          // It was a new card that has been created
+          // If TabCards passed a temporary ID with the original cardDataFromTab, remove that temporary entry
+          if (cardDataFromTab.id && (typeof cardDataFromTab.id === 'number' && cardDataFromTab.id > 1000000)) {
+            teamCards = teamCards.filter(c => c.id !== cardDataFromTab.id);
+          }
+          teamCards.push(savedCard); // Add the newly saved card with its real ID
+        }
+        return { ...prev, [teamKey]: teamCards };
+      });
+      await fetchFixtures(true); // Refresh all fixture data to ensure consistency
+    } catch (error) {
+      console.error('Error saving card (add/update):', error);
+      // TODO: Optionally show an error message to the user
+    }
   };
 
   return (
