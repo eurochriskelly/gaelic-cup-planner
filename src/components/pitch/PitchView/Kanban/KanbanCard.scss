@@ -55,7 +55,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
 
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
   &.selected {
-    border: $bwid solid $bcol;
+    border: $bwid solid darken(desaturate($bcol, 30%), 10%);
   }
 
   .FixtureBar {
