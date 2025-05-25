@@ -216,9 +216,9 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   .umpire-info{
     position: absolute;
     bottom: 0.1rem;
-    right: 0.1rem;
-    padding: 0.2rem 0.4rem;
-    width: 6rem;
+    right: 0.0rem;
+    padding: 0.2rem 0.0rem;
+    width: 100%;
     svg path {
       fill: black;
       fill-opacity: 1;
@@ -230,8 +230,11 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     &>div {
       display: grid;
       gap: -0.8rem;
-      align-items: center;
-      justify-content: center;
+      align-items: right;
+      color: #555;
+      justify-content: right;
+      font-weight: normal;
+      padding-top: 0.2rem;
       grid-template-columns: auto auto;
     }
   }
