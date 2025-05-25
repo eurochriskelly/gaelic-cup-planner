@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import API from "../../../../../../shared/api/endpoints";
 import './TabCancel.scss';
 
-const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClose, team1, team2, fixture }) => {
+const TabCancel = ({ 
+  cancellationOption, 
+  setCancellationOption, 
+  onConfirm, onClose, team1, team2, fixture 
+}) => {
   const [confirming, setConfirming] = useState(false);
 
   const handleConfirm = (type) => {
@@ -10,7 +14,7 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
     setConfirming(true);
   };
 
-  const handleFinalConfirm = () => {
+  const handleFinalConfirm = async () => {
     // Create the result object with the appropriate scores
     const result = {
       scores: {
@@ -28,7 +32,10 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
     }
     
     // Update score via API
-    API.updateScore(fixture.tournamentId, fixture.id, result)
+    if (!fixture.started) {
+      await API.startMatch(fixture.tournamentId, fixture.id);
+    }
+    await API.updateScore(fixture.tournamentId, fixture.id, result)
       .then(() => {
         console.log("Match settled without playing:", result);
         setConfirming(false);
@@ -38,6 +45,10 @@ const TabCancel = ({ cancellationOption, setCancellationOption, onConfirm, onClo
         console.error("Error updating match outcome:", error);
         setConfirming(false); // Ensure confirming is reset on error too
       });
+    if (!fixture.ended) {
+      console.log("Ending match", fixture.id);
+      await API.endMatch(fixture.tournamentId, fixture.id);
+    }
   };
   
   const cancelConfirmation = () => {
