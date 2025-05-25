@@ -320,29 +320,35 @@ function CardEntryWrapper({ fixture, closePanel }) {
   const handleSetCardedPlayer = (cardUpdate) => {
     setCardedPlayers(prev => {
       const teamKey = cardUpdate.team === fixture.team1 ? 'team1' : 'team2';
-      let teamCards = [...(prev[teamKey] || [])]; // Ensure prev[teamKey] is an array
+      let teamCards = [...(prev[teamKey] || [])];
+      const existingCardIndex = teamCards.findIndex(c => c.id === cardUpdate.id);
 
       if (cardUpdate.action === 'delete') {
-        teamCards = teamCards.filter((card) => card.id !== cardUpdate.id); // Fixed: Added opening parenthesis
-      } else if (cardUpdate.id && !(typeof cardUpdate.id === 'number' && cardUpdate.id > 1000000)) { // Existing card (not a temp ID)
-        teamCards = teamCards.map(card => card.id === cardUpdate.id ? { ...card, ...cardUpdate } : card);
-      } else {
-        // New card or card with temp ID being confirmed
-        // If it was a temp ID, find and update; otherwise, add new
-        const tempId = cardUpdate.id; // Store temp ID if present
-
-        let foundAndUpdated = false;
-        if (tempId && typeof tempId === 'number' && tempId > 1000000) {
-          teamCards = teamCards.map(card => {
-            if (card.id === tempId) {
-              foundAndUpdated = true;
-              return { ...card, ...cardUpdate, id: card.id }; // Keep original temp ID for now, API call will handle it
-            }
-            return card;
-          });
+        if (existingCardIndex !== -1) {
+          teamCards.splice(existingCardIndex, 1);
+          // Note: The API call to delete the card on the backend should be triggered
+          // by TabCards or explicitly here, followed by fetchFixtures if needed.
         }
-        if (!foundAndUpdated) {
-          // Ensure new cards get a temporary, unique ID for local list management
+      } else if (existingCardIndex !== -1) {
+        // Card with cardUpdate.id already exists in local state. Update it.
+        // This handles updates to existing cards, whether they have real or temporary IDs.
+        teamCards[existingCardIndex] = { ...teamCards[existingCardIndex], ...cardUpdate };
+      } else {
+        // Card with cardUpdate.id does not exist in local state. This means it's a new card to be added.
+        // It could be:
+        // 1. A card freshly created in the UI, where cardUpdate.id might be undefined or a new temporary ID.
+        // 2. A card that was just saved to the server, and cardUpdate includes the new real ID from the server.
+
+        if (cardUpdate.id && !(typeof cardUpdate.id === 'number' && cardUpdate.id > 1000000)) {
+          // Case 2: cardUpdate.id is a real ID (e.g., 123 from the server).
+          // Since it wasn't found by findIndex, it's genuinely new to the local list. Add it.
+          // cardUpdate should contain all necessary details including the real ID.
+          teamCards.push({ ...cardUpdate });
+        } else {
+          // Case 1: cardUpdate.id is undefined, or it's a temporary ID (e.g., from Date.now()).
+          // This is for a card being added locally for the first time, before server confirmation,
+          // or if TabCards passes a temporary ID directly.
+          // Assign a new temporary Date.now() ID to ensure it's unique for local list management.
           teamCards.push({ ...cardUpdate, id: Date.now() });
         }
       }
