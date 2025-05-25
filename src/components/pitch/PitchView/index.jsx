@@ -11,8 +11,6 @@ const PitchView = () => {
   const { fixtures, fetchFixtures, nextFixture, pitchId, tournamentId } = useFixtureContext(); // Ensure pitchId, tournamentId from context if needed by KanbanView directly, or it uses useParams
   const { sections } = useAppContext();
   let tabNames = ["Kanban", "Next", "Finished" ] // , "Unplayed"]; // Added Kanban
-  // tabNames = [ "Next", "Finished", "Unplayed"]; // Added Kanban
-  
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
