@@ -272,6 +272,18 @@ function CardEntryWrapper({ fixture, closePanel }) {
   const isInitialMount = useRef(true); // Ref to track initial mount for debounced effect
   const syncedCardedPlayersRef = useRef({ team1: [], team2: [] });
 
+  // Effect to update local cardedPlayers state when fixture prop changes
+  useEffect(() => {
+    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
+      setCardedPlayers({
+        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id),
+        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id),
+      });
+    } else {
+      setCardedPlayers({ team1: [], team2: [] });
+    }
+  }, [fixture.cardedPlayers, fixture.team1, fixture.team2]); // Removed setCardedPlayers from deps as it's stable
+
   // Effect to initialize/update syncedCardedPlayersRef when fixture.cardedPlayers (the source of truth) changes
   useEffect(() => {
     if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
