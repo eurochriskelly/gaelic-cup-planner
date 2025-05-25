@@ -260,10 +260,10 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
 function CardEntryWrapper({ fixture, closePanel }) {
   const { fetchFixtures } = useFixtureContext();
   const [cardedPlayers, setCardedPlayers] = useState(() => {
-    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
+    if (fixture.cards && Array.isArray(fixture.cards)) {
       return {
-        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id), // Ensure cards have IDs
-        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id), // Ensure cards have IDs
+        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id), // Ensure cards have IDs
+        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id), // Ensure cards have IDs
       };
     }
     return { team1: [], team2: [] };
@@ -274,27 +274,27 @@ function CardEntryWrapper({ fixture, closePanel }) {
 
   // Effect to update local cardedPlayers state when fixture prop changes
   useEffect(() => {
-    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
+    if (fixture.cards && Array.isArray(fixture.cards)) {
       setCardedPlayers({
-        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id),
-        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id),
+        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id),
+        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id),
       });
     } else {
       setCardedPlayers({ team1: [], team2: [] });
     }
-  }, [fixture.cardedPlayers, fixture.team1, fixture.team2]); // Removed setCardedPlayers from deps as it's stable
+  }, [fixture.cards, fixture.team1, fixture.team2]); // Removed setCardedPlayers from deps as it's stable
 
-  // Effect to initialize/update syncedCardedPlayersRef when fixture.cardedPlayers (the source of truth) changes
+  // Effect to initialize/update syncedCardedPlayersRef when fixture.cards (the source of truth) changes
   useEffect(() => {
-    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
+    if (fixture.cards && Array.isArray(fixture.cards)) {
       syncedCardedPlayersRef.current = {
-        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
-        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
       };
     } else {
       syncedCardedPlayersRef.current = { team1: [], team2: [] };
     }
-  }, [fixture.cardedPlayers, fixture.team1, fixture.team2]);
+  }, [fixture.cards, fixture.team1, fixture.team2]);
 
   useEffect(() => {
     if (isInitialMount.current) {
