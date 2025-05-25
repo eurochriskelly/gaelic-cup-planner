@@ -278,6 +278,7 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
 
     const persistCardChanges = async () => {
+      console.log('Peersiisssting')
       const playersToUpdate = [
         ...(cardedPlayers.team1 || []),
         ...(cardedPlayers.team2 || []),
