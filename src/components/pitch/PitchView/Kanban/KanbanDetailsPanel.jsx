@@ -262,8 +262,8 @@ function CardEntryWrapper({ fixture, closePanel }) {
   const [cardedPlayers, setCardedPlayers] = useState(() => {
     if (fixture.cards && Array.isArray(fixture.cards)) {
       return {
-        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id), // Ensure cards have IDs
-        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id), // Ensure cards have IDs
+        team1: fixture.cards.filter(p => p.team === fixture.team1),
+        team2: fixture.cards.filter(p => p.team === fixture.team2),
       };
     }
     return { team1: [], team2: [] };
@@ -276,8 +276,8 @@ function CardEntryWrapper({ fixture, closePanel }) {
   useEffect(() => {
     if (fixture.cards && Array.isArray(fixture.cards)) {
       setCardedPlayers({
-        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id),
-        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id),
+        team1: fixture.cards.filter(p => p.team === fixture.team1),
+        team2: fixture.cards.filter(p => p.team === fixture.team2),
       });
     } else {
       setCardedPlayers({ team1: [], team2: [] });
