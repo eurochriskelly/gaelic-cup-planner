@@ -261,7 +261,7 @@ function CardEntryWrapper({ fixture, closePanel }) {
   const { fetchFixtures } = useFixtureContext();
   const [cardedPlayers, setCardedPlayers] = useState(() => {
     if (fixture.cards && Array.isArray(fixture.cards)) {
-      return {
+      return { 
         team1: fixture.cards.filter(p => p.team === fixture.team1),
         team2: fixture.cards.filter(p => p.team === fixture.team2),
       };
@@ -275,10 +275,12 @@ function CardEntryWrapper({ fixture, closePanel }) {
   // Effect to update local cardedPlayers state when fixture prop changes
   useEffect(() => {
     if (fixture.cards && Array.isArray(fixture.cards)) {
-      setCardedPlayers({
+      const res = {
         team1: fixture.cards.filter(p => p.team === fixture.team1),
         team2: fixture.cards.filter(p => p.team === fixture.team2),
-      });
+      }
+      console.log('aaa', res);
+      setCardedPlayers(res);
     } else {
       setCardedPlayers({ team1: [], team2: [] });
     }
