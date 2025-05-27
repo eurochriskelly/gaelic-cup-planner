@@ -1,6 +1,6 @@
 .minute-clock-container {
-  width: 56px; // Doubled from 28px
-  height: 56px; // Doubled from 28px
+  width: 66px; // Doubled from 28px
+  height: 66px; // Doubled from 28px
   position: relative;
   display: flex;
   align-items: center;
@@ -11,9 +11,9 @@
 .minute-clock-face {
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: #b5bd9e;
   border-radius: 50%;
-  border: 1px solid #ccc;
+  border: 0.5rem solid #a3ac87;
   position: relative; // For positioning text and pie
   overflow: hidden; // Clip the pie if it exceeds due to rotation artifacts
 }
@@ -34,7 +34,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.4rem; // Doubled from 0.7rem
+  font-size: 2.1rem; // Doubled from 0.7rem
   font-weight: bold;
   color: #333;
   z-index: 1; // Ensure text is above the pie
