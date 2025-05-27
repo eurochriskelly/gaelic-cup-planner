@@ -2,15 +2,15 @@ import './OnAirLight.scss';
 
 const OnAirLight = ({ status }) => {
   // status can be 'ready', 'in-progress', 'unavailable', 'warning'
-  // We'll map these to colors: green, red, blue
-  let lightColorClass = 'blue'; // Default to blue
+  // We'll map these to colors: green, red, orange
+  let lightColorClass = 'orange'; // Default to orange
 
   if (status === 'ready') {
     lightColorClass = 'green';
   } else if (status === 'in-progress') {
     lightColorClass = 'red';
   }
-  // 'unavailable' and 'warning' will use the default 'blue'
+  // 'unavailable' and 'warning' will use the default 'orange'
 
   return (
     <div className="on-air-light-container">
