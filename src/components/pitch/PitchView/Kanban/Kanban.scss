@@ -33,8 +33,10 @@
 
   .kanban-board-area {
     flex-grow: 1;
-    display: flex;
-    gap: 0rem; // No gap between the two main visual columns
+    display: grid; // Changed to grid
+    grid-template-columns: 1fr 1fr; // Two equal-width columns
+    grid-template-rows: auto 1fr;   // Row 1 content height, Row 2 takes remaining space
+    gap: 0rem;
     top: 0;
     overflow: hidden;
     position: absolute;
@@ -44,85 +46,61 @@
     padding: 0;
     box-sizing: border-box;
 
-    .kanban-visual-column {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      height: 100%;
-
-      &.kanban-visual-column-left {
-        border-right: 0.3rem solid #000000a8; // Separator between left and right visual columns
-        .kanban-column[data-column-key="queued"] { // NEXT column
-          flex-grow: 0;    // Height based on content (pitch slots)
-          flex-shrink: 1;
-          flex-basis: auto;
-          min-height: 10rem;  // Min height for a couple of slots even if empty
-          border-bottom: 0.3rem solid #000000a8; // Separator between Next and Planned
-        }
-        .kanban-column[data-column-key="planned"] { // PLANNED column
-          flex-grow: 1;    // Takes remaining vertical space
-          flex-shrink: 1;
-          min-height: 24rem; // Always reserve space for at least one card + header
-          height: 0; // Works with flex-grow
-        }
+    // Assign columns to grid cells and define specific styles
+    .kanban-column {
+      // Common styles for all columns if any (e.g. min-width if needed)
+      // border-bottom and border-right will define separators
+      &[data-column-key="queued"] {
+        grid-area: 1 / 1 / 2 / 2; // Row 1, Col 1
+        min-height: 10rem;
+        border-bottom: 0.3rem solid #000000a8;
+        border-right: 0.3rem solid #000000a8;
       }
-
-      &.kanban-visual-column-right {
-        .kanban-column[data-column-key="started"] { // ONGOING column
-          flex-grow: 0;    // Height based on content (pitch slots)
-          flex-shrink: 1;
-          flex-basis: auto;
-          min-height: 10rem;  // Min height for a couple of slots even if empty
-          border-bottom: 0.3rem solid #000000a8; // Separator between Ongoing and Finished
-        }
-        .kanban-column[data-column-key="finished"] { // FINISHED column
-          flex-grow: 1;    // Takes remaining vertical space
-          flex-shrink: 1;
-          min-height: 24rem; // Always reserve space for at least one card + header
-          height: 0;
-        }
+      &[data-column-key="started"] {
+        grid-area: 1 / 2 / 2 / 3; // Row 1, Col 2
+        min-height: 10rem;
+        border-bottom: 0.3rem solid #000000a8;
+      }
+      &[data-column-key="planned"] {
+        grid-area: 2 / 1 / 3 / 2; // Row 2, Col 1
+        min-height: 24rem;
+        border-right: 0.3rem solid #000000a8;
+      }
+      &[data-column-key="finished"] {
+        grid-area: 2 / 2 / 3 / 3; // Row 2, Col 2
+        min-height: 24rem;
       }
     }
 
     // Maximized states
     &.maximized-queued {
-      .kanban-visual-column-left {
-        flex-basis: 100%;
-        .kanban-column[data-column-key="queued"] { height: 100%; min-height: 0; }
-        .kanban-column[data-column-key="planned"] { display: none; }
-      }
-      .kanban-visual-column-right { display: none; }
+      .kanban-column[data-column-key="queued"] { grid-area: 1 / 1 / 3 / 3; height: 100%; min-height: 0; }
+      .kanban-column[data-column-key="planned"],
+      .kanban-column[data-column-key="started"],
+      .kanban-column[data-column-key="finished"] { display: none; }
     }
 
     &.maximized-planned {
-      .kanban-visual-column-left {
-        flex-basis: 100%;
-        .kanban-column[data-column-key="queued"] { display: none; }
-        .kanban-column[data-column-key="planned"] { height: 100%; min-height: 0; }
-      }
-      .kanban-visual-column-right { display: none; }
+      .kanban-column[data-column-key="planned"] { grid-area: 1 / 1 / 3 / 3; height: 100%; min-height: 0; }
+      .kanban-column[data-column-key="queued"],
+      .kanban-column[data-column-key="started"],
+      .kanban-column[data-column-key="finished"] { display: none; }
     }
 
     &.maximized-started {
-      .kanban-visual-column-left { display: none; }
-      .kanban-visual-column-right {
-        flex-basis: 100%;
-        .kanban-column[data-column-key="started"] { height: 100%; min-height: 0; }
-        .kanban-column[data-column-key="finished"] { display: none; }
-      }
+      .kanban-column[data-column-key="started"] { grid-area: 1 / 1 / 3 / 3; height: 100%; min-height: 0; }
+      .kanban-column[data-column-key="queued"],
+      .kanban-column[data-column-key="planned"],
+      .kanban-column[data-column-key="finished"] { display: none; }
     }
 
     &.maximized-finished {
-      .kanban-visual-column-left { display: none; }
-      .kanban-visual-column-right {
-        flex-basis: 100%;
-        .kanban-column[data-column-key="started"] { display: none; }
-        .kanban-column[data-column-key="finished"] { height: 100%; min-height: 0; }
-        }
-      }
+      .kanban-column[data-column-key="finished"] { grid-area: 1 / 1 / 3 / 3; height: 100%; min-height: 0; }
+      .kanban-column[data-column-key="queued"],
+      .kanban-column[data-column-key="planned"],
+      .kanban-column[data-column-key="started"] { display: none; }
     }
-    // Premature closing brace for .kanban-view removed from here
+  }
 
   .kanban-error-message {
     position: fixed;
