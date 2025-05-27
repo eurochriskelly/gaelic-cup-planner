@@ -9,8 +9,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   box-sizing: border-box;
   // padding: 0.75rem; // Handled by content wrapper or FixtureBar
   margin-bottom: 0; // Card margin is removed, slot handles spacing
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+  transition: all 0.9s cubic-bezier(.25, .8, .25, 1);
   cursor: grab; // Indicates draggable
   position: relative; // For potential pseudo-elements or absolutely positioned children
   overflow: hidden; // To make children conform to parent's border-radius
@@ -20,7 +19,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
   // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
   border-radius: 0.8rem;
-  border: $bwid solid #74824815;
+  border: $bwid solid white;//darken(rgb(90 94 78), 10%);
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 

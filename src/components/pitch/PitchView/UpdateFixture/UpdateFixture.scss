@@ -6,6 +6,7 @@
   background-color: desaturate(darken($sc, 10%), 10%);
   height: 9rem;
   width: 100%;
+  max-width: 1024px;
   z-index: 1000;
   //background: #788356;
   .bg {
