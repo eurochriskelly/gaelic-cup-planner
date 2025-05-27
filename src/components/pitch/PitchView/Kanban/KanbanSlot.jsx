@@ -1,8 +1,7 @@
 import PitchIcon from "../../../../shared/icons/icon-pitch-2.svg?react";
-import OnAirLight from './OnAirLight'; // Import the new component
+import OnAirLight from './OnAirLight';
+import MinuteClock from './MinuteClock'; // Import the new MinuteClock component
 import './KanbanSlot.scss';
-
-// WarningIcon component is no longer needed here as OnAirLight handles visual status
 
 const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, showWarningIcon, isMatchInProgress }) => {
   const isDynamicSlotColumn = columnKey === 'started' || columnKey === 'queued';
@@ -36,19 +35,23 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
             <PitchIcon width={219*0.4} height={159*0.4} />
             <span>{pitchName}</span>
           </div>
-          <div className="slot-status-light"> {/* Changed class name for clarity */}
+          <div className="slot-status-light">
+            {columnKey === 'started' && isMatchInProgress && (
+              <MinuteClock duration={20} max={40} startTime="now" />
+            )}
             {(() => {
               let lightStatus = 'unavailable'; // Default to orange light
               if (isMatchInProgress) {
                 if (columnKey === 'queued') {
-                  lightStatus = 'ready'; // Green light
+                  lightStatus = 'ready'; // Green light for "Next" column if match is ready
                 } else if (columnKey === 'started') {
-                  lightStatus = 'in-progress'; // Red light
+                  lightStatus = 'in-progress'; // Red light for "Ongoing" column
                 }
               } else if (showWarningIcon) {
-                lightStatus = 'warning'; // Orange light (warning maps to orange)
+                // This warning is for empty "Ongoing" slots when other matches are planned for that pitch
+                lightStatus = 'warning'; // Orange light
               }
-              // 'unavailable' status (for NO MORE MATCHES, NO MATCH READY) will also use orange
+              // 'unavailable' status (e.g. "NO MATCH READY" in "Next", or empty "Ongoing" with no warning) will also use orange
               return <OnAirLight status={lightStatus} />;
             })()}
           </div>
