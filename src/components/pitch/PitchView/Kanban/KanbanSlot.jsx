@@ -36,7 +36,7 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
             <span>{pitchName}</span>
           </div>
           <div className="slot-status-light">
-            {columnKey === 'started' && isMatchInProgress && (
+            {isMatchInProgress && ( // Condition changed to show clock if a match is in progress or ready in the slot
               <MinuteClock duration={20} max={40} startTime="now" />
             )}
             {(() => {
