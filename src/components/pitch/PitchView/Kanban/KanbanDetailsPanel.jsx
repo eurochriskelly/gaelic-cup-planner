@@ -449,17 +449,13 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
   };
 
-  const combinedCardedPlayers = [
-    ...(cardedPlayers.team1 || []),
-    ...(cardedPlayers.team2 || [])
-  ];
-
+  console.log('eee x', Object.keys(cardedPlayers))
   return (
     <div className="card-entry-container" style={{ marginTop: '1rem' }}>
       <TabCards
         team1={fixture.team1 || "Team 1"}
         team2={fixture.team2 || "Team 2"}
-        cardedPlayers={combinedCardedPlayers}
+        cardedPlayers={cardedPlayers}
         setCardedPlayer={handleSetCardedPlayer}
         fixture={fixture}
       />
