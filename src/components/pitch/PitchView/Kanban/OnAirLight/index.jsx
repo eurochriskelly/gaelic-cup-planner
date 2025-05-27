@@ -1,4 +1,3 @@
-import React from 'react';
 import './OnAirLight.scss';
 
 const OnAirLight = ({ status }) => {
