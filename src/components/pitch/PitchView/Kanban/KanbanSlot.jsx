@@ -38,7 +38,7 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
           </div>
           <div className="slot-status-light"> {/* Changed class name for clarity */}
             {(() => {
-              let lightStatus = 'unavailable'; // Default to blue light
+              let lightStatus = 'unavailable'; // Default to orange light
               if (isMatchInProgress) {
                 if (columnKey === 'queued') {
                   lightStatus = 'ready'; // Green light
@@ -46,9 +46,9 @@ const KanbanSlot = ({ slotIndex, columnIndex, columnKey, children, pitchName, sh
                   lightStatus = 'in-progress'; // Red light
                 }
               } else if (showWarningIcon) {
-                lightStatus = 'warning'; // Blue light (as per 3-color constraint, warning maps to blue)
+                lightStatus = 'warning'; // Orange light (warning maps to orange)
               }
-              // 'unavailable' status (for NO MORE MATCHES, NO MATCH READY) will also use blue
+              // 'unavailable' status (for NO MORE MATCHES, NO MATCH READY) will also use orange
               return <OnAirLight status={lightStatus} />;
             })()}
           </div>
