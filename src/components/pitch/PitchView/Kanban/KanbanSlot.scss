@@ -58,30 +58,18 @@
       }
     }
 
-    .slot-status-text {
-      display: flex; // To align icon and text
+    // Renamed from .slot-status-text to .slot-status-light
+    // This container will hold the OnAirLight component
+    .slot-status-light {
+      display: flex;
       align-items: center;
-      font-size: 1.4rem; // "NO ACTIVE MATCH" text
-      font-weight: bold;
-      color: #555555cc; // Default status text color
-
-      .warning-icon {
-        fill: red;
-        margin-right: 0.3rem;
-      }
-      .warn { // For "NO ACTIVE MATCH" when warning is active
-        color: red; // Text color for warning
-        display: flex; // To align icon and text if icon is direct child
-        align-items: center;
-      }
-      .no-warn { // For "NO ACTIVE MATCH" or "NO MORE MATCHES" when no warning
-        // Standard color inherited from .slot-status-text
-      }
-      .status-in-progress {
-        color: $sc; // Use secondary color for "MATCH IN PROGRESS"
-        font-weight: bold;
-      }
+      justify-content: flex-end; // Align light to the right
+      // Ensure it has some dimensions if the light itself doesn't force it
+      min-width: 36px; 
+      min-height: 36px;
     }
+    // Removed .warning-icon, .warn, .no-warn, .status-in-progress styles
+    // as OnAirLight component handles its own styling.
   }
 
   .slot-card-container {

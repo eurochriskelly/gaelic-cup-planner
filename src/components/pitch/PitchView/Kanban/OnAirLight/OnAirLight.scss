@@ -1,0 +1,45 @@
+.on-air-light-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; // Match previous WarningIcon size for consistency
+  height: 36px;
+}
+
+.on-air-light {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 2s infinite ease-in-out;
+
+  &.green {
+    background-color: #28a745; // Green
+    box-shadow: 0 0 5px #28a745, 0 0 10px #28a745, 0 0 15px #28a745, 0 0 20px #28a745;
+  }
+
+  &.red {
+    background-color: #dc3545; // Red
+    box-shadow: 0 0 5px #dc3545, 0 0 10px #dc3545, 0 0 15px #dc3545, 0 0 20px #dc3545;
+  }
+
+  &.blue {
+    background-color: #007bff; // Blue
+    box-shadow: 0 0 5px #007bff, 0 0 10px #007bff, 0 0 15px #007bff, 0 0 20px #007bff;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
