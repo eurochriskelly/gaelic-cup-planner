@@ -8,7 +8,7 @@ import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
 import { useMemo } from 'react'; // Import useMemo
 import UpdateFixture from '../UpdateFixture';
-import './KanbanView.scss';
+import './Kanban.scss';
 
 // Helper function to determine fixture status (similar to useKanbanBoard.js)
 const getKanbanColumnLogic = (fixture) => {
@@ -22,7 +22,7 @@ const getKanbanColumnLogic = (fixture) => {
   return 'planned';
 };
 
-const KanbanView = ({
+const Kanban = ({
   moveToNextFixture,
 }) => {
   const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
@@ -126,10 +126,14 @@ const KanbanView = ({
       <KanbanErrorMessage message={errorMessage} />
       <div className={`kanban-board-area ${
         maximizedColumnKey === 'planned' ? 'maximized-planned' :
+        maximizedColumnKey === 'queued' ? 'maximized-queued' :
+        maximizedColumnKey === 'planned' ? 'maximized-planned' :
         maximizedColumnKey === 'started' ? 'maximized-started' :
         maximizedColumnKey === 'finished' ? 'maximized-finished' : ''
       }`}>
         {(() => {
+          // Assuming 'queued' fixtures are identified by fixture.lane.current === 'queued'
+          const queuedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'queued');
           const plannedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'planned');
           const startedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'started');
           const finishedFixtures = filteredFixtures
@@ -140,64 +144,87 @@ const KanbanView = ({
               return dateB - dateA; // Sort descending, most recent first
             });
 
+          const relevantPitchNamesForQueued = useMemo(() => {
+            const pitchNames = new Set();
+            if (queuedFixtures && queuedFixtures.length > 0) {
+              queuedFixtures.forEach(fixture => {
+                if (fixture.pitch) {
+                  pitchNames.add(fixture.pitch);
+                }
+              });
+            }
+            return Array.from(pitchNames).sort();
+          }, [queuedFixtures]);
+
           return (
             <>
-              {/* Visual Column 1: Planned */}
-              <div className="kanban-visual-column planned-column-container">
-                <KanbanColumn
-                  key="planned"
-                  columnKey="planned"
-                  title="Planned"
-                  columnIndex={0} // Logical index for 'planned'
-                  fixtures={plannedFixtures}
-                  isCurrentlyMaximized={maximizedColumnKey === 'planned'}
-                  onToggleMaximize={toggleMaximizeColumn}
-                  onDrop={(e) => onDrop(e, 'planned')}
-                  onDragOver={onDragOver}
-                  onDragStart={onDragStart}
-                  handleFixtureClick={handleFixtureClick}
-                  selectedFixture={selectedFixture}
-                  getPitchColor={getPitchColor}
-                  allTournamentPitches={null}
-                />
-              </div>
-
-              {/* Visual Column 2: Stacked Ongoing and Finished */}
-              <div className="kanban-visual-column kanban-column-stacked stacked-column-container">
-                <KanbanColumn
-                  key="started"
-                  columnKey="started"
-                  title="Ongoing"
-                  columnIndex={1} // Logical index for 'started'
-                  fixtures={startedFixtures}
-                  allPlannedFixtures={globalPlannedFixtures} // Use globally planned fixtures for warning icon
-                  isCurrentlyMaximized={maximizedColumnKey === 'started'}
-                  onToggleMaximize={toggleMaximizeColumn}
-                  onDrop={(e) => onDrop(e, 'started')}
-                  onDragOver={onDragOver}
-                  onDragStart={onDragStart}
-                  handleFixtureClick={handleFixtureClick}
-                  selectedFixture={selectedFixture}
-                  getPitchColor={getPitchColor}
-                  allTournamentPitches={relevantPitchNamesForOngoing} // Pass filtered list of pitches
-                />
-                <KanbanColumn
-                  key="finished"
-                  columnKey="finished"
-                  title="Finished"
-                  columnIndex={2} // Logical index for 'finished'
-                  fixtures={finishedFixtures}
-                  isCurrentlyMaximized={maximizedColumnKey === 'finished'}
-                  onToggleMaximize={toggleMaximizeColumn}
-                  onDrop={(e) => onDrop(e, 'finished')}
-                  onDragOver={onDragOver}
-                  onDragStart={onDragStart}
-                  handleFixtureClick={handleFixtureClick}
-                  selectedFixture={selectedFixture}
-                  getPitchColor={getPitchColor}
-                  allTournamentPitches={null}
-                />
-              </div>
+              {/* Columns are now direct children of kanban-board-area, ordered for grid placement */}
+              <KanbanColumn
+                key="queued"
+                columnKey="queued"
+                title="Queued"
+                columnIndex={0} // Logical index for 'queued'
+                fixtures={queuedFixtures}
+                isCurrentlyMaximized={maximizedColumnKey === 'queued'}
+                onToggleMaximize={toggleMaximizeColumn}
+                onDrop={(e) => onDrop(e, 'queued')}
+                onDragOver={onDragOver}
+                onDragStart={onDragStart}
+                handleFixtureClick={handleFixtureClick}
+                selectedFixture={selectedFixture}
+                getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
+                allTournamentPitches={relevantPitchNamesForQueued}
+                // allPlannedFixtures might be needed if warning logic applies to "Next" column
+              />
+              <KanbanColumn
+                key="started"
+                columnKey="started"
+                title="Ongoing"
+                columnIndex={2} // Logical index for 'started'
+                fixtures={startedFixtures}
+                allPlannedFixtures={globalPlannedFixtures}
+                isCurrentlyMaximized={maximizedColumnKey === 'started'}
+                onToggleMaximize={toggleMaximizeColumn}
+                onDrop={(e) => onDrop(e, 'started')}
+                onDragOver={onDragOver}
+                onDragStart={onDragStart}
+                handleFixtureClick={handleFixtureClick}
+                selectedFixture={selectedFixture}
+                getPitchColor={getPitchColor}
+                allTournamentPitches={relevantPitchNamesForOngoing}
+              />
+              <KanbanColumn
+                key="planned"
+                columnKey="planned"
+                title="Planned"
+                columnIndex={1} // Logical index for 'planned'
+                fixtures={plannedFixtures}
+                isCurrentlyMaximized={maximizedColumnKey === 'planned'}
+                onToggleMaximize={toggleMaximizeColumn}
+                onDrop={(e) => onDrop(e, 'planned')}
+                onDragOver={onDragOver}
+                onDragStart={onDragStart}
+                handleFixtureClick={handleFixtureClick}
+                selectedFixture={selectedFixture}
+                getPitchColor={getPitchColor}
+                allTournamentPitches={null} // Planned column does not use pitch-based slots
+              />
+              <KanbanColumn
+                key="finished"
+                columnKey="finished"
+                title="Finished"
+                columnIndex={3} // Logical index for 'finished'
+                fixtures={finishedFixtures}
+                isCurrentlyMaximized={maximizedColumnKey === 'finished'}
+                onToggleMaximize={toggleMaximizeColumn}
+                onDrop={(e) => onDrop(e, 'finished')}
+                onDragOver={onDragOver}
+                onDragStart={onDragStart}
+                handleFixtureClick={handleFixtureClick}
+                selectedFixture={selectedFixture}
+                getPitchColor={getPitchColor}
+                allTournamentPitches={null} // Finished column does not use pitch-based slots
+              />
             </>
           );
         })()}
@@ -226,4 +253,4 @@ const KanbanView = ({
   );
 };
 
-export default KanbanView;
+export default Kanban;

@@ -19,7 +19,7 @@
     font-weight: bold;
     padding: 1rem 0.5rem;
     margin:0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
     text-align: center;
     background-color: lighten(saturate($pc, 37%), 10%);
     color: black; 
@@ -39,10 +39,11 @@
       background-color: rgba(255, 255, 255, 0.2);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.5);
-      padding: 0.3rem 0.8rem;
+      padding: 0.7rem 0.3rem;
+      text-transform: uppercase;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 1.2rem; // Smaller font size for the button
+      font-size: 1.3rem; // Smaller font size for the button
       margin-left: 0.5rem; // Space between title count and button
       line-height: 1; // Ensure text fits well
 
@@ -72,10 +73,3 @@
   display: none;               // Chrome, Safari, Opera
 }
 
-// Adjust padding for first and last columns
-.kanban-column:first-child .column-content {
-  padding-left: 0.5rem;
-}
-.kanban-column:last-child .column-content {
-  padding-right: 0.5rem;
-}

@@ -116,28 +116,6 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
           </div>
         )}
       </div>
-
-      {/* Add manual save button for existing scores */}
-      {scores.team1 && scores.team2 &&
-        scores.team1.goals !== null && scores.team1.points !== null &&
-        scores.team2.goals !== null && scores.team2.points !== null && (
-          <div className="manual-save-container" style={{ marginTop: '1rem', textAlign: 'center' }}>
-            <button
-              onClick={onProceed}
-              className="manual-save-button"
-              style={{
-                padding: '0.5rem 1rem',
-                background: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              Save Scores
-            </button>
-          </div>
-        )}
     </div>
   );
 };

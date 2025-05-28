@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFixtureContext } from "./FixturesContext";
 import MobileLayout from "../../../shared/generic/MobileLayout";
-import KanbanView from "./Kanban"; // Import the new KanbanView
+import Kanban from "./Kanban"; // Import the new KanbanView
 import KanbanFiters from "./Kanban/KanbanFilters";
 import './PitchView.scss';
 
@@ -11,8 +11,6 @@ const PitchView = () => {
   const { fixtures, fetchFixtures, nextFixture, pitchId, tournamentId } = useFixtureContext(); // Ensure pitchId, tournamentId from context if needed by KanbanView directly, or it uses useParams
   const { sections } = useAppContext();
   let tabNames = ["Kanban", "Next", "Finished" ] // , "Unplayed"]; // Added Kanban
-  // tabNames = [ "Next", "Finished", "Unplayed"]; // Added Kanban
-  
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
@@ -116,7 +114,7 @@ const PitchView = () => {
         }</span>
         <KanbanFiters />
       </span>
-      <KanbanView moveToNextFixture={moveToNextFixture} />
+      <Kanban moveToNextFixture={moveToNextFixture} />
     </MobileLayout>
   );
 };

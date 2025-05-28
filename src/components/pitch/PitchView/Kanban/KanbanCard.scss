@@ -1,13 +1,15 @@
 @import '../../../../shared/css/colors.scss'; // Assuming you have a variables file
 
+$bwid: 0.6rem;
+$bcol: saturate(lighten($sc, 5%), 30%);
+
 .kanban-card {
   width: 100%;
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
   // padding: 0.75rem; // Handled by content wrapper or FixtureBar
   margin-bottom: 0; // Card margin is removed, slot handles spacing
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+  transition: all 0.9s cubic-bezier(.25, .8, .25, 1);
   cursor: grab; // Indicates draggable
   position: relative; // For potential pseudo-elements or absolutely positioned children
   overflow: hidden; // To make children conform to parent's border-radius
@@ -17,7 +19,7 @@
   // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
   // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
   border-radius: 0.8rem;
-  border: 0.4rem solid #74824815;
+  border: $bwid solid white;//darken(rgb(90 94 78), 10%);
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 
@@ -52,11 +54,7 @@
 
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
   &.selected {
-    .FixtureBar {
-      color: lighten($sc, 80%); // Highlight selected card
-      background-color: saturate(darken($sc, 5%), 30%);
-    }
-    border: 0.4rem solid saturate(darken($sc, 5%), 30%);
+    border: $bwid solid darken(desaturate($bcol, 30%), 10%);
   }
 
   .FixtureBar {
@@ -76,7 +74,7 @@
     }
   
     padding: 0.5rem 0.75rem;
-    background-color: darken(#b0b0b0, 22%);
+    // background-color: darken(#b0b0b0, 22%); // Removed to allow competition colors
     color: white;
     border: none;
 
@@ -217,9 +215,9 @@
   .umpire-info{
     position: absolute;
     bottom: 0.1rem;
-    right: 0.1rem;
-    padding: 0.2rem 0.4rem;
-    width: 6rem;
+    right: 0.0rem;
+    padding: 0.2rem 0.0rem;
+    width: 100%;
     svg path {
       fill: black;
       fill-opacity: 1;
@@ -231,8 +229,11 @@
     &>div {
       display: grid;
       gap: -0.8rem;
-      align-items: center;
-      justify-content: center;
+      align-items: right;
+      color: #555;
+      justify-content: right;
+      font-weight: normal;
+      padding-top: 0.2rem;
       grid-template-columns: auto auto;
     }
   }

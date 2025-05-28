@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixtures Timeline Preview</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.22.5/babel.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const FixturesProgress = ({ fixtures, height = '30px' }) => {
+            const getColor = (fixture) => {
+                const isGroupStage = fixture.stage === 'group';
+                const baseColor = isGroupStage ? 'yellow' : 'orange';
+
+                if (!fixture.started) {
+                    return isGroupStage ? '#fff3cd' : '#ffe5d0'; // Faded
+                } else if (fixture.started && !fixture.ended) {
+                    return isGroupStage ? '#ffda6e' : '#ffac4b'; // Medium
+                } else {
+                    return isGroupStage ? '#f1b600' : '#f28c38'; // Dark
+                }
+            };
+
+            // Compute timeline bounds
+            const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+            const scheduledTimes = fixtures.map(f => new Date(f.scheduled).getTime() + TWO_HOURS_MS);
+            const startedTimes = fixtures
+                .map(f => f.started && (new Date(f.started).getTime() + TWO_HOURS_MS))
+                .filter(t => t);
+            const actualEndTimes = fixtures.map(f => {
+                const end = f.ended && new Date(f.ended);
+                if (end) return end.getTime() + TWO_HOURS_MS;
+                const start = f.started ? new Date(f.started) : new Date(f.scheduled);
+                return start.getTime() + TWO_HOURS_MS + f.duration * 60 * 1000;
+            });
+            const plannedEndTimes = fixtures.map(f => {
+                const scheduled = new Date(f.scheduled).getTime() + TWO_HOURS_MS;
+                return scheduled + f.duration * 60 * 1000;
+            });
+            const timelineStart = Math.min(...scheduledTimes, ...startedTimes);
+            const timelineEnd = Math.max(...plannedEndTimes, ...actualEndTimes);
+            const timelineDuration = timelineEnd - timelineStart;
+
+            // Generate hourly ticks
+            const renderTicks = () => {
+                const startDate = new Date(timelineStart);
+                const endDate = new Date(timelineEnd);
+                const startHour = Math.ceil(startDate.getUTCHours());
+                const endHour = Math.floor(endDate.getUTCHours());
+                const ticks = [];
+
+                for (let hour = startHour; hour <= endHour; hour++) {
+                    const tickTime = new Date(startDate);
+                    tickTime.setUTCHours(hour, 0, 0, 0);
+                    if (tickTime.getTime() >= timelineStart && tickTime.getTime() <= timelineEnd) {
+                        const offset = (tickTime.getTime() - timelineStart) / timelineDuration * 100;
+                        ticks.push(
+                            <div
+                                key={`tick-${hour}`}
+                                style={{
+                                    position: 'absolute',
+                                    left: `${offset}%`,
+                                    top: '0',
+                                    height: '100%',
+                                    width: '1px',
+                                    backgroundColor: '#ccc',
+                                    zIndex: 0,
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-20px',
+                                        transform: 'translateX(-50%)',
+                                        fontSize: '12px',
+                                        color: '#333',
+                                    }}
+                                >
+                                    {`${(hour).toString().padStart(2, '0')}:00`}
+                                </div>
+                            </div>
+                        );
+                    }
+                }
+                return ticks;
+            };
+
+            // Planned Timeline
+            const renderPlannedTimeline = () => (
+                <div style={{ display: 'flex', width: '100%', height }}>
+                    {fixtures.map((fixture, index) => {
+                        const scheduledTime = new Date(fixture.scheduled).getTime() + TWO_HOURS_MS;
+                        const durationMs = fixture.duration * 60 * 1000;
+                        const flexGrow = durationMs / timelineDuration;
+
+                        let gapWidth = 0;
+                        if (index > 0) {
+                            const prevFixture = fixtures[index - 1];
+                            const prevEnd = new Date(prevFixture.scheduled).getTime() + TWO_HOURS_MS + 
+                                          prevFixture.duration * 60 * 1000;
+                            gapWidth = (scheduledTime - prevEnd) / timelineDuration;
+                        } else {
+                            gapWidth = (scheduledTime - timelineStart) / timelineDuration;
+                        }
+
+                        const idLabel = fixture.id.toString().slice(-3);
+
+                        return (
+                            <React.Fragment key={`planned-${fixture.id}`}>
+                                {gapWidth > 0 && (
+                                    <div style={{ flexGrow: gapWidth }} />
+                                )}
+                                <div
+                                    style={{
+                                        flexGrow,
+                                        border: '0.1rem solid white',
+                                        height,
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            border: '1px solid black',
+                                            backgroundColor: getColor(fixture),
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '12px',
+                                                color: '#000',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                        >
+                                            {idLabel}
+                                        </div>
+                                    </div>
+                                </div>
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
+            );
+
+            // Actual Timeline
+            const renderActualTimeline = () => (
+                <div style={{ display: 'flex', width: '100%', height }}>
+                    {fixtures.map((fixture, index) => {
+                        const startTime = fixture.started ? new Date(fixture.started) : new Date(fixture.scheduled);
+                        const endTime = fixture.ended ? 
+                            new Date(fixture.ended) : 
+                            new Date(startTime.getTime() + fixture.duration * 60 * 1000);
+                        const startMs = startTime.getTime() + TWO_HOURS_MS;
+                        const durationMs = (endTime.getTime() + TWO_HOURS_MS) - startMs;
+                        const flexGrow = durationMs / timelineDuration;
+
+                        let gapWidth = 0;
+                        if (index > 0) {
+                            const prevFixture = fixtures[index - 1];
+                            const prevStart = prevFixture.started ? 
+                                new Date(prevFixture.started) : new Date(prevFixture.scheduled);
+                            const prevEnd = prevFixture.ended ? 
+                                new Date(prevFixture.ended) : 
+                                new Date(prevStart.getTime() + prevFixture.duration * 60 * 1000);
+                            gapWidth = (startMs - (prevEnd.getTime() + TWO_HOURS_MS)) / timelineDuration;
+                        } else {
+                            gapWidth = (startMs - timelineStart) / timelineDuration;
+                        }
+
+                        const idLabel = fixture.id.toString().slice(-3);
+
+                        return (
+                            <React.Fragment key={`actual-${fixture.id}`}>
+                                {gapWidth > 0 && (
+                                    <div style={{ flexGrow: gapWidth }} />
+                                )}
+                                <div
+                                    style={{
+                                        flexGrow,
+                                        border: '0.1rem solid white',
+                                        height,
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            border: '1px solid black',
+                                            backgroundColor: getColor(fixture),
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '12px',
+                                                color: '#000',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                        >
+                                            {idLabel}
+                                        </div>
+                                    </div>
+                                </div>
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
+            );
+
+            return (
+                <div style={{ position: 'relative', width: '100%' }}>
+                    <div style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%' }}>
+                        {renderTicks()}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingTop: '20px' }}>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            {renderActualTimeline()}
+                        </div>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            {renderPlannedTimeline()}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const fixtures = [
+            {
+                id: 260202,
+                category: "MEN",
+                groupNumber: 1,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T09:00:00.000Z",
+                started: "2025-05-17T09:03:31.000Z",
+                ended: "2025-05-17T09:40:27.000Z",
+                duration: 20
+            },
+            {
+                id: 260102,
+                category: "LADIES",
+                groupNumber: 1,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T09:30:00.000Z",
+                started: "2025-05-17T09:42:08.000Z",
+                ended: "2025-05-17T10:11:27.000Z",
+                duration: 20
+            },
+            {
+                id: 260104,
+                category: "LADIES",
+                groupNumber: 2,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T10:00:00.000Z",
+                started: "2025-05-17T10:41:07.000Z",
+                ended: "2025-05-17T10:41:18.000Z",
+                duration: 20
+            },
+            {
+                id: 260106,
+                category: "LADIES",
+                groupNumber: 1,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T10:30:00.000Z",
+                started: "2025-05-17T10:48:51.000Z",
+                ended: "2025-05-17T11:15:24.000Z",
+                duration: 20
+            },
+            {
+                id: 260108,
+                category: "LADIES",
+                groupNumber: 2,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T11:00:00.000Z",
+                started: "2025-05-17T11:25:39.000Z",
+                ended: "2025-05-17T11:46:46.000Z",
+                duration: 20
+            },
+            {
+                id: 260110,
+                category: "LADIES",
+                groupNumber: 1,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T11:30:00.000Z",
+                started: "2025-05-17T12:01:45.000Z",
+                ended: "2025-05-17T12:21:40.000Z",
+                duration: 20
+            },
+            {
+                id: 260112,
+                category: "LADIES",
+                groupNumber: 2,
+                stage: "group",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T12:00:00.000Z",
+                started: "2025-05-17T12:22:56.000Z",
+                ended: "2025-05-17T12:45:21.000Z",
+                duration: 20
+            },
+            {
+                id: 260114,
+                category: "LADIES",
+                groupNumber: 2,
+                stage: "cup_semis",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T12:45:00.000Z",
+                started: "2025-05-17T13:04:26.000Z",
+                ended: "2025-05-17T13:32:45.000Z",
+                duration: 20
+            },
+            {
+                id: 260220,
+                category: "MEN",
+                groupNumber: 2,
+                stage: "cup_semis",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T13:15:00.000Z",
+                started: "2025-05-17T13:45:14.000Z",
+                ended: "2025-05-17T14:10:17.000Z",
+                duration: 20
+            },
+            {
+                id: 260222,
+                category: "MEN",
+                groupNumber: 2,
+                stage: "shd_semis",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T13:45:00.000Z",
+                started: "2025-05-17T14:15:54.000Z",
+                ended: "2025-05-17T14:43:18.000Z",
+                duration: 20
+            },
+            {
+                id: 260224,
+                category: "MEN",
+                groupNumber: 2,
+                stage: "plt_semis",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T14:15:00.000Z",
+                started: "2025-05-17T14:47:35.000Z",
+                ended: "2025-05-17T15:09:53.000Z",
+                duration: 20
+            },
+            {
+                id: 260227,
+                category: "MEN",
+                groupNumber: 1,
+                stage: "cup_3rd4th",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T14:45:00.000Z",
+                started: "2025-05-17T14:45:23.000Z",
+                ended: "2025-05-17T14:45:27.000Z",
+                duration: 20
+            },
+            {
+                id: 260228,
+                category: "MEN",
+                groupNumber: 1,
+                stage: "shd_3rd4th",
+                pitch: "Pitch 2",
+                scheduled: "2025-05-17T15:15:00.000Z",
+                started: "2025-05-17T16:46:09.000Z",
+                ended: "2025-05-17T16:47:00.000Z",
+                duration: 20
+            }
+        ];
+
+        const App = () => (
+            <div>
+                <h1>Fixtures Timeline</h1>
+                <FixturesProgress fixtures={fixtures} height="30px" />
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
