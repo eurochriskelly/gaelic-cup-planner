@@ -13,7 +13,7 @@ import "./PinLogin.scss";
 
 const PinLogin = () => {
   const { t } = useTranslation();
-  const { setupTournament, versionInfo } = useAppContext();
+  const { setupTournament, versionInfo, userRole, setUserRoleAndCookie } = useAppContext();
   const navigate = useNavigate();
   const [pin, setPin] = useState(["", "", "", ""]);
   const [isThinking, setIsThinking] = useState(false);
@@ -25,20 +25,12 @@ const PinLogin = () => {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
 
-  const [userRole, setUserRole] = useState('spectator'); // Default role
+  // const [userRole, setUserRole] = useState('spectator'); // Replaced by context userRole
   const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
 
   useEffect(() => {
-    const roleFromCookie = Cookies.get("ppUserRole");
-    if (roleFromCookie) {
-      setUserRole(roleFromCookie);
-      // showRoleSelectorView remains false (its initial state), 
-      // ensuring user goes to tournament view.
-    } else {
-      // No cookie found. userRole is already 'spectator' (from useState).
-      // showRoleSelectorView remains false (its initial state).
-      // User will see the tournament list by default.
-    }
+    // userRole is now managed by AppContext/Provider, which initializes from cookie.
+    // PinLogin consumes this userRole directly from useAppContext.
 
     // Fetch tournaments when component mounts
     setIsLoadingTournaments(true);
@@ -107,8 +99,7 @@ const PinLogin = () => {
   };
 
   const handleRoleSelect = (role) => {
-    setUserRole(role);
-    Cookies.set("ppUserRole", role, { expires: 365, path: "/" }); // Store for a year
+    setUserRoleAndCookie(role); // Use context function
     setShowRoleSelectorView(false);
     setSelectedTournament(null); // Ensure we are on tournament list view
     setPin(["", "", "", ""]);    // Clear any stale PIN
@@ -139,11 +130,11 @@ const PinLogin = () => {
   };
 
   const handleContinueAsSpectator = () => {
-    setUserRole('spectator'); // Update local PinLogin state
-    Cookies.set("ppUserRole", 'spectator', { expires: 365, path: "/" }); // Set role cookie
+    setUserRoleAndCookie('spectator'); // Use context function to set role and cookie
 
     if (selectedTournament) {
       // Ensure the tournamentId cookie is set, as directNavigateToTournament (which calls setupTournament) is bypassed.
+      // This is still needed because of the full page reload that follows.
       Cookies.set("tournamentId", selectedTournament.Id, { expires: 1 / 24, path: "/" });
       setIsThinking(true); // Show loading feedback
       // Force a full page navigation. App.jsx will re-initialize and read the new 'spectator' role.
