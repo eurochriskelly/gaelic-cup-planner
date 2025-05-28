@@ -221,17 +221,22 @@ const PinLogin = () => {
     <>
       <LoginHeader
         version={versionInfo?.mobile}
-        showBackButton={!showRoleSelectorView && !!selectedTournament}
+        showBackButton={showRoleSelectorView || (!!selectedTournament && !showRoleSelectorView)}
         onBackClick={() => {
-          setSelectedTournament(null);
-          setPin(["", "", "", ""]);
-          setMessage("");
+          if (showRoleSelectorView) {
+            setShowRoleSelectorView(false);
+          } else {
+            setSelectedTournament(null);
+            setPin(["", "", "", ""]);
+            setMessage("");
+          }
         }}
       />
       <div className={`pinLogin ${showRoleSelectorView ? 'role-selector-active-parent' : ''}`}>
         {showRoleSelectorView ? (
           <div className="role-selector-container">
             <h2>Select Your Role</h2>
+            {/* Back button is now handled by LoginHeader */}
             <div className="role-grid">
               <button onClick={() => handleRoleSelect('organizer')} className="role-button">Organizer</button>
               <button onClick={() => handleRoleSelect('coordinator')} className="role-button">Coordinator</button>
