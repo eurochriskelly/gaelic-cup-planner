@@ -19,20 +19,34 @@ import "./i18n";
 
 function App() {
   const tidFromCookie = Cookies.get("tournamentId");
-
-  return (
-    <Provider>
-      <Routes>
-        <Route path="/" element={<PinLogin />} />
-        <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-        <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
-        <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
-        <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
-        <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Provider>
-  );
+  const userRole = Cookies.get("ppUserRole") || 'spectator';
+  switch (userRole.toLowerCase()) {
+    case 'coordinator':
+      return (
+        <Provider>
+          <Routes>
+            <Route path="/" element={<PinLogin />} />
+            <Route path="/tournament/:tournamentId" element={<LandingPage />} />
+            <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
+            <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
+            <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
+            <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Provider>
+      );
+    case 'spectator':
+    default:
+      return (
+        <Provider>
+          <Routes>
+            <Route path="/" element={<PinLogin />} />
+            <Route path="/tournament/:tournamentId" element={<SelectTournamentView />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Provider>
+      );
+  }
 }
 
 function PitchViewWrapper() {
