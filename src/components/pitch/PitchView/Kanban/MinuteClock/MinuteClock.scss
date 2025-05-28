@@ -1,0 +1,41 @@
+.minute-clock-container {
+  width: 66px; // Doubled from 28px
+  height: 66px; // Doubled from 28px
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+}
+
+.minute-clock-face {
+  width: 100%;
+  height: 100%;
+  background-color: #b5bd9e;
+  border-radius: 50%;
+  border: 0.5rem solid #a3ac87;
+  position: relative; // For positioning text and pie
+  overflow: hidden; // Clip the pie if it exceeds due to rotation artifacts
+}
+
+.minute-clock-pie {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg); // Rotate pie to start from 12 o'clock
+  // Conic gradient will be applied via inline style
+}
+
+.minute-clock-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.1rem; // Doubled from 0.7rem
+  font-weight: bold;
+  color: #333;
+  z-index: 1; // Ensure text is above the pie
+}

@@ -29,7 +29,7 @@ const UpdateFixture = ({
 
   const hasStarted = !!nextFixture.startedTime;
   const hasResult = !!nextFixture.isResult;
-  const isPlanned = nextFixture.lane?.current === 'planned';
+  const isPlanned = nextFixture.lane?.current === 'planned' || nextFixture.lane?.current === 'queued';
 
   // Basic buttons definition - won't change
   const buttons = [
@@ -39,16 +39,7 @@ const UpdateFixture = ({
       getState: () => "enabled",
       action: async (setDrawer) => {
         showDetails && showDetails('forfeit');
-        if (!fixture.started) {
-          console.log("Starting match", fixture.id);
-          await startMatch(fixture.id);
-        }
-        moveToNextFixture();
-        if (!fixture.ended) {
-          console.log("Ending match", fixture.id);
-          await API.endMatch(fixture.tournamentId, fixture.id);
-        }
-        await fetchFixtures(true);
+        // await fetchFixtures(true);
       }
     },
     {
@@ -63,7 +54,9 @@ const UpdateFixture = ({
       Icon: StartIcon,
       showOnlyWhenPlanned: true,
       getState: (hasStarted, hasResult, fixture) => {
-        if (isPlanned && fixture?.lane?.allowedLanes && !fixture.lane.allowedLanes.includes('started')) {
+        const startedNotAllowed = fixture?.lane?.allowedLanes && !fixture.lane.allowedLanes.includes('started');
+        const { pitch } = fixture;
+        if (isPlanned && startedNotAllowed) {
           return "disabled";
         }
         return !hasStarted && !hasResult ? "enabled" : "disabled";
@@ -185,6 +178,7 @@ const UpdateFixture = ({
         {activeDrawer === "finish" && (
           <DialogUpdate
             nextFixture={nextFixture}
+            startMatch={startMatch}
             onClose={async () => {
               await fetchFixtures();
               setActiveDrawer(null)

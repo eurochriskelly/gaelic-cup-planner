@@ -1,0 +1,52 @@
+.on-air-light-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; // Match previous WarningIcon size for consistency
+  height: 36px;
+}
+
+.on-air-light {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 2s infinite ease-in-out;
+  border: 2px solid rgba(0, 0, 0, 0.3); // Outer ridge
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5), // Inner shadow for 3D effect
+              0 0 0px transparent; // Placeholder for color-specific glow
+
+  &.green {
+    background-color: #28a745; // Green
+    // Combined inset shadow with color-specific glow
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5),
+                0 0 5px #28a745, 0 0 10px #28a745, 0 0 15px #28a745, 0 0 20px #28a745;
+  }
+
+  &.red {
+    background-color: #dc3545; // Red
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5),
+                0 0 5px #dc3545, 0 0 10px #dc3545, 0 0 15px #dc3545, 0 0 20px #dc3545;
+  }
+
+  &.orange { // Changed from blue to orange
+    background-color: #fd7e14; // Orange
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5),
+                0 0 5px #fd7e14, 0 0 10px #fd7e14, 0 0 15px #fd7e14, 0 0 20px #fd7e14;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}

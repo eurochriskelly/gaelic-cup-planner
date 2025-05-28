@@ -1,5 +1,15 @@
 @import "src/shared/css/_colors.scss";
 
+.pitch-slot {
+  border: 0.5rem solid #a1ac87;
+  margin-bottom: 0.5rem;
+  .kanban-card:not(.selected) {
+    // special case with no border
+    border-color:#44493496;
+    border-style:inset;
+  }
+}
+
 .kanban-slot {
   // padding-top: 0.3rem; // Removed, header/card will manage internal padding
   // padding-bottom: 0.3rem; // Removed
@@ -7,14 +17,6 @@
   display: flex;
   flex-direction: column;
   min-height: 5rem; // Ensure all slots have a minimum base height, card height will expand this
-
-  &.gray1 {
-    background-color:#44493496; // Lighter gray for empty Planned/Finished
-  }
-
-  &.gray2 {
-    background-color: #44493466; // Darker gray for empty Planned/Finished
-  }
 
   .slot-pitch-name { // Header for Ongoing slots
     width: 100%;
@@ -48,30 +50,17 @@
       }
     }
 
-    .slot-status-text {
-      display: flex; // To align icon and text
+    // Renamed from .slot-status-text to .slot-status-light
+    // This container will hold the OnAirLight component
+    .slot-status-light {
+      display: flex;
       align-items: center;
-      font-size: 1.4rem; // "NO ACTIVE MATCH" text
-      font-weight: bold;
-      color: #555555cc; // Default status text color
-
-      .warning-icon {
-        fill: red;
-        margin-right: 0.3rem;
-      }
-      .warn { // For "NO ACTIVE MATCH" when warning is active
-        color: red; // Text color for warning
-        display: flex; // To align icon and text if icon is direct child
-        align-items: center;
-      }
-      .no-warn { // For "NO ACTIVE MATCH" or "NO MORE MATCHES" when no warning
-        // Standard color inherited from .slot-status-text
-      }
-      .status-in-progress {
-        color: $sc; // Use secondary color for "MATCH IN PROGRESS"
-        font-weight: bold;
-      }
+      justify-content: flex-end; // Align light to the right
+      // Adjust min-height for larger clock, remove min-width to allow content to define width
+      min-height: 56px; // To accommodate the new clock height
     }
+    // Removed .warning-icon, .warn, .no-warn, .status-in-progress styles
+    // as OnAirLight component handles its own styling.
   }
 
   .slot-card-container {
@@ -89,4 +78,11 @@
     justify-content: center;
     // border: 1px dashed #ccc; // Optional: visual cue for empty draggable area
   }
+}
+.kanban-card.selected {
+  box-shadow:
+    rgba(0, 0, 0, 0.25) 0px 5px 10px 0px,
+    rgba(0, 0, 0, 0.22) 0px 3px 3px 0px,
+    0 0 60px 5px rgba(255, 255, 255, 0.6); /* White glow shadow */
+  overflow: visible; 
 }

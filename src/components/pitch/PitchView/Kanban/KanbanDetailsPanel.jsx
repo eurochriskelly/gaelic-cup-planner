@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'; // Added useEffect, useRef
 import './KanbanDetailsPanel.scss';
-import FixtureBar from '../Fixture/FixtureBar';
+import FixtureBar from './FixtureBar';
 import { useFixtureContext } from '../../PitchView/FixturesContext';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
@@ -41,6 +41,8 @@ const KanbanDetailsPanel = ({
         category={displayCategory}
         stage={displayStage}
         number={fixture.groupNumber || '0'}
+        competitionPrefix={fixture?.competition?.initials}
+        competitionOffset={fixture?.competition?.offset}
       />
 
       <div className="details-content-wrapper">
@@ -260,16 +262,43 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
 function CardEntryWrapper({ fixture, closePanel }) {
   const { fetchFixtures } = useFixtureContext();
   const [cardedPlayers, setCardedPlayers] = useState(() => {
-    if (fixture.cardedPlayers && Array.isArray(fixture.cardedPlayers)) {
-      return {
-        team1: fixture.cardedPlayers.filter(p => p.team === fixture.team1 && p.id), // Ensure cards have IDs
-        team2: fixture.cardedPlayers.filter(p => p.team === fixture.team2 && p.id), // Ensure cards have IDs
+    if (fixture.cards && Array.isArray(fixture.cards)) {
+      return { 
+        team1: fixture.cards.filter(p => p.team === fixture.team1),
+        team2: fixture.cards.filter(p => p.team === fixture.team2),
       };
     }
     return { team1: [], team2: [] };
   });
 
-  const isInitialMount = useRef(true); // Ref to track initial mount
+  const isInitialMount = useRef(true); // Ref to track initial mount for debounced effect
+  const syncedCardedPlayersRef = useRef({ team1: [], team2: [] });
+
+  // Effect to update local cardedPlayers state when fixture prop changes
+  useEffect(() => {
+    if (fixture.cards && Array.isArray(fixture.cards)) {
+      const res = {
+        team1: fixture.cards.filter(p => p.team === fixture.team1),
+        team2: fixture.cards.filter(p => p.team === fixture.team2),
+      }
+      console.log('aaa', res);
+      setCardedPlayers(res);
+    } else {
+      setCardedPlayers({ team1: [], team2: [] });
+    }
+  }, [fixture.cards, fixture.team1, fixture.team2]); // Removed setCardedPlayers from deps as it's stable
+
+  // Effect to initialize/update syncedCardedPlayersRef when fixture.cards (the source of truth) changes
+  useEffect(() => {
+    if (fixture.cards && Array.isArray(fixture.cards)) {
+      syncedCardedPlayersRef.current = {
+        team1: fixture.cards.filter(p => p.team === fixture.team1 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+        team2: fixture.cards.filter(p => p.team === fixture.team2 && p.id && !(typeof p.id === 'number' && p.id > 1000000)),
+      };
+    } else {
+      syncedCardedPlayersRef.current = { team1: [], team2: [] };
+    }
+  }, [fixture.cards, fixture.team1, fixture.team2]);
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -278,80 +307,151 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
 
     const persistCardChanges = async () => {
-      const playersToUpdate = [
-        ...(cardedPlayers.team1 || []),
-        ...(cardedPlayers.team2 || []),
-      ].map(card => ({ // Ensure structure matches API expectation, remove temporary IDs if necessary
-        ...card,
-        id: typeof card.id === 'number' && card.id > 1000000 ? null : card.id // Example: nullify temporary IDs
-      }));
+      console.log('Debounced persistCardChanges triggered...');
+      const currentCardsTeam1 = cardedPlayers.team1 || [];
+      const currentCardsTeam2 = cardedPlayers.team2 || [];
+      const syncedCardsTeam1 = syncedCardedPlayersRef.current.team1 || [];
+      const syncedCardsTeam2 = syncedCardedPlayersRef.current.team2 || [];
 
-      try {
-        console.log("Auto-saving carded players:", playersToUpdate);
-        for (const player of playersToUpdate) {
-          // If the player has a temporary ID (e.g., from Date.now()),
-          // it might need to be handled differently or sent as null
-          // depending on how API.updateCardedPlayer handles new vs existing cards.
-          // Assuming API.updateCardedPlayer can handle creating a new card if id is null
-          // or updating if id is present.
-          const payload = { ...player };
-          if (typeof player.id === 'number' && player.id > 1000000) {
-            // This indicates a temporary ID used for local state management.
-            // The backend might expect 'id' to be null for new entries.
-            payload.id = null;
-          }
-          await API.updateCardedPlayer(fixture.tournamentId, fixture.id, payload);
+      const playersToUpdate = [];
+
+      const findAndCompareCard = (currentCard, syncedTeamCards) => {
+        // Only consider cards with real IDs (not temporary ones) for update
+        if (!currentCard.id || (typeof currentCard.id === 'number' && currentCard.id > 1000000)) {
+          return null;
         }
-        console.log("Successfully auto-saved carded players");
-        await fetchFixtures(true); // Refresh fixtures after successful save
-      } catch (error) {
-        console.error("Error auto-saving carded players:", error);
+        const syncedCard = syncedTeamCards.find(sc => sc.id === currentCard.id);
+
+        if (!syncedCard) {
+          // This card is in current state with a real ID but not in our last synced snapshot.
+          // This could happen if it was just added and syncedRef hasn't updated yet.
+          // For an auto-save of *modifications*, we should only update cards that were previously known (synced).
+          // Additions are handled by TabCards' explicit save.
+          return null;
+        }
+
+        // Compare relevant editable properties
+        if (currentCard.player !== syncedCard.player ||
+            currentCard.cardType !== syncedCard.cardType ||
+            currentCard.notes !== syncedCard.notes ||
+            currentCard.number !== syncedCard.number // Assuming 'number' (jersey) is editable
+           ) {
+          return currentCard; // This card has changed
+        }
+        return null; // No changes detected for this card
+      };
+
+      currentCardsTeam1.forEach(cc => {
+        const changedCard = findAndCompareCard(cc, syncedCardsTeam1);
+        if (changedCard) playersToUpdate.push(changedCard);
+      });
+      currentCardsTeam2.forEach(cc => {
+        const changedCard = findAndCompareCard(cc, syncedCardsTeam2);
+        if (changedCard) playersToUpdate.push(changedCard);
+      });
+
+      if (playersToUpdate.length > 0) {
+        try {
+          console.log("Auto-saving updates to specific carded players:", playersToUpdate);
+          for (const player of playersToUpdate) {
+            await API.updateCardedPlayer(fixture.tournamentId, fixture.id, player);
+          }
+          console.log("Successfully auto-saved updates to specific carded players.");
+          // After successful updates, fetchFixtures will refresh the data,
+          // which in turn will update fixture.cardedPlayers prop,
+          // and the other useEffect will update syncedCardedPlayersRef.current.
+          await fetchFixtures(true);
+        } catch (error) {
+          console.error("Error auto-saving updates to specific carded players:", error);
+          // If an error occurs, syncedCardedPlayersRef is not updated with these changes,
+          // allowing a retry on the next trigger if the data is still different.
+        }
+      } else {
+        console.log("No actual card changes detected for auto-save.");
       }
     };
 
-    // Simple debounce implementation
-    const timerId = setTimeout(() => {
-      persistCardChanges();
-    }, 1000); // Debounce API call by 1 second
-
+    const timerId = setTimeout(persistCardChanges, 1000); // Debounce API call by 1 second
     return () => clearTimeout(timerId); // Cleanup timeout
 
-  }, [cardedPlayers, fixture.id, fixture.tournamentId, fetchFixtures]);
+  }, [cardedPlayers, fixture.id, fixture.tournamentId, fetchFixtures]); // Dependencies remain the same
 
 
-  const handleSetCardedPlayer = (cardUpdate) => {
-    setCardedPlayers(prev => {
-      const teamKey = cardUpdate.team === fixture.team1 ? 'team1' : 'team2';
-      let teamCards = [...(prev[teamKey] || [])]; // Ensure prev[teamKey] is an array
+  const handleSetCardedPlayer = async (cardDataFromTab) => {
+    const { tournamentId, id: fixtureId, team1: fixtureTeam1Name } = fixture;
 
-      if (cardUpdate.action === 'delete') {
-        teamCards = teamCards.filter((card) => card.id !== cardUpdate.id); // Fixed: Added opening parenthesis
-      } else if (cardUpdate.id && !(typeof cardUpdate.id === 'number' && cardUpdate.id > 1000000)) { // Existing card (not a temp ID)
-        teamCards = teamCards.map(card => card.id === cardUpdate.id ? { ...card, ...cardUpdate } : card);
-      } else {
-        // New card or card with temp ID being confirmed
-        // If it was a temp ID, find and update; otherwise, add new
-        const tempId = cardUpdate.id; // Store temp ID if present
+    if (cardDataFromTab.action === 'delete') {
+      const cardIdToDelete = cardDataFromTab.id;
+      // Check if the card to delete has a real ID (i.e., it exists on the backend)
+      const isRealCard = cardIdToDelete && !(typeof cardIdToDelete === 'number' && cardIdToDelete > 1000000);
 
-        let foundAndUpdated = false;
-        if (tempId && typeof tempId === 'number' && tempId > 1000000) {
-          teamCards = teamCards.map(card => {
-            if (card.id === tempId) {
-              foundAndUpdated = true;
-              return { ...card, ...cardUpdate, id: card.id }; // Keep original temp ID for now, API call will handle it
-            }
-            return card;
+      if (isRealCard) {
+        try {
+          await API.deleteCardedPlayer(tournamentId, fixtureId, cardDataFromTab); // API expects card object
+          // Update local state by removing the card
+          setCardedPlayers(prev => {
+            const teamKey = cardDataFromTab.team === fixtureTeam1Name ? 'team1' : 'team2';
+            const newTeamCards = (prev[teamKey] || []).filter(c => c.id !== cardIdToDelete);
+            return { ...prev, [teamKey]: newTeamCards };
           });
+          await fetchFixtures(true); // Refresh all fixture data
+        } catch (error) {
+          console.error('Error deleting card from backend:', error);
+          // TODO: Optionally show an error message to the user
         }
-        if (!foundAndUpdated) {
-          // Ensure new cards get a temporary, unique ID for local list management
-          teamCards.push({ ...cardUpdate, id: Date.now() });
-        }
+      } else {
+        // Card has no real ID (was temporary and not saved to backend), just remove from local state
+        setCardedPlayers(prev => {
+          const teamKey = cardDataFromTab.team === fixtureTeam1Name ? 'team1' : 'team2';
+          const newTeamCards = (prev[teamKey] || []).filter(c => c.id !== cardIdToDelete); // cardIdToDelete is temp ID
+          return { ...prev, [teamKey]: newTeamCards };
+        });
       }
-      return { ...prev, [teamKey]: teamCards };
-    });
+      return;
+    }
+
+    // --- Add or Update card ---
+    const isExistingCardWithRealId = cardDataFromTab.id && !(typeof cardDataFromTab.id === 'number' && cardDataFromTab.id > 1000000);
+    
+    const payload = { ...cardDataFromTab };
+    delete payload.action; // 'action' is not part of the card model for backend update/create
+
+    if (!isExistingCardWithRealId) {
+      // This is a new card being added.
+      // Remove temporary ID if TabCards assigned one; backend will assign the real ID.
+      // This assumes API.updateCardedPlayer can create if ID is missing in payload.
+      delete payload.id; 
+    }
+
+    try {
+      // API.updateCardedPlayer is assumed to handle both create (if no ID in payload) and update.
+      const savedCard = await API.updateCardedPlayer(tournamentId, fixtureId, payload);
+
+      setCardedPlayers(prev => {
+        const teamKey = savedCard.team === fixtureTeam1Name ? 'team1' : 'team2';
+        let teamCards = [...(prev[teamKey] || [])];
+
+        if (isExistingCardWithRealId) {
+          // It was an update to an existing card
+          teamCards = teamCards.map(c => c.id === savedCard.id ? savedCard : c);
+        } else {
+          // It was a new card that has been created
+          // If TabCards passed a temporary ID with the original cardDataFromTab, remove that temporary entry
+          if (cardDataFromTab.id && (typeof cardDataFromTab.id === 'number' && cardDataFromTab.id > 1000000)) {
+            teamCards = teamCards.filter(c => c.id !== cardDataFromTab.id);
+          }
+          teamCards.push(savedCard); // Add the newly saved card with its real ID
+        }
+        return { ...prev, [teamKey]: teamCards };
+      });
+      await fetchFixtures(true); // Refresh all fixture data to ensure consistency
+    } catch (error) {
+      console.error('Error saving card (add/update):', error);
+      // TODO: Optionally show an error message to the user
+    }
   };
 
+  console.log('eee x', Object.keys(cardedPlayers))
   return (
     <div className="card-entry-container" style={{ marginTop: '1rem' }}>
       <TabCards

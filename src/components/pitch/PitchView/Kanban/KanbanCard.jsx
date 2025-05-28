@@ -1,5 +1,5 @@
 import './KanbanCard.scss';
-import FixtureBar from '../Fixture/FixtureBar'; // Import FixtureBar
+import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
 import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react';
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react';
@@ -33,6 +33,8 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
         category={displayCategory}
         stage={displayStage}
         number={displayNumber}
+        competitionPrefix={fixture?.competition?.initials}
+        competitionOffset={fixture?.competition?.offset}
       />
       {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
         <TimeDisplay
@@ -100,15 +102,21 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
               <b>{fixture.pitch}</b>
             </div>
         }
-        {(fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'started') &&
+        {(fixture?.lane?.current === 'queued' || fixture?.lane?.current === 'started') &&
           <>
             <div className="card-detail umpire-info">
               <div>
+                <team-name
+                  style={teamStyle}
+                  name={fixture.umpireTeam|| 'TBD'}
+                  direction="r2l"
+                  showLogo="true"
+                  height="35px" // Increased from 22px to 26px (20% larger)
+                  maxchars="28"
+                  title-margin-below={vspace}
+                  logo-margin-right="0.5rem"
+                ></team-name>
                 <UmpireIcon width={42} height={42} />
-                <logo-box
-                  title={fixture.umpireTeam || 'TBD'}
-                  size="45px"
-                ></logo-box>
               </div>
             </div>
         </>
