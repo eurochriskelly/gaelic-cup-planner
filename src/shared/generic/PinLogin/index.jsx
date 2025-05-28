@@ -25,30 +25,46 @@ const PinLogin = () => {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
 
+  const [userRole, setUserRole] = useState('spectator'); // Default role
+  const [showRoleSelectorView, setShowRoleSelectorView] = useState(false);
+
   useEffect(() => {
+    const roleFromCookie = Cookies.get("ppUserRole");
+    if (roleFromCookie) {
+      setUserRole(roleFromCookie);
+      setShowRoleSelectorView(false); // Has a role, go to tournament view
+    } else {
+      setShowRoleSelectorView(true); // No role, show role selector
+    }
+
     // Fetch tournaments when component mounts
     setIsLoadingTournaments(true);
     setFetchError(null);
     API.fetchActiveTournaments()
       .then(response => {
-        // Assuming the API returns { data: [...] }
         setAvailableTournaments(response?.data || []);
       })
       .catch(error => {
         console.error("Error fetching tournaments:", error);
         setFetchError("Failed to load tournaments.");
-        setAvailableTournaments([]); // Ensure it's an empty array on error
+        setAvailableTournaments([]);
       })
       .finally(() => {
         setIsLoadingTournaments(false);
       });
 
-    // Check for existing tournament cookie
-    const tid = Cookies.get("tournamentId");
-    if (tid && tid !== "undefined") {
-      navigate(`/tournament/${tid}`, { replace: true });
+    // Check for existing tournament cookie if not showing role selector
+    // and navigate if a tournamentId is already set (e.g. user refreshes page)
+    if (!showRoleSelectorView) {
+        const tid = Cookies.get("tournamentId");
+        if (tid && tid !== "undefined" && !selectedTournament) { // also check selectedTournament to avoid loop if already on pin screen
+            // Potentially verify if this tournament is still valid for the role or if PIN is needed
+            // For now, directly navigate if tid exists.
+            // This part might need refinement if role changes should invalidate existing tid immediately.
+            // navigate(`/tournament/${tid}`, { replace: true }); // This might be too aggressive if user just changed role
+        }
     }
-  }, [navigate]);
+  }, [navigate]); // Removed showRoleSelectorView from deps to avoid re-triggering navigation from cookie check
 
   // focus first PIN input when a tournament is selected
   useEffect(() => {
@@ -87,14 +103,35 @@ const PinLogin = () => {
     }
   };
 
-  const selectTournament = (id) => {
-    setupTournament(id);
-    Cookies.set("tournamentId", id, { expires: 1 / 24, path: "/" });
+  const handleRoleSelect = (role) => {
+    setUserRole(role);
+    Cookies.set("ppUserRole", role, { expires: 365, path: "/" }); // Store for a year
+    setShowRoleSelectorView(false);
+    setSelectedTournament(null); // Ensure we are on tournament list view
+    setPin(["", "", "", ""]);    // Clear any stale PIN
+    setMessage("");             // Clear any stale message
+  };
+
+  const directNavigateToTournament = (tournamentId) => {
+    setupTournament(tournamentId);
+    Cookies.set("tournamentId", tournamentId, { expires: 1 / 24, path: "/" });
     setIsThinking(true);
     setTimeout(() => {
-      navigate(`/tournament/${id}`, { replace: true });
+      navigate(`/tournament/${tournamentId}`, { replace: true });
       setIsThinking(false);
     }, 500);
+  };
+  
+  const handleTournamentCardClick = (tournament) => {
+    setMessage(""); // Clear previous messages
+    if (userRole === 'spectator' && !tournament.code) {
+      directNavigateToTournament(tournament.Id);
+    } else if (userRole !== 'spectator' && !tournament.code) {
+      setMessage(`Tournament "${tournament.Title}" requires a PIN for ${userRole} access.`);
+      setTimeout(() => setMessage(""), 3000); 
+    } else {
+      setSelectedTournament(tournament);
+    }
   };
 
   const onPinEntered = (enteredPin) => {
@@ -102,7 +139,7 @@ const PinLogin = () => {
     if (selectedTournament && selectedTournament.code) {
       if (enteredPin?.toLowerCase() === selectedTournament?.code?.toLowerCase()) {
         // PIN matches, proceed to select the tournament
-        selectTournament(selectedTournament.Id);
+        directNavigateToTournament(selectedTournament.Id);
       } else {
         // PIN does not match, handle invalid attempt
         const attempts = failedAttempts + 1;
@@ -178,74 +215,98 @@ const PinLogin = () => {
 
   // Main return statement for the component
   return (
-    <> {/* Use Fragment to wrap header and content */}
-      {/* Pass showBackButton and onBackClick props */}
+    <>
       <LoginHeader
         version={versionInfo?.mobile}
-        showBackButton={!!selectedTournament} // Show only when tournament is selected
-        onBackClick={() => setSelectedTournament(null)} // Pass handler
+        showBackButton={!showRoleSelectorView && !!selectedTournament}
+        onBackClick={() => {
+          setSelectedTournament(null);
+          setPin(["", "", "", ""]);
+          setMessage("");
+        }}
       />
-
-      {/* Conditional rendering for Tournament Selection or PIN Entry */}
-        {!selectedTournament ? (
-          // Tournament Selection View
-          <div className="pinLogin tournament-selection-view">
-            {/* Subheading before the tournament list */}
-            <h3>Select from upcoming tournaments</h3>
-
-            <div className="tournamentList">
-              {/* Use the TournamentCard component for the list */}
-              {availableTournaments.map((t) => (
-                <TournamentCard
-                  key={t.Id}
-                  title={t.Title}
-                  location={t.Location}
-                  date={t.Date}
-                  onClick={() => setSelectedTournament(t)}
-                />
-              ))}
+      <div className={`pinLogin ${showRoleSelectorView ? 'role-selector-active-parent' : ''}`}>
+        {showRoleSelectorView ? (
+          <div className="role-selector-container">
+            <h2>Select Your Role</h2>
+            <div className="role-grid">
+              <button onClick={() => handleRoleSelect('organizer')} className="role-button">Organizer</button>
+              <button onClick={() => handleRoleSelect('coordinator')} className="role-button">Coordinator</button>
+              <button onClick={() => handleRoleSelect('coach')} className="role-button">Coach</button>
+              <button onClick={() => handleRoleSelect('spectator')} className="role-button">Spectator</button>
             </div>
           </div>
         ) : (
-          // PIN Entry View
-          /* Removed position: relative style, header handles positioning context */
-          <div className="pinLogin pin-entry-view">
-            {/* Back Icon Span moved to LoginHeader */}
-
-            {/* Display selected tournament using the TournamentCard component */}
-            <div className="selected-tournament-display">
-              <TournamentCard
-                title={selectedTournament?.Title}
-                location={selectedTournament?.Location}
-                date={selectedTournament?.Date}
-              />
-            </div>
-
-            {/* Updated prompt text and added class */}
-            <div className="pin-entry-prompt">Enter tournament code</div>
-            <div className="pinContainer">
-              {pin.map((num, index) => (
-                <input
-                  className={isThinking ? "thinking" : ""}
-                  key={index}
-                  ref={(el) => (inputsRef.current[index] = el)}
-                  value={num}
-                  onChange={(e) => handleChange(e, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  maxLength="1"
-                />
-              ))}
-            </div>
-
-            {/* Message display area */}
-            <div className="pin-message">&nbsp;{message}&nbsp;</div>
-          </div>
+          <>
+            {!selectedTournament ? (
+              // Tournament Selection View
+              <div className="tournament-selection-view"> {/* Removed pinLogin class from here */}
+                <h3>Select from upcoming tournaments</h3>
+                {message && <div className="general-message">{message}</div>}
+                {isLoadingTournaments && <div className="thinking">Loading tournaments...</div>}
+                {fetchError && <div className="error">{fetchError}</div>}
+                {!isLoadingTournaments && !fetchError && availableTournaments.length === 0 && !message && (
+                  <div>No active tournaments found.</div>
+                )}
+                <div className="tournamentList">
+                  {availableTournaments.map((t) => (
+                    <TournamentCard
+                      key={t.Id}
+                      title={t.Title}
+                      location={t.Location}
+                      date={t.Date}
+                      onClick={() => handleTournamentCardClick(t)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // PIN Entry View
+              <div className="pin-entry-view"> {/* Removed pinLogin class from here */}
+                <div className="selected-tournament-display">
+                  <TournamentCard
+                    title={selectedTournament?.Title}
+                    location={selectedTournament?.Location}
+                    date={selectedTournament?.Date}
+                  />
+                </div>
+                <div className="pin-entry-prompt">Enter tournament code</div>
+                <div className="pinContainer">
+                  {pin.map((num, index) => (
+                    <input
+                      className={isThinking ? "thinking" : ""}
+                      key={index}
+                      ref={(el) => (inputsRef.current[index] = el)}
+                      value={num}
+                      onChange={(e) => handleChange(e, index)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
+                      maxLength="1"
+                    />
+                  ))}
+                </div>
+                <div className="pin-message">&nbsp;{message}&nbsp;</div>
+              </div>
+            )}
+          </>
         )}
-
-        {/* Version info - rendered outside main content */}
-        <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
-      </>
-    );
+        {!showRoleSelectorView && (
+          <button 
+            className="hat-icon-button pi pi-user" 
+            onClick={() => {
+              setShowRoleSelectorView(true);
+              setSelectedTournament(null);
+              setPin(["", "", "", ""]);
+              setMessage("");
+            }}
+            title="Change Role"
+          >
+            {/* CSS will style the icon */}
+          </button>
+        )}
+      </div>
+      <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
+    </>
+  );
 };
 
 export default PinLogin;
