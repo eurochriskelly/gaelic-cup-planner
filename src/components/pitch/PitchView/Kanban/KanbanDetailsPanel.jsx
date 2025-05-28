@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'; // Added useEffect, useRef
 import './KanbanDetailsPanel.scss';
-import FixtureBar from '../Fixture/FixtureBar';
+import FixtureBar from './FixtureBar';
 import { useFixtureContext } from '../../PitchView/FixturesContext';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
@@ -41,6 +41,8 @@ const KanbanDetailsPanel = ({
         category={displayCategory}
         stage={displayStage}
         number={fixture.groupNumber || '0'}
+        competitionPrefix={fixture?.competition?.initials}
+        competitionOffset={fixture?.competition?.offset}
       />
 
       <div className="details-content-wrapper">

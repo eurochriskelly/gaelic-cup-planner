@@ -162,7 +162,7 @@ const Kanban = ({
               <KanbanColumn
                 key="queued"
                 columnKey="queued"
-                title="Next"
+                title="Queued"
                 columnIndex={0} // Logical index for 'queued'
                 fixtures={queuedFixtures}
                 isCurrentlyMaximized={maximizedColumnKey === 'queued'}
