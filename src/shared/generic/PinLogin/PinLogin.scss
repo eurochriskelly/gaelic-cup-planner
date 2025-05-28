@@ -381,3 +381,36 @@
   align-items: center;
 }
 
+// Styles for the "Spectator access?" prompt on PIN entry screen
+.spectator-access-prompt {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.6rem; // Readable size
+  color: #f0f0f0; // Light color for visibility on dark background
+
+  span {
+    margin-right: 0.5rem;
+  }
+
+  .spectator-access-button {
+    background-color: #5a683c; // A slightly different shade from role buttons
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #748050; // Lighter on hover
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
