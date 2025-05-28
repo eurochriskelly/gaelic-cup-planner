@@ -139,10 +139,20 @@ const PinLogin = () => {
   };
 
   const handleContinueAsSpectator = () => {
-    setUserRole('spectator');
-    Cookies.set("ppUserRole", 'spectator', { expires: 365, path: "/" });
+    setUserRole('spectator'); // Update local PinLogin state
+    Cookies.set("ppUserRole", 'spectator', { expires: 365, path: "/" }); // Set role cookie
+
     if (selectedTournament) {
-      directNavigateToTournament(selectedTournament.Id);
+      // Ensure the tournamentId cookie is set, as directNavigateToTournament (which calls setupTournament) is bypassed.
+      Cookies.set("tournamentId", selectedTournament.Id, { expires: 1 / 24, path: "/" });
+      setIsThinking(true); // Show loading feedback
+      // Force a full page navigation. App.jsx will re-initialize and read the new 'spectator' role.
+      window.location.href = `/tournament/${selectedTournament.Id}`;
+    } else {
+      // Fallback: if selectedTournament is somehow not available, go to the root.
+      // PinLogin will re-render and pick up the 'spectator' role.
+      setIsThinking(true);
+      window.location.href = `/`;
     }
   };
 
