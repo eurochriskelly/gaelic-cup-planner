@@ -26,15 +26,18 @@ const PinLogin = () => {
   const [failedAttempts, setFailedAttempts] = useState(0);
 
   const [userRole, setUserRole] = useState('spectator'); // Default role
-  const [showRoleSelectorView, setShowRoleSelectorView] = useState(false);
+  const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
 
   useEffect(() => {
     const roleFromCookie = Cookies.get("ppUserRole");
     if (roleFromCookie) {
       setUserRole(roleFromCookie);
-      setShowRoleSelectorView(false); // Has a role, go to tournament view
+      // showRoleSelectorView remains false (its initial state), 
+      // ensuring user goes to tournament view.
     } else {
-      setShowRoleSelectorView(true); // No role, show role selector
+      // No cookie found. userRole is already 'spectator' (from useState).
+      // showRoleSelectorView remains false (its initial state).
+      // User will see the tournament list by default.
     }
 
     // Fetch tournaments when component mounts
