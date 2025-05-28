@@ -257,10 +257,16 @@ const PinLogin = () => {
             <h2>Select Your Role</h2>
             {/* Back button is now handled by LoginHeader */}
             <div className="role-grid">
-              <button onClick={() => handleRoleSelect('organizer')} className="role-button">Organizer</button>
-              <button onClick={() => handleRoleSelect('coordinator')} className="role-button">Coordinator</button>
-              <button onClick={() => handleRoleSelect('coach')} className="role-button">Coach</button>
-              <button onClick={() => handleRoleSelect('spectator')} className="role-button">Spectator</button>
+              {['organizer', 'coordinator', 'coach', 'spectator'].map(role => (
+                <button
+                  key={role}
+                  onClick={() => handleRoleSelect(role)}
+                  className={`role-button ${userRole === role ? 'active-role' : ''}`}
+                >
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                  {userRole === role ? ' *' : ''}
+                </button>
+              ))}
             </div>
           </div>
         ) : (
