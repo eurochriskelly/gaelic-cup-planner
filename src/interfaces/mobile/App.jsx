@@ -16,10 +16,11 @@ import "../../shared/css/site-common.scss";
 import "../../shared/css/site-mobile.scss";
 import "./App.scss";
 import "./i18n";
+import { useAppContext } from "../../shared/js/Provider"; // Import useAppContext
 
 function App() {
-  const tidFromCookie = Cookies.get("tournamentId");
-  const userRole = Cookies.get("ppUserRole") || 'spectator';
+  const { userRole } = useAppContext();
+
   switch (userRole.toLowerCase()) {
     case 'coordinator':
       return (
