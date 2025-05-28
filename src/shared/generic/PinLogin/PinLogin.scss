@@ -307,6 +307,7 @@
 .role-button {
   background-color: #748050; // Same as tournamentCard background
   color: white;
+  border: 2px solid transparent; // Add transparent border for consistent sizing
   border: none;
   border-radius: 0.5rem;
   padding: 2rem 1rem; // Generous padding
@@ -324,6 +325,13 @@
 
   &:active {
     transform: translateY(0px);
+  }
+
+  &.active-role {
+    border-color: #ffffff; // White border for active role
+    // Or a more prominent style:
+    // background-color: #9cae5a; // Lighter shade for active
+    // box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   }
 }
 
