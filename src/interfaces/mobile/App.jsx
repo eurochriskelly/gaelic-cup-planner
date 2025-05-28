@@ -18,36 +18,41 @@ import "./App.scss";
 import "./i18n";
 import { useAppContext } from "../../shared/js/Provider"; // Import useAppContext
 
-function App() {
-  const { userRole } = useAppContext();
+// New component to contain the routes and context-dependent logic
+function AppContent() {
+  const { userRole } = useAppContext(); // Now called within Provider's scope
 
   switch (userRole.toLowerCase()) {
     case 'coordinator':
       return (
-        <Provider>
-          <Routes>
-            <Route path="/" element={<PinLogin />} />
-            <Route path="/tournament/:tournamentId" element={<LandingPage />} />
-            <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
-            <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
-            <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
-            <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Provider>
+        <Routes>
+          <Route path="/" element={<PinLogin />} />
+          <Route path="/tournament/:tournamentId" element={<LandingPage />} />
+          <Route path="/tournament/:tournamentId/selectCategory" element={<SelectTournamentView />} />
+          <Route path="/tournament/:tournamentId/category/:category" element={<TournamentView />} />
+          <Route path="/tournament/:tournamentId/selectPitch" element={<SelectPitchView />} />
+          <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       );
     case 'spectator':
     default:
       return (
-        <Provider>
-          <Routes>
-            <Route path="/" element={<PinLogin />} />
-            <Route path="/tournament/:tournamentId" element={<SelectTournamentView />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Provider>
+        <Routes>
+          <Route path="/" element={<PinLogin />} />
+          <Route path="/tournament/:tournamentId" element={<SelectTournamentView />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       );
   }
+}
+
+function App() {
+  return (
+    <Provider>
+      <AppContent />
+    </Provider>
+  );
 }
 
 function PitchViewWrapper() {
