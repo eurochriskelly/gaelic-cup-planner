@@ -1,10 +1,9 @@
 @import "src/shared/css/_colors.scss";
 
 .kanban-details-panel {
-
   position: absolute;
-  top: 0;
-  bottom: 20rem;
+  top: 9rem;
+  bottom: 11rem;
   left: 0;
   right: 0;
   max-width: 1024px;
@@ -135,12 +134,10 @@
   .FixtureBar {
     // style the header bar like cards
     margin-bottom: 0;
-    background-color: black;
     color: white;
     padding: 0.5rem 0.75rem;
     gap: 1rem;
     font-size: 4rem;
-    background-color: desaturate(lighten($sc, 02%), 10%);
     color: lighten($sc, 80%);
     height: 6rem;
     .icon-larger {

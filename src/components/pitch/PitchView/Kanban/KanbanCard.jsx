@@ -1,5 +1,5 @@
 import './KanbanCard.scss';
-import FixtureBar from '../Fixture/FixtureBar'; // Import FixtureBar
+import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
 import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react';
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react';
@@ -33,6 +33,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
         category={displayCategory}
         stage={displayStage}
         number={displayNumber}
+        competitionPrefix={fixture?.competition?.initials}
         competitionOffset={fixture?.competition?.offset}
       />
       {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (

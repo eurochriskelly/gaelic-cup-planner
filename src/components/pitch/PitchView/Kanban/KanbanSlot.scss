@@ -18,14 +18,6 @@
   flex-direction: column;
   min-height: 5rem; // Ensure all slots have a minimum base height, card height will expand this
 
-  &.gray1 {
-    background-color:#44493496; // Lighter gray for empty Planned/Finished
-  }
-
-  &.gray2 {
-    background-color: #44493466; // Darker gray for empty Planned/Finished
-  }
-
   .slot-pitch-name { // Header for Ongoing slots
     width: 100%;
     display: flex;

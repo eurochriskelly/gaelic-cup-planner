@@ -13,12 +13,12 @@
     gap: 1rem;
     flex-wrap: wrap;
     position: absolute;
+    top: 0;
 
     .filter-group {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-
       label {
         font-weight: bold;
       }
@@ -37,7 +37,7 @@
     grid-template-columns: 1fr 1fr; // Two equal-width columns
     grid-template-rows: auto 1fr;   // Row 1 content height, Row 2 takes remaining space
     gap: 0rem;
-    top: 0;
+    top: 9rem;
     overflow: hidden;
     position: absolute;
     height: calc(100% - 20rem); // Available height for the board

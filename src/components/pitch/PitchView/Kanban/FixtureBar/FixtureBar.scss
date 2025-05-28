@@ -1,0 +1,117 @@
+@import "src/shared/css/_colors.scss";
+
+.FixtureBar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  margin-bottom: 1rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 1px solid #ffffff5e;
+  border-bottom: 4px solid #0000005e;
+  color: $pc;
+
+  .fixture-id,
+  .category,
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: currentColor;
+    }
+  }
+  
+  .category {
+    margin-left: auto;
+  }
+  
+  .stage {
+    margin-right: 1rem;
+    position: absolute;
+    right:-0.5rem;
+    top:0.3rem;
+    height: 5rem;
+    width: 5rem;
+    border: 0.3rem solid #ffffff;
+    font-size: 5.95rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    
+      &.group-stage {
+        background-color: #daebba;
+        .group-number {
+          font-weight: bold;
+        }
+        // Default text color will be inherited or from text-gray-500
+        // Styles for the number part of Gp.X
+        >div:first-child {
+          .group-number-1 {
+            color: #D32F2F;
+          }
+    
+          .group-number-2 {
+            color: #0a56a3;
+          }
+    
+          .group-number-3 {
+            color: #388E3C;
+          }
+    
+          .group-number-4 {
+            color: #7B1FA2;
+          }
+    
+          .group-number-5 {
+            color: #F57C00;
+          }
+        }
+      }
+    
+      &.other-stage {
+        background-color: #e4caef;
+        // Default text color will be inherited or from text-gray-500
+      }
+    
+      // Target the first div child (mainStr) for specific font colors
+      &.cup-main>div:first-child {
+        color: #055702; // DarkGoldenRod for "Cup"
+      }
+    
+      &.shield-main>div:first-child {
+        color: #830505; // DimGray for "Shield"
+      }
+    
+      &.plate-main>div:first-child {
+        color: #02197f; // SaddleBrown for "Plate"
+      }
+  }
+}
+
+.icon-larger {
+  transform: scale(1.6);
+  transform-origin: center;
+  margin-right: 0.5rem;
+}
+
+// Competition Color Styles
+.competition-col-0 { background-color: saturate(darken(#A2B29F, 40%), 10%); } // Pastel Green
+.competition-col-1 { background-color: saturate(darken(#B2A29F, 20%), 10%); } // Pastel Red/Brown
+.competition-col-2 { background-color: saturate(darken(#9FA2B2, 20%), 10%); } // Pastel Blue/Purple
+.competition-col-3 { background-color: saturate(darken(#B2B29F, 20%), 10%); } // Pastel Yellow/Green
+.competition-col-4 { background-color: saturate(darken(#A29FB2, 20%), 10%); } // Pastel Purple/Pink
+.competition-col-5 { background-color: saturate(darken(#9FB2A2, 20%), 10%); } // Pastel Green/Blue
+.competition-col-6 { background-color: saturate(darken(#B29FA2, 20%), 10%); } // Pastel Pink/Red
+.competition-col-7 { background-color: saturate(darken(#A2A2B2, 20%), 10%); } // Pastel Blue
+.competition-col-8 { background-color: saturate(darken(#B2A2A2, 20%), 10%); } // Pastel Brownish
+.competition-col-9 { background-color: saturate(darken(#A2B2A2, 20%), 10%); } // Pastel Greenish
+.competition-col-10 { background-color: saturate(darken(#B2B2B2, 20%), 10%); } // Pastel Grey
