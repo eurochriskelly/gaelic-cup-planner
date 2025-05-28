@@ -127,12 +127,13 @@ const PinLogin = () => {
   
   const handleTournamentCardClick = (tournament) => {
     setMessage(""); // Clear previous messages
-    if (userRole === 'spectator' && !tournament.code) {
+    if (userRole === 'spectator') {
       directNavigateToTournament(tournament.Id);
     } else if (userRole !== 'spectator' && !tournament.code) {
       setMessage(`Tournament "${tournament.Title}" requires a PIN for ${userRole} access.`);
       setTimeout(() => setMessage(""), 3000); 
     } else {
+      // This case handles non-spectators who need to enter a PIN for a tournament that has one.
       setSelectedTournament(tournament);
     }
   };
