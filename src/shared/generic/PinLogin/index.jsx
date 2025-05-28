@@ -138,6 +138,14 @@ const PinLogin = () => {
     }
   };
 
+  const handleContinueAsSpectator = () => {
+    setUserRole('spectator');
+    Cookies.set("ppUserRole", 'spectator', { expires: 365, path: "/" });
+    if (selectedTournament) {
+      directNavigateToTournament(selectedTournament.Id);
+    }
+  };
+
   const onPinEntered = (enteredPin) => {
     // Check if a tournament is selected and has a PIN property
     if (selectedTournament && selectedTournament.code) {
@@ -294,13 +302,22 @@ const PinLogin = () => {
                   ))}
                 </div>
                 <div className="pin-message">&nbsp;{message}&nbsp;</div>
+
+                {userRole !== 'spectator' && (
+                  <div className="spectator-access-prompt">
+                    <span>Spectator access? </span>
+                    <button onClick={handleContinueAsSpectator} className="spectator-access-button">
+                      Continue without login
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </>
         )}
         {!showRoleSelectorView && (
-          <button 
-            className="hat-icon-button pi pi-user" 
+          <button
+            className="hat-icon-button pi pi-user"
             onClick={() => {
               setShowRoleSelectorView(true);
               setSelectedTournament(null);
