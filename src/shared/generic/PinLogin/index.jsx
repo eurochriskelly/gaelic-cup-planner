@@ -24,6 +24,7 @@ const PinLogin = () => {
   const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
+  const [pinEntryRole, setPinEntryRole] = useState('coach'); // Role for the PIN entry dropdown
 
   // const [userRole, setUserRole] = useState('spectator'); // Replaced by context userRole
   const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
@@ -118,14 +119,19 @@ const PinLogin = () => {
   
   const handleTournamentCardClick = (tournament) => {
     setMessage(""); // Clear previous messages
-    if (userRole === 'spectator') {
-      directNavigateToTournament(tournament.Id);
-    } else if (userRole !== 'spectator' && !tournament.code) {
-      setMessage(`Tournament "${tournament.Title}" requires a PIN for ${userRole} access.`);
-      setTimeout(() => setMessage(""), 3000); 
-    } else {
-      // This case handles non-spectators who need to enter a PIN for a tournament that has one.
+    // If tournament.code exists, it's PIN protected, show PIN screen.
+    // Otherwise, allow direct navigation (spectator-like access).
+    if (tournament.code) {
       setSelectedTournament(tournament);
+      // Default pinEntryRole based on current global userRole, or 'coach'
+      if (['organizer', 'coordinator', 'coach'].includes(userRole)) {
+        setPinEntryRole(userRole);
+      } else {
+        setPinEntryRole('coach');
+      }
+      setPin(["", "", "", ""]); // Clear previous PIN
+    } else {
+      directNavigateToTournament(tournament.Id);
     }
   };
 
@@ -147,39 +153,43 @@ const PinLogin = () => {
     }
   };
 
-  const onPinEntered = (enteredPin) => {
-    // Check if a tournament is selected and has a PIN property
-    if (selectedTournament && selectedTournament.code) {
-      if (enteredPin?.toLowerCase() === selectedTournament?.code?.toLowerCase()) {
-        // PIN matches, proceed to select the tournament
-        directNavigateToTournament(selectedTournament.Id);
-      } else {
-        // PIN does not match, handle invalid attempt
+  const onPinEntered = async (enteredPin) => {
+    if (selectedTournament) {
+      setIsThinking(true);
+      setMessage(""); // Clear previous messages
+      try {
+        await API.checkTournamentCode(selectedTournament.Id, enteredPin, pinEntryRole);
+        // PIN is valid for the role
+        setUserRoleAndCookie(pinEntryRole); // Set the global role
+        directNavigateToTournament(selectedTournament.Id); // Navigate (handles its own setIsThinking)
+      } catch (error) {
+        setIsThinking(false); // Reset thinking state on error
+        console.error("PIN check failed:", error);
+
         const attempts = failedAttempts + 1;
         setFailedAttempts(attempts);
         if (attempts >= 3) {
           setMessage("Too many invalid attempts");
-          // After lockout message, clear pin and go back to tournament selection
           setTimeout(() => {
-            setPin(["", "", "", ""]); // Clear PIN on lockout timeout
+            setPin(["", "", "", ""]);
             setMessage("");
             setFailedAttempts(0);
             setSelectedTournament(null); // Go back to tournament selection
           }, 2000);
         } else {
-          // Display invalid pin message, keep digits visible
-          setMessage("Invalid pin! " + enteredPin);
-          // Keep the inputs filled for 2 seconds, then reset
+          setMessage("Invalid pin for selected role!");
           setTimeout(() => {
-            setPin(["", "", "", ""]); // Reset PIN after delay
-            inputsRef.current[0]?.focus(); // Refocus after delay
-            setMessage(""); // Clear message after delay
+            setPin(["", "", "", ""]);
+            if (inputsRef.current[0]) {
+              inputsRef.current[0].focus();
+            }
+            setMessage("");
           }, 2000);
         }
       }
     } else {
-      // Handle case where tournament or PIN is missing (should not normally happen if flow is correct)
-      console.error("Error: No selected tournament or PIN found for validation.");
+      // Handle case where tournament is not selected (should not normally happen if flow is correct)
+      console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
       inputsRef.current[0]?.focus();
@@ -295,6 +305,19 @@ const PinLogin = () => {
                   />
                 </div>
                 <div className="pin-entry-prompt">Enter tournament code</div>
+                <div className="role-for-pin-container" style={{ margin: '10px 0', textAlign: 'center' }}>
+                  for role <i className="pi pi-user" style={{ margin: '0 5px 0 10px' }}></i>
+                  <select
+                    value={pinEntryRole}
+                    onChange={(e) => setPinEntryRole(e.target.value)}
+                    className="pin-entry-role-select"
+                    style={{ padding: '5px', borderRadius: '4px', marginLeft: '5px' }}
+                  >
+                    <option value="organizer">Organizer</option>
+                    <option value="coordinator">Coordinator</option>
+                    <option value="coach">Coach</option>
+                  </select>
+                </div>
                 <div className="pinContainer">
                   {pin.map((num, index) => (
                     <input
