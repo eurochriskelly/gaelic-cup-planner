@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider} from "../../shared/js/Provider";
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./pages/LandingPage";
 import Story from "./story-lite";
 import { TournamentProvider } from "./TournamentContext";
 import { PrimeReactProvider } from 'primereact/api';

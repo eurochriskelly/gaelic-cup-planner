@@ -12,7 +12,7 @@ export const Provider = ({ children }) => {
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
-  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'spectator');
+  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'coordinator');
 
   const setUserRoleAndCookie = (role) => {
     setUserRole(role);
