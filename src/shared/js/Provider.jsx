@@ -12,6 +12,12 @@ export const Provider = ({ children }) => {
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
+  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'spectator');
+
+  const setUserRoleAndCookie = (role) => {
+    setUserRole(role);
+    Cookies.set("ppUserRole", role, { expires: 365, path: "/" });
+  };
 
   const setupTournament = (id) => {
     setTournamentId(id);
@@ -43,15 +49,28 @@ export const Provider = ({ children }) => {
       setMediaType(event.matches ? "phone" : "desktop");
     };
     handleMediaQueryChange(mediaQuery);
-    mediaQuery.addListener(handleMediaQueryChange);
+    // mediaQuery.addListener(handleMediaQueryChange); // Deprecated
+    mediaQuery.addEventListener("change", handleMediaQueryChange); // Modern way
     const tid = Cookies.get("tournamentId"); // Check cookie on mount
     if (tid) setupTournament(tid);
-    return () => {};
+    
+    // Cleanup listener
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
   }, []);
 
   return (
     <Context.Provider
-      value={{ mediaType, tournamentId, setupTournament, sections, versionInfo }}
+      value={{
+        mediaType,
+        tournamentId,
+        setupTournament,
+        sections,
+        versionInfo,
+        userRole,
+        setUserRoleAndCookie,
+      }}
     >
       {children}
     </Context.Provider>

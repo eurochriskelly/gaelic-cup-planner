@@ -37,8 +37,9 @@ const SelectTournamentView = () => {
     <MobileSelect sections={sections} active={0}>
       <div>Select competition</div>
       {categories?.map(
-        ({ category, latestStage, totalGames, currentGame, brackets }) => (
+        ({ category, latestStage, totalGames, currentGame, brackets }, i) => (
           <MainCard
+            key={`mc-${i}`}
             id={category}
             heading={`${category}`}
             onSelect={handle.select}
