@@ -102,7 +102,7 @@ function FilterWidget({
           if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
           else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
           else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
-          return IconComponent ? <IconComponent /> : null;
+          return IconComponent ? <IconComponent /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
         })()}
       </div>
       <div className="flex-1 px-2">
