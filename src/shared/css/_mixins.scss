@@ -1,0 +1,10 @@
+@import "./colors.scss";
+
+@mixin label-style {
+  color: $pc;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  flex-grow: 1;
+  text-align: right;
+}
