@@ -6,13 +6,12 @@ const FixtureContext = createContext();
 
 export const useFixtureContext = () => useContext(FixtureContext);
 
-export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
+export const FixtureProvider = ({ tournamentId, pitchId, userRole, children }) => {
   const [fixture, setFixture] = useState(null);
   const [fixtures, setFixtures] = useState([]);
   const [nextFixture, setNextFixture] = useState(null);
 
   const fetchFixtures = async (progress = false) => {
-    console.log("Fetching fixtures...");
     const { data } = await API.fetchFixtures(tournamentId, pitchId);
     setFixtures(data);
     if (progress) {

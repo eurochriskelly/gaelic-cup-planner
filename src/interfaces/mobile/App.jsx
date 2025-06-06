@@ -21,19 +21,20 @@ function AppContent() {
   const { userRole } = useAppContext(); // Now called within Provider's scope
 
   switch (userRole.toLowerCase()) {
+    case 'organizer':
     case 'coordinator':
+    case 'coach':
       return (
         <Routes>
           <Route path="/" element={<PinLogin />} />
           <Route path="/tournament/:tournamentId" 
-                 element={<LandingPage />} />
+                 element={<LandingPage role={userRole} />} />
           <Route path="/tournament/:tournamentId/selectCategory"
-                 element={<SelectTournamentView />} />
+                 element={<SelectTournamentView role={userRole} />} />
           <Route path="/tournament/:tournamentId/category/:category"
-                 element={<TournamentView />} />
-          <Route path="/tournament/:tournamentId/selectPitch"
-                 element={<SelectPitchView />} />
-          <Route path="/tournament/:tournamentId/pitch/:pitchId" element={<PitchViewWrapper />} />
+                 element={<TournamentView role />} />
+          <Route path="/tournament/:tournamentId/pitch/:pitchId"
+                 element={<PitchViewWrapper role={userRole} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       );
@@ -42,7 +43,8 @@ function AppContent() {
       return (
         <Routes>
           <Route path="/" element={<PinLogin />} />
-          <Route path="/tournament/:tournamentId" element={<SelectTournamentView />} />
+          <Route path="/tournament/:tournamentId"
+                 element={<SelectTournamentView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       );
@@ -53,13 +55,15 @@ function App() {
   return <Provider><AppContent /></Provider>;
 }
 
-function PitchViewWrapper() {
+function PitchViewWrapper({
+  userRole = 'coordinator' 
+}) {
   const { tournamentId } = useParams();
   let pitchId = useParams().pitchId;
   if (!pitchId) pitchId = '*'
   return (
-    <FixtureProvider tournamentId={tournamentId} pitchId={pitchId}>
-      <PitchView />
+    <FixtureProvider tournamentId={tournamentId} pitchId={pitchId} userRole={userRole}>
+      <PitchView userRole={userRole} />
     </FixtureProvider>
   );
 }
