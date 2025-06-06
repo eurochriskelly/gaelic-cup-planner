@@ -309,15 +309,16 @@ const PinLogin = () => {
                   ))}
                 </div>
                 <div className="pin-message">&nbsp;{message}&nbsp;</div>
-
-                {userRole !== 'spectator' && (
+                {/*
+                  userRole !== 'spectator' && (
                   <div className="spectator-access-prompt">
                     <span>Spectator access? </span>
                     <button onClick={handleContinueAsSpectator} className="spectator-access-button">
                       Continue without login
                     </button>
                   </div>
-                )}
+                ) 
+                */}
               </div>
             )}
           </>
