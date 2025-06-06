@@ -279,3 +279,146 @@
     z-index: 10; // Ensure it's above other elements if necessary
 }
 
+// Role Selector Styles
+.role-selector-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  h2 {
+    font-size: 2.5rem; // Larger than h3
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem; // Spacing between buttons
+  width: 100%;
+  max-width: 600px; // Max width of the grid
+}
+
+.role-button {
+  background-color: #748050; // Same as tournamentCard background
+  color: white;
+  border: 2px solid transparent; // Add transparent border for consistent sizing
+  border: none;
+  border-radius: 0.5rem;
+  padding: 2rem 1rem; // Generous padding
+  font-size: 1.8rem; // Larger font size
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: #9cae5a; // Lighter shade on hover
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0px);
+  }
+
+  &.active-role {
+    border-color: #ffffff; // White border for active role
+    // Or a more prominent style:
+    // background-color: #9cae5a; // Lighter shade for active
+    // box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Hat Icon Button Styles
+.hat-icon-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #748050; // Consistent theme color
+  color: white;
+  border: none;
+  border-radius: 50%; // Circular button
+  width: 60px;       // Fixed size
+  height: 60px;      // Fixed size
+  font-size: 2rem;  // Icon size
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 1000; // Ensure it's above other content
+
+  &:hover {
+    background-color: #9cae5a;
+    transform: scale(1.1);
+  }
+
+  &::before { // Style for PrimeIcon
+    font-family: 'PrimeIcons';
+    // content: "\e939"; // pi-user, ensure this is correct if not using class directly
+  }
+}
+
+// General message styling for tournament list view
+.general-message {
+  color: red;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 1rem;
+  min-height: 2em; // Reserve space
+}
+
+// Adjustments for when role selector is active, if needed
+.pinLogin.role-selector-active-parent {
+  // e.g. if the overall alignment needs to change
+  // justify-content: center; // if role selector should be centered vertically
+}
+
+// Ensure tournament selection and pin entry views take up space correctly
+.tournament-selection-view, .pin-entry-view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// Styles for the "Spectator access?" prompt on PIN entry screen
+.spectator-access-prompt {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.6rem; // Readable size
+  color: #f0f0f0; // Light color for visibility on dark background
+
+  span {
+    margin-right: 0.5rem;
+  }
+
+  .spectator-access-button {
+    background-color: #5a683c; // A slightly different shade from role buttons
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #748050; // Lighter on hover
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+

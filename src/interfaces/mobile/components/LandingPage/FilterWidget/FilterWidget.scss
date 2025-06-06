@@ -1,0 +1,52 @@
+@import "../../../../../shared/css/_mixins.scss";
+
+$col:#c0d18f;
+
+.FilterWidget {
+  width: calc(1024px - 13rem);
+  .filter-icon {
+    background: desaturate(darken($col, 30%), 20%);
+    height: 7rem;
+    width: 7rem;
+    max-width: 7rem;
+    margin: 0.5rem;
+  }
+  .flex-1.px-2 {
+    max-width: 34rem;
+    margin-left: 3rem;
+  } 
+}
+/* Styles applied to the .filter-schedule element */
+.filter-schedule {
+  padding: 16px;
+  margin: 0px 32px;
+  background-color: rgb(201, 218, 149);
+  .label {
+    @include label-style;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Styles applied to the direct children of the .flex.flex-col.items-center.justify-between element */
+/* This targeted the three elements on the right side (two buttons and a div) */
+.flex.flex-col.items-center.justify-between > * {
+  flex: 1;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styles applied to the .space-y-1 element (parent of the small elements) */
+.space-y-1 {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Applied to make it take up available height */
+}
+
+/* Styles applied to the children of the .space-y-1 element (the small elements) */
+.space-y-1 > .flex.items-center.text-purple-600.cursor-pointer.text-sm {
+  flex: 1; /* Applied to make them share vertical space */
+  height: auto; /* Let flex control height */
+  font-size: 22.4px; /* Increased font size */
+}

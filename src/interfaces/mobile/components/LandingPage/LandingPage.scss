@@ -1,4 +1,5 @@
 @import "../../../../shared/css/_colors.scss";
+@import "../../../../shared/css/_mixins.scss";
 
 $rcol: #d4e79b;
 
@@ -166,12 +167,7 @@ $rcol: #d4e79b;
           fill: $pc;
         }
         .label {
-          color: $pc;
-          font-size: 1.6rem;
-          font-weight: bold;
-          text-transform: uppercase;
-          flex-grow: 1;
-          text-align: right;
+          @include label-style;
         }
 
         &:hover {
