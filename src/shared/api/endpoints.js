@@ -68,4 +68,8 @@ export default {
           reject(error);
         });
     }),
+
+  // Check if a tournament code is valid for a given role
+  checkTournamentCode: (tournamentId, code, role) =>
+    fetchApi(tournamentId, `code-check/${code}?role=${role}`),
 };
