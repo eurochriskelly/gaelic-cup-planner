@@ -72,4 +72,10 @@ export default {
   // Check if a tournament code is valid for a given role
   checkTournamentCode: (tournamentId, code, role) =>
     fetchRootApi(`/tournaments/${tournamentId}/code-check/${code}?role=${role}`),
+
+  // Fetch available filters for a tournament
+  fetchFilters: (tournamentId, role, categories = []) => {
+    const categoryParam = categories.length ? `&category=${categories.join(',')}` : '';
+    return fetchRootApi(`/tournaments/${tournamentId}/filters?role=${role}${categoryParam}`);
+  },
 };
