@@ -305,13 +305,13 @@ const PinLogin = () => {
                   />
                 </div>
                 <div className="pin-entry-prompt">Enter tournament code</div>
-                <div className="role-for-pin-container" style={{ margin: '10px 0', textAlign: 'center', fontSize: '1.5em' }}>
-                  for role <i className="pi pi-user" style={{ margin: '0 5px 0 10px' }}></i>
+                <div className="role-for-pin-container " style={{ margin: '10px 0 30px 0', textAlign: 'center', fontSize: '2.25em' }}>
+                  for role <i className="pi pi-user text-5xl" style={{ margin: '0 12px 0 12px' }}></i>
                   <select
                     value={pinEntryRole}
                     onChange={(e) => setPinEntryRole(e.target.value)}
                     className="pin-entry-role-select"
-                    style={{ padding: '5px', borderRadius: '4px', marginLeft: '5px' }}
+                    style={{ padding: '5px', borderRadius: '4px', marginLeft: '5px', fontSize: 'inherit' }}
                   >
                     <option value="organizer">Organizer</option>
                     <option value="coordinator">Coordinator</option>
@@ -346,7 +346,7 @@ const PinLogin = () => {
             )}
           </>
         )}
-        {!showRoleSelectorView && (
+        {!showRoleSelectorView && !selectedTournament && (
           <button
             className="hat-icon-button pi pi-user"
             onClick={() => {
