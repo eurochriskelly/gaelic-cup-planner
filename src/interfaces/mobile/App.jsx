@@ -4,7 +4,6 @@ import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContex
 import SelectTournamentView from "../../components/groups/SelectTournamentView";
 import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./pages/LandingPage";
-import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
 
@@ -26,7 +25,8 @@ function AppContent() {
     case 'coach':
       return (
         <Routes>
-          <Route path="/" element={<PinLogin />} />
+          <Route path="/"
+                 element={<PinLogin />} />
           <Route path="/tournament/:tournamentId" 
                  element={<LandingPage role={userRole} />} />
           <Route path="/tournament/:tournamentId/selectCategory"
@@ -35,17 +35,20 @@ function AppContent() {
                  element={<TournamentView role />} />
           <Route path="/tournament/:tournamentId/pitch/:pitchId"
                  element={<PitchViewWrapper role={userRole} />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" 
+                 element={<Navigate to="/" replace />} />
         </Routes>
       );
     case 'spectator':
     default:
       return (
         <Routes>
-          <Route path="/" element={<PinLogin />} />
+          <Route path="/"
+                 element={<PinLogin />} />
           <Route path="/tournament/:tournamentId"
                  element={<SelectTournamentView />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*"
+                 element={<Navigate to="/" replace />} />
         </Routes>
       );
   }
@@ -55,15 +58,12 @@ function App() {
   return <Provider><AppContent /></Provider>;
 }
 
-function PitchViewWrapper({
-  userRole = 'coordinator' 
-}) {
+function PitchViewWrapper() {
   const { tournamentId } = useParams();
-  let pitchId = useParams().pitchId;
-  if (!pitchId) pitchId = '*'
+  console.log(' we')
   return (
-    <FixtureProvider tournamentId={tournamentId} pitchId={pitchId} userRole={userRole}>
-      <PitchView userRole={userRole} />
+    <FixtureProvider tournamentId={tournamentId} >
+      <PitchView />
     </FixtureProvider>
   );
 }

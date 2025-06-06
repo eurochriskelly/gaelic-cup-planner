@@ -14,10 +14,26 @@ export const Provider = ({ children }) => {
   const [sections, setSections] = useState([]);
   const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'coordinator');
   
-  // Add state for filter selections
+  // Add state for filter selections - make it role-specific
   const [filterSelections, setFilterSelections] = useState(() => {
     const savedFilters = Cookies.get("ppFilterSelections");
-    return savedFilters ? JSON.parse(savedFilters) : {};
+    if (savedFilters) {
+      try {
+        const parsedFilters = JSON.parse(savedFilters);
+        // If the saved filters are already role-specific, use them
+        if (parsedFilters && typeof parsedFilters === 'object' && Object.keys(parsedFilters).some(key => 
+          ['coordinator', 'coach', 'referee', 'organizer', 'spectator'].includes(key.toLowerCase()))) {
+          return parsedFilters;
+        }
+        // Otherwise, convert the old format to the new role-specific format
+        const currentRole = Cookies.get("ppUserRole") || 'coordinator';
+        return { [currentRole]: parsedFilters || {} };
+      } catch (e) {
+        console.error("Error parsing saved filters:", e);
+        return {};
+      }
+    }
+    return {};
   });
 
   const setUserRoleAndCookie = (role) => {
@@ -25,10 +41,20 @@ export const Provider = ({ children }) => {
     Cookies.set("ppUserRole", role, { expires: 365, path: "/" });
   };
 
-  // Add method to update filter selections
+  // Update method to make filter selections role-specific
   const updateFilterSelections = (newSelections) => {
-    setFilterSelections(newSelections);
-    Cookies.set("ppFilterSelections", JSON.stringify(newSelections), { expires: 7, path: "/" });
+    const updatedSelections = {
+      ...filterSelections,
+      [userRole]: newSelections
+    };
+    
+    setFilterSelections(updatedSelections);
+    Cookies.set("ppFilterSelections", JSON.stringify(updatedSelections), { expires: 7, path: "/" });
+  };
+
+  // Get current role's filter selections
+  const getCurrentRoleFilterSelections = () => {
+    return filterSelections[userRole] || {};
   };
 
   const setupTournament = (id) => {
@@ -82,8 +108,9 @@ export const Provider = ({ children }) => {
         versionInfo,
         userRole,
         setUserRoleAndCookie,
-        filterSelections,
-        updateFilterSelections
+        filterSelections: getCurrentRoleFilterSelections(), // Return only current role's selections
+        updateFilterSelections,
+        allFilterSelections: filterSelections // Provide access to all filter selections if needed
       }}
     >
       {children}

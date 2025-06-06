@@ -1,18 +1,23 @@
 // FixtureContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import API from "../../../shared/api/endpoints.js";
+import { useAppContext } from "../../../shared/js/Provider";
 
 const FixtureContext = createContext();
 
 export const useFixtureContext = () => useContext(FixtureContext);
 
-export const FixtureProvider = ({ tournamentId, pitchId, userRole, children }) => {
+export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
   const [fixture, setFixture] = useState(null);
   const [fixtures, setFixtures] = useState([]);
   const [nextFixture, setNextFixture] = useState(null);
+  const { 
+    userRole, 
+    filterSelections, 
+  } = useAppContext();
 
   const fetchFixtures = async (progress = false) => {
-    const { data } = await API.fetchFixtures(tournamentId, pitchId);
+    const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections);
     setFixtures(data);
     if (progress) {
         setNextFixture(data.find((f) => !f.played));
@@ -41,7 +46,7 @@ export const FixtureProvider = ({ tournamentId, pitchId, userRole, children }) =
 
   useEffect(() => {
     const initialFetch = async () => {
-      const { data } = await API.fetchFixtures(tournamentId, pitchId);
+      const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections)
       setFixtures(data);
       const nextFixture = data.find((f) => !f.played);
       setNextFixture(nextFixture);

@@ -46,14 +46,20 @@ export const useFetchFilters = (tournamentId, userRole, selectedFilters = {}) =>
         
         if (data && Array.isArray(data.data)) {
           // Transform API data to match the format expected by FilterWidget
-          const formattedFilters = data.data.map(filter => ({
-            icon: filter.icon || `${filter.category}Icon`,
-            category: filter.category,
-            choices: filter.choices || [],
-            allowMultiselect: filter.multiSelect || false,
-            selected: selectedFilters[filter.category] || null,
-            default: filter.default || null
-          }));
+          const formattedFilters = data.data.map(filter => {
+            // Check if this category has selections in the selectedFilters
+            const currentSelection = selectedFilters[filter.category];
+            
+            return {
+              icon: filter.icon || `${filter.category}Icon`,
+              category: filter.category,
+              choices: filter.choices || [],
+              allowMultiselect: Boolean(filter.allowMultiselect), // Ensure it's a boolean
+              // Handle both array and single value formats
+              selected: currentSelection, 
+              default: filter.default || null
+            };
+          });
           
           setFilterChoices(formattedFilters);
         } else {
