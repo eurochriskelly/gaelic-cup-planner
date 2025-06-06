@@ -96,13 +96,13 @@ function FilterWidget({
   return <>
     <div className="label">Apply schedule filter</div>
     <div className="FilterWidget p-2 rounded-lg flex h-48">
-      <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => setIsCategorySelectorOpen(true)}>
+      <div className="filter-icon flex flex-col items-center justify-center cursor-pointer" onClick={() => setIsCategorySelectorOpen(true)}>
         {(() => {
           let IconComponent = null;
           if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
           else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
           else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
-          return IconComponent ? <IconComponent /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
+          return IconComponent ? <IconComponent className="w-8 h-8 mb-1" /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
         })()}
       </div>
       <div className="flex-1 px-2">
