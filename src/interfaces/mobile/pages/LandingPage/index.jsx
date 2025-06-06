@@ -1,51 +1,42 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppContext } from "../../../../shared/js/Provider";
+import { useTranslation } from 'react-i18next';
+import { useFetchTournament, useFetchFilters } from './LandingPage.hooks';
 import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
-import { useNavigate, useParams } from "react-router-dom";
-import { useAppContext } from "../../../../shared/js/Provider";
-import { useTranslation } from 'react-i18next';
 import API from "../../../../shared/api/endpoints";
-import { useFetchTournament } from './LandingPage.hooks';
 import './LandingPage.scss';
-
-const handleFilterChange = (selections) => {
-  console.log('Selections:', selections);
-};
-
-const filterChoices = [
-  {
-    icon: 'CompIcon',
-    category: 'Competition',
-    choices: ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', 'Choice 5', 'Choice 6'],
-    allowMultiselect: true,
-    default: true
-  },
-  {
-    icon: 'PitchIcon',
-    category: 'Pitches',
-    choices: ['Pitch 1', 'Pitch 2', 'Pitch 3'],
-    allowMultiselect: true
-  },
-  {
-    icon: 'TeamIcon',
-    category: 'Team',
-    choices: ['Team 1', 'Team 2'],
-    allowMultiselect: false
-  }
-];
 
 const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // New: Track scroll state
+  const [isScrolled, setIsScrolled] = useState(false);
   const { tournInfo } = useFetchTournament(tournamentId);
   const { t } = useTranslation();
-  const tt = code => t(`landingPage_${code}`);
-  const { versionInfo } = useAppContext();
+  const { 
+    versionInfo, 
+    userRole, 
+    filterSelections, 
+    updateFilterSelections 
+  } = useAppContext();
   const navigate = useNavigate();
+  
+  // Fetch filter choices from API
+  const { filterChoices, isLoading: isLoadingFilters } = useFetchFilters(
+    tournamentId,
+    userRole,
+    filterSelections
+  );
+
+  // Handle filter changes
+  const handleFilterChange = (selections) => {
+    console.log('Selections:', selections);
+    updateFilterSelections(selections);
+  };
 
   // New: Add scroll listener to toggle shrink class
   useEffect(() => {
@@ -118,8 +109,16 @@ const LandingPage = () => {
           </button>
         </div>
 
-        <div className="filter-schedule">
-          <FilterWidget onChangeSelect={handleFilterChange} choices={filterChoices} />
+        <div className="filter-schedule"
+              onClick={() => console.log('Filter Widget clicked', filterChoices)}>
+          {isLoadingFilters ? (
+            <div className="loading-filters">Loading filters...</div>
+          ) : (
+            <FilterWidget 
+              onChangeSelect={handleFilterChange} 
+              choices={filterChoices} 
+            />
+          )}
         </div>
 
         {+tournamentId === 1 && (
@@ -135,8 +134,6 @@ const LandingPage = () => {
     </main>
   );
 };
-
-
 
 function Row({ label, children }) {
   return (
