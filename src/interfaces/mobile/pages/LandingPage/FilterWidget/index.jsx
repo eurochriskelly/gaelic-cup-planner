@@ -82,10 +82,9 @@ function FilterWidget({
             <button
               key={choice.category}
               onClick={() => handleCategoryClick(index)}
-              className="filter-icon flex-1 text-white p-2 rounded hover:bg-green-700 flex flex-col items-center"
+              className="filter-icon rounded hover:bg-green-700 flex items-center justify-center focus:outline-none"
             >
-              {IconComponent ? <IconComponent className="w-24 h-14" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
-              <span className="text-xs uppercase">{choice.category}</span>
+              {IconComponent ? <IconComponent className="w-24 h-24" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
             </button>
           );
         })}
