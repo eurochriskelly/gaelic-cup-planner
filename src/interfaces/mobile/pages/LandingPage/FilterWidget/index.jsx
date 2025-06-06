@@ -1,6 +1,7 @@
 import CategoryIcon from '../../../../../shared/icons/icon-competition.svg?react';
 import PitchesIcon from '../../../../../shared/icons/icon-pitches.svg?react';
 import TeamIcon from '../../../../../shared/icons/icon-team.svg?react';
+import RefIcon from '../../../../../shared/icons/icon-referee.svg?react';
 
 import './FilterWidget.scss';
 
@@ -123,6 +124,7 @@ function FilterWidget({
           let IconComponent = null;
           if (choice.icon === 'CompIcon' || choice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
           else if (choice.icon === 'PitchIcon' || choice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
+          else if (choice.icon === 'RefIcon' || choice.icon === 'RefIcon') IconComponent = RefIcon;
           else if (choice.icon === 'TeamIcon') IconComponent = TeamIcon;
           
           // Get the applied selections for this category
@@ -175,45 +177,54 @@ function FilterWidget({
           let IconComponent = null;
           if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
           else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
+          else if (currentChoice.icon === 'RefIcon' || currentChoice.icon === 'RefIcon') IconComponent = RefIcon;
           else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
           return IconComponent ? <IconComponent className="w-64 h-64" /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
         })()}
       </div>
       <div className="flex-1 px-2">
-        <div className="space-y-1">
-          {displayedChoices.map((choice, index) => {
-            const isSelected = pendingSelections[currentChoice.category].includes(choice);
-            return (
-              <div
-                key={index}
-                onClick={() => handleChoiceClick(choice)}
-                className="flex items-center uppercase text-purple-600 cursor-pointer text-sm"
-              >
-                <span className="mr-2 text-5xl">{isSelected ? '●' : '○'}</span>
-                <span className="text-3xl">{choice}</span>
-              </div>
-            );
-          })}
+        {totalChoices === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-600 text-2xl text-center">There are no choices for category "{currentChoice.category}" at this time</p>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {displayedChoices.map((choice, index) => {
+              const isSelected = pendingSelections[currentChoice.category].includes(choice);
+              return (
+                <div
+                  key={index}
+                  onClick={() => handleChoiceClick(choice)}
+                  className="flex items-center uppercase text-purple-600 cursor-pointer text-sm"
+                >
+                  <span className="mr-2 text-5xl">{isSelected ? '●' : '○'}</span>
+                  <span className="text-3xl">{choice}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      {totalChoices > 0 && (
+        <div className="flex flex-col items-center justify-between mr-6">
+          <button
+            onClick={handlePrevPage}
+            disabled={startIndex === 0}
+            className="text-green-600 disabled:text-gray-400 text-3xl"
+            style={{background:'none'}}
+          >
+            ▲
+          </button>
+          <div className="text-2xl">{currentPage}/{totalPages}</div>
+          <button
+            onClick={handleNextPage}
+            disabled={startIndex + itemsPerPage >= totalChoices}
+            className="text-green-600 disabled:text-gray-400 text-3xl"
+          >
+            ▼
+          </button>
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-between mr-6">
-        <button
-          onClick={handlePrevPage}
-          disabled={startIndex === 0}
-          className="text-green-600 disabled:text-gray-400 text-3xl"
-          style={{background:'none'}}
-        >
-          ▲
-        </button>
-        <div className="text-2xl">{currentPage}/{totalPages}</div>
-        <button
-          onClick={handleNextPage}
-          disabled={startIndex + itemsPerPage >= totalChoices}
-          className="text-green-600 disabled:text-gray-400 text-3xl"
-        >
-          ▼
-        </button>
-      </div>
+      )}
       <div className="flex flex-col items-center justify-center ml-2 space-y-2">
         <button
           onClick={handleCancelFilter}
@@ -222,13 +233,15 @@ function FilterWidget({
         >
           Cancel
         </button>
-        <button
-          onClick={handleSaveFilter}
-          className="bg-green-600 w-48 text-white px-3 py-1 rounded hover:bg-green-700 text-xs"
-          style={{ fontSize: '1.3rem', width: '6rem' }}
-        >
-          Save
-        </button>
+        {totalChoices > 0 && (
+          <button
+            onClick={handleSaveFilter}
+            className="bg-green-600 w-48 text-white px-3 py-1 rounded hover:bg-green-700 text-xs"
+            style={{ fontSize: '1.3rem', width: '6rem' }}
+          >
+            Save
+          </button>
+        )}
       </div>
     </div>
   </>;
