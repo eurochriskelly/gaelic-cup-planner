@@ -84,7 +84,7 @@ function FilterWidget({
               onClick={() => handleCategoryClick(index)}
               className="filter-icon flex-1 text-white p-2 rounded hover:bg-green-700 flex flex-col items-center"
             >
-              {IconComponent ? <IconComponent className="w-8 h-8 mb-1" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
+              {IconComponent ? <IconComponent className="w-24 h-14" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
               <span className="text-xs uppercase">{choice.category}</span>
             </button>
           );
@@ -102,7 +102,7 @@ function FilterWidget({
           if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
           else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
           else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
-          return IconComponent ? <IconComponent className="w-8 h-8 mb-1" /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
+          return IconComponent ? <IconComponent className="w-24 h-24" /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
         })()}
       </div>
       <div className="flex-1 px-2">

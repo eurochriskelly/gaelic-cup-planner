@@ -7,7 +7,6 @@ import LandingPage from "./pages/LandingPage";
 import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
-import Cookies from "js-cookie";
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -53,10 +52,7 @@ function App() {
 function PitchViewWrapper() {
   const { tournamentId } = useParams();
   let pitchId = useParams().pitchId;
-  if (!pitchId) {
-    pitchId = '*'
-  }
-
+  if (!pitchId) pitchId = '*'
   return (
     <FixtureProvider tournamentId={tournamentId} pitchId={pitchId}>
       <PitchView />
