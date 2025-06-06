@@ -24,9 +24,8 @@ const PinLogin = () => {
   const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const [pinEntryRole, setPinEntryRole] = useState('coach'); // Role for the PIN entry dropdown
+  const [pinEntryRole, setPinEntryRole] = useState('coordinator');
 
-  // const [userRole, setUserRole] = useState('spectator'); // Replaced by context userRole
   const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
 
   useEffect(() => {
@@ -258,7 +257,7 @@ const PinLogin = () => {
             <h2>Select Your Role</h2>
             {/* Back button is now handled by LoginHeader */}
             <div className="role-grid">
-              {['organizer', 'coordinator', 'coach', 'spectator'].map(role => (
+              {['organizer', 'coordinator', 'coach', 'referee'].map(role => (
                 <button
                   key={role}
                   onClick={() => handleRoleSelect(role)}
@@ -312,16 +311,18 @@ const PinLogin = () => {
                     onChange={(e) => setPinEntryRole(e.target.value)}
                     className="pin-entry-role-select"
                     style={{
-                          padding: '5px 1rem',
-                          borderRadius: '0.6rem',
-                          color: 'white',
-                          background: '#b0bd82',
-                          marginLeft: '5px', 
-                          textTransform: 'uppercase', fontSize: 'inherit' }}
-                    >
+                      padding: '1.4rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: 'white',
+                      background: '#b0bd82',
+                      textAlign: 'center',
+                      marginLeft: '5px', 
+                      textTransform: 'uppercase', fontSize: 'inherit' 
+                    }}>
                     <option value="organizer" style={{ fontSize: '0.5em' }}>Organizer</option>
                     <option value="coordinator" style={{ fontSize: '0.5em' }}>Coordinator</option>
                     <option value="coach" style={{ fontSize: '0.5em' }}>Coach</option>
+                    <option value="referee" style={{ fontSize: '0.5em' }}>Referee</option>
                   </select>
                 </div>
                 <div className="pinContainer">
