@@ -1,3 +1,7 @@
+import CategoryIcon from '../../../../../shared/icons/icon-competition.svg?react';
+import PitchesIcon from '../../../../../shared/icons/icon-pitches.svg?react';
+import TeamIcon from '../../../../../shared/icons/icon-team.svg?react';
+
 import './FilterWidget.scss';
 
 function FilterWidget({
@@ -69,16 +73,22 @@ function FilterWidget({
     return <>
       <div className="label">Apply schedule filter</div>
       <div className="FilterWidget p-2 rounded-lg flex space-x-4 w-128">
-        {choices.map((choice, index) => (
-          <button
-            key={choice.category}
-            onClick={() => handleCategoryClick(index)}
-            className="filter-icon flex-1 text-white p-2 rounded hover:bg-green-700 flex flex-col items-center"
-          >
-            <span className="text-sm">[Icon: {choice.icon}]</span>
-            <span className="text-xs uppercase">{choice.category}</span>
-          </button>
-        ))}
+        {choices.map((choice, index) => {
+          let IconComponent = null;
+          if (choice.icon === 'CompIcon' || choice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
+          else if (choice.icon === 'PitchIcon' || choice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
+          else if (choice.icon === 'TeamIcon') IconComponent = TeamIcon;
+          return (
+            <button
+              key={choice.category}
+              onClick={() => handleCategoryClick(index)}
+              className="filter-icon flex-1 text-white p-2 rounded hover:bg-green-700 flex flex-col items-center"
+            >
+              {IconComponent ? <IconComponent className="w-8 h-8 mb-1" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
+              <span className="text-xs uppercase">{choice.category}</span>
+            </button>
+          );
+        })}
       </div>
     </>;
   }
@@ -86,16 +96,14 @@ function FilterWidget({
   return <>
     <div className="label">Apply schedule filter</div>
     <div className="FilterWidget p-2 rounded-lg flex h-48">
-      <div>
-        <div
-          className="filter-icon text-white w-24 h-24 flex items-center justify-center rounded cursor-pointer"
-          onClick={() => setIsCategorySelectorOpen(true)}
-        >
-          <span className="text-xs">[Icon: {currentChoice.icon}]</span>
-        </div>
-        <div className="text-center text-xl uppercase mt-2">
-          {currentChoice.category}
-        </div>
+      <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => setIsCategorySelectorOpen(true)}>
+        {(() => {
+          let IconComponent = null;
+          if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
+          else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
+          else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
+          return IconComponent ? <IconComponent /> : null;
+        })()}
       </div>
       <div className="flex-1 px-2">
         <div className="space-y-1">
