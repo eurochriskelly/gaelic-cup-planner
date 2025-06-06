@@ -22,8 +22,9 @@ function FilterWidget({
   const [pendingSelections, setPendingSelections] = React.useState(() => {
     const init = {};
     choices.forEach(choice => {
+      // Make sure we handle the case where selected could be an array or a single value
       init[choice.category] = choice.allowMultiselect 
-        ? (Array.isArray(choice.selected) ? [...choice.selected] : [])
+        ? (Array.isArray(choice.selected) ? [...choice.selected] : (choice.selected ? [choice.selected] : []))
         : (choice.selected ? [choice.selected] : []);
     });
     return init;
@@ -32,8 +33,9 @@ function FilterWidget({
   const [appliedSelections, setAppliedSelections] = React.useState(() => {
     const init = {};
     choices.forEach(choice => {
+      // Same fix for applied selections
       init[choice.category] = choice.allowMultiselect 
-        ? (Array.isArray(choice.selected) ? [...choice.selected] : [])
+        ? (Array.isArray(choice.selected) ? [...choice.selected] : (choice.selected ? [choice.selected] : []))
         : (choice.selected ? [choice.selected] : []);
     });
     return init;
@@ -85,9 +87,12 @@ function FilterWidget({
     const formattedSelections = {};
     Object.keys(newAppliedSelections).forEach(cat => {
       const catChoice = choices.find(c => c.category === cat);
-      formattedSelections[cat] = catChoice.allowMultiselect 
-        ? newAppliedSelections[cat] 
-        : (newAppliedSelections[cat][0] || null);
+      if (catChoice) {
+        // Ensure we properly format multiselect values as arrays and single select as single values
+        formattedSelections[cat] = catChoice.allowMultiselect 
+          ? [...newAppliedSelections[cat]]  // Return array for multiselect
+          : (newAppliedSelections[cat].length > 0 ? newAppliedSelections[cat][0] : null);  // Return first item or null
+      }
     });
     
     onChangeSelect(formattedSelections);
@@ -205,7 +210,7 @@ function FilterWidget({
           </div>
         )}
       </div>
-      {totalChoices > 0 && (
+      {totalPages > 1 && (
         <div className="flex flex-col items-center justify-between mr-6">
           <button
             onClick={handlePrevPage}

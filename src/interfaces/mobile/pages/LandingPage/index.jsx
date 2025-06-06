@@ -32,6 +32,9 @@ const LandingPage = () => {
     filterSelections
   );
 
+  console.log('selsl', filterSelections, userRole);
+
+
   // Handle filter changes
   const handleFilterChange = (selections) => {
     console.log('Selections:', selections);

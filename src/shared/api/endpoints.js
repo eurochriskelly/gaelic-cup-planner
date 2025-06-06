@@ -3,9 +3,13 @@ import { fetchApi, fetchRootApi } from './api-helper.js'; // Import new helper
 export default {
 
   // Fetch active tournaments with specific statuses
-  fetchActiveTournaments: (statuses = ['new', 'in-design']) =>
-    fetchRootApi('/tournaments', 'GET', null, { status: statuses.join(',') }),
+  fetchActiveTournaments: async (statuses = ['new', 'in-design']) =>
+    await fetchRootApi('/tournaments', 'GET', null, { status: statuses.join(',') }),
 
+  // Fetch fixtures for a specific pitch
+  fetchFilteredFixtures: async (tournamentId, filter) =>
+    await fetchRootApi(`/tournaments/${tournamentId}/fixtures/filtered`, 'POST', filter),
+  
   // Fetch fixtures for a specific pitch
   fetchFixtures: async (tournamentId, pitchId) =>
     await fetchApi(tournamentId, `pitches/${pitchId}/fixtures`),
