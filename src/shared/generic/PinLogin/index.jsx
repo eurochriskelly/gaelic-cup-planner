@@ -305,7 +305,7 @@ const PinLogin = () => {
                   />
                 </div>
                 <div className="pin-entry-prompt">Enter tournament code</div>
-                <div className="role-for-pin-container" style={{ margin: '10px 0', textAlign: 'center' }}>
+                <div className="role-for-pin-container" style={{ margin: '10px 0', textAlign: 'center', fontSize: '1.5em' }}>
                   for role <i className="pi pi-user" style={{ margin: '0 5px 0 10px' }}></i>
                   <select
                     value={pinEntryRole}
