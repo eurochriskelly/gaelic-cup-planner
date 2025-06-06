@@ -311,11 +311,17 @@ const PinLogin = () => {
                     value={pinEntryRole}
                     onChange={(e) => setPinEntryRole(e.target.value)}
                     className="pin-entry-role-select"
-                    style={{ padding: '5px', borderRadius: '4px', marginLeft: '5px', fontSize: 'inherit' }}
-                  >
-                    <option value="organizer">Organizer</option>
-                    <option value="coordinator">Coordinator</option>
-                    <option value="coach">Coach</option>
+                    style={{
+                          padding: '5px 1rem',
+                          borderRadius: '0.6rem',
+                          color: 'white',
+                          background: '#b0bd82',
+                          marginLeft: '5px', 
+                          textTransform: 'uppercase', fontSize: 'inherit' }}
+                    >
+                    <option value="organizer" style={{ fontSize: '0.5em' }}>Organizer</option>
+                    <option value="coordinator" style={{ fontSize: '0.5em' }}>Coordinator</option>
+                    <option value="coach" style={{ fontSize: '0.5em' }}>Coach</option>
                   </select>
                 </div>
                 <div className="pinContainer">
