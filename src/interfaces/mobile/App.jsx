@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
-import { Provider } from "../../shared/js/Provider";
+import { Provider, useAppContext } from "../../shared/js/Provider";
 import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContext";
 import SelectTournamentView from "../../components/groups/SelectTournamentView";
 import TournamentView from "../../components/groups/TournamentView";
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./pages/LandingPage";
 import SelectPitchView from "../../components/pitch/SelectPitchView";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
@@ -16,7 +16,6 @@ import "../../shared/css/site-common.scss";
 import "../../shared/css/site-mobile.scss";
 import "./App.scss";
 import "./i18n";
-import { useAppContext } from "../../shared/js/Provider"; // Import useAppContext
 
 // New component to contain the routes and context-dependent logic
 function AppContent() {
@@ -48,11 +47,7 @@ function AppContent() {
 }
 
 function App() {
-  return (
-    <Provider>
-      <AppContent />
-    </Provider>
-  );
+  return <Provider><AppContent /></Provider>;
 }
 
 function PitchViewWrapper() {
