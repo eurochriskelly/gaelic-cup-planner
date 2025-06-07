@@ -135,18 +135,21 @@ const PinLogin = () => {
   };
 
   const handleContinueAsSpectator = () => {
-    setUserRoleAndCookie('spectator'); // Use context function to set role and cookie
-
     if (selectedTournament) {
-      // Ensure the tournamentId cookie is set, as directNavigateToTournament (which calls setupTournament) is bypassed.
-      // This is still needed because of the full page reload that follows.
+      // Ensure the tournamentId cookie is set for backward compatibility
       Cookies.set("tournamentId", selectedTournament.Id, { expires: 1 / 24, path: "/" });
       setIsThinking(true); // Show loading feedback
-      // Force a full page navigation. App.jsx will re-initialize and read the new 'spectator' role.
-      window.location.href = `/tournament/${selectedTournament.Id}`;
+      
+      // Check if eventUuid exists and redirect to the new planner URL
+      if (selectedTournament.eventUuid) {
+        const url = `https://planner.pitchperfect.eu.com/event/${selectedTournament.eventUuid}`;
+        window.location.href = url;
+      } else {
+        // Fallback to original behavior if eventUuid is not available
+        window.location.href = `/tournament/${selectedTournament.Id}`;
+      }
     } else {
       // Fallback: if selectedTournament is somehow not available, go to the root.
-      // PinLogin will re-render and pick up the 'spectator' role.
       setIsThinking(true);
       window.location.href = `/`;
     }
@@ -274,7 +277,7 @@ const PinLogin = () => {
             {!selectedTournament ? (
               // Tournament Selection View
               <div className="tournament-selection-view"> {/* Removed pinLogin class from here */}
-                <h3>Select from upcoming tournaments</h3>
+                <h2>Select from upcoming tournaments</h2>
                 {message && <div className="general-message">{message}</div>}
                 {isLoadingTournaments && <div className="thinking">Loading tournaments...</div>}
                 {fetchError && <div className="error">{fetchError}</div>}
@@ -339,16 +342,12 @@ const PinLogin = () => {
                   ))}
                 </div>
                 <div className="pin-message">&nbsp;{message}&nbsp;</div>
-                {/*
-                  userRole !== 'spectator' && (
                   <div className="spectator-access-prompt">
-                    <span>Spectator access? </span>
+                    <div>Spectator access? </div>
                     <button onClick={handleContinueAsSpectator} className="spectator-access-button">
                       Continue without login
                     </button>
                   </div>
-                ) 
-                */}
               </div>
             )}
           </>
