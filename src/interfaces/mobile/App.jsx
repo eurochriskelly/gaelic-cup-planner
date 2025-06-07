@@ -23,6 +23,7 @@ function AppContent() {
     case 'organizer':
     case 'coordinator':
     case 'coach':
+    case 'referee':
       return (
         <Routes>
           <Route path="/"

@@ -52,9 +52,8 @@ const TabCancel = ({
   };
   
   const cancelConfirmation = () => {
-    setCancellationOption(null);
+    // Only reset confirming state without closing the dialog
     setConfirming(false);
-    onClose && onClose(); // Call onClose prop
   };
 
   useEffect(() => {
@@ -76,15 +75,19 @@ const TabCancel = ({
                     <div className="non-played-outcome">
                       <div>Click <b>YES</b> to confirm</div>
                       <div className="p-8">
-                        <span className="decision walkover bg-rose-400">Walkover</span> 
+                        <span className={`decision ${cancellationOption === 'team2_forfeit' ? 'walkover bg-rose-400' : 'forfeit bg-green-400'}`}>
+                          {cancellationOption === 'team2_forfeit' ? 'Walkover' : 'Forfeit'}
+                        </span> 
                         <span>for</span>
-                        <span>{cancellationOption === 'team1_forfeit' ? team1 : team2}</span>
+                        <span>{team1}</span>
                       </div>
-                      <div className="color-gray-200 pb-4">and</div>
+                      <div className="color-gray-200 pb-4">and ..</div>
                       <div className="p-8">
-                        <span className="decision forfeit">Forfeit</span>
+                        <span className={`decision ${cancellationOption === 'team2_forfeit' ? 'forfeit' : 'walkover bg-rose-400'}`}>
+                          {cancellationOption === 'team2_forfeit' ? 'Forfeit' : 'Walkover'}
+                        </span>
                         <span>for</span>
-                        <span>{cancellationOption === 'team1_forfeit' ? team2 : team1}</span>
+                        <span>{team2}</span>
                       </div>
                     </div>
                   )}
