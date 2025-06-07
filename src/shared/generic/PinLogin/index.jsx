@@ -316,8 +316,8 @@ const PinLogin = () => {
                     style={{
                       padding: '1.4rem 1rem',
                       borderRadius: '0.6rem',
-                      color: 'white',
-                      background: '#b0bd82',
+                      color: '#64752b',
+                      background: "rgb(168 174 147 / 35%)",
                       textAlign: 'center',
                       marginLeft: '5px', 
                       textTransform: 'uppercase', fontSize: 'inherit' 

@@ -61,7 +61,6 @@ function App() {
 
 function PitchViewWrapper() {
   const { tournamentId } = useParams();
-  console.log(' we')
   return (
     <FixtureProvider tournamentId={tournamentId} >
       <PitchView />
