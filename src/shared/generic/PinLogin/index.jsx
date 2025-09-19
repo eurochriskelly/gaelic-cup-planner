@@ -1,18 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
 import TournamentCard from "./TournamentCard"; // Import the new component
 import LoginHeader from "../LoginHeader"; // Import the new LoginHeader component
-//import LanguageSwitcher from "../LanguageSwitcher";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 
 // Removed AppHeader definition from here
 
 const PinLogin = () => {
-  const { t } = useTranslation();
   const { setupTournament, versionInfo, userRole, setUserRoleAndCookie } = useAppContext();
   const navigate = useNavigate();
   const [pin, setPin] = useState(["", "", "", ""]);
@@ -41,7 +38,7 @@ const PinLogin = () => {
       })
       .catch(error => {
         console.error("Error fetching tournaments:", error);
-        setFetchError("Failed to load tournaments.");
+        setFetchError("Failed 2 load tournaments!");
         setAvailableTournaments([]);
       })
       .finally(() => {
