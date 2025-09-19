@@ -3,7 +3,15 @@ SHELL := bash
 
 ENV := $(firstword $(filter production acceptance test,$(MAKECMDGOALS)))
 
-.PHONY: help build production acceptance test dev-mobile dev-desktop story home
+.PHONY: help build build-storybook production acceptance test dev-mobile story home
+
+help:
+	$(call banner,Commands)
+	@echo "make build [production|acceptance|test]    Build mobile target"
+	@echo "make build-storybook [production|...]      Build storybook"
+	@echo "make dev-mobile                            Start mobile dev server"
+	@echo "make story                                 Run Storybook"
+	@echo "make home                                  Serve home interface"
 
 production:
 acceptance:
@@ -12,14 +20,6 @@ test:
 define banner
 	printf "\n\033[1;37m== %s ==\033[0m\n" "$(1)"
 endef
-
-help:
-	$(call banner,Commands)
-	@echo "make build [production|acceptance|test]   Build all targets"
-	@echo "make dev-mobile                          Start mobile dev server"
-	@echo "make dev-desktop                         Start desktop dev server"
-	@echo "make story                               Run Storybook"
-	@echo "make home                                Serve home interface"
 
 build:
 	@if [ -z "$(ENV)" ]; then \
@@ -36,19 +36,15 @@ build:
 	@if [ "$(ENV)" = "production" ]; then \
 	  bash scripts/bump.sh --release-candidate; \
 	fi
-	$(call banner,Building desktop $(ENV))
-	@BUILD_ENV=$(ENV) npm run build:desktop
-	$(call banner,Building storybook $(ENV))
-	@BUILD_ENV=$(ENV) npm run build-storybook
 	$(call banner,Done $(ENV))
 
 dev-mobile:
 	$(call banner,Dev mobile)
 	@npm run dev:mobile
 
-dev-desktop:
-	$(call banner,Dev desktop)
-	@npm run dev:desktop
+build-storybook:
+	$(call banner,Building storybook $(ENV))
+	@BUILD_ENV=$(ENV) npm run build-storybook
 
 story:
 	$(call banner,Storybook)
