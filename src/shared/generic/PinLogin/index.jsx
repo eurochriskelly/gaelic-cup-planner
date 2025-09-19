@@ -1,18 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
 import TournamentCard from "./TournamentCard"; // Import the new component
 import LoginHeader from "../LoginHeader"; // Import the new LoginHeader component
-//import LanguageSwitcher from "../LanguageSwitcher";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 
 // Removed AppHeader definition from here
 
 const PinLogin = () => {
-  const { t } = useTranslation();
   const { setupTournament, versionInfo, userRole, setUserRoleAndCookie } = useAppContext();
   const navigate = useNavigate();
   const [pin, setPin] = useState(["", "", "", ""]);
@@ -24,8 +21,8 @@ const PinLogin = () => {
   const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
+  const [pinEntryRole, setPinEntryRole] = useState('coordinator');
 
-  // const [userRole, setUserRole] = useState('spectator'); // Replaced by context userRole
   const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
 
   useEffect(() => {
@@ -41,7 +38,7 @@ const PinLogin = () => {
       })
       .catch(error => {
         console.error("Error fetching tournaments:", error);
-        setFetchError("Failed to load tournaments.");
+        setFetchError("Failed 2 load tournaments!");
         setAvailableTournaments([]);
       })
       .finally(() => {
@@ -118,68 +115,80 @@ const PinLogin = () => {
   
   const handleTournamentCardClick = (tournament) => {
     setMessage(""); // Clear previous messages
-    if (userRole === 'spectator') {
-      directNavigateToTournament(tournament.Id);
-    } else if (userRole !== 'spectator' && !tournament.code) {
-      setMessage(`Tournament "${tournament.Title}" requires a PIN for ${userRole} access.`);
-      setTimeout(() => setMessage(""), 3000); 
-    } else {
-      // This case handles non-spectators who need to enter a PIN for a tournament that has one.
+    // If tournament.code exists, it's PIN protected, show PIN screen.
+    // Otherwise, allow direct navigation (spectator-like access).
+    if (tournament.code) {
       setSelectedTournament(tournament);
+      // Default pinEntryRole based on current global userRole, or 'coach'
+      if (['organizer', 'coordinator', 'coach'].includes(userRole)) {
+        setPinEntryRole(userRole);
+      } else {
+        setPinEntryRole('coach');
+      }
+      setPin(["", "", "", ""]); // Clear previous PIN
+    } else {
+      directNavigateToTournament(tournament.Id);
     }
   };
 
   const handleContinueAsSpectator = () => {
-    setUserRoleAndCookie('spectator'); // Use context function to set role and cookie
-
     if (selectedTournament) {
-      // Ensure the tournamentId cookie is set, as directNavigateToTournament (which calls setupTournament) is bypassed.
-      // This is still needed because of the full page reload that follows.
+      // Ensure the tournamentId cookie is set for backward compatibility
       Cookies.set("tournamentId", selectedTournament.Id, { expires: 1 / 24, path: "/" });
       setIsThinking(true); // Show loading feedback
-      // Force a full page navigation. App.jsx will re-initialize and read the new 'spectator' role.
-      window.location.href = `/tournament/${selectedTournament.Id}`;
+      
+      // Check if eventUuid exists and redirect to the new planner URL
+      if (selectedTournament.eventUuid) {
+        const url = `https://planner.pitchperfect.eu.com/event/${selectedTournament.eventUuid}`;
+        window.location.href = url;
+      } else {
+        // Fallback to original behavior if eventUuid is not available
+        window.location.href = `/tournament/${selectedTournament.Id}`;
+      }
     } else {
       // Fallback: if selectedTournament is somehow not available, go to the root.
-      // PinLogin will re-render and pick up the 'spectator' role.
       setIsThinking(true);
       window.location.href = `/`;
     }
   };
 
-  const onPinEntered = (enteredPin) => {
-    // Check if a tournament is selected and has a PIN property
-    if (selectedTournament && selectedTournament.code) {
-      if (enteredPin?.toLowerCase() === selectedTournament?.code?.toLowerCase()) {
-        // PIN matches, proceed to select the tournament
-        directNavigateToTournament(selectedTournament.Id);
-      } else {
-        // PIN does not match, handle invalid attempt
+  const onPinEntered = async (enteredPin) => {
+    if (selectedTournament) {
+      setIsThinking(true);
+      setMessage(""); // Clear previous messages
+      try {
+        await API.checkTournamentCode(selectedTournament.Id, enteredPin, pinEntryRole);
+        // PIN is valid for the role
+        setUserRoleAndCookie(pinEntryRole); // Set the global role
+        directNavigateToTournament(selectedTournament.Id); // Navigate (handles its own setIsThinking)
+      } catch (error) {
+        setIsThinking(false); // Reset thinking state on error
+        console.error("PIN check failed:", error);
+
         const attempts = failedAttempts + 1;
         setFailedAttempts(attempts);
         if (attempts >= 3) {
           setMessage("Too many invalid attempts");
-          // After lockout message, clear pin and go back to tournament selection
           setTimeout(() => {
-            setPin(["", "", "", ""]); // Clear PIN on lockout timeout
+            setPin(["", "", "", ""]);
             setMessage("");
             setFailedAttempts(0);
             setSelectedTournament(null); // Go back to tournament selection
           }, 2000);
         } else {
-          // Display invalid pin message, keep digits visible
-          setMessage("Invalid pin! " + enteredPin);
-          // Keep the inputs filled for 2 seconds, then reset
+          setMessage("Invalid pin for selected role!");
           setTimeout(() => {
-            setPin(["", "", "", ""]); // Reset PIN after delay
-            inputsRef.current[0]?.focus(); // Refocus after delay
-            setMessage(""); // Clear message after delay
+            setPin(["", "", "", ""]);
+            if (inputsRef.current[0]) {
+              inputsRef.current[0].focus();
+            }
+            setMessage("");
           }, 2000);
         }
       }
     } else {
-      // Handle case where tournament or PIN is missing (should not normally happen if flow is correct)
-      console.error("Error: No selected tournament or PIN found for validation.");
+      // Handle case where tournament is not selected (should not normally happen if flow is correct)
+      console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
       inputsRef.current[0]?.focus();
@@ -248,7 +257,7 @@ const PinLogin = () => {
             <h2>Select Your Role</h2>
             {/* Back button is now handled by LoginHeader */}
             <div className="role-grid">
-              {['organizer', 'coordinator', 'coach', 'spectator'].map(role => (
+              {['organizer', 'coordinator', 'coach', 'referee'].map(role => (
                 <button
                   key={role}
                   onClick={() => handleRoleSelect(role)}
@@ -265,7 +274,7 @@ const PinLogin = () => {
             {!selectedTournament ? (
               // Tournament Selection View
               <div className="tournament-selection-view"> {/* Removed pinLogin class from here */}
-                <h3>Select from upcoming tournaments</h3>
+                <h2>Select from upcoming tournaments</h2>
                 {message && <div className="general-message">{message}</div>}
                 {isLoadingTournaments && <div className="thinking">Loading tournaments...</div>}
                 {fetchError && <div className="error">{fetchError}</div>}
@@ -295,6 +304,27 @@ const PinLogin = () => {
                   />
                 </div>
                 <div className="pin-entry-prompt">Enter tournament code</div>
+                <div className="role-for-pin-container " style={{ margin: '10px 0 30px 0', textAlign: 'center', fontSize: '2.25em' }}>
+                  for role <i className="pi pi-user text-5xl" style={{ margin: '0 12px 0 12px' }}></i>
+                  <select
+                    value={pinEntryRole}
+                    onChange={(e) => setPinEntryRole(e.target.value)}
+                    className="pin-entry-role-select"
+                    style={{
+                      padding: '1.4rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: '#64752b',
+                      background: "rgb(168 174 147 / 35%)",
+                      textAlign: 'center',
+                      marginLeft: '5px', 
+                      textTransform: 'uppercase', fontSize: 'inherit' 
+                    }}>
+                    <option value="organizer" style={{ fontSize: '0.5em' }}>Organizer</option>
+                    <option value="coordinator" style={{ fontSize: '0.5em' }}>Coordinator</option>
+                    <option value="coach" style={{ fontSize: '0.5em' }}>Coach</option>
+                    <option value="referee" style={{ fontSize: '0.5em' }}>Referee</option>
+                  </select>
+                </div>
                 <div className="pinContainer">
                   {pin.map((num, index) => (
                     <input
@@ -309,20 +339,17 @@ const PinLogin = () => {
                   ))}
                 </div>
                 <div className="pin-message">&nbsp;{message}&nbsp;</div>
-
-                {userRole !== 'spectator' && (
                   <div className="spectator-access-prompt">
-                    <span>Spectator access? </span>
+                    <div>Spectator access? </div>
                     <button onClick={handleContinueAsSpectator} className="spectator-access-button">
                       Continue without login
                     </button>
                   </div>
-                )}
               </div>
             )}
           </>
         )}
-        {!showRoleSelectorView && (
+        {!showRoleSelectorView && !selectedTournament && (
           <button
             className="hat-icon-button pi pi-user"
             onClick={() => {

@@ -3,28 +3,47 @@
 $col:#c0d18f;
 
 .FilterWidget {
-  width: calc(1024px - 13rem);
+  width: calc(1024px - 15rem);
   .filter-icon {
     background: desaturate(darken($col, 30%), 20%);
-    height: 7rem;
-    width: 7rem;
-    max-width: 7rem;
     margin: 0.5rem;
   }
   .flex-1.px-2 {
-    max-width: 34rem;
-    margin-left: 3rem;
+    max-width: 19rem;
+    margin-left: 1rem;
   } 
+  svg {
+    rect {
+      fill: #3b4213;
+    }
+  }
+}
+.FilterWidget button {
+  /* Remove any fixed width that's being applied */
+  width: auto;
+  /* Allow the buttons to grow and fill the available space */
+  flex-grow: 1;
+  /* Set flex-basis to auto or 0 depending on desired initial size */
+  /* With width: auto, flex-basis: auto is often appropriate */
+  flex-basis: auto;
+  /* Ensure no horizontal margins are applied by other rules */
+  margin-left: 0;
+  margin-right: 0;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: center;
 }
 /* Styles applied to the .filter-schedule element */
 .filter-schedule {
   padding: 16px;
   margin: 0px 32px;
+  vertical-align: top;
   background-color: rgb(201, 218, 149);
   .label {
     @include label-style;
     margin-bottom: 0.5rem;
   }
+  height: 22rem;
 }
 
 /* Styles applied to the direct children of the .flex.flex-col.items-center.justify-between element */
