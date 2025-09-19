@@ -159,18 +159,23 @@ const StatusContent = ({
                 const numTeams = rows.length;
                 const hasFixtures = groupFixtures.length > 0;
 
-                const unplayedCount = hasFixtures
-                  ? groupFixtures.filter((f) => f.outcome !== "played").length
-                  : 0;
-                const isComplete = hasFixtures && unplayedCount === 0;
+                let remainingMatches;
+                let isComplete;
 
-                const remainingMatches = isComplete
-                  ? 0
-                  : hasFixtures
-                  ? unplayedCount
-                  : numTeams > 1
-                  ? (numTeams * (numTeams - 1)) / 2
-                  : 0;
+                if (hasFixtures) {
+                  const unplayedCount = groupFixtures.filter((f) => f.outcome !== "played").length;
+                  remainingMatches = unplayedCount;
+                  isComplete = unplayedCount === 0;
+                } else if (numTeams > 1) {
+                  const totalMatches = (numTeams * (numTeams - 1)) / 2;
+                  const playedMatches =
+                    rows.reduce((sum, row) => sum + (row.matchesPlayed || 0), 0) / 2;
+                  remainingMatches = totalMatches - playedMatches;
+                  isComplete = remainingMatches <= 0;
+                } else {
+                  remainingMatches = 0;
+                  isComplete = true;
+                }
 
                 const matchesToPlay = numTeams > 1 ? numTeams - 1 : 0;
 
