@@ -16,7 +16,8 @@ const StandingsTable = ({
   return (
     <table className="status-table" style={{ tableLayout: 'fixed', width: '100%' }}>
       <colgroup>
-        <col style={{ width: "60%" }} />
+        <col style={{ width: "10%" }} />
+        <col style={{ width: "50%" }} />
         <col style={{ width: "10%", textAlign:'center' }} />
         <col style={{ width: "10%", textAlign:'center' }} />
         <col style={{ width: "10%", textAlign:'center' }} />
@@ -24,6 +25,7 @@ const StandingsTable = ({
       </colgroup>
       <thead>
         <tr>
+          <th>Pos</th>
           <th>Team</th>
           <th>MP</th>
           <th>W</th>
@@ -32,8 +34,9 @@ const StandingsTable = ({
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <tr key={row.team}>
+            <td style={{ fontWeight: "bold" }}>{index + 1}</td>
             <td>{row.team}</td>
             <td>
               {typeof matchesToPlay === "number"
