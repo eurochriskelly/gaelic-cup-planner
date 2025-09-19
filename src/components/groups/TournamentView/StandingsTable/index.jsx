@@ -1,3 +1,5 @@
+import "./StandingsTable.scss";
+
 const valueOrDash = (value) => {
   return typeof value === "number" ? value : "-";
 };
@@ -14,11 +16,11 @@ const StandingsTable = ({
   return (
     <table className="status-table" style={{ tableLayout: 'fixed', width: '100%' }}>
       <colgroup>
-        <col style={{ width: "50%" }} />
-        <col style={{ width: "12.5%" }} />
-        <col style={{ width: "12.5%" }} />
-        <col style={{ width: "12.5%" }} />
-        <col style={{ width: "12.5%" }} />
+        <col style={{ width: "60%" }} />
+        <col style={{ width: "10%", textAlign:'center' }} />
+        <col style={{ width: "10%", textAlign:'center' }} />
+        <col style={{ width: "10%", textAlign:'center' }} />
+        <col style={{ width: "10%", textAlign:'center' }} />
       </colgroup>
       <thead>
         <tr>

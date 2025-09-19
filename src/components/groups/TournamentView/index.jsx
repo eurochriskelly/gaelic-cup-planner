@@ -113,6 +113,13 @@ const StatusContent = ({
       </div>
     );
   }
+  const styleTitle = {
+    background: "white",
+    fontSize: "2rem",
+    color: "#005500",
+    fontWeight: "bold",
+    background: 'none',
+  }
 
   const {
     label,
@@ -182,7 +189,7 @@ const StatusContent = ({
                 return (
                   <div className="status-card" key={`group-standing-${key}`}>
                     <div className="group-header">
-                      <h2 className="group-header__title">{groupLabel}</h2>
+                      <h2 className="group-header__title" style={styleTitle}>{groupLabel}</h2>
                       {isComplete ? (
                         <div className="group-header__status group-header__status--complete">
                           <span role="img" aria-label="complete">
@@ -209,8 +216,8 @@ const StatusContent = ({
             : null}
 
           { (groupStandings.length > 1) &&
-            <div className="status-card">
-              <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
+            <div className="status-card" style={{background: "#ddd"}}>
+              <h2 style={styleTitle}>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
               <StandingsTable
                 rows={standings}
                 emptyMessage="Standings will appear once matches begin."
