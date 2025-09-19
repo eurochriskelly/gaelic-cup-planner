@@ -278,18 +278,15 @@ const KnockoutList = ({ fixtures = [] }) => {
   });
 
   return (
-    <div className="status-card">
-      <h2>Knockout fixtures</h2>
-      <ul className="fixture-list">
-        {orderedFixtures.map((fixture) => (
-          <li key={fixture.matchId}>
-            {fixture.outcome === "played" && fixture.result
-              ? <FixtureResult fixture={fixture} />
-              : <FixtureSummary fixture={fixture} />}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      {orderedFixtures.map((fixture) => (
+        <div className="status-card" key={fixture.matchId}>
+          {fixture.outcome === "played" && fixture.result
+            ? <FixtureResult fixture={fixture} />
+            : <FixtureSummary fixture={fixture} />}
+        </div>
+      ))}
+    </>
   );
 };
 
