@@ -2,7 +2,6 @@ import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
-import { useTranslation } from 'react-i18next';
 import { useFetchTournament, useFetchFilters } from './LandingPage.hooks';
 import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
@@ -16,7 +15,6 @@ const LandingPage = () => {
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { tournInfo } = useFetchTournament(tournamentId);
-  const { t } = useTranslation();
   const { 
     versionInfo, 
     userRole, 
@@ -76,7 +74,7 @@ const LandingPage = () => {
         <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
         <h1>
           <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
-          <div>{t('landingPage_heading')}</div>
+          <div>{'landingPage_heading'}</div>
         </h1>
       </div>
       <header>

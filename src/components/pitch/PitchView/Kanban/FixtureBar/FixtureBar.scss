@@ -27,7 +27,11 @@
       fill: currentColor;
     }
   }
-  
+  .fixture-id {
+    > span {
+      white-space: nowrap;
+    }
+  } 
   .category {
     margin-left: auto;
   }
