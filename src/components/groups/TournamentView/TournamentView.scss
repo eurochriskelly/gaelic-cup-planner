@@ -1,32 +1,5 @@
 @import "src/shared/css/_colors.scss";
 
-.status-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  background: #fff;
-  border-bottom: 1px solid lighten($sc, 45%);
-
-  .status-heading {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .status-subheading {
-    display: block;
-    font-size: 0.9rem;
-    color: darken($sc, 20%);
-  }
-
-  .status-meta {
-    font-size: 0.85rem;
-    color: darken($sc, 10%);
-  }
-}
-
 .status-content {
   display: flex;
   flex-direction: column;
@@ -60,6 +33,22 @@
   &--error {
     border-color: #f2b8b5;
     color: #a63c32;
+  }
+
+  &--hero {
+    text-align: center;
+
+    h1 {
+      font-size: 1.2rem;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .status-card__meta {
+      margin: 0.35rem 0 0;
+      font-size: 0.85rem;
+      color: darken($sc, 15%);
+    }
   }
 
   h2 {
