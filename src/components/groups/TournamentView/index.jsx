@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import MobileLayout from "../../../shared/generic/MobileLayout";
+import StandingsTable from "./StandingsTable";
 import './TournamentView.scss';
 
 const POLL_INTERVAL_MS = 20000;
@@ -236,36 +237,6 @@ const FixtureSummary = ({ fixture }) => {
   );
 };
 
-const StandingsTable = ({ rows = [], emptyMessage = "No results yet." }) => {
-  if (!rows?.length) {
-    return <p>{emptyMessage}</p>;
-  }
-
-  return (
-    <table className="status-table">
-      <thead>
-        <tr>
-          <th>Team</th>
-          <th>MP</th>
-          <th>W</th>
-          <th>Pts</th>
-          <th>Diff</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={row.team}>
-            <td>{row.team}</td>
-            <td>{valueOrDash(row.matchesPlayed)}</td>
-            <td>{valueOrDash(row.won)}</td>
-            <td>{valueOrDash(row.points)}</td>
-            <td>{valueOrDash(row.scoreDifference)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
 const KnockoutList = ({ fixtures = [] }) => {
   const knockoutFixtures = fixtures.length ? fixtures : [];
@@ -328,9 +299,6 @@ const FixtureResult = ({ fixture }) => {
   );
 };
 
-const valueOrDash = (value) => {
-  return typeof value === "number" ? value : "-";
-};
 
 const formatScore = ({ goals, points, total }) => {
   if (typeof total === "number") {
