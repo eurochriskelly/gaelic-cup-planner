@@ -156,27 +156,48 @@ const StatusContent = ({
           {groupStandings.length
             ? groupStandings.map(({ key, label: groupLabel, rows }) => {
                 const groupFixtures = fixtures.filter((f) => String(f.group) === String(key));
-                const remainingMatches = groupFixtures.filter((f) => f.outcome !== "played").length;
+                const numTeams = rows.length;
+                const hasFixtures = groupFixtures.length > 0;
+
+                const unplayedCount = hasFixtures
+                  ? groupFixtures.filter((f) => f.outcome !== "played").length
+                  : 0;
+                const isComplete = hasFixtures && unplayedCount === 0;
+
+                const remainingMatches = isComplete
+                  ? 0
+                  : hasFixtures
+                  ? unplayedCount
+                  : numTeams > 1
+                  ? (numTeams * (numTeams - 1)) / 2
+                  : 0;
+
+                const matchesToPlay = numTeams > 1 ? numTeams - 1 : 0;
+
                 return (
                   <div className="status-card" key={`group-standing-${key}`}>
                     <div className="group-header">
                       <h2 className="group-header__title">{groupLabel}</h2>
-                      {remainingMatches === 0 ? (
+                      {isComplete ? (
                         <div className="group-header__status group-header__status--complete">
                           <span role="img" aria-label="complete">
                             ✔
                           </span>{" "}
                           Group Complete
                         </div>
-                      ) : (
+                      ) : remainingMatches > 0 ? (
                         <div className="group-header__status group-header__status--pending">
                           {`${remainingMatches} ${
                             remainingMatches === 1 ? "match" : "matches"
                           } remaining`}
                         </div>
-                      )}
+                      ) : null}
                     </div>
-                    <StandingsTable rows={rows} emptyMessage="No results for this group yet." />
+                    <StandingsTable
+                      rows={rows}
+                      matchesToPlay={matchesToPlay}
+                      emptyMessage="No results for this group yet."
+                    />
                   </div>
                 );
               })
