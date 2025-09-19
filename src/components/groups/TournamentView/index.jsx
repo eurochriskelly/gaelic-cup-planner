@@ -154,15 +154,32 @@ const StatusContent = ({
         <>
 
           {groupStandings.length
-            ? groupStandings.map(({ key, label: groupLabel, rows }) => (
-                <div className="status-card" key={`group-standing-${key}`}>
-                  <h2>{groupLabel}</h2>
-                  <StandingsTable
-                    rows={rows}
-                    emptyMessage="No results for this group yet."
-                  />
-                </div>
-              ))
+            ? groupStandings.map(({ key, label: groupLabel, rows }) => {
+                const groupFixtures = fixtures.filter((f) => String(f.group) === String(key));
+                const remainingMatches = groupFixtures.filter((f) => f.outcome !== "played").length;
+                return (
+                  <div className="status-card" key={`group-standing-${key}`}>
+                    <div className="group-header">
+                      <h2 className="group-header__title">{groupLabel}</h2>
+                      {remainingMatches === 0 ? (
+                        <div className="group-header__status group-header__status--complete">
+                          <span role="img" aria-label="complete">
+                            ✔
+                          </span>{" "}
+                          Group Complete
+                        </div>
+                      ) : (
+                        <div className="group-header__status group-header__status--pending">
+                          {`${remainingMatches} ${
+                            remainingMatches === 1 ? "match" : "matches"
+                          } remaining`}
+                        </div>
+                      )}
+                    </div>
+                    <StandingsTable rows={rows} emptyMessage="No results for this group yet." />
+                  </div>
+                );
+              })
             : null}
 
           { (groupStandings.length > 1) &&
@@ -497,6 +514,7 @@ const normalizeFixture = (fixture) => {
 
   const label = fixture.label || fixture.matchLabel || String(fixture.matchId || "");
   const stage = fixture.stage || planned.stage || fixture.bracket || actual.stage || "";
+  const group = fixture.groupNumber ?? fixture.group ?? null;
   const scheduled = planned.scheduled || actual.scheduled || fixture.scheduled || null;
   const pitch = planned.pitch || actual.pitch || fixture.pitch || '';
   const umpire = fixture.umpire || fixture.umpireTeam || planned.umpireTeam || actual.umpireTeam || null;
@@ -512,6 +530,7 @@ const normalizeFixture = (fixture) => {
     matchId: fixture.matchId || fixture.id || label,
     label,
     stage,
+    group,
     team1: team1Data.name || planned.team1 || fixture.team1 || "",
     team2: team2Data.name || planned.team2 || fixture.team2 || "",
     umpire,

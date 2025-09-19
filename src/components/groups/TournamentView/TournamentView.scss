@@ -194,3 +194,34 @@
     font-weight: 600;
   }
 }
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #006400;
+    margin: 0;
+  }
+
+  &__status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+
+    &--complete {
+      background-color: #28a745;
+    }
+
+    &--pending {
+      background-color: #fd7e14;
+    }
+  }
+}
