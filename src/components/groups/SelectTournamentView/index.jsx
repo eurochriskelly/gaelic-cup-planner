@@ -16,10 +16,12 @@ const SelectTournamentView = () => {
     fetch(`/api/tournaments/${tournamentId}/categories`)
       .then((response) => response.json())
       .then((data) => {
-        setCategories(data);
+        const payload = Array.isArray(data) ? data : data?.data;
+        setCategories(Array.isArray(payload) ? payload : []);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setCategories([]);
       });
   }, []);
 

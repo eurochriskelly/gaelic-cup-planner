@@ -1,7 +1,15 @@
 import { useState } from "react"; // Removed useEffect as it's not used
 import './ScoreSelect.scss';
 
-const Header = ({ name, team, pages, setPages, scores, setScores }) => {
+const Header = ({ name }) => {
+  return (
+    <div className='header'>
+      <span>{name.toUpperCase()}</span>
+    </div>
+  );
+};
+
+const Footer = ({ name, team, pages, setPages, scores, setScores }) => {
   const updateScoreValue = () => {
     const newTeamScores = {
       ...scores[team],
@@ -12,11 +20,8 @@ const Header = ({ name, team, pages, setPages, scores, setScores }) => {
       [team]: newTeamScores,
     });
   };
+  
   const increasePage = () => {
-    // updateScoreValue(); // This line might be causing premature nullification if not desired.
-    // If paging should clear the current selection for that type, keep it.
-    // If paging should retain the selection, comment it out.
-    // For now, let's assume original behavior is intended.
     updateScoreValue();
     let end = pages[name] + 1;
     if (end > 4) end = 4;
@@ -25,6 +30,7 @@ const Header = ({ name, team, pages, setPages, scores, setScores }) => {
       [name]: end,
     });
   };
+  
   const decreasePage = () => {
     updateScoreValue();
     let end = pages[name] - 1;
@@ -34,14 +40,14 @@ const Header = ({ name, team, pages, setPages, scores, setScores }) => {
       [name]: end,
     });
   };
+  
   return (
-    <div className='header'>
+    <div className='footer'>
       <button
         className="pi pi-chevron-circle-left navigate"
         disabled={pages[name] < 0 ? "disabled" : ""}
         onClick={decreasePage}
       />
-      <span>{name.toUpperCase()}</span>
       <button 
         className="pi pi-chevron-circle-right navigate"
         onClick={increasePage}
@@ -50,7 +56,7 @@ const Header = ({ name, team, pages, setPages, scores, setScores }) => {
   );
 };
 
-const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam }) => { // Added onScoreCompleteForTeam
+const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam }) => {
   const [pages, setPages] = useState({
     goals: 0,
     points: 0,
@@ -109,28 +115,30 @@ const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam })
 
   return (
     <div className='scoreSelect'>
-      <div>
-        <Header
+      <div className="score-column">
+        <Header name="goals" />
+        <div className='goals'>{squaresGoals}</div>
+        <Footer
           name="goals"
           team={currentTeam}
           pages={pages}
           setPages={setPages}
-          scores={scores} // Pass scores prop
-          setScores={setScores} // Pass setScores prop
+          scores={scores}
+          setScores={setScores}
         />
-        <div className='goals'>{squaresGoals}</div>
       </div>
       <div />
-      <div>
-        <Header
+      <div className="score-column">
+        <Header name="points" />
+        <div className='points'>{squaresPoints}</div>
+        <Footer
           name="points"
           team={currentTeam}
           pages={pages}
           setPages={setPages}
-          scores={scores} // Pass scores prop
-          setScores={setScores} // Pass setScores prop
+          scores={scores}
+          setScores={setScores}
         />
-        <div className='points'>{squaresPoints}</div>
       </div>
     </div>
   );

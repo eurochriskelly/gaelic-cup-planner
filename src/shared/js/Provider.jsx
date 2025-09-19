@@ -4,19 +4,31 @@ import Cookies from "js-cookie";
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "%%0.5.55_RC%%".replace(/%/g, ''),
-  desktop: "%%0.0.54_RC%%".replace(/%/g, ''),
+  mobile: "%%0.5.74_RC%%".replace(/%/g, ''),
+  desktop: "%%0.0.74_RC%%".replace(/%/g, ''),
 };
 
 export const Provider = ({ children }) => {
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
-  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'spectator');
+  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'coordinator');
+  
+  // Add state for filter selections
+  const [filterSelections, setFilterSelections] = useState(() => {
+    const savedFilters = Cookies.get("ppFilterSelections");
+    return savedFilters ? JSON.parse(savedFilters) : {};
+  });
 
   const setUserRoleAndCookie = (role) => {
     setUserRole(role);
     Cookies.set("ppUserRole", role, { expires: 365, path: "/" });
+  };
+
+  // Add method to update filter selections
+  const updateFilterSelections = (newSelections) => {
+    setFilterSelections(newSelections);
+    Cookies.set("ppFilterSelections", JSON.stringify(newSelections), { expires: 7, path: "/" });
   };
 
   const setupTournament = (id) => {
@@ -70,6 +82,8 @@ export const Provider = ({ children }) => {
         versionInfo,
         userRole,
         setUserRoleAndCookie,
+        filterSelections,
+        updateFilterSelections
       }}
     >
       {children}

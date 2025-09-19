@@ -1,4 +1,4 @@
-import { DialogPickTeam } from "./components/LandingPage/CompetitionsTabView/BigView/FixtureTable/DialogTeam";
+import { DialogPickTeam } from "./pages/LandingPage/CompetitionsTabView/BigView/FixtureTable/DialogTeam";
 
 
 function Story() {

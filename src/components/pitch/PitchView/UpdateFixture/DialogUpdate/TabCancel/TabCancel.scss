@@ -15,8 +15,15 @@
     }
     .decision {
       color: white;
-      padding: 0.2rem 0.4rem;
+      padding: 0.5rem 1rem;
       background-color: #ddd;
+      border-radius: 0.4rem;
+    }
+    .forfeit{
+      background-color: lighten(red, 20%);
+    }
+    .walkover{
+      background-color: darken(green, 10%);
     }
   }
 

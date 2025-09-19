@@ -52,16 +52,12 @@ export const PickCompetition = {
       {
         title: 'live competition status',
         name: 'competitions',
-        action: () => {
-          console.log('foo fah')
-        }
+        action: () => { }
       },
       {
         title: 'field coordination',
         name: 'pitches',
-        action: () => {
-          console.log('fee faw')
-        }
+        action: () => { }
       }
     ]
   },

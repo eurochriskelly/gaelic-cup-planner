@@ -140,7 +140,7 @@ const UpdateFixture = ({
               button.id === 'reschedule' ||
               (button.id === 'start' && button.getState(hasStarted, hasResult, nextFixture) === 'disabled')
             }
-            onClick={() => (console.log('click on button ', button.id)) || handleButtonClick(button)}
+            onClick={() => handleButtonClick(button)}
           >
             <button.Icon className="icon" />
           </button>

@@ -451,7 +451,6 @@ function CardEntryWrapper({ fixture, closePanel }) {
     }
   };
 
-  console.log('eee x', Object.keys(cardedPlayers))
   return (
     <div className="card-entry-container" style={{ marginTop: '1rem' }}>
       <TabCards

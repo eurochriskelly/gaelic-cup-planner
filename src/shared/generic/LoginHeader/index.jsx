@@ -4,11 +4,10 @@ import whistleImage from '../../../interfaces/mobile/public/images/banner.png';
 const LoginHeader = ({ version, showBackButton, onBackClick }) => {
   const isRC = (version.includes('_RC'));
   const rcStyle = {
-    color: 'red',
+    color: '#b43e3e',
     whiteSpace: 'nowrap',
-    fontWeight: 'bold',
-    background: '#dd9696b5',
-    padding: '0.8rem',
+    background: '#dd969645',
+    padding: '0.7rem',
     borderRadius: '0.5rem',
     border: '0.3rem dotted #b43e3e'
   }

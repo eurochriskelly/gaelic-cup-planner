@@ -59,7 +59,7 @@
     background-color: #748050;
     opacity: 1;
     background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #748050 10px ), repeating-linear-gradient( #9cae5a55, #9cae5a );
-
+    border: 0.5rem solid #95a46c;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     // Removed base font-size increase, applying to individual elements instead
 
@@ -161,6 +161,18 @@
 /* Moved to .app-header h2 */
 
 
+.tournament-selection-view h2 {
+  font-size: 2.3rem;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  color: #445513;
+  color: rgb(68, 85, 19);
+  /* Original color, as requested */
+  font-weight: 800;
+  /* Increased boldness */
+  text-shadow: rgba(255, 255, 255, 0.3) 0.3rem 0.3rem 0.5rem;
+  /* Light text shadow */
+}
 /* Styles for the subheading h3 */
 .tournament-selection-view h3 {
     // Merged styles from ai-style-change-1
@@ -391,12 +403,13 @@
 
 // Styles for the "Spectator access?" prompt on PIN entry screen
 .spectator-access-prompt {
-  margin-top: 2rem;
+  margin-top: 1rem;
   text-align: center;
-  font-size: 1.6rem; // Readable size
-  color: #f0f0f0; // Light color for visibility on dark background
+  color: darken(#f0f0f0, 10%); 
 
-  span {
+  div {
+    font-size: 2.6rem; // Readable size
+    padding-bottom: 1rem ;
     margin-right: 0.5rem;
   }
 
@@ -405,9 +418,8 @@
     color: white;
     border: none;
     border-radius: 0.3rem;
-    padding: 0.6rem 1.2rem;
-    font-size: 1.5rem;
-    font-weight: bold;
+    padding: 0.9rem 2.8rem;
+    font-size: 2.5rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);

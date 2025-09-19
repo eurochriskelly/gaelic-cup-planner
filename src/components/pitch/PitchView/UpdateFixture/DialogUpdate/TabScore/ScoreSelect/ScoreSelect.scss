@@ -6,7 +6,13 @@
   align-items: normal;
   width: 100%;
   padding: 0rem;
-  background:white;
+  background: white;
+  
+    .score-column {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
 
   .goals {
     display: grid;
@@ -24,9 +30,8 @@
   }
 
   .header {
-    display: grid;
-    grid-template-columns: 40px auto 40px;
-    gap: 10px;
+    display: flex;
+      justify-content: center;
     margin-bottom: 20px;
     padding: 0.2rem;
     background: transparent;
@@ -41,22 +46,44 @@
     }
   }
 
+                                .footer {
+                                  display: flex;
+                                  justify-content: space-between;
+                                  margin-top: 10px;
+                                  padding: 0.5rem;
+                                }
   .navigate {
-    background: transparent;
+    background: #f0f0f0;
     border: none;
     color: $sc-dark-20;
-    font-size: 2.2rem;
-    max-width: 60px !important;
-    min-width: 60px !important;
-    width: 60px !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    font-size: 2.5rem;
+      padding: 0.8rem 1.5rem !important;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+      width: auto !important;
+      min-width: auto !important;
+      border-radius: 0.5rem;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 
     &:disabled {
-      color: #666;
-      cursor: not-allowed;
+      opacity: 1;
+        /* Keep button visible */
+        cursor: default;
+      
+        &::before {
+          opacity: 0;
+          /* Hide only the icon */
+        }
+      }
+      
+      &:hover:not(:disabled) {
+        background: #e0e0e0;
+        color: darken($sc, 10%);
+      }
+      
+      &:active:not(:disabled) {
+        background: #d0d0d0;
+        box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.1);
     }
   }
 
