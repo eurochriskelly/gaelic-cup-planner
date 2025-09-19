@@ -14,6 +14,7 @@ const TournamentView = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [statusView, setStatusView] = useState("preliminary");
 
   const loadReport = useCallback(async () => {
     try {
@@ -63,6 +64,8 @@ const TournamentView = () => {
         error={error}
         categoryReport={categoryReport}
         tournament={tournamentMeta}
+        statusView={statusView}
+        onChangeStatusView={setStatusView}
       />
     </MobileLayout>
   );
@@ -70,7 +73,14 @@ const TournamentView = () => {
 
 export default TournamentView;
 
-const StatusContent = ({ loading, error, categoryReport, tournament }) => {
+const StatusContent = ({
+  loading,
+  error,
+  categoryReport,
+  tournament,
+  statusView,
+  onChangeStatusView,
+}) => {
   if (loading && !categoryReport) {
     return <div className="status-card status-card--message">Loading competition data...</div>;
   }
@@ -100,6 +110,7 @@ const StatusContent = ({ loading, error, categoryReport, tournament }) => {
     fixtures = [],
     standings = [],
     teamSummaries = [],
+    groupStandings = [],
     lastUpdated,
   } = categoryReport;
 
@@ -130,6 +141,29 @@ const StatusContent = ({ loading, error, categoryReport, tournament }) => {
         <h1>{title}</h1>
         {metaLine && <p className="status-card__meta">{metaLine}</p>}
       </div>
+      <div className="status-toggle" role="tablist" aria-label="Competition phase">
+        <button
+          type="button"
+          className={`status-toggle__button ${statusView === "preliminary" ? "is-active" : ""}`}
+          onClick={() => onChangeStatusView("preliminary")}
+          role="tab"
+          aria-selected={statusView === "preliminary"}
+        >
+          Preliminary
+        </button>
+        <button
+          type="button"
+          className={`status-toggle__button ${statusView === "knockouts" ? "is-active" : ""}`}
+          onClick={() => onChangeStatusView("knockouts")}
+          role="tab"
+          aria-selected={statusView === "knockouts"}
+        >
+          Knockouts
+        </button>
+      </div>
+
+      {statusView === "preliminary" ? (
+        <>
       <div className="status-grid">
         <div className="status-card">
           <h2>{label} overview</h2>
@@ -161,100 +195,96 @@ const StatusContent = ({ loading, error, categoryReport, tournament }) => {
         </div>
       </div>
 
-      <div className="status-card">
-        <h2>Standings</h2>
-        <table className="status-table">
-          <thead>
-            <tr>
-              <th>Team</th>
-              <th>MP</th>
-              <th>W</th>
-              <th>Pts</th>
-              <th>Diff</th>
-            </tr>
-          </thead>
-          <tbody>
-            {standings.length ? (
-              standings.map((row) => (
-                <tr key={row.team}>
-                  <td>{row.team}</td>
-                  <td>{valueOrDash(row.matchesPlayed)}</td>
-                  <td>{valueOrDash(row.won)}</td>
-                  <td>{valueOrDash(row.points)}</td>
-                  <td>{valueOrDash(row.scoreDifference)}</td>
-                </tr>
+          {groupStandings.length
+            ? groupStandings.map(({ key, label: groupLabel, rows }) => (
+                <div className="status-card" key={`group-standing-${key}`}>
+                  <h2>{groupLabel}</h2>
+                  <StandingsTable
+                    rows={rows}
+                    emptyMessage="No results for this group yet."
+                  />
+                </div>
               ))
-            ) : (
-              <tr>
-                <td colSpan={5}>Standings will appear once matches begin.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            : null}
 
-      {teamSummaries.length ? (
-        <div className="status-card">
-          <h2>Team snapshot</h2>
-          <table className="status-table status-table--compact">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Team</th>
-                <th>MP</th>
-                <th>Score ±</th>
-                <th>Bracket</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teamSummaries.map((summary) => (
-                <tr key={summary.team}>
-                  <td>{valueOrDash(summary.rank)}</td>
-                  <td>{summary.team}</td>
-                  <td>{valueOrDash(summary.matchesPlayed)}</td>
-                  <td>{valueOrDash(summary.totalScore?.scoreDifference)}</td>
-                  <td>{summary.progression?.bracket || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+          <div className="status-card">
+            <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
+            <StandingsTable
+              rows={standings}
+              emptyMessage="Standings will appear once matches begin."
+            />
+          </div>
 
-      <div className="status-grid">
-        <div className="status-card">
-          <h2>Upcoming fixtures</h2>
-          {upcomingFixtures.length ? (
-            <ul className="fixture-list">
-              {upcomingFixtures.map((fixture) => (
-                <li key={fixture.matchId}>
-                  <FixtureSummary fixture={fixture} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>All fixtures complete or awaiting scheduling.</p>
-          )}
-        </div>
+          {teamSummaries.length ? (
+            <div className="status-card">
+              <h2>Team snapshot</h2>
+              <table className="status-table status-table--compact">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>MP</th>
+                    <th>Score ±</th>
+                    <th>Bracket</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teamSummaries.map((summary) => (
+                    <tr key={summary.team}>
+                      <td>{valueOrDash(summary.rank)}</td>
+                      <td>{summary.team}</td>
+                      <td>{valueOrDash(summary.matchesPlayed)}</td>
+                      <td>{valueOrDash(summary.totalScore?.scoreDifference)}</td>
+                      <td>{summary.progression?.bracket || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
 
-        <div className="status-card">
-          <h2>Recent results</h2>
-          {recentResults.length ? (
-            <ul className="fixture-list">
-              {recentResults.map((fixture) => (
-                <li key={fixture.matchId}>
-                  <FixtureResult fixture={fixture} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No games completed yet.</p>
-          )}
+          <div className="status-grid">
+            <div className="status-card">
+              <h2>Upcoming fixtures</h2>
+              {upcomingFixtures.length ? (
+                <ul className="fixture-list">
+                  {upcomingFixtures.map((fixture) => (
+                    <li key={fixture.matchId}>
+                      <FixtureSummary fixture={fixture} />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>All fixtures complete or awaiting scheduling.</p>
+              )}
+            </div>
+
+            <div className="status-card">
+              <h2>Recent results</h2>
+              {recentResults.length ? (
+                <ul className="fixture-list">
+                  {recentResults.map((fixture) => (
+                    <li key={fixture.matchId}>
+                      <FixtureResult fixture={fixture} />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No games completed yet.</p>
+              )}
+            </div>
+          </div>
+
+          <footer className="status-updated">
+            {lastUpdated ? `Last updated ${formatTime(lastUpdated)}` : null}
+          </footer>
+        </>
+      ) : (
+        <div className="status-card status-card--message">
+          <h2>Knockouts</h2>
+          <p>Knockout fixtures will appear here.</p>
         </div>
-      </div>
-      <footer className="status-updated">
-        {lastUpdated ? `Last updated ${formatTime(lastUpdated)}` : null}
-      </footer>
+      )}
     </section>
   );
 };
@@ -279,6 +309,37 @@ const FixtureSummary = ({ fixture }) => {
         {fixture.umpire && <span>Ump {fixture.umpire}</span>}
       </footer>
     </article>
+  );
+};
+
+const StandingsTable = ({ rows = [], emptyMessage = "No results yet." }) => {
+  if (!rows?.length) {
+    return <p>{emptyMessage}</p>;
+  }
+
+  return (
+    <table className="status-table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>MP</th>
+          <th>W</th>
+          <th>Pts</th>
+          <th>Diff</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr key={row.team}>
+            <td>{row.team}</td>
+            <td>{valueOrDash(row.matchesPlayed)}</td>
+            <td>{valueOrDash(row.won)}</td>
+            <td>{valueOrDash(row.points)}</td>
+            <td>{valueOrDash(row.scoreDifference)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
@@ -373,6 +434,7 @@ const normalizeCategory = (category) => {
       fixtures,
       standings: Array.isArray(category.standings) ? category.standings : [],
       teamSummaries: [],
+      groupStandings: [],
       lastUpdated: null,
     };
   }
@@ -402,6 +464,8 @@ const normalizeCategory = (category) => {
     ? category.teams.summary
     : [];
 
+  const groupStandings = extractGroupStandings(category, groups, standings);
+
   const key = category.category || category.name || "";
 
   return {
@@ -412,8 +476,65 @@ const normalizeCategory = (category) => {
     fixtures: fixturesNormalized.list,
     standings,
     teamSummaries,
+    groupStandings,
     lastUpdated: fixturesNormalized.lastUpdated,
   };
+};
+
+const extractGroupStandings = (category, normalizedGroups, overallStandings) => {
+  const byGroup = category?.standings?.byGroup;
+  if (byGroup && typeof byGroup === "object") {
+    return Object.entries(byGroup).map(([key, rows]) => ({
+      key,
+      label: deriveGroupLabel(key, normalizedGroups),
+      rows: Array.isArray(rows) ? rows : [],
+    }));
+  }
+
+  if (Array.isArray(overallStandings) && overallStandings.length) {
+    const grouped = overallStandings.reduce((acc, row) => {
+      const groupKey =
+        row?.grp ??
+        row?.group ??
+        row?.pool ??
+        row?.stage ??
+        null;
+      if (!groupKey) return acc;
+      const key = String(groupKey);
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(row);
+      return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([key, rows]) => ({
+      key,
+      label: deriveGroupLabel(key, normalizedGroups),
+      rows,
+    }));
+  }
+
+  return [];
+};
+
+const deriveGroupLabel = (rawKey, normalizedGroups) => {
+  const keyString = String(rawKey ?? "").trim();
+  if (!keyString) {
+    return normalizedGroups[0]?.label || "Group";
+  }
+
+  const directMatch = normalizedGroups.find((group) => group.key === keyString);
+  if (directMatch) return directMatch.label;
+
+  const digits = keyString.match(/\d+/)?.[0];
+  if (digits) {
+    const numericMatch = normalizedGroups.find(
+      (group) => group.key === digits || group.label?.includes(digits)
+    );
+    if (numericMatch) return numericMatch.label;
+    return `Group ${digits}`;
+  }
+
+  return normalizedGroups.find((group) => group.label === keyString)?.label || `Group ${keyString}`;
 };
 
 const normalizeFixturesCollection = (fixtures) => {
