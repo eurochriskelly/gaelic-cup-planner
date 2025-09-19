@@ -57,11 +57,7 @@ const TournamentView = () => {
       active={0}
       tabNames={["Status"]}
     >
-      <StatusHeader
-        category={categoryReport?.label || category}
-        tournament={tournamentMeta}
-        loading={loading}
-      />
+      <span aria-hidden="true" />
       <StatusContent
         loading={loading}
         error={error}
@@ -73,38 +69,6 @@ const TournamentView = () => {
 };
 
 export default TournamentView;
-
-const StatusHeader = ({ category, tournament, loading }) => {
-  const title = tournament?.title || "";
-  const date = tournament?.date
-    ? new Date(tournament.date).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      })
-    : null;
-
-  const location = tournament?.location;
-  const locationLabel = location?.address || location?.region || null;
-  const metaItems = [];
-  if (loading) {
-    metaItems.push("Loading...");
-  } else {
-    if (date) metaItems.push(date);
-    if (locationLabel) metaItems.push(locationLabel);
-  }
-
-  return (
-    <header className="status-header">
-      <div>
-        <span className="status-heading">{category}</span>
-        <span className="status-subheading">{title}</span>
-      </div>
-      <div className="status-meta">
-        {metaItems.filter(Boolean).join(" • ")}
-      </div>
-    </header>
-  );
-};
 
 const StatusContent = ({ loading, error, categoryReport, tournament }) => {
   if (loading && !categoryReport) {
@@ -140,6 +104,15 @@ const StatusContent = ({ loading, error, categoryReport, tournament }) => {
   } = categoryReport;
 
   const points = tournament?.pointsFor || tournament?.points;
+  const title = tournament?.title;
+  const date = tournament?.date
+    ? new Date(tournament.date).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      })
+    : null;
+  const locationLabel = tournament?.location?.address || tournament?.location?.region || null;
+  const metaLine = [date, locationLabel].filter(Boolean).join(" • ");
 
   const upcomingFixtures = fixtures
     .filter((fixture) => fixture.outcome !== "played")
@@ -153,6 +126,10 @@ const StatusContent = ({ loading, error, categoryReport, tournament }) => {
 
   return (
     <section className="status-content">
+      <div className="status-card status-card--hero">
+        <h1>{title}</h1>
+        {metaLine && <p className="status-card__meta">{metaLine}</p>}
+      </div>
       <div className="status-grid">
         <div className="status-card">
           <h2>{label} overview</h2>
