@@ -165,13 +165,15 @@ const StatusContent = ({
               ))
             : null}
 
-          <div className="status-card">
-            <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
-            <StandingsTable
-              rows={standings}
-              emptyMessage="Standings will appear once matches begin."
-            />
-          </div>
+          { (groupStandings.length > 1) &&
+            <div className="status-card">
+              <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
+              <StandingsTable
+                rows={standings}
+                emptyMessage="Standings will appear once matches begin."
+              />
+            </div>
+          }
 
           <footer className="status-updated">
             {lastUpdated ? `Last updated ${formatTime(lastUpdated)}` : null}
