@@ -152,36 +152,6 @@ const StatusContent = ({
 
       {statusView === "preliminary" ? (
         <>
-      <div className="status-grid">
-        <div className="status-card">
-          <h2>{label} overview</h2>
-          <ul>
-            <li><strong>Teams:</strong> {teams.length}</li>
-            <li><strong>Groups:</strong> {groups.length || "Single pool"}</li>
-            {points && (
-              <li>
-                <strong>Points:</strong> W {points.win} | D {points.draw} | L {points.loss}
-              </li>
-            )}
-            <li><strong>Fixtures scheduled:</strong> {fixtures.length}</li>
-          </ul>
-        </div>
-
-        <div className="status-card">
-          <h2>Group breakdown</h2>
-          {groups.length ? (
-            <ul>
-              {groups.map((group) => (
-                <li key={group.key}>
-                  <strong>{group.label}:</strong> {group.teams.join(", ")}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Single group round-robin.</p>
-          )}
-        </div>
-      </div>
 
           {groupStandings.length
             ? groupStandings.map(({ key, label: groupLabel, rows }) => (
