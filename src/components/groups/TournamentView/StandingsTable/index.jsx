@@ -2,7 +2,11 @@ const valueOrDash = (value) => {
   return typeof value === "number" ? value : "-";
 };
 
-const StandingsTable = ({ rows = [], emptyMessage = "No results yet." }) => {
+const StandingsTable = ({
+  rows = [],
+  matchesToPlay,
+  emptyMessage = "No results yet.",
+}) => {
   if (!rows?.length) {
     return <p>{emptyMessage}</p>;
   }
@@ -29,7 +33,11 @@ const StandingsTable = ({ rows = [], emptyMessage = "No results yet." }) => {
         {rows.map((row) => (
           <tr key={row.team}>
             <td>{row.team}</td>
-            <td>{valueOrDash(row.matchesPlayed)}</td>
+            <td>
+              {typeof matchesToPlay === "number"
+                ? `${valueOrDash(row.matchesPlayed)}/${matchesToPlay}`
+                : valueOrDash(row.matchesPlayed)}
+            </td>
             <td>{valueOrDash(row.won)}</td>
             <td>{valueOrDash(row.points)}</td>
             <td>{valueOrDash(row.scoreDifference)}</td>
