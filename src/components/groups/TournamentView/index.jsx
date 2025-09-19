@@ -81,6 +81,16 @@ const StatusContent = ({
   statusView,
   onChangeStatusView,
 }) => {
+  useEffect(() => {
+    if (categoryReport?.knockoutFixtures) {
+      // Temporary debug output to verify knockout extraction
+      console.log("Knockout fixtures", {
+        category: categoryReport.label,
+        count: categoryReport.knockoutFixtures.length,
+        sample: categoryReport.knockoutFixtures.slice(0, 3),
+      });
+    }
+  }, [categoryReport]);
   if (loading && !categoryReport) {
     return <div className="status-card status-card--message">Loading competition data...</div>;
   }
@@ -109,38 +119,15 @@ const StatusContent = ({
     groups = [],
     fixtures = [],
     standings = [],
-    teamSummaries = [],
     groupStandings = [],
+    knockoutFixtures = [],
     lastUpdated,
   } = categoryReport;
 
   const points = tournament?.pointsFor || tournament?.points;
-  const title = tournament?.title;
-  const date = tournament?.date
-    ? new Date(tournament.date).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      })
-    : null;
-  const locationLabel = tournament?.location?.address || tournament?.location?.region || null;
-  const metaLine = [date, locationLabel].filter(Boolean).join(" • ");
-
-  const upcomingFixtures = fixtures
-    .filter((fixture) => fixture.outcome !== "played")
-    .sort((a, b) => new Date(a.scheduled) - new Date(b.scheduled))
-    .slice(0, 6);
-
-  const recentResults = fixtures
-    .filter((fixture) => fixture.outcome === "played")
-    .sort((a, b) => new Date(b.scheduled) - new Date(a.scheduled))
-    .slice(0, 6);
 
   return (
     <section className="status-content">
-      <div className="status-card status-card--hero">
-        <h1>{title}</h1>
-        {metaLine && <p className="status-card__meta">{metaLine}</p>}
-      </div>
       <div className="status-toggle" role="tablist" aria-label="Competition phase">
         <button
           type="button"
@@ -215,75 +202,12 @@ const StatusContent = ({
             />
           </div>
 
-          {teamSummaries.length ? (
-            <div className="status-card">
-              <h2>Team snapshot</h2>
-              <table className="status-table status-table--compact">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Team</th>
-                    <th>MP</th>
-                    <th>Score ±</th>
-                    <th>Bracket</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {teamSummaries.map((summary) => (
-                    <tr key={summary.team}>
-                      <td>{valueOrDash(summary.rank)}</td>
-                      <td>{summary.team}</td>
-                      <td>{valueOrDash(summary.matchesPlayed)}</td>
-                      <td>{valueOrDash(summary.totalScore?.scoreDifference)}</td>
-                      <td>{summary.progression?.bracket || "-"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : null}
-
-          <div className="status-grid">
-            <div className="status-card">
-              <h2>Upcoming fixtures</h2>
-              {upcomingFixtures.length ? (
-                <ul className="fixture-list">
-                  {upcomingFixtures.map((fixture) => (
-                    <li key={fixture.matchId}>
-                      <FixtureSummary fixture={fixture} />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>All fixtures complete or awaiting scheduling.</p>
-              )}
-            </div>
-
-            <div className="status-card">
-              <h2>Recent results</h2>
-              {recentResults.length ? (
-                <ul className="fixture-list">
-                  {recentResults.map((fixture) => (
-                    <li key={fixture.matchId}>
-                      <FixtureResult fixture={fixture} />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No games completed yet.</p>
-              )}
-            </div>
-          </div>
-
           <footer className="status-updated">
             {lastUpdated ? `Last updated ${formatTime(lastUpdated)}` : null}
           </footer>
         </>
       ) : (
-        <div className="status-card status-card--message">
-          <h2>Knockouts</h2>
-          <p>Knockout fixtures will appear here.</p>
-        </div>
+        <KnockoutList fixtures={knockoutFixtures.length ? knockoutFixtures : fixtures} />
       )}
     </section>
   );
@@ -340,6 +264,39 @@ const StandingsTable = ({ rows = [], emptyMessage = "No results yet." }) => {
         ))}
       </tbody>
     </table>
+  );
+};
+
+const KnockoutList = ({ fixtures = [] }) => {
+  const knockoutFixtures = fixtures.length ? fixtures : [];
+  if (!knockoutFixtures.length) {
+    return (
+      <div className="status-card status-card--message">
+        <h2>Knockouts</h2>
+        <p>No knockout fixtures scheduled yet.</p>
+      </div>
+    );
+  }
+
+  const orderedFixtures = knockoutFixtures.slice().sort((a, b) => {
+    const aTime = a.scheduled ? new Date(a.scheduled).getTime() : Number.POSITIVE_INFINITY;
+    const bTime = b.scheduled ? new Date(b.scheduled).getTime() : Number.POSITIVE_INFINITY;
+    return aTime - bTime;
+  });
+
+  return (
+    <div className="status-card">
+      <h2>Knockout fixtures</h2>
+      <ul className="fixture-list">
+        {orderedFixtures.map((fixture) => (
+          <li key={fixture.matchId}>
+            {fixture.outcome === "played" && fixture.result
+              ? <FixtureResult fixture={fixture} />
+              : <FixtureSummary fixture={fixture} />}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
@@ -406,6 +363,12 @@ const formatStageLabel = (stage) => {
   return stage;
 };
 
+const isKnockoutStage = (stage) => {
+  if (!stage) return false;
+  const normalized = String(stage).toLowerCase();
+  return /knock|semi|quarter|final|cup|playoff|shield|plate/.test(normalized);
+};
+
 const normalizeCategories = (rawCategories) => {
   if (!Array.isArray(rawCategories)) return [];
   return rawCategories
@@ -435,6 +398,7 @@ const normalizeCategory = (category) => {
       standings: Array.isArray(category.standings) ? category.standings : [],
       teamSummaries: [],
       groupStandings: [],
+      knockoutFixtures: [],
       lastUpdated: null,
     };
   }
@@ -474,6 +438,7 @@ const normalizeCategory = (category) => {
     teams,
     groups,
     fixtures: fixturesNormalized.list,
+    knockoutFixtures: fixturesNormalized.knockouts,
     standings,
     teamSummaries,
     groupStandings,
@@ -539,35 +504,45 @@ const deriveGroupLabel = (rawKey, normalizedGroups) => {
 
 const normalizeFixturesCollection = (fixtures) => {
   if (!fixtures) {
-    return { list: [], lastUpdated: null };
+    return { list: [], knockouts: [], lastUpdated: null };
   }
 
+  const list = [];
+  const knockouts = [];
+
+  const addFixture = (fixture, context) => {
+    const normalized = normalizeFixture(fixture);
+    if (!normalized) return;
+    list.push(normalized);
+    const contextIsKnockout = typeof context === "string" && /knock|semi|quarter|final|cup|plate|shield/i.test(context);
+    if (contextIsKnockout || isKnockoutStage(normalized.stage)) {
+      knockouts.push(normalized);
+    }
+  };
+
   if (Array.isArray(fixtures)) {
+    fixtures.forEach((fixture) => addFixture(fixture));
     return {
-      list: fixtures.map(normalizeFixture).filter(Boolean),
+      list,
+      knockouts,
       lastUpdated: null,
     };
   }
 
-  const list = [];
-  const addFixture = (fixture) => {
-    const normalized = normalizeFixture(fixture);
-    if (normalized) list.push(normalized);
-  };
-
   if (Array.isArray(fixtures.stage)) {
-    fixtures.stage.forEach(addFixture);
+    fixtures.stage.forEach((fixture) => addFixture(fixture));
   } else if (fixtures.stage && typeof fixtures.stage === "object") {
-    Object.values(fixtures.stage).forEach((value) => {
-      if (Array.isArray(value)) value.forEach(addFixture);
+    Object.entries(fixtures.stage).forEach(([key, value]) => {
+      if (Array.isArray(value)) value.forEach((fixture) => addFixture(fixture, key));
     });
   }
 
-  if (Array.isArray(fixtures.group)) fixtures.group.forEach(addFixture);
-  if (Array.isArray(fixtures.knockouts)) fixtures.knockouts.forEach(addFixture);
+  if (Array.isArray(fixtures.group)) fixtures.group.forEach((fixture) => addFixture(fixture, "group"));
+  if (Array.isArray(fixtures.knockouts)) fixtures.knockouts.forEach((fixture) => addFixture(fixture, "knockout"));
 
   return {
     list,
+    knockouts,
     lastUpdated: fixtures.lastUpdated || fixtures.updatedAt || null,
   };
 };
