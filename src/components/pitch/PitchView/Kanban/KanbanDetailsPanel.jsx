@@ -219,12 +219,15 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
   const handleScoreProceed = async () => {
     try {
       const result = {
+        outcome: 'played',
         scores: {
           team1: {
+            name: fixture.team1,
             goals: parseInt(scores.team1.goals, 10) || 0,
             points: parseInt(scores.team1.points, 10) || 0,
           },
           team2: {
+            name: fixture.team2,
             goals: parseInt(scores.team2.goals, 10) || 0,
             points: parseInt(scores.team2.points, 10) || 0,
           },
