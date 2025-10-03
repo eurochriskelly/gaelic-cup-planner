@@ -128,8 +128,9 @@ function FilterWidget({
     });
   };
 
-  const handleToggleMultiSelect = () => {
-    if (!multiSelectEnabled) {
+  const handleMultiSelectChange = (event) => {
+    const enabled = event.target.checked;
+    if (enabled) {
       setMultiSelectEnabled(true);
       return;
     }
@@ -161,7 +162,7 @@ function FilterWidget({
   const additionalSummary = multiSelectEnabled && extraCount > 0 ? ` (${extraCount} additional)` : "";
 
   return (
-    <div className={`FilterWidget${multiSelectEnabled ? " allow-extras" : ""}`}>
+    <div className={`FilterWidget${multiSelectEnabled ? " multi-select" : ""}`}>
       <div className="label">Select which pitch(es) you are coordinating</div>
       <p className="helper">Select a pitch to coordinate; enable multi-select if you need to cover more than one.</p>
 
@@ -200,14 +201,15 @@ function FilterWidget({
       )}
 
       <div className="controls">
-        <button
-          type="button"
-          className={`toggle-extras${multiSelectEnabled ? " active" : ""}`}
-          onClick={handleToggleMultiSelect}
-          disabled={!pitches.length}
-        >
-          {multiSelectEnabled ? "Done selecting multiple pitches" : "Select multiple pitches"}
-        </button>
+        <label className={`toggle-multi${!pitches.length ? " disabled" : ""}`}>
+          <input
+            type="checkbox"
+            checked={multiSelectEnabled}
+            onChange={handleMultiSelectChange}
+            disabled={!pitches.length}
+          />
+          <span>Select multiple pitches</span>
+        </label>
         {multiSelectActive && (
           <span className="extras-indicator">{selectionSummary}{additionalSummary}.</span>
         )}

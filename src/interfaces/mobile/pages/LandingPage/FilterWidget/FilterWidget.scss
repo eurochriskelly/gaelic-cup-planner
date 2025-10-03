@@ -121,30 +121,37 @@ $muted: #3d3d3d;
     gap: 0.75rem;
   }
 
-  .toggle-extras {
-    background: $accent;
-    color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 0.6rem 1.4rem;
-    font-size: 0.95rem;
+  .toggle-multi {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.35rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
+    color: $primary;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
 
-    &:hover:not(:disabled) {
-      background: darken($accent, 6%);
-      transform: translateY(-1px);
+    input[type="checkbox"] {
+      width: 1.5rem;
+      height: 1.5rem;
+      accent-color: $accent;
+      cursor: pointer;
     }
 
-    &:disabled {
-      background: lighten($accent, 15%);
+    span {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      color: lighten($muted, 25%);
       cursor: not-allowed;
-    }
 
-    &.active {
-      background: $primary;
+      span {
+        cursor: not-allowed;
+      }
+
+      input[type="checkbox"] {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -154,7 +161,7 @@ $muted: #3d3d3d;
   }
 }
 
-.FilterWidget.allow-extras {
+.FilterWidget.multi-select {
   .pitch-chip.selected {
     border-style: solid;
   }
