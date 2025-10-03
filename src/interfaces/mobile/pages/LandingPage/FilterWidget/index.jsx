@@ -1,256 +1,239 @@
-import CategoryIcon from '../../../../../shared/icons/icon-competition.svg?react';
-import PitchesIcon from '../../../../../shared/icons/icon-pitches.svg?react';
-import TeamIcon from '../../../../../shared/icons/icon-team.svg?react';
-import RefIcon from '../../../../../shared/icons/icon-referee.svg?react';
+import { useEffect, useMemo, useRef, useState } from "react";
+import "./FilterWidget.scss";
 
-import './FilterWidget.scss';
+const ENTER_KEYS = ["Enter", " ", "Spacebar", "Space"];
 
 function FilterWidget({
-  onChangeSelect, choices
+  pitches = [],
+  isLoading = false,
+  error = null,
+  initialSelection,
+  onSelectionChange,
 }) {
-  const itemsPerPage = 3;
+  const [selectedPitches, setSelectedPitches] = useState([]);
+  const [allowExtras, setAllowExtras] = useState(false);
+  const lastEmittedSelection = useRef(JSON.stringify({ primary: null, additional: [] }));
 
-  // Find default category
-  const defaultCategoryIndex = choices.findIndex(choice => choice.default);
-  const initialCategory = defaultCategoryIndex !== -1 ? defaultCategoryIndex : 0;
-
-  // Initialize with category selector open by default
-  const [isCategorySelectorOpen, setIsCategorySelectorOpen] = React.useState(true);
-  const [currentCategory, setCurrentCategory] = React.useState(initialCategory);
-  
-  // Separate pending (temporary) selections from applied (saved) selections
-  const [pendingSelections, setPendingSelections] = React.useState(() => {
-    const init = {};
-    choices.forEach(choice => {
-      // Make sure we handle the case where selected could be an array or a single value
-      init[choice.category] = choice.allowMultiselect 
-        ? (Array.isArray(choice.selected) ? [...choice.selected] : (choice.selected ? [choice.selected] : []))
-        : (choice.selected ? [choice.selected] : []);
-    });
-    return init;
-  });
-  
-  const [appliedSelections, setAppliedSelections] = React.useState(() => {
-    const init = {};
-    choices.forEach(choice => {
-      // Same fix for applied selections
-      init[choice.category] = choice.allowMultiselect 
-        ? (Array.isArray(choice.selected) ? [...choice.selected] : (choice.selected ? [choice.selected] : []))
-        : (choice.selected ? [choice.selected] : []);
-    });
-    return init;
-  });
-  
-  const [startIndex, setStartIndex] = React.useState(0);
-
-  const currentChoice = choices[currentCategory];
-  const totalChoices = currentChoice.choices.length;
-  const totalPages = Math.ceil(totalChoices / itemsPerPage);
-  const currentPage = Math.floor(startIndex / itemsPerPage) + 1;
-  const displayedChoices = currentChoice.choices.slice(startIndex, startIndex + itemsPerPage);
-
-  const handleCategoryClick = (index) => {
-    setCurrentCategory(index);
-    setStartIndex(0);
-    setIsCategorySelectorOpen(false);
-  };
-
-  const handleChoiceClick = (choice) => {
-    const category = currentChoice.category;
-    const allowMultiselect = currentChoice.allowMultiselect;
-    let newSelections = { ...pendingSelections };
-
-    if (allowMultiselect) {
-      const index = newSelections[category].indexOf(choice);
-      if (index === -1) {
-        newSelections[category] = [...newSelections[category], choice];
-      } else {
-        newSelections[category] = newSelections[category].filter(c => c !== choice);
-      }
-    } else {
-      newSelections[category] = [choice];
+  const sanitizeSelection = (pitchList, selection) => {
+    if (!pitchList.length) {
+      return { ids: [], allowExtras: false };
     }
 
-    setPendingSelections(newSelections);
-  };
+    const availableIds = pitchList.map((pitch) => `${pitch.id}`);
+    const ordered = [];
+    const seen = new Set();
 
-  const handleSaveFilter = () => {
-    const category = currentChoice.category;
-    const newAppliedSelections = {
-      ...appliedSelections,
-      [category]: pendingSelections[category]
+    const pushIfValid = (candidate) => {
+      if (candidate === null || candidate === undefined) return;
+      const id = `${candidate}`;
+      if (!availableIds.includes(id)) return;
+      if (seen.has(id)) return;
+      seen.add(id);
+      ordered.push(id);
     };
-    
-    setAppliedSelections(newAppliedSelections);
-    
-    // Format selections for onChangeSelect
-    const formattedSelections = {};
-    Object.keys(newAppliedSelections).forEach(cat => {
-      const catChoice = choices.find(c => c.category === cat);
-      if (catChoice) {
-        // Ensure we properly format multiselect values as arrays and single select as single values
-        formattedSelections[cat] = catChoice.allowMultiselect 
-          ? [...newAppliedSelections[cat]]  // Return array for multiselect
-          : (newAppliedSelections[cat].length > 0 ? newAppliedSelections[cat][0] : null);  // Return first item or null
+
+    pushIfValid(selection?.primary);
+    (selection?.additional || []).forEach(pushIfValid);
+
+    if (!ordered.length) {
+      ordered.push(availableIds[0]);
+    }
+
+    return {
+      ids: ordered,
+      allowExtras: ordered.length > 1,
+    };
+  };
+
+  const lastAppliedInitial = useRef({ signature: null, allowExtras: null });
+
+  useEffect(() => {
+    if (!pitches.length) {
+      setSelectedPitches([]);
+      setAllowExtras(false);
+      lastAppliedInitial.current = { signature: null, allowExtras: false };
+      return;
+    }
+
+    const { ids, allowExtras: extrasState } = sanitizeSelection(pitches, initialSelection);
+    console.log('[FilterWidget] hydrate from props', {
+      initialSelection,
+      resolvedIds: ids,
+      allowExtras: extrasState,
+    });
+    const signature = JSON.stringify(ids);
+    const { signature: lastSignature, allowExtras: lastExtras } = lastAppliedInitial.current;
+
+    const signatureChanged = lastSignature !== signature;
+    const extrasChanged = lastExtras !== extrasState;
+
+    if (!signatureChanged && !extrasChanged) {
+      return;
+    }
+
+    lastAppliedInitial.current = { signature, allowExtras: extrasState };
+
+    if (signatureChanged) {
+      console.log('[FilterWidget] applying hydrated selection', ids);
+      setSelectedPitches(ids);
+    }
+
+    if (extrasChanged) {
+      console.log('[FilterWidget] setting allowExtras', extrasState);
+      setAllowExtras(extrasState);
+    }
+  }, [pitches, initialSelection]);
+
+  useEffect(() => {
+    if (!onSelectionChange) return;
+    const [primary, ...additional] = selectedPitches;
+    const payload = { primary: primary || null, additional };
+
+    if (!selectedPitches.length) {
+      lastEmittedSelection.current = JSON.stringify({ primary: null, additional: [] });
+      return;
+    }
+
+    const signature = JSON.stringify(payload);
+    if (lastEmittedSelection.current === signature) return;
+    lastEmittedSelection.current = signature;
+    console.log('[FilterWidget] emit selection change', payload);
+    onSelectionChange(payload);
+  }, [selectedPitches, onSelectionChange]);
+
+  const primaryPitch = selectedPitches[0] || null;
+  const selectedSet = useMemo(() => new Set(selectedPitches), [selectedPitches]);
+
+  const handlePitchToggle = (pitchId) => {
+    if (pitchId === null || pitchId === undefined) return;
+    const safeId = `${pitchId}`;
+    setSelectedPitches((prev) => {
+      const hasPitch = prev.includes(safeId);
+
+      if (allowExtras) {
+        if (hasPitch) {
+          if (prev.length === 1) {
+            return prev;
+          }
+          return prev.filter((id) => id !== safeId);
+        }
+        return [...prev, safeId];
       }
+
+      if (hasPitch && prev.length === 1) {
+        return prev;
+      }
+
+      return [safeId];
     });
-    
-    onChangeSelect(formattedSelections);
-    
-    // Return to category selection
-    setIsCategorySelectorOpen(true);
   };
 
-  const handleCancelFilter = () => {
-    // Reset pending selections to applied selections for this category
-    setPendingSelections({
-      ...pendingSelections,
-      [currentChoice.category]: [...appliedSelections[currentChoice.category]]
+  const handlePromoteToPrimary = (pitchId) => {
+    const safeId = `${pitchId}`;
+    setSelectedPitches((prev) => {
+      if (!prev.includes(safeId)) return prev;
+      const filtered = prev.filter((id) => id !== safeId);
+      return [safeId, ...filtered];
     });
-    
-    // Return to category selection
-    setIsCategorySelectorOpen(true);
   };
 
-  const handlePrevPage = () => {
-    if (startIndex > 0) setStartIndex(Math.max(0, startIndex - itemsPerPage));
+  const handleToggleExtras = () => {
+    if (!allowExtras) {
+      setAllowExtras(true);
+      return;
+    }
+
+    setAllowExtras(false);
+    setSelectedPitches((prevSel) => {
+      if (prevSel.length <= 1) return prevSel;
+      return prevSel.slice(0, 1);
+    });
   };
 
-  const handleNextPage = () => {
-    if (startIndex + itemsPerPage < totalChoices) setStartIndex(startIndex + itemsPerPage);
+  const handleKeyToggle = (event, pitchId) => {
+    if (ENTER_KEYS.includes(event.key)) {
+      event.preventDefault();
+      handlePitchToggle(pitchId);
+    }
   };
 
-  // Category selector view
-  if (isCategorySelectorOpen) {
-    return <>
-      <div className="label">Choose schedule filter</div>
-      <div className="FilterWidget p-2 rounded-lg flex w-128 justify-center gap-18">
-        {choices.map((choice, index) => {
-          let IconComponent = null;
-          if (choice.icon === 'CompIcon' || choice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
-          else if (choice.icon === 'PitchIcon' || choice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
-          else if (choice.icon === 'RefIcon' || choice.icon === 'RefIcon') IconComponent = RefIcon;
-          else if (choice.icon === 'TeamIcon') IconComponent = TeamIcon;
-          
-          // Get the applied selections for this category
-          const selectedValues = appliedSelections[choice.category] || [];
-          const hasSelections = selectedValues.length > 0;
-          
-          return (
-            <div key={choice.category} className="flex flex-col items-center mb-3 mx-2">
-              <button
-                onClick={() => handleCategoryClick(index)}
-                className={`filter-icon rounded hover:bg-green-700 flex items-center justify-center focus:outline-none ${hasSelections ? 'filter-active' : ''}`}
-                style={{background:'none', border: 'none'}}
+  const getStatusLabel = (id) => {
+    if (!selectedSet.has(id)) return "Tap to coordinate";
+    return primaryPitch === id ? "Coordinating" : "Viewing";
+  };
+
+  const extraCount = Math.max(selectedPitches.length - 1, 0);
+  const canShowGrid = !isLoading && !error && pitches.length;
+
+  return (
+    <div className={`FilterWidget${allowExtras ? " allow-extras" : ""}`}>
+      <div className="label">Select which pitch(es) you are coordinating</div>
+      <p className="helper">Pick your primary pitch; use "View additional pitch" to keep an eye on another field.</p>
+
+      {isLoading && <div className="state">Loading pitches...</div>}
+
+      {error && !isLoading && (
+        <div className="state error">We could not load the pitch list. Refresh to try again.</div>
+      )}
+
+      {!isLoading && !error && !pitches.length && (
+        <div className="state">No pitches available yet.</div>
+      )}
+
+      {canShowGrid && (
+        <div className="pitch-grid">
+          {pitches.map(({ id, label }) => {
+            const safeId = `${id}`;
+            const isPrimary = primaryPitch === safeId;
+            const isSelected = selectedSet.has(safeId);
+            return (
+              <div
+                key={safeId}
+                role="button"
+                tabIndex={0}
+                className={`pitch-chip${isSelected ? " selected" : ""}${isPrimary ? " primary" : ""}`}
+                onClick={() => handlePitchToggle(safeId)}
+                onKeyDown={(event) => handleKeyToggle(event, safeId)}
               >
-                {IconComponent ? <IconComponent className="w-48 h-40" /> : <span className="text-sm">[Icon: {choice.icon}]</span>}
-              </button>
-              
-              <div className="flex m-4 justify-center mt-1 max-w-72 white-space-nowrap ellipsis">
-                {hasSelections ? (
-                  selectedValues.map((value, i) => (
-                    <div 
-                      key={i} 
-                      className="bg-green-600 text-white uppercase rounded-full px-2 py-1 text-3xl m-1 white-space-nowrap min-w-24 center"
-                      style={{ fontSize: '1.4rem', whiteSpace: 'nowrap' }}
-                    >
-                      {value}
-                    </div>
-                  ))
-                ) : (
-                  <div 
-                    className="bg-gray-300 text-gray-600 rounded-full px-2 py-1 text-xs m-1"
-                    style={{ fontSize: '1.3rem' }}
+                <div className="chip-heading">
+                  <span className="chip-label">{label}</span>
+                  <span className="chip-status">{getStatusLabel(safeId)}</span>
+                </div>
+                {allowExtras && isSelected && !isPrimary && (
+                  <button
+                    type="button"
+                    className="chip-promote"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePromoteToPrimary(safeId);
+                    }}
                   >
-                    ...
-                  </div>
+                    Set as primary
+                  </button>
                 )}
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </>;
-  }
-
-  // Filter values view
-  return <>
-    <div className="label">Set filter: {currentChoice.category}</div>
-    <div className="FilterWidget p-2 rounded-lg flex h-64">
-      <div className="filter-icon flex flex-col items-center justify-center cursor-pointer" onClick={() => setIsCategorySelectorOpen(true)}>
-        {(() => {
-          let IconComponent = null;
-          if (currentChoice.icon === 'CompIcon' || currentChoice.icon === 'CategoryIcon') IconComponent = CategoryIcon;
-          else if (currentChoice.icon === 'PitchIcon' || currentChoice.icon === 'PitchesIcon') IconComponent = PitchesIcon;
-          else if (currentChoice.icon === 'RefIcon' || currentChoice.icon === 'RefIcon') IconComponent = RefIcon;
-          else if (currentChoice.icon === 'TeamIcon') IconComponent = TeamIcon;
-          return IconComponent ? <IconComponent className="w-64 h-64" /> : <span className="text-sm">[Icon: {currentChoice.icon}]</span>;
-        })()}
-      </div>
-      <div className="flex-1 px-2">
-        {totalChoices === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-600 text-2xl text-center">There are no choices for category "{currentChoice.category}" at this time</p>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {displayedChoices.map((choice, index) => {
-              const isSelected = pendingSelections[currentChoice.category].includes(choice);
-              return (
-                <div
-                  key={index}
-                  onClick={() => handleChoiceClick(choice)}
-                  className="flex items-center uppercase text-purple-600 cursor-pointer text-sm"
-                >
-                  <span className="mr-2 text-5xl">{isSelected ? '●' : '○'}</span>
-                  <span className="text-3xl">{choice}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-      {totalPages > 1 && (
-        <div className="flex flex-col items-center justify-between mr-6">
-          <button
-            onClick={handlePrevPage}
-            disabled={startIndex === 0}
-            className="text-green-600 disabled:text-gray-400 text-3xl"
-            style={{background:'none'}}
-          >
-            ▲
-          </button>
-          <div className="text-2xl">{currentPage}/{totalPages}</div>
-          <button
-            onClick={handleNextPage}
-            disabled={startIndex + itemsPerPage >= totalChoices}
-            className="text-green-600 disabled:text-gray-400 text-3xl"
-          >
-            ▼
-          </button>
+            );
+          })}
         </div>
       )}
-      <div className="flex flex-col items-center justify-center ml-2 space-y-2">
+
+      <div className="controls">
         <button
-          onClick={handleCancelFilter}
-          className="bg-gray-300 w-48 text-gray-800 px-3 py-1 rounded hover:bg-gray-400 text-xs"
-          style={{ fontSize: '1.3rem', width: '6rem' }}
+          type="button"
+          className={`toggle-extras${allowExtras ? " active" : ""}`}
+          onClick={handleToggleExtras}
+          disabled={!pitches.length}
         >
-          Cancel
+          {allowExtras ? "Done adding extra pitches" : "View additional pitch"}
         </button>
-        {totalChoices > 0 && (
-          <button
-            onClick={handleSaveFilter}
-            className="bg-green-600 w-48 text-white px-3 py-1 rounded hover:bg-green-700 text-xs"
-            style={{ fontSize: '1.3rem', width: '6rem' }}
-          >
-            Save
-          </button>
+        {extraCount > 0 && (
+          <span className="extras-indicator">
+            Viewing {extraCount} additional pitch{extraCount > 1 ? "es" : ""}.
+          </span>
         )}
       </div>
     </div>
-  </>;
-};
-
+  );
+}
 
 export default FilterWidget;
