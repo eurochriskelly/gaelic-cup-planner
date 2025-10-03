@@ -207,8 +207,10 @@ function FilterWidget({
             checked={multiSelectEnabled}
             onChange={handleMultiSelectChange}
             disabled={!pitches.length}
+            className="toggle-multi__input"
           />
-          <span>Select multiple pitches</span>
+          <span className="toggle-multi__box" aria-hidden="true" />
+          <span className="toggle-multi__label">Select multiple pitches</span>
         </label>
         {multiSelectActive && (
           <span className="extras-indicator">{selectionSummary}{additionalSummary}.</span>

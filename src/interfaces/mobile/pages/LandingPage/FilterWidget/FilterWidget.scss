@@ -124,33 +124,76 @@ $muted: #3d3d3d;
   .toggle-multi {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 1.35rem;
+    gap: 1.25rem;
+    font-size: 2.4rem;
     font-weight: 600;
     color: $primary;
     cursor: pointer;
+    position: relative;
 
-    input[type="checkbox"] {
-      width: 1.5rem;
-      height: 1.5rem;
-      accent-color: $accent;
+    .toggle-multi__input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toggle-multi__box {
+      width: 3.2rem;
+      height: 3.2rem;
+      border: 3px solid $accent;
+      border-radius: 0.6rem;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+
+      &::after {
+        content: "";
+        width: 1rem;
+        height: 1.8rem;
+        border-right: 0.4rem solid #fff;
+        border-bottom: 0.4rem solid #fff;
+        transform: rotate(45deg) scale(0.5);
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+    }
+
+    .toggle-multi__label {
       cursor: pointer;
     }
 
-    span {
-      cursor: pointer;
+    &:focus-within .toggle-multi__box {
+      box-shadow: 0 0 0 4px lighten($accent, 35%);
+    }
+
+    input[type="checkbox"]:checked + .toggle-multi__box {
+      background: $accent;
+      border-color: $accent;
+
+      &::after {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+      }
     }
 
     &.disabled {
       color: lighten($muted, 25%);
       cursor: not-allowed;
 
-      span {
+      .toggle-multi__label,
+      .toggle-multi__box {
         cursor: not-allowed;
       }
 
-      input[type="checkbox"] {
-        cursor: not-allowed;
+      input[type="checkbox"] + .toggle-multi__box {
+        background: lighten($surface, 15%);
+        border-color: lighten($surface-border, 20%);
       }
     }
   }
