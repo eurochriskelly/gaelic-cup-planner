@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import API from "../../../../shared/api/endpoints";
+
 const defaultDate = {
   Date: '2028-01-01T00:00:00Z'
 }
@@ -19,62 +21,46 @@ export const useFetchTournament = (tid) => {
   return { tournInfo }
 }
 
-export const useFetchFilters = (tournamentId, userRole, selectedFilters = {}) => {
-  const [filterChoices, setFilterChoices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+export const useFetchPitches = (tid) => {
+  const [pitches, setPitches] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!tournamentId || !userRole) {
-      setIsLoading(false);
-      return;
-    }
+    if (!tid) return;
 
-    const fetchFilters = async () => {
-      setIsLoading(true);
-      try {
-        // Get the selected categories to fetch specific filters
-        const selectedCategories = Object.keys(selectedFilters).join(',');
-        const url = `/api/tournaments/${tournamentId}/filters?role=${userRole}${selectedCategories ? `&category=${selectedCategories}` : ''}`;
+    let isMounted = true;
+    setIsLoading(true);
+    setError(null);
 
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch filters: ${response.status}`);
-        }
+    API.fetchPitches(tid)
+      .then(({ data }) => {
+        if (!isMounted) return;
+        const normalised = (data || []).map((pitch, index) => {
+          const id = pitch.pitch || pitch.id || `pitch-${index + 1}`;
+          const label = pitch.pitch || pitch.name || `Pitch ${index + 1}`;
+          return {
+            id: `${id}`,
+            label,
+            details: pitch,
+          };
+        });
+        setPitches(normalised);
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(`Error fetching pitches for [${tid}]`, err);
+        setError(err);
+        setPitches([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
 
-        const data = await response.json();
-        
-        if (data && Array.isArray(data.data)) {
-          // Transform API data to match the format expected by FilterWidget
-          const formattedFilters = data.data.map(filter => {
-            // Check if this category has selections in the selectedFilters
-            const currentSelection = selectedFilters[filter.category];
-            
-            return {
-              icon: filter.icon || `${filter.category}Icon`,
-              category: filter.category,
-              choices: filter.choices || [],
-              allowMultiselect: Boolean(filter.allowMultiselect), // Ensure it's a boolean
-              // Handle both array and single value formats
-              selected: currentSelection, 
-              default: filter.default || null
-            };
-          });
-          
-          setFilterChoices(formattedFilters);
-        } else {
-          setFilterChoices([]);
-        }
-      } catch (err) {
-        console.error('Error fetching filters:', err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
+    return () => {
+      isMounted = false;
     };
+  }, [tid]);
 
-    fetchFilters();
-  }, [tournamentId, userRole, selectedFilters]);
-
-  return { filterChoices, isLoading, error };
+  return { pitches, isLoading, error };
 };
