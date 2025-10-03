@@ -177,6 +177,12 @@ const LandingPage = () => {
             <LogoutIcon className="icon" />
             <span className="label">Log Out</span>
           </button>
+          {+tournamentId === 1 && (
+            <button className='icon-button sudo' onClick={handleResetClick}>
+              <ResetIcon className="icon" />
+              <span className="label">Reset Tournament</span>
+            </button>
+          )}
         </div>
 
         <div className="filter-schedule">
@@ -188,15 +194,6 @@ const LandingPage = () => {
             onSelectionChange={handlePitchSelectionChange}
           />
         </div>
-
-        {+tournamentId === 1 && (
-          <div className="reset-action sudo">
-            <button className='icon-button' onClick={handleResetClick}>
-              <ResetIcon className="icon" />
-              <span className="label">Reset Tournament</span>
-            </button>
-          </div>
-        )}
       </section>
       <NavFooter /> 
     </main>
