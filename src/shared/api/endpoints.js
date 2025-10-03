@@ -3,7 +3,7 @@ import { fetchApi, fetchRootApi } from './api-helper.js'; // Import new helper
 export default {
 
   // Fetch active tournaments with specific statuses
-  fetchActiveTournaments: async (statuses = ['new', 'in-design']) =>
+  fetchActiveTournaments: async (statuses = ['new', 'in-design', 'started']) =>
     await fetchRootApi('/tournaments', 'GET', null, { status: statuses.join(',') }),
 
   // Fetch fixtures for a specific pitch
