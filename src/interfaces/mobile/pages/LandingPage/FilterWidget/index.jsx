@@ -11,12 +11,12 @@ function FilterWidget({
   onSelectionChange,
 }) {
   const [selectedPitches, setSelectedPitches] = useState([]);
-  const [allowExtras, setAllowExtras] = useState(false);
+  const [multiSelectEnabled, setMultiSelectEnabled] = useState(false);
   const lastEmittedSelection = useRef(JSON.stringify({ primary: null, additional: [] }));
 
   const sanitizeSelection = (pitchList, selection) => {
     if (!pitchList.length) {
-      return { ids: [], allowExtras: false };
+      return { ids: [], multiSelect: false };
     }
 
     const availableIds = pitchList.map((pitch) => `${pitch.id}`);
@@ -41,46 +41,46 @@ function FilterWidget({
 
     return {
       ids: ordered,
-      allowExtras: ordered.length > 1,
+      multiSelect: ordered.length > 1,
     };
   };
 
-  const lastAppliedInitial = useRef({ signature: null, allowExtras: null });
+  const lastAppliedInitial = useRef({ signature: null, multiSelect: null });
 
   useEffect(() => {
     if (!pitches.length) {
       setSelectedPitches([]);
-      setAllowExtras(false);
-      lastAppliedInitial.current = { signature: null, allowExtras: false };
+      setMultiSelectEnabled(false);
+      lastAppliedInitial.current = { signature: null, multiSelect: false };
       return;
     }
 
-    const { ids, allowExtras: extrasState } = sanitizeSelection(pitches, initialSelection);
+    const { ids, multiSelect } = sanitizeSelection(pitches, initialSelection);
     console.log('[FilterWidget] hydrate from props', {
       initialSelection,
       resolvedIds: ids,
-      allowExtras: extrasState,
+      multiSelect,
     });
     const signature = JSON.stringify(ids);
-    const { signature: lastSignature, allowExtras: lastExtras } = lastAppliedInitial.current;
+    const { signature: lastSignature, multiSelect: lastMulti } = lastAppliedInitial.current;
 
     const signatureChanged = lastSignature !== signature;
-    const extrasChanged = lastExtras !== extrasState;
+    const multiChanged = lastMulti !== multiSelect;
 
-    if (!signatureChanged && !extrasChanged) {
+    if (!signatureChanged && !multiChanged) {
       return;
     }
 
-    lastAppliedInitial.current = { signature, allowExtras: extrasState };
+    lastAppliedInitial.current = { signature, multiSelect };
 
     if (signatureChanged) {
       console.log('[FilterWidget] applying hydrated selection', ids);
       setSelectedPitches(ids);
     }
 
-    if (extrasChanged) {
-      console.log('[FilterWidget] setting allowExtras', extrasState);
-      setAllowExtras(extrasState);
+    if (multiChanged) {
+      console.log('[FilterWidget] setting multiSelectEnabled', multiSelect);
+      setMultiSelectEnabled(multiSelect);
     }
   }, [pitches, initialSelection]);
 
@@ -101,8 +101,8 @@ function FilterWidget({
     onSelectionChange(payload);
   }, [selectedPitches, onSelectionChange]);
 
-  const primaryPitch = selectedPitches[0] || null;
   const selectedSet = useMemo(() => new Set(selectedPitches), [selectedPitches]);
+  const selectedCount = selectedPitches.length;
 
   const handlePitchToggle = (pitchId) => {
     if (pitchId === null || pitchId === undefined) return;
@@ -110,7 +110,7 @@ function FilterWidget({
     setSelectedPitches((prev) => {
       const hasPitch = prev.includes(safeId);
 
-      if (allowExtras) {
+      if (multiSelectEnabled) {
         if (hasPitch) {
           if (prev.length === 1) {
             return prev;
@@ -128,22 +128,13 @@ function FilterWidget({
     });
   };
 
-  const handlePromoteToPrimary = (pitchId) => {
-    const safeId = `${pitchId}`;
-    setSelectedPitches((prev) => {
-      if (!prev.includes(safeId)) return prev;
-      const filtered = prev.filter((id) => id !== safeId);
-      return [safeId, ...filtered];
-    });
-  };
-
-  const handleToggleExtras = () => {
-    if (!allowExtras) {
-      setAllowExtras(true);
+  const handleToggleMultiSelect = () => {
+    if (!multiSelectEnabled) {
+      setMultiSelectEnabled(true);
       return;
     }
 
-    setAllowExtras(false);
+    setMultiSelectEnabled(false);
     setSelectedPitches((prevSel) => {
       if (prevSel.length <= 1) return prevSel;
       return prevSel.slice(0, 1);
@@ -158,17 +149,21 @@ function FilterWidget({
   };
 
   const getStatusLabel = (id) => {
-    if (!selectedSet.has(id)) return "Tap to coordinate";
-    return primaryPitch === id ? "Coordinating" : "Viewing";
+    if (!selectedSet.has(id)) return "Tap to select";
+    return "Selected";
   };
 
-  const extraCount = Math.max(selectedPitches.length - 1, 0);
+  const extraCount = Math.max(selectedCount - 1, 0);
   const canShowGrid = !isLoading && !error && pitches.length;
+  const multiSelectActive = multiSelectEnabled || selectedCount > 1;
+  const baseSummary = `${selectedCount} pitch${selectedCount === 1 ? "" : "es"} selected`;
+  const selectionSummary = multiSelectEnabled ? `Multi-select on · ${baseSummary}` : baseSummary;
+  const additionalSummary = multiSelectEnabled && extraCount > 0 ? ` (${extraCount} additional)` : "";
 
   return (
-    <div className={`FilterWidget${allowExtras ? " allow-extras" : ""}`}>
+    <div className={`FilterWidget${multiSelectEnabled ? " allow-extras" : ""}`}>
       <div className="label">Select which pitch(es) you are coordinating</div>
-      <p className="helper">Pick your primary pitch; use "View additional pitch" to keep an eye on another field.</p>
+      <p className="helper">Select a pitch to coordinate; enable multi-select if you need to cover more than one.</p>
 
       {isLoading && <div className="state">Loading pitches...</div>}
 
@@ -184,14 +179,13 @@ function FilterWidget({
         <div className="pitch-grid">
           {pitches.map(({ id, label }) => {
             const safeId = `${id}`;
-            const isPrimary = primaryPitch === safeId;
             const isSelected = selectedSet.has(safeId);
             return (
               <div
                 key={safeId}
                 role="button"
                 tabIndex={0}
-                className={`pitch-chip${isSelected ? " selected" : ""}${isPrimary ? " primary" : ""}`}
+                className={`pitch-chip${isSelected ? " selected" : ""}`}
                 onClick={() => handlePitchToggle(safeId)}
                 onKeyDown={(event) => handleKeyToggle(event, safeId)}
               >
@@ -199,18 +193,6 @@ function FilterWidget({
                   <span className="chip-label">{label}</span>
                   <span className="chip-status">{getStatusLabel(safeId)}</span>
                 </div>
-                {allowExtras && isSelected && !isPrimary && (
-                  <button
-                    type="button"
-                    className="chip-promote"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handlePromoteToPrimary(safeId);
-                    }}
-                  >
-                    Set as primary
-                  </button>
-                )}
               </div>
             );
           })}
@@ -220,16 +202,14 @@ function FilterWidget({
       <div className="controls">
         <button
           type="button"
-          className={`toggle-extras${allowExtras ? " active" : ""}`}
-          onClick={handleToggleExtras}
+          className={`toggle-extras${multiSelectEnabled ? " active" : ""}`}
+          onClick={handleToggleMultiSelect}
           disabled={!pitches.length}
         >
-          {allowExtras ? "Done adding extra pitches" : "View additional pitch"}
+          {multiSelectEnabled ? "Done selecting multiple pitches" : "Select multiple pitches"}
         </button>
-        {extraCount > 0 && (
-          <span className="extras-indicator">
-            Viewing {extraCount} additional pitch{extraCount > 1 ? "es" : ""}.
-          </span>
+        {multiSelectActive && (
+          <span className="extras-indicator">{selectionSummary}{additionalSummary}.</span>
         )}
       </div>
     </div>
