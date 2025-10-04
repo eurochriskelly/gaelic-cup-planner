@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
@@ -8,6 +8,7 @@ import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
+import ResetUserIcon from '../../../../shared/icons/icon-team.svg?react';
 import API from "../../../../shared/api/endpoints";
 import './LandingPage.scss';
 
@@ -21,13 +22,42 @@ const LandingPage = () => {
     versionInfo,
     filterSelections,
     updateFilterSelections,
+    userName,
+    setUserNameAndCookie,
+    resetUserContext,
   } = useAppContext();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const nameInputRef = useRef(null);
 
   const persistedFilters = filterSelections && typeof filterSelections === "object"
     ? filterSelections
     : {};
+
+  const [nameInput, setNameInput] = useState(() => userName || "");
+  const [showNamePrompt, setShowNamePrompt] = useState(() => !userName);
+
+  useEffect(() => {
+    setNameInput(userName || "");
+    setShowNamePrompt(!userName);
+  }, [userName]);
+
+  useEffect(() => {
+    if (showNamePrompt && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [showNamePrompt]);
+
+  useEffect(() => {
+    if (showNamePrompt) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+    return undefined;
+  }, [showNamePrompt]);
 
   const normaliseId = (id) => (id === null || id === undefined ? null : `${id}`);
 
@@ -127,6 +157,12 @@ const LandingPage = () => {
       await API.resetTournament(tournamentId);
       button.classList.remove('active');
     },
+    resetUser: () => {
+      resetUserContext?.();
+      setNameInput("");
+      setShowNamePrompt(true);
+      console.log('[LandingPage] user reset – cookies cleared');
+    },
     disconnect: () => {
       Cookies.remove("tournamentId");
       navigate("/", { replace: true });
@@ -142,31 +178,61 @@ const LandingPage = () => {
     }, 200);
   };
 
+  const handleNameSubmit = (event) => {
+    event.preventDefault();
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    setUserNameAndCookie?.(trimmed);
+    setShowNamePrompt(false);
+  };
+
   return (
     <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
-      {/* New: Add banner container */}
-      <div className="banner-container">
-        <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
-        <h1>
-          <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
-          <div>{t('landingPage_heading', 'Pitch Perfect')}</div>
-        </h1>
-      </div>
-      <header>
-        <table>
-          <tbody>
-            <Row label="date">{tournInfo.Date?.substring(0, 10)}</Row>
-            <Row label="title">{tournInfo.Title}</Row>
-            <Row label="location">{tournInfo.Location}</Row>
-          </tbody>
-        </table>
-      </header>
-      <section className="icon-grid">
-        { false && // This is a placeholder for the actual condition
-          <div>
-            <h2 className="role-selection-heading">Choose your role:</h2>
-            <div className="role-selection">
-              {['CCO', 'Coordinator', 'Referee', 'Coach'].map((role) => (
+      {showNamePrompt && (
+        <div className="name-prompt-overlay" role="dialog" aria-modal="true" aria-labelledby="namePromptTitle">
+          <div className="name-prompt-modal">
+            <h2 id="namePromptTitle">Welcome pitch coordinator.</h2>
+            <p>Please enter your name and then select the pitch(es) you are coordinating.</p>
+            <form className="name-prompt-form" onSubmit={handleNameSubmit}>
+              <input
+                ref={nameInputRef}
+                type="text"
+                value={nameInput}
+                onChange={(event) => setNameInput(event.target.value)}
+                placeholder="Your name"
+                aria-label="Your name"
+              />
+              <button type="submit" disabled={!nameInput.trim()}>
+                Save & Continue
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      <div className="LandingPage__content" aria-hidden={showNamePrompt}>
+        {/* New: Add banner container */}
+        <div className="banner-container">
+          <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
+          <h1>
+            <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
+            <div>{t('landingPage_heading', 'Pitch Perfect')}</div>
+          </h1>
+        </div>
+        <header>
+          <table>
+            <tbody>
+              <Row label="date">{tournInfo.Date?.substring(0, 10)}</Row>
+              <Row label="title">{tournInfo.Title}</Row>
+              <Row label="location">{tournInfo.Location}</Row>
+            </tbody>
+          </table>
+        </header>
+        <section className="icon-grid">
+          { false && // This is a placeholder for the actual condition
+            <div>
+              <h2 className="role-selection-heading">Choose your role:</h2>
+              <div className="role-selection">
+                {['CCO', 'Coordinator', 'Referee', 'Coach'].map((role) => (
                 <div key={role} className="role-card" onClick={() => console.log(`Selected role: ${role}`)}>
                   <span className="role-name">{role}</span>
                 </div>
@@ -175,29 +241,43 @@ const LandingPage = () => {
           </div>
         }
         <div className="main-actions">
-          <button className='icon-button' onClick={handle.disconnect}>
-            <LogoutIcon className="icon" />
-            <span className="label">Log Out</span>
+          <button className='icon-button reset-user' onClick={handle.resetUser}>
+            {userName ? (
+              <>
+                <i className="pi pi-pencil edit-icon" aria-hidden="true" />
+                <span className="label user-name-label">{userName}</span>
+              </>
+            ) : (
+              <>
+                <ResetUserIcon className="icon" />
+                <span className="label">Reset User</span>
+              </>
+            )}
           </button>
           {+tournamentId === 1 && (
-            <button className='icon-button sudo' onClick={handleResetClick}>
+            <button className='icon-button reset-tournament sudo' onClick={handleResetClick}>
               <ResetIcon className="icon" />
               <span className="label">Reset Tournament</span>
             </button>
           )}
+          <button className='icon-button logout' onClick={handle.disconnect}>
+            <LogoutIcon className="icon" />
+            <span className="label">Log Out</span>
+          </button>
         </div>
 
-        <div className="filter-schedule">
-          <FilterWidget
-            pitches={pitches}
-            isLoading={isLoadingPitches}
-            error={pitchesError}
-            initialSelection={existingPitchSelection}
-            onSelectionChange={handlePitchSelectionChange}
-          />
-        </div>
-      </section>
-      <NavFooter /> 
+          <div className="filter-schedule">
+            <FilterWidget
+              pitches={pitches}
+              isLoading={isLoadingPitches}
+              error={pitchesError}
+              initialSelection={existingPitchSelection}
+              onSelectionChange={handlePitchSelectionChange}
+            />
+          </div>
+        </section>
+        <NavFooter /> 
+      </div>
     </main>
   );
 };
