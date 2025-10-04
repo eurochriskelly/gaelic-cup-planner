@@ -13,6 +13,7 @@ export const Provider = ({ children }) => {
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
   const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'coordinator');
+  const [userName, setUserName] = useState(() => Cookies.get("ppUserName") || "");
   
   // Add state for filter selections
   const [filterSelections, setFilterSelections] = useState(() => {
@@ -29,6 +30,28 @@ export const Provider = ({ children }) => {
   const updateFilterSelections = (newSelections) => {
     setFilterSelections(newSelections);
     Cookies.set("ppFilterSelections", JSON.stringify(newSelections), { expires: 7, path: "/" });
+  };
+
+  const clearFilterSelections = () => {
+    setFilterSelections({});
+    Cookies.remove("ppFilterSelections");
+  };
+
+  const setUserNameAndCookie = (name) => {
+    const safeName = name?.trim() || "";
+    setUserName(safeName);
+    if (safeName) {
+      Cookies.set("ppUserName", safeName, { expires: 365, path: "/" });
+    } else {
+      Cookies.remove("ppUserName");
+    }
+  };
+
+  const resetUserContext = () => {
+    setUserRole('coordinator');
+    Cookies.remove("ppUserRole");
+    clearFilterSelections();
+    setUserNameAndCookie("");
   };
 
   const setupTournament = (id) => {
@@ -82,8 +105,12 @@ export const Provider = ({ children }) => {
         versionInfo,
         userRole,
         setUserRoleAndCookie,
+        userName,
+        setUserNameAndCookie,
         filterSelections,
-        updateFilterSelections
+        updateFilterSelections,
+        clearFilterSelections,
+        resetUserContext
       }}
     >
       {children}

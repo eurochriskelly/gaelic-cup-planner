@@ -124,116 +124,191 @@ $rcol: #d4e79b;
   .icon-grid {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.4rem;
     margin: 2rem;
     margin-top: 2rem;
-    padding: 1rem;
+    padding: 1rem 0 3rem;
     flex-grow: 1;
 
     .main-actions {
       display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
       justify-content: center;
-      gap: 1rem;
-      background: #c9da95;
-      border-radius: 15px;
-      padding: 1rem;
-      margin: 0 2rem;
+      gap: 1.6rem;
+      margin: 0 1rem;
 
       .icon-button {
-        .icon .bg {
-          opacity: 0;
-        }
-        background: none;
-        border: none;
-        padding: 1.1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        flex: 1 1 32%;
+        min-width: 14rem;
         display: flex;
         align-items: center;
-        gap: 1rem;
-        flex: 1;
+        justify-content: center;
+        gap: 1.2rem;
+        border: none;
+        border-radius: 1.8rem;
+        padding: 1.8rem 1.4rem;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        color: #fff;
+        background: $pc;
+        box-shadow: 0 1.6rem 2.6rem rgba(0, 0, 0, 0.18);
 
         .icon {
-          width: 6rem;
-          height: 6rem;
-          transition: fill 0.2s ease;
+          width: 5.4rem;
+          height: 5.4rem;
           flex-shrink: 0;
-
-          text {
-            display: none; /* Hide text below icons */
-          }
         }
 
         svg path {
-          fill: $pc;
+          fill: currentColor;
         }
+
         .label {
           @include label-style;
+          color: inherit;
+          font-size: 1.8rem;
         }
 
         &:hover {
-          transform: scale(1.05);
+          transform: translateY(-3px);
+          box-shadow: 0 2rem 3.2rem rgba(0, 0, 0, 0.25);
         }
 
-        &:hover .icon {
-          fill: #ffcc00;
+        .edit-icon {
+          font-size: 3rem;
+        }
+
+        .user-name-label {
+          font-weight: 700;
+          font-size: 1.9rem;
+          text-transform: capitalize;
         }
       }
-    }
 
-    .reset-action {
-      display: flex;
-      justify-content: center;
-      background: #c9da95;
-      border-radius: 15px;
-      padding: 1rem;
-      margin: 0 2rem;
+      .icon-button.reset-user {
+        background: $sc;
+      }
 
-      .icon-button {
-        .icon .bg {
-          opacity: 0;
-        }
-        width: 100%;
-        background: none;
-        border: none;
-        padding: 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        
-        .icon {
-          width: 6rem;
-          height: 6rem;
-          fill: $pc;
-          transition: fill 0.2s ease;
-          flex-shrink: 0;
-          
-          text {
-            display: none; /* Hide text below icons */
-          }
-        }
+      .icon-button.reset-tournament {
+        background: $pc;
+      }
 
-        .label {
-          color: $pc;
-          font-size: 1.6rem;
-          font-weight: bold;
-          text-transform: uppercase;
-          flex-grow: 1;
-          text-align: right;
-        }
-
-        &:hover {
-          transform: scale(1.05);
-        }
-
-        &:hover .icon {
-          fill: #ffcc00;
-        }
+      .icon-button.logout {
+        background: $pc-dark-30;
       }
     }
   }
+
+.name-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.name-prompt-modal {
+  width: 100%;
+  max-width: 44rem;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 2.4rem;
+  padding: 3.2rem 2.8rem;
+  text-align: center;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  color: $pc-dark-30;
+
+  h2 {
+    margin: 0;
+    font-size: 2.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.8rem;
+    line-height: 1.6;
+  }
+
+  .name-prompt-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+
+    input {
+      border: 2px solid lighten($pc, 30%);
+      border-radius: 1.6rem;
+      padding: 1.6rem 1.8rem;
+      font-size: 1.8rem;
+      color: $pc-dark-30;
+      background: rgba(255, 255, 255, 0.98);
+
+      &:focus {
+        outline: none;
+        border-color: $sc;
+        box-shadow: 0 0 0 3px rgba($sc, 0.25);
+      }
+    }
+
+    button {
+      border: none;
+      border-radius: 9999px;
+      padding: 1.6rem 2.4rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: $pc;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: darken($pc, 8%);
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        background: $pc-light-40;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .name-prompt-modal {
+    padding: 2.4rem;
+
+    h2 {
+      font-size: 2.4rem;
+    }
+
+    p {
+      font-size: 1.6rem;
+    }
+
+    .name-prompt-form {
+      gap: 1.2rem;
+
+      input {
+        font-size: 1.6rem;
+        padding: 1.4rem 1.6rem;
+      }
+
+      button {
+        font-size: 1.6rem;
+        padding: 1.4rem;
+      }
+    }
+  }
+}
+
 // Style for the "Choose your role" heading
 .role-selection-heading {
   font-size: 2rem;
