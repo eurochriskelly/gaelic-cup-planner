@@ -215,9 +215,13 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
       points: fixture.points2 !== undefined ? fixture.points2 : null,
     },
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleScoreProceed = async () => {
+    if (isSubmitting) return;
+
     try {
+      setIsSubmitting(true);
       const result = {
         outcome: 'played',
         scores: {
@@ -242,11 +246,9 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
     } catch (error) {
       console.error("Error proceeding with score:", error);
       // Optionally, show an error message to the user
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleScoreClose = () => {
-    closePanel(); // Just close the panel without saving
   };
 
   return (
@@ -256,7 +258,7 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
         scores={scores}
         setScores={setScores}
         onProceed={handleScoreProceed}
-        onClose={handleScoreClose}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

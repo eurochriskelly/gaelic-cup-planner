@@ -21,9 +21,9 @@ const DialogUpdate = ({
     team1: { goals: "", points: "", name: "" },
     team2: { goals: "", points: "", name: "" },
   });
+  const [isSubmittingScore, setIsSubmittingScore] = useState(false);
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
   const [cancellationOption, setCancellationOption] = useState(null);
-  const initialLoadRef = useRef(true);
   const originalScoresRef = useRef({
     team1: { goals: "", points: "" },
     team2: { goals: "", points: "" }
@@ -85,42 +85,60 @@ const DialogUpdate = ({
 
   // Initial data fetch using the provided IDs
   useEffect(() => {
-    refreshFixtureData()
-      .finally(() => {
-        initialLoadRef.current = false;
-      });
+    refreshFixtureData();
   }, [fixtureId, tournamentId]);
 
-  // Update scores effect
-  useEffect(() => {
-    if (initialLoadRef.current || !fixture) return;
+  const handleScoreSubmit = async () => {
+    if (!fixture || isSubmittingScore) return;
 
-    const hasScores = Object.values(scores).every(
-      team => team.goals !== "" && team.points !== ""
-    );
+    const isScoreValueSet = (value) => value !== null && value !== undefined && value !== "";
+    const allScoresProvided = Object.values(scores).every((team) => (
+      isScoreValueSet(team.goals) && isScoreValueSet(team.points)
+    ));
 
-    // Check if scores have changed from original
-    const scoresHaveChanged =
+    if (!allScoresProvided) {
+      console.log('Skipping score submission – incomplete scores');
+      return;
+    }
+
+    const scoresHaveChanged = (
       scores.team1.goals !== originalScoresRef.current.team1.goals ||
       scores.team1.points !== originalScoresRef.current.team1.points ||
       scores.team2.goals !== originalScoresRef.current.team2.goals ||
-      scores.team2.points !== originalScoresRef.current.team2.points;
+      scores.team2.points !== originalScoresRef.current.team2.points
+    );
 
-    if (hasScores && scoresHaveChanged) {
-      console.log('Updating scores - detected changes:', {
-        current: scores,
-        original: originalScoresRef.current
-      });
-
-      const result = { scores, outcome: 'played' };
-      API.updateScore(tournamentId, fixtureId, result)
-        .then(() => {
-          console.log('Score update successful, refreshing data');
-          return refreshFixtureData();
-        })
-        .catch(error => console.error("Error updating scores:", error));
+    if (!scoresHaveChanged) {
+      console.log('Skipping score submission – no score changes detected');
+      return;
     }
-  }, [scores, fixtureId, tournamentId, fixture]);
+
+    const payload = {
+      outcome: 'played',
+      scores: {
+        team1: {
+          name: scores.team1.name || fixture.team1,
+          goals: Number(scores.team1.goals) || 0,
+          points: Number(scores.team1.points) || 0,
+        },
+        team2: {
+          name: scores.team2.name || fixture.team2,
+          goals: Number(scores.team2.goals) || 0,
+          points: Number(scores.team2.points) || 0,
+        },
+      },
+    };
+
+    try {
+      setIsSubmittingScore(true);
+      await API.updateScore(tournamentId, fixtureId, payload);
+      await refreshFixtureData();
+    } catch (error) {
+      console.error('Error updating scores:', error);
+    } finally {
+      setIsSubmittingScore(false);
+    }
+  };
 
   const registerCardedPlayer = (player) => {
     const action = player?.action === "delete"
@@ -148,6 +166,8 @@ const DialogUpdate = ({
             scores={scores}
             setScores={setScores}
             fixture={fixture}
+            onProceed={handleScoreSubmit}
+            isSubmitting={isSubmittingScore}
           />
         );
       case "cancel":

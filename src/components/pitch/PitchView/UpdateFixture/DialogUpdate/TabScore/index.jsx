@@ -1,44 +1,37 @@
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
-const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
+const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
-  const isInitialRender = useRef(true);
-  const hasUserInteracted = useRef(false);
 
   const actions = {
     updateScore: (team) => {
       setCurrentTeam(team);
       setScorePicker({ visible: true });
-      hasUserInteracted.current = true;
     },
   };
 
-  // This effect will trigger onProceed when all scores are filled
-  useEffect(() => {
-    const s1 = scores.team1;
-    const s2 = scores.team2;
-    const isScoreSet = (value) => value !== null && value !== undefined && value !== "";
-
-    // Only proceed automatically if this is not the initial render AND user has interacted
-    if (!isInitialRender.current && hasUserInteracted.current) {
-      if (s1 && s2 &&
-        isScoreSet(s1.goals) && isScoreSet(s1.points) &&
-        isScoreSet(s2.goals) && isScoreSet(s2.points)) {
-        onProceed();
-      }
-    }
-  }, [scores, onProceed]);
-
-  // Mark initial render as complete after the first render
-  useEffect(() => {
-    isInitialRender.current = false;
-  }, []);
-
   const handleScoreSelectedForTeam = () => {
     setScorePicker({ visible: false }); // Close the ScoreSelect sub-dialog
+  };
+
+  const isScoreValueSet = (value) => value !== null && value !== undefined && value !== "";
+
+  const isScoreComplete = useMemo(() => (
+    scores &&
+    scores.team1 &&
+    scores.team2 &&
+    isScoreValueSet(scores.team1.goals) &&
+    isScoreValueSet(scores.team1.points) &&
+    isScoreValueSet(scores.team2.goals) &&
+    isScoreValueSet(scores.team2.points)
+  ), [scores]);
+
+  const handleSubmitScores = () => {
+    if (!onProceed || !isScoreComplete || isSubmitting) return;
+    onProceed();
   };
 
   const displayScore = (team, type) => {
@@ -116,6 +109,19 @@ const TabScore = ({ scores, setScores, fixture, onProceed, onClose }) => {
           </div>
         )}
       </div>
+
+      {onProceed && (
+        <div className="tab-score-actions">
+          <button
+            type="button"
+            className="set-score-button"
+            disabled={!isScoreComplete || isSubmitting}
+            onClick={handleSubmitScores}
+          >
+            {isSubmitting ? 'Saving...' : 'CONFIRM FINAL SCORE'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
