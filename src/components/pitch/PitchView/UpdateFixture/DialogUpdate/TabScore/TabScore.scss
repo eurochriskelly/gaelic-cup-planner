@@ -72,8 +72,8 @@
 }
 
 .score-container {
-  position: absolute;
-  top: 10rem;
+  position: relative;
+  margin-top: 10rem;
   .side-by-side {
     width: 100%;
     display: grid;
@@ -98,6 +98,35 @@
   height: 100%;
   z-index: 10; /* Ensures it’s on top */
   background: rgba(0, 0, 0, 0.5); /* Optional: adds a slight dimming effect */
+}
+
+.tab-score-actions {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2rem;
+}
+
+.set-score-button {
+  min-width: 36rem;
+  padding: 2.4rem 4.8rem;
+  border-radius: 9999px;
+  border: none;
+  font-size: 3.0rem;
+  font-weight: 600;
+  background-color: $pc;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken($pc, 10%);
+  }
+
+  &:disabled {
+    background-color: $pc-light-40;
+    cursor: not-allowed;
+  }
 }
 
 /* For mobile */
