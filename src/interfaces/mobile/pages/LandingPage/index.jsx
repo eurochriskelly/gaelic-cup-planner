@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useFetchTournament, useFetchPitches } from './LandingPage.hooks';
@@ -21,6 +22,7 @@ const LandingPage = () => {
     filterSelections,
     updateFilterSelections,
   } = useAppContext();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const persistedFilters = filterSelections && typeof filterSelections === "object"
@@ -147,7 +149,7 @@ const LandingPage = () => {
         <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
         <h1>
           <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
-          <div>{'landingPage_heading'}</div>
+          <div>{t('landingPage_heading', 'Pitch Perfect')}</div>
         </h1>
       </div>
       <header>
