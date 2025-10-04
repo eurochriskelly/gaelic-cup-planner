@@ -150,8 +150,8 @@ function FilterWidget({
   };
 
   const getStatusLabel = (id) => {
-    if (!selectedSet.has(id)) return "Tap to select";
-    return "Selected";
+    if (!selectedSet.has(id)) return "Tap to coordinate";
+    return "Coordinating";
   };
 
   const extraCount = Math.max(selectedCount - 1, 0);

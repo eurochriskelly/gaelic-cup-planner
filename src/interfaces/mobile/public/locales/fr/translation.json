@@ -1,6 +1,6 @@
 {
   "pinLogin_enter_pin": "Entrez le code du tournoi à 4 chiffres",
-  "landingPage_heading": "Infos sur le tournoi",
+  "landingPage_heading": "Pitch Perfect",
   "landingPage_sched_exe": "Exécution du calendrier",
   "landingPage_comp_status": "Statut de la compétition",
   "landingPage_Landingpage": "Page d'accueil",
@@ -15,4 +15,3 @@
   "landingPage_ResetTournament": "Réinitialiser le tournoi",
   "landingPage_Disconnect": "Déconnecter"
 }
-
