@@ -21,6 +21,11 @@ const KanbanColumn = ({
    showDetailsPanel,
    moveBarFixtureId,
    setMoveBarFixtureId,
+   pendingMove,
+   setPendingMove,
+   recentlyMovedFixtureId,
+   findAdjacentFixture,
+   fetchFixtures,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -74,6 +79,11 @@ const KanbanColumn = ({
                showDetailsPanel={showDetailsPanel}
                moveBarFixtureId={moveBarFixtureId}
                setMoveBarFixtureId={setMoveBarFixtureId}
+               pendingMove={pendingMove}
+               setPendingMove={setPendingMove}
+               recentlyMovedFixtureId={recentlyMovedFixtureId}
+               findAdjacentFixture={findAdjacentFixture}
+               fetchFixtures={fetchFixtures}
              />
            )}
         </KanbanSlot>
@@ -109,6 +119,11 @@ const KanbanColumn = ({
                showDetailsPanel={showDetailsPanel}
                moveBarFixtureId={moveBarFixtureId}
                setMoveBarFixtureId={setMoveBarFixtureId}
+               pendingMove={pendingMove}
+               setPendingMove={setPendingMove}
+               recentlyMovedFixtureId={recentlyMovedFixtureId}
+               findAdjacentFixture={findAdjacentFixture}
+               fetchFixtures={fetchFixtures}
              />
            )}
         </KanbanSlot>

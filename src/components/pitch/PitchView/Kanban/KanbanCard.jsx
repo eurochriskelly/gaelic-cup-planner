@@ -4,11 +4,12 @@ import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
 import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react';
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react';
+import API from '../../../../shared/api/endpoints';
 import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
 
-const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPanel, moveBarFixtureId, setMoveBarFixtureId }) => {
+const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPanel, moveBarFixtureId, setMoveBarFixtureId, pendingMove, setPendingMove, recentlyMovedFixtureId, findAdjacentFixture, fetchFixtures }) => {
   const toolboxRef = useRef(null);
 
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
@@ -49,12 +50,15 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
     onClick();
   };
 
+  const isPendingMove = pendingMove && fixture.id === moveBarFixtureId;
+  const isRecentlyMoved = fixture.id === recentlyMovedFixtureId;
+
   return (
     <div
       draggable
       onDragStart={onDragStart}
       onClick={handleClick}
-      className={`kanban-card ${isSelected ? 'selected' : ''}`}
+      className={`kanban-card ${isSelected ? 'selected' : ''} ${isPendingMove ? 'pending-move' : ''} ${isRecentlyMoved ? 'recently-moved' : ''}`}
     >
       <FixtureBar
         fixtureId={fixture.id}
@@ -151,9 +155,35 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
          }
        </div>
        <div className={`fixture-toolbox ${fixture.id === moveBarFixtureId ? 'visible' : ''}`} ref={toolboxRef} role="toolbar" aria-label="Fixture tools">
-         <button className="tool-btn" aria-label="Move up" onClick={() => {}}>▲</button>
-         <button className="tool-btn" aria-label="More" onClick={() => showDetailsPanel('move')}>⋯</button>
-         <button className="tool-btn" aria-label="Move down" onClick={() => {}}>▼</button>
+         {isPendingMove ? (
+           <>
+             <button className="tool-btn" aria-label="Confirm move" onClick={async () => {
+               try {
+                 await API.rescheduleMatch(fixture.tournamentId, fixture.pitch, fixture.id, pendingMove.targetFixtureId, 'swapTime');
+                 await fetchFixtures(true);
+                 setRecentlyMovedFixtureId(fixture.id);
+                 setTimeout(() => setRecentlyMovedFixtureId(null), 2000);
+               } catch (error) {
+                 console.error('Error moving fixture:', error);
+               }
+               setPendingMove(null);
+               setMoveBarFixtureId(null);
+             }}>✓</button>
+             <button className="tool-btn" aria-label="Cancel move" onClick={() => setPendingMove(null)}>✗</button>
+           </>
+         ) : (
+           <>
+             <button className="tool-btn" aria-label="Move up" onClick={() => {
+               const prev = findAdjacentFixture(fixture, 'up');
+               if (prev) setPendingMove({ type: 'up', targetFixtureId: prev.id });
+             }}>▲</button>
+             <button className="tool-btn" aria-label="More" onClick={() => showDetailsPanel('move')}>⋯</button>
+             <button className="tool-btn" aria-label="Move down" onClick={() => {
+               const next = findAdjacentFixture(fixture, 'down');
+               if (next) setPendingMove({ type: 'down', targetFixtureId: next.id });
+             }}>▼</button>
+           </>
+         )}
        </div>
      </div>
    );
