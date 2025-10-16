@@ -7,9 +7,15 @@ $rcol: #d4e79b;
   font-family: Arial, sans-serif;
   background: radial-gradient(circle at top center, $rcol, $radial2 50%);
   margin-top: 500px; /* Push entire main below initial banner */
-  min-height: calc(100vh - 500px); /* Ensure it fills remaining height */
+  height: calc(100vh - 500px); /* Set fixed height for scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
   display: flex;
   flex-direction: column;
+
+  &.shrink {
+    margin-top: 120px; /* Adjust for shrunk banner */
+    height: calc(100vh - 120px);
+  }
 
   /* Modified: Adjust margin for content below banner */
   header, section, footer {
