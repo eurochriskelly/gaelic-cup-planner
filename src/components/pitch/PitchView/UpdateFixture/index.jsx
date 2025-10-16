@@ -47,7 +47,13 @@ const UpdateFixture = ({
       Icon: MoveIcon,
       showOnlyWhenPlanned: true,
       getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
-      action: (setDrawer) => setDrawer("postpone")
+      action: (setDrawer) => {
+        if (showDetails) {
+          showDetails('move');
+          return;
+        }
+        setDrawer("postpone");
+      }
     },
     {
       id: 'start',
@@ -132,19 +138,21 @@ const UpdateFixture = ({
   return (
     <div className="updateFixture select-none">
       <div className="button-grid">
-        {mainButtons.map((button, index) => (
-          <button
-            key={button.id}
-            className={`space-button ${button.id === 'start' ? button.getState(hasStarted, hasResult, nextFixture) : button.getState(hasStarted, hasResult)}`}
-            disabled={
-              button.id === 'reschedule' ||
-              (button.id === 'start' && button.getState(hasStarted, hasResult, nextFixture) === 'disabled')
-            }
-            onClick={() => handleButtonClick(button)}
-          >
-            <button.Icon className="icon" />
-          </button>
-        ))}
+        {mainButtons.map((button) => {
+          const state = button.getState(hasStarted, hasResult, nextFixture);
+          const isDisabled = state === 'disabled';
+
+          return (
+            <button
+              key={button.id}
+              className={`space-button ${state}`}
+              disabled={isDisabled}
+              onClick={() => handleButtonClick(button)}
+            >
+              <button.Icon className="icon" />
+            </button>
+          );
+        })}
 
         {/* Generate placeholders only if we have fewer than 3 buttons */}
         {mainButtons.length < 3 &&
@@ -173,6 +181,7 @@ const UpdateFixture = ({
               setActiveDrawer(null);
             }}
             pitch={nextFixture.pitch}
+            visible={activeDrawer === "postpone"}
           />
         )}
         {activeDrawer === "finish" && (

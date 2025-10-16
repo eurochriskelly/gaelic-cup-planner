@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'; // Added useEffect, useRef
+import { useState, useEffect, useRef, useMemo } from 'react'; // Added useMemo
 import './KanbanDetailsPanel.scss';
 import FixtureBar from './FixtureBar';
 import { useFixtureContext } from '../../PitchView/FixturesContext';
@@ -12,6 +12,7 @@ import '../../../../components/web/team-name';
 import TabCancel from '../UpdateFixture/DialogUpdate/TabCancel';
 import TabScore from '../UpdateFixture/DialogUpdate/TabScore'; // Import TabScore
 import TabCards from '../UpdateFixture/DialogUpdate/TabCards'; // Import TabCards
+import Select from 'react-select';
 
 const KanbanDetailsPanel = ({ 
   fixture,
@@ -88,6 +89,12 @@ const KanbanDetailsPanel = ({
                 fixture={fixture}
                 closePanel={closePanel}
                 moveToNextFixture={moveToNextFixture}
+              />
+            )}
+            {mode === 'move' && (
+              <MoveFixtureWrapper
+                fixture={fixture}
+                closePanel={closePanel}
               />
             )}
           </div>
@@ -465,6 +472,204 @@ function CardEntryWrapper({ fixture, closePanel }) {
         setCardedPlayer={handleSetCardedPlayer}
         fixture={fixture}
       />
+    </div>
+  );
+}
+
+function MoveFixtureWrapper({ fixture, closePanel }) {
+  const { fetchFixtures } = useFixtureContext();
+  const [pitches, setPitches] = useState([]);
+  const [fixtures, setFixtures] = useState([]);
+  const [selectedPitch, setSelectedPitch] = useState(fixture.pitch || "");
+  const [placement, setPlacement] = useState('after');
+  const [targetFixtureId, setTargetFixtureId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const tournamentId = fixture.tournamentId;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadData = async () => {
+      if (!tournamentId) return;
+      setIsLoading(true);
+      setErrorMessage(null);
+
+      try {
+        const [pitchesResponse, fixturesResponse] = await Promise.all([
+          API.fetchPitches(tournamentId),
+          API.fetchAllFixtures(tournamentId),
+        ]);
+
+        if (cancelled) return;
+
+        const pitchList = Array.isArray(pitchesResponse?.data)
+          ? pitchesResponse.data.map((p) => p.pitch)
+          : [];
+        const fixtureList = Array.isArray(fixturesResponse?.data)
+          ? fixturesResponse.data
+          : [];
+
+        setPitches(pitchList);
+        setFixtures(fixtureList);
+
+        if (pitchList.length) {
+          setSelectedPitch((prev) => {
+            if (prev && pitchList.includes(prev)) return prev;
+            if (fixture.pitch && pitchList.includes(fixture.pitch)) return fixture.pitch;
+            return pitchList[0];
+          });
+        }
+      } catch (error) {
+        if (cancelled) return;
+        console.error('Error loading move options:', error);
+        setErrorMessage('Unable to load pitch and fixture information right now.');
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [tournamentId, fixture.pitch]);
+
+  useEffect(() => {
+    setTargetFixtureId(null);
+  }, [selectedPitch, placement]);
+
+  const fixturesOnSelectedPitch = useMemo(() => {
+    return fixtures
+      .filter((f) => f.id !== fixture.id && f.pitch === selectedPitch)
+      .sort((a, b) => {
+        const left = a.scheduledTime || a.plannedStart || '';
+        const right = b.scheduledTime || b.plannedStart || '';
+        return left.localeCompare(right);
+      });
+  }, [fixtures, selectedPitch, fixture.id]);
+
+  const selectOptions = useMemo(() => (
+    fixturesOnSelectedPitch.map((item) => ({
+      value: item.id,
+      label: `${item.scheduledTime || item.plannedStart || 'TBD'} • ${item.team1} vs ${item.team2}`,
+      meta: item,
+    }))
+  ), [fixturesOnSelectedPitch]);
+
+  const canSubmit = Boolean(selectedPitch && placement && targetFixtureId && !isSaving);
+
+  const handleSubmit = async () => {
+    if (!canSubmit) return;
+    setIsSaving(true);
+    setErrorMessage(null);
+
+    try {
+      await API.rescheduleMatch(
+        fixture.tournamentId,
+        selectedPitch,
+        fixture.id,
+        targetFixtureId,
+        placement,
+      );
+      await fetchFixtures(true);
+      closePanel();
+    } catch (error) {
+      console.error('Error applying move:', error);
+      setErrorMessage('Could not apply the move. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const formatOptionLabel = ({ meta }) => (
+    <div className="move-option-label">
+      <span className="move-option-time">{meta.scheduledTime || meta.plannedStart || 'TBD'}</span>
+      <span className="move-option-vs">{`${meta.team1} vs ${meta.team2}`}</span>
+    </div>
+  );
+
+  return (
+    <div className="move-entry-wrapper">
+      <header className="move-entry-header">
+        <h3>Move Fixture</h3>
+        <p>Select the destination pitch, the relative position, and the match to anchor this move.</p>
+      </header>
+
+      {errorMessage && (
+        <div className="move-entry-alert" role="alert">{errorMessage}</div>
+      )}
+
+      <div className="move-entry-grid">
+        <div className="move-entry-group">
+          <label htmlFor="move-pitch">Destination pitch</label>
+          <Select
+            inputId="move-pitch"
+            classNamePrefix="move-select"
+            isLoading={isLoading}
+            options={pitches.map((pitch) => ({ value: pitch, label: pitch }))}
+            value={selectedPitch ? { value: selectedPitch, label: selectedPitch } : null}
+            onChange={(option) => setSelectedPitch(option?.value || '')}
+            placeholder={isLoading ? 'Loading pitches…' : 'Select pitch'}
+            isDisabled={isLoading || !pitches.length}
+          />
+        </div>
+
+        <div className="move-entry-group">
+          <span className="move-entry-label">Placement</span>
+          <div className="move-entry-placement">
+            {['before', 'after', 'swap'].map((value) => (
+              <label key={value}>
+                <input
+                  type="radio"
+                  name="move-placement"
+                  value={value}
+                  checked={placement === value}
+                  onChange={(event) => setPlacement(event.target.value)}
+                />
+                <span className="move-entry-placement-text">{value === 'swap' ? 'Swap with fixture' : `${value.charAt(0).toUpperCase()}${value.slice(1)} fixture`}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="move-entry-group">
+          <label htmlFor="move-anchor">Anchor fixture</label>
+          <Select
+            inputId="move-anchor"
+            classNamePrefix="move-select"
+            isLoading={isLoading}
+            options={selectOptions}
+            value={selectOptions.find((option) => option.value === targetFixtureId) || null}
+            onChange={(option) => setTargetFixtureId(option?.value || null)}
+            placeholder={
+              fixturesOnSelectedPitch.length
+                ? 'Select reference fixture'
+                : 'No fixtures available on this pitch'
+            }
+            formatOptionLabel={formatOptionLabel}
+            isDisabled={isLoading || !fixturesOnSelectedPitch.length}
+          />
+        </div>
+      </div>
+
+      <div className="move-entry-actions">
+        <button type="button" className="btn btn-tertiary" onClick={closePanel}>
+          Cancel
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={!canSubmit || isLoading || isSaving}
+          onClick={handleSubmit}
+        >
+          {isSaving ? 'Saving…' : 'Apply move'}
+        </button>
+      </div>
     </div>
   );
 }
