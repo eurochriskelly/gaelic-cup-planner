@@ -50,7 +50,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
     onClick();
   };
 
-  const isPendingMove = pendingMove && fixture.id === moveBarFixtureId;
+  const isPendingMove = pendingMove && (fixture.id === moveBarFixtureId || fixture.id === pendingMove.targetFixtureId);
   const isRecentlyMoved = fixture.id === recentlyMovedFixtureId;
 
   return (
@@ -157,31 +157,40 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
        <div className={`fixture-toolbox ${fixture.id === moveBarFixtureId ? 'visible' : ''}`} ref={toolboxRef} role="toolbar" aria-label="Fixture tools">
          {isPendingMove ? (
            <>
-             <button className="tool-btn" aria-label="Confirm move" onClick={async () => {
-               try {
-                 await API.rescheduleMatch(fixture.tournamentId, fixture.pitch, fixture.id, pendingMove.targetFixtureId, 'swapTime');
-                 await fetchFixtures(true);
-                 setRecentlyMovedFixtureId(fixture.id);
-                 setTimeout(() => setRecentlyMovedFixtureId(null), 2000);
-               } catch (error) {
-                 console.error('Error moving fixture:', error);
-               }
-               setPendingMove(null);
-               setMoveBarFixtureId(null);
-             }}>✓</button>
-             <button className="tool-btn" aria-label="Cancel move" onClick={() => setPendingMove(null)}>✗</button>
+              <button className="tool-btn" aria-label="Confirm move" onClick={async (e) => {
+                e.stopPropagation();
+                try {
+                  await API.rescheduleMatch(fixture.tournamentId, fixture.pitch, fixture.id, pendingMove.targetFixtureId, 'swapTime');
+                  await fetchFixtures(true);
+                  setRecentlyMovedFixtureId(fixture.id);
+                  setTimeout(() => setRecentlyMovedFixtureId(null), 2000);
+                } catch (error) {
+                  console.error('Error moving fixture:', error);
+                }
+                setPendingMove(null);
+                setMoveBarFixtureId(null);
+              }}>✓</button>
+              <button className="tool-btn" aria-label="Cancel move" onClick={(e) => {
+                e.stopPropagation();
+                setPendingMove(null);
+              }}>✗</button>
            </>
          ) : (
            <>
-             <button className="tool-btn" aria-label="Move up" onClick={() => {
-               const prev = findAdjacentFixture(fixture, 'up');
-               if (prev) setPendingMove({ type: 'up', targetFixtureId: prev.id });
-             }}>▲</button>
-             <button className="tool-btn" aria-label="More" onClick={() => showDetailsPanel('move')}>⋯</button>
-             <button className="tool-btn" aria-label="Move down" onClick={() => {
-               const next = findAdjacentFixture(fixture, 'down');
-               if (next) setPendingMove({ type: 'down', targetFixtureId: next.id });
-             }}>▼</button>
+              <button className="tool-btn" aria-label="Move up" onClick={(e) => {
+                e.stopPropagation();
+                const prev = findAdjacentFixture(fixture, 'up');
+                if (prev) setPendingMove({ type: 'up', targetFixtureId: prev.id });
+              }}>▲</button>
+              <button className="tool-btn" aria-label="More" onClick={(e) => {
+                e.stopPropagation();
+                showDetailsPanel('move');
+              }}>⋯</button>
+              <button className="tool-btn" aria-label="Move down" onClick={(e) => {
+                e.stopPropagation();
+                const next = findAdjacentFixture(fixture, 'down');
+                if (next) setPendingMove({ type: 'down', targetFixtureId: next.id });
+              }}>▼</button>
            </>
          )}
        </div>
