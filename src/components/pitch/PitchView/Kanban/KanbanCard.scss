@@ -57,6 +57,14 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     border: $bwid solid darken(desaturate($bcol, 30%), 10%);
   }
 
+  &.pending-move {
+    outline: 3px solid red;
+  }
+
+  &.recently-moved {
+    outline: 3px solid red;
+  }
+
   .FixtureBar {
     margin-bottom: 0;
     position: relative;

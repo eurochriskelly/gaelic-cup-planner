@@ -32,6 +32,8 @@ const Kanban = ({
    const [showingDetails, setShowingDetails] = useState(false);
    const [detailsMode, setDetailsMode] = useState('score'); // Default mode
    const [moveBarFixtureId, setMoveBarFixtureId] = useState(null);
+   const [pendingMove, setPendingMove] = useState(null); // { type: 'up'|'down', targetFixtureId }
+   const [recentlyMovedFixtureId, setRecentlyMovedFixtureId] = useState(null);
 
   const {
     filteredFixtures,
@@ -106,12 +108,22 @@ const Kanban = ({
      setMoveBarFixtureId(null); // Hide move bar when opening panel
    };
 
-  // Function to close details panel
-  const closeDetailsPanel = () => {
-    setShowingDetails(false);
-    setDetailsMode('info'); // Reset mode to info
-    // setSelectedFixture(null); // Consider if this is still needed or handled elsewhere
-  };
+   // Function to close details panel
+   const closeDetailsPanel = () => {
+     setShowingDetails(false);
+     setDetailsMode('info'); // Reset mode to info
+     // setSelectedFixture(null); // Consider if this is still needed or handled elsewhere
+   };
+
+   // Helper function to find adjacent fixture on same pitch
+   const findAdjacentFixture = (currentFixture, direction) => {
+     const samePitchFixtures = filteredFixtures
+       .filter(f => f.pitch === currentFixture.pitch && f.id !== currentFixture.id)
+       .sort((a, b) => new Date(a.scheduledTime || a.plannedStart) - new Date(b.scheduledTime || b.plannedStart));
+
+     const currentIndex = samePitchFixtures.findIndex(f => f.id === currentFixture.id);
+     return direction === 'up' ? samePitchFixtures[currentIndex - 1] : samePitchFixtures[currentIndex + 1];
+   };
 
   return (
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
@@ -179,6 +191,11 @@ const Kanban = ({
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
+                 pendingMove={pendingMove}
+                 setPendingMove={setPendingMove}
+                 recentlyMovedFixtureId={recentlyMovedFixtureId}
+                 findAdjacentFixture={findAdjacentFixture}
+                 fetchFixtures={fetchFixtures}
                  // allPlannedFixtures might be needed if warning logic applies to "Next" column
                />
                <KanbanColumn
@@ -200,6 +217,11 @@ const Kanban = ({
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
+                 pendingMove={pendingMove}
+                 setPendingMove={setPendingMove}
+                 recentlyMovedFixtureId={recentlyMovedFixtureId}
+                 findAdjacentFixture={findAdjacentFixture}
+                 fetchFixtures={fetchFixtures}
                />
                <KanbanColumn
                  key="planned"
@@ -219,6 +241,11 @@ const Kanban = ({
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
+                 pendingMove={pendingMove}
+                 setPendingMove={setPendingMove}
+                 recentlyMovedFixtureId={recentlyMovedFixtureId}
+                 findAdjacentFixture={findAdjacentFixture}
+                 fetchFixtures={fetchFixtures}
                />
                <KanbanColumn
                  key="finished"
@@ -238,6 +265,11 @@ const Kanban = ({
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
+                 pendingMove={pendingMove}
+                 setPendingMove={setPendingMove}
+                 recentlyMovedFixtureId={recentlyMovedFixtureId}
+                 findAdjacentFixture={findAdjacentFixture}
+                 fetchFixtures={fetchFixtures}
                />
             </>
           );
