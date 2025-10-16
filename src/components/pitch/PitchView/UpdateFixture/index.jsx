@@ -14,12 +14,13 @@ import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
 import './UpdateFixture.scss';
 
 const UpdateFixture = ({
-  moveToNextFixture,
-  fixture,
-  showDetails,
-  closeDetails,
-  isDetailsMode = false
-}) => {
+   moveToNextFixture,
+   fixture,
+   showDetails,
+   closeDetails,
+   isDetailsMode = false,
+   setMoveBarFixtureId
+ }) => {
   const { fetchFixtures, startMatch } = useFixtureContext();
   let nextFixture = fixture;
   if (!fixture) nextFixture = useFixtureContext().nextFixture;
@@ -42,19 +43,23 @@ const UpdateFixture = ({
         // await fetchFixtures(true);
       }
     },
-    {
-      id: 'reschedule',
-      Icon: MoveIcon,
-      showOnlyWhenPlanned: true,
-      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
-      action: (setDrawer) => {
-        if (showDetails) {
-          showDetails('move');
-          return;
-        }
-        setDrawer("postpone");
-      }
-    },
+     {
+       id: 'reschedule',
+       Icon: MoveIcon,
+       showOnlyWhenPlanned: true,
+       getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+       action: (setDrawer) => {
+         if (setMoveBarFixtureId) {
+           setMoveBarFixtureId(fixture.id);
+           return;
+         }
+         if (showDetails) {
+           showDetails('move');
+           return;
+         }
+         setDrawer("postpone");
+       }
+     },
     {
       id: 'start',
       Icon: StartIcon,

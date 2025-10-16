@@ -28,9 +28,10 @@ const Kanban = ({
   const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
-  // New state to track if details panel should be shown
-  const [showingDetails, setShowingDetails] = useState(false);
-  const [detailsMode, setDetailsMode] = useState('score'); // Default mode
+   // New state to track if details panel should be shown
+   const [showingDetails, setShowingDetails] = useState(false);
+   const [detailsMode, setDetailsMode] = useState('score'); // Default mode
+   const [moveBarFixtureId, setMoveBarFixtureId] = useState(null);
 
   const {
     filteredFixtures,
@@ -98,11 +99,12 @@ const Kanban = ({
   }, [initialFixtures, selectedFixture?.id, setSelectedFixture, selectedFixture]);
 
 
-  // Function to show full details panel
-  const showDetailsPanel = (mode = 'score') => {
-    setDetailsMode(mode);
-    setShowingDetails(true);
-  };
+   // Function to show full details panel
+   const showDetailsPanel = (mode = 'score') => {
+     setDetailsMode(mode);
+     setShowingDetails(true);
+     setMoveBarFixtureId(null); // Hide move bar when opening panel
+   };
 
   // Function to close details panel
   const closeDetailsPanel = () => {
@@ -159,86 +161,99 @@ const Kanban = ({
           return (
             <>
               {/* Columns are now direct children of kanban-board-area, ordered for grid placement */}
-              <KanbanColumn
-                key="queued"
-                columnKey="queued"
-                title="Queued"
-                columnIndex={0} // Logical index for 'queued'
-                fixtures={queuedFixtures}
-                isCurrentlyMaximized={maximizedColumnKey === 'queued'}
-                onToggleMaximize={toggleMaximizeColumn}
-                onDrop={(e) => onDrop(e, 'queued')}
-                onDragOver={onDragOver}
-                onDragStart={onDragStart}
-                handleFixtureClick={handleFixtureClick}
-                selectedFixture={selectedFixture}
-                getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
-                allTournamentPitches={relevantPitchNamesForQueued}
-                // allPlannedFixtures might be needed if warning logic applies to "Next" column
-              />
-              <KanbanColumn
-                key="started"
-                columnKey="started"
-                title="Ongoing"
-                columnIndex={2} // Logical index for 'started'
-                fixtures={startedFixtures}
-                allPlannedFixtures={globalPlannedFixtures}
-                isCurrentlyMaximized={maximizedColumnKey === 'started'}
-                onToggleMaximize={toggleMaximizeColumn}
-                onDrop={(e) => onDrop(e, 'started')}
-                onDragOver={onDragOver}
-                onDragStart={onDragStart}
-                handleFixtureClick={handleFixtureClick}
-                selectedFixture={selectedFixture}
-                getPitchColor={getPitchColor}
-                allTournamentPitches={relevantPitchNamesForOngoing}
-              />
-              <KanbanColumn
-                key="planned"
-                columnKey="planned"
-                title="Planned"
-                columnIndex={1} // Logical index for 'planned'
-                fixtures={plannedFixtures}
-                isCurrentlyMaximized={maximizedColumnKey === 'planned'}
-                onToggleMaximize={toggleMaximizeColumn}
-                onDrop={(e) => onDrop(e, 'planned')}
-                onDragOver={onDragOver}
-                onDragStart={onDragStart}
-                handleFixtureClick={handleFixtureClick}
-                selectedFixture={selectedFixture}
-                getPitchColor={getPitchColor}
-                allTournamentPitches={null} // Planned column does not use pitch-based slots
-              />
-              <KanbanColumn
-                key="finished"
-                columnKey="finished"
-                title="Finished"
-                columnIndex={3} // Logical index for 'finished'
-                fixtures={finishedFixtures}
-                isCurrentlyMaximized={maximizedColumnKey === 'finished'}
-                onToggleMaximize={toggleMaximizeColumn}
-                onDrop={(e) => onDrop(e, 'finished')}
-                onDragOver={onDragOver}
-                onDragStart={onDragStart}
-                handleFixtureClick={handleFixtureClick}
-                selectedFixture={selectedFixture}
-                getPitchColor={getPitchColor}
-                allTournamentPitches={null} // Finished column does not use pitch-based slots
-              />
+               <KanbanColumn
+                 key="queued"
+                 columnKey="queued"
+                 title="Queued"
+                 columnIndex={0} // Logical index for 'queued'
+                 fixtures={queuedFixtures}
+                 isCurrentlyMaximized={maximizedColumnKey === 'queued'}
+                 onToggleMaximize={toggleMaximizeColumn}
+                 onDrop={(e) => onDrop(e, 'queued')}
+                 onDragOver={onDragOver}
+                 onDragStart={onDragStart}
+                 handleFixtureClick={handleFixtureClick}
+                 selectedFixture={selectedFixture}
+                 getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
+                 allTournamentPitches={relevantPitchNamesForQueued}
+                 showDetailsPanel={showDetailsPanel}
+                 moveBarFixtureId={moveBarFixtureId}
+                 setMoveBarFixtureId={setMoveBarFixtureId}
+                 // allPlannedFixtures might be needed if warning logic applies to "Next" column
+               />
+               <KanbanColumn
+                 key="started"
+                 columnKey="started"
+                 title="Ongoing"
+                 columnIndex={2} // Logical index for 'started'
+                 fixtures={startedFixtures}
+                 allPlannedFixtures={globalPlannedFixtures}
+                 isCurrentlyMaximized={maximizedColumnKey === 'started'}
+                 onToggleMaximize={toggleMaximizeColumn}
+                 onDrop={(e) => onDrop(e, 'started')}
+                 onDragOver={onDragOver}
+                 onDragStart={onDragStart}
+                 handleFixtureClick={handleFixtureClick}
+                 selectedFixture={selectedFixture}
+                 getPitchColor={getPitchColor}
+                 allTournamentPitches={relevantPitchNamesForOngoing}
+                 showDetailsPanel={showDetailsPanel}
+                 moveBarFixtureId={moveBarFixtureId}
+                 setMoveBarFixtureId={setMoveBarFixtureId}
+               />
+               <KanbanColumn
+                 key="planned"
+                 columnKey="planned"
+                 title="Planned"
+                 columnIndex={1} // Logical index for 'planned'
+                 fixtures={plannedFixtures}
+                 isCurrentlyMaximized={maximizedColumnKey === 'planned'}
+                 onToggleMaximize={toggleMaximizeColumn}
+                 onDrop={(e) => onDrop(e, 'planned')}
+                 onDragOver={onDragOver}
+                 onDragStart={onDragStart}
+                 handleFixtureClick={handleFixtureClick}
+                 selectedFixture={selectedFixture}
+                 getPitchColor={getPitchColor}
+                 allTournamentPitches={null} // Planned column does not use pitch-based slots
+                 showDetailsPanel={showDetailsPanel}
+                 moveBarFixtureId={moveBarFixtureId}
+                 setMoveBarFixtureId={setMoveBarFixtureId}
+               />
+               <KanbanColumn
+                 key="finished"
+                 columnKey="finished"
+                 title="Finished"
+                 columnIndex={3} // Logical index for 'finished'
+                 fixtures={finishedFixtures}
+                 isCurrentlyMaximized={maximizedColumnKey === 'finished'}
+                 onToggleMaximize={toggleMaximizeColumn}
+                 onDrop={(e) => onDrop(e, 'finished')}
+                 onDragOver={onDragOver}
+                 onDragStart={onDragStart}
+                 handleFixtureClick={handleFixtureClick}
+                 selectedFixture={selectedFixture}
+                 getPitchColor={getPitchColor}
+                 allTournamentPitches={null} // Finished column does not use pitch-based slots
+                 showDetailsPanel={showDetailsPanel}
+                 moveBarFixtureId={moveBarFixtureId}
+                 setMoveBarFixtureId={setMoveBarFixtureId}
+               />
             </>
           );
         })()}
       </div>
 
-      {selectedFixture && (
-        <UpdateFixture
-          moveToNextFixture={moveToNextFixture}
-          fixture={selectedFixture}
-          showDetails={showDetailsPanel}
-          closeDetails={closeDetailsPanel}
-          isDetailsMode={showingDetails}
-        />
-      )}
+       {selectedFixture && (
+         <UpdateFixture
+           moveToNextFixture={moveToNextFixture}
+           fixture={selectedFixture}
+           showDetails={showDetailsPanel}
+           closeDetails={closeDetailsPanel}
+           isDetailsMode={showingDetails}
+           setMoveBarFixtureId={setMoveBarFixtureId}
+         />
+       )}
 
       {/* Show details panel when showingDetails is true */}
       {selectedFixture && showingDetails && (

@@ -3,22 +3,25 @@ import KanbanSlot from './KanbanSlot';
 import './KanbanColumn.scss';
 
 const KanbanColumn = ({
-  title,
-  fixtures, // This is the array of fixtures for this specific column
-  onDrop,
-  onDragOver,
-  onDragStart,
-  handleFixtureClick,
-  selectedFixture,
-  // getPitchColor, // Removed
-  columnIndex,
-  allTournamentPitches, // New prop for all pitches in the tournament
-  allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
-  // Props for maximization
-  columnKey,
-  isCurrentlyMaximized,
-  onToggleMaximize,
-}) => {
+   title,
+   fixtures, // This is the array of fixtures for this specific column
+   onDrop,
+   onDragOver,
+   onDragStart,
+   handleFixtureClick,
+   selectedFixture,
+   // getPitchColor, // Removed
+   columnIndex,
+   allTournamentPitches, // New prop for all pitches in the tournament
+   allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
+   // Props for maximization
+   columnKey,
+   isCurrentlyMaximized,
+   onToggleMaximize,
+   showDetailsPanel,
+   moveBarFixtureId,
+   setMoveBarFixtureId,
+ }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
 
@@ -61,15 +64,18 @@ const KanbanColumn = ({
           showWarningIcon={showWarning}
           isMatchInProgress={!!fixtureForPitchSlot}
         >
-          {fixtureForPitchSlot && (
-            <KanbanCard
-              key={fixtureForPitchSlot.id}
-              fixture={fixtureForPitchSlot}
-              onDragStart={(e) => onDragStart(e, fixtureForPitchSlot.id)}
-              onClick={() => handleFixtureClick(fixtureForPitchSlot)}
-              isSelected={selectedFixture && selectedFixture.id === fixtureForPitchSlot.id}
-            />
-          )}
+           {fixtureForPitchSlot && (
+             <KanbanCard
+               key={fixtureForPitchSlot.id}
+               fixture={fixtureForPitchSlot}
+               onDragStart={(e) => onDragStart(e, fixtureForPitchSlot.id)}
+               onClick={() => handleFixtureClick(fixtureForPitchSlot)}
+               isSelected={selectedFixture && selectedFixture.id === fixtureForPitchSlot.id}
+               showDetailsPanel={showDetailsPanel}
+               moveBarFixtureId={moveBarFixtureId}
+               setMoveBarFixtureId={setMoveBarFixtureId}
+             />
+           )}
         </KanbanSlot>
       );
     });
@@ -93,15 +99,18 @@ const KanbanColumn = ({
           columnIndex={columnIndex} // Pass logical index for striping
           columnKey={columnKey} // Pass columnKey
         >
-          {fixtureForSlot && (
-            <KanbanCard
-              key={fixtureForSlot.id}
-              fixture={fixtureForSlot}
-              onDragStart={(e) => onDragStart(e, fixtureForSlot.id)}
-              onClick={() => handleFixtureClick(fixtureForSlot)}
-              isSelected={selectedFixture && selectedFixture.id === fixtureForSlot.id}
-            />
-          )}
+           {fixtureForSlot && (
+             <KanbanCard
+               key={fixtureForSlot.id}
+               fixture={fixtureForSlot}
+               onDragStart={(e) => onDragStart(e, fixtureForSlot.id)}
+               onClick={() => handleFixtureClick(fixtureForSlot)}
+               isSelected={selectedFixture && selectedFixture.id === fixtureForSlot.id}
+               showDetailsPanel={showDetailsPanel}
+               moveBarFixtureId={moveBarFixtureId}
+               setMoveBarFixtureId={setMoveBarFixtureId}
+             />
+           )}
         </KanbanSlot>
       );
     });

@@ -14,7 +14,7 @@ import TabScore from '../UpdateFixture/DialogUpdate/TabScore'; // Import TabScor
 import TabCards from '../UpdateFixture/DialogUpdate/TabCards'; // Import TabCards
 import Select from 'react-select';
 
-const KanbanDetailsPanel = ({ 
+const KanbanDetailsPanel = ({
   fixture,
   mode = 'info',
   closePanel,
@@ -33,7 +33,7 @@ const KanbanDetailsPanel = ({
       .replace('_', '/')
     : '';
 
-  // Check if all score values are valid 
+  // Check if all score values are valid
 
   return (
     <div className="kanban-details-panel">
@@ -91,12 +91,12 @@ const KanbanDetailsPanel = ({
                 moveToNextFixture={moveToNextFixture}
               />
             )}
-            {mode === 'move' && (
-              <MoveFixtureWrapper
-                fixture={fixture}
-                closePanel={closePanel}
-              />
-            )}
+             {mode === 'move' && (
+               <MoveFixtureWrapper
+                 fixture={fixture}
+                 closePanel={closePanel}
+               />
+             )}
           </div>
 
         </section>
