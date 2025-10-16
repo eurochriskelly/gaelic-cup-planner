@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import './KanbanCard.scss';
 import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
@@ -7,7 +8,9 @@ import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
 import '../../../../components/web/gaelic-score.js';
 
-const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
+const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPanel, moveBarFixtureId, setMoveBarFixtureId }) => {
+  const toolboxRef = useRef(null);
+
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const displayNumber = fixture?.groupNumber || '0';
@@ -21,11 +24,36 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
     !isNaN(fixture.points1) &&
     !isNaN(fixture.points2);
   const vspace = hasScore ? '2.1rem' : 0;
+
+  useEffect(() => {
+    const positionToolbox = () => {
+      try {
+        const tb = toolboxRef.current;
+        if (!tb) return;
+        tb.classList.remove('align-left');
+        const rect = tb.getBoundingClientRect();
+        const needsLeft = rect.right > window.innerWidth - 8;
+        tb.classList.toggle('align-left', needsLeft);
+      } catch (error) {
+        console.error('Error positioning toolbox:', error);
+      }
+    };
+
+    if (fixture.id === moveBarFixtureId) {
+      positionToolbox();
+    }
+  }, [fixture.id, moveBarFixtureId]);
+
+  const handleClick = () => {
+    setMoveBarFixtureId(null);
+    onClick();
+  };
+
   return (
     <div
       draggable
       onDragStart={onDragStart}
-      onClick={onClick}
+      onClick={handleClick}
       className={`kanban-card ${isSelected ? 'selected' : ''}`}
     >
       <FixtureBar
@@ -119,11 +147,18 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected }) => {
                 <UmpireIcon width={42} height={42} />
               </div>
             </div>
-        </>
-        }
-      </div>
-    </div>
-  );
-};
+         </>
+         }
+       </div>
+       <div className={`fixture-toolbox ${fixture.id === moveBarFixtureId ? 'visible' : ''}`} ref={toolboxRef} role="toolbar" aria-label="Fixture tools">
+         <button className="tool-btn" aria-label="Move up" onClick={() => {}}>▲</button>
+         <button className="tool-btn" aria-label="More" onClick={() => showDetailsPanel('move')}>⋯</button>
+         <button className="tool-btn" aria-label="Move down" onClick={() => {}}>▼</button>
+       </div>
+     </div>
+   );
+ };
 
-export default KanbanCard;
+
+
+ export default KanbanCard;

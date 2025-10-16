@@ -38,7 +38,7 @@
     grid-template-rows: auto 1fr;   // Row 1 content height, Row 2 takes remaining space
     gap: 0rem;
     top: 9rem;
-    overflow: hidden;
+    overflow: visible;
     position: absolute;
     height: calc(100% - 20rem); // Available height for the board
     width: 100%;
@@ -50,6 +50,7 @@
     .kanban-column {
       // Common styles for all columns if any (e.g. min-width if needed)
       // border-bottom and border-right will define separators
+      overflow: visible;
       &[data-column-key="queued"] {
         grid-area: 1 / 1 / 2 / 2; // Row 1, Col 1
         min-height: 10rem;

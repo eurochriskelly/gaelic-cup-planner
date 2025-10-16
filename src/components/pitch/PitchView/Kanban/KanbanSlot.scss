@@ -68,6 +68,7 @@
     padding: 0.5rem; // Add padding around the card container
     // This padding will be between the slot's background and the card itself.
     // The card itself has a height of 19rem.
+    overflow: visible; // Allow toolbox to overhang
   }
 
   .empty-planned-finished-slot-placeholder {
