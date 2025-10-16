@@ -4,7 +4,7 @@ import svgr from 'vite-plugin-svgr';
 import { VitePWA } from 'vite-plugin-pwa';
 import { resolve } from 'path';
 
-const port = process.env.GG_PORT_OVERRIDE || '4010'
+const port = process.env.GG_PORT_OVERRIDE || '4000'
 export default defineConfig({
   root: resolve(__dirname, 'src/interfaces/mobile'),
   resolve: {
