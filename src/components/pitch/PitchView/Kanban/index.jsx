@@ -116,14 +116,14 @@ const Kanban = ({
    };
 
    // Helper function to find adjacent fixture on same pitch
-   const findAdjacentFixture = (currentFixture, direction) => {
-     const samePitchFixtures = filteredFixtures
-       .filter(f => f.pitch === currentFixture.pitch && f.id !== currentFixture.id)
-       .sort((a, b) => new Date(a.scheduledTime || a.plannedStart) - new Date(b.scheduledTime || b.plannedStart));
+    const findAdjacentFixture = (currentFixture, direction) => {
+      const samePitchFixtures = filteredFixtures
+        .filter(f => f.pitch === currentFixture.pitch)
+        .sort((a, b) => new Date(a.scheduledTime || a.plannedStart) - new Date(b.scheduledTime || b.plannedStart));
 
-     const currentIndex = samePitchFixtures.findIndex(f => f.id === currentFixture.id);
-     return direction === 'up' ? samePitchFixtures[currentIndex - 1] : samePitchFixtures[currentIndex + 1];
-   };
+      const currentIndex = samePitchFixtures.findIndex(f => f.id === currentFixture.id);
+      return direction === 'up' ? samePitchFixtures[currentIndex - 1] : samePitchFixtures[currentIndex + 1];
+    };
 
   return (
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
