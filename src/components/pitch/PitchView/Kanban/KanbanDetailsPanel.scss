@@ -228,6 +228,136 @@
   }
 }
 
+.move-entry-wrapper {
+  margin-top: 2.4rem;
+  padding: 0 2.4rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .move-entry-header {
+    text-align: center;
+
+    h3 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin: 0 0 0.6rem;
+      color: $pc-dark-30;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.6rem;
+      color: darken($pc, 10%);
+    }
+  }
+
+  .move-entry-grid {
+    display: grid;
+    gap: 1.6rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      .move-entry-group:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  .move-entry-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    label {
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: $pc-dark-30;
+    }
+  }
+
+  .move-entry-label {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: $pc-dark-30;
+  }
+
+  .move-entry-placement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: darken($pc, 15%);
+    }
+  }
+
+  .move-option-label {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.4rem;
+
+    .move-option-time {
+      font-weight: 600;
+      color: $pc-dark-20;
+    }
+
+    .move-option-vs {
+      color: darken($pc, 15%);
+    }
+  }
+
+  .move-entry-alert {
+    background: rgba(#f87171, 0.12);
+    border: 1px solid rgba(#f87171, 0.4);
+    color: #b91c1c;
+    padding: 1.2rem 1.6rem;
+    border-radius: 1.2rem;
+    font-size: 1.5rem;
+  }
+
+  .move-entry-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+
+    .btn {
+      padding: 1.2rem 2.4rem;
+      font-size: 1.5rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &.btn-tertiary {
+        background: rgba(0, 0, 0, 0.05);
+        color: $pc-dark-30;
+      }
+
+      &.btn-primary {
+        background: $pc;
+        color: #fff;
+
+        &:disabled {
+          background: $pc-light-40;
+          cursor: not-allowed;
+        }
+      }
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
 .panel-backdrop {
   position: fixed;
   top: 0;
