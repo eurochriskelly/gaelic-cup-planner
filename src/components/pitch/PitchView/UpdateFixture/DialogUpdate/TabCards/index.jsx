@@ -3,12 +3,13 @@ import { useState } from "react";
 import CardButton from "./CardButton";
 import './TabCards.scss';
 
-const TabCards = ({ 
-  team1, 
-  team2, 
-  cardedPlayers, 
+const TabCards = ({
+  team1,
+  team2,
+  cardedPlayers,
   setCardedPlayer, // This will update the state in CardEntryWrapper
-  fixture // fixture might still be needed for context, e.g. tournamentId, fixture.id if API was here
+  fixture, // fixture might still be needed for context, e.g. tournamentId, fixture.id if API was here
+  onEditStart
   // onSaveComplete and onCancel props removed
 }) => {
   const [showForm, setShowForm] = useState(false);
@@ -111,20 +112,21 @@ const TabCards = ({
 
   const renderTeamSection = (team, cards, suffix) => (
     <div className={`team-section team-${suffix}`}>
-      <div className="team-header">
-        <h4>Team: {team}</h4>
-        {!showForm && (
-          <button
-            className="add-card-button"
-            onClick={() => {
-              setFormData({ ...formData, team });
-              setShowForm(true);
-            }}
-          >
-            <i className="pi pi-plus"></i> Add Card
-          </button>
-        )}
-      </div>
+         <div className="team-header">
+           <h4>Team: {team}</h4>
+           {!showForm && (
+             <button
+               className="add-card-button"
+               onClick={() => {
+                 if (onEditStart && !onEditStart()) return;
+                 setFormData({ ...formData, team });
+                 setShowForm(true);
+               }}
+             >
+               <i className="pi pi-plus"></i> Add Card
+             </button>
+           )}
+         </div>
       {/* Ensure cards is an array before mapping */}
       {(cards || []).length > 0 ? (
         <div className="cards-list">
@@ -142,11 +144,14 @@ const TabCards = ({
                   onClick={() => actions.removeCard(team, card.id)}
                   title="Remove Card"
                 ></i>
-                <i
-                  className="pi pi-pencil edit-icon"
-                  onClick={() => actions.editCard(card)}
-                  title="Edit Card"
-                ></i>
+                 <i
+                   className="pi pi-pencil edit-icon"
+                   onClick={() => {
+                     if (onEditStart && !onEditStart()) return;
+                     actions.editCard(card);
+                   }}
+                   title="Edit Card"
+                 ></i>
               </div>
             </div>
           ))}

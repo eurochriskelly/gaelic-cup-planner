@@ -24,6 +24,7 @@ const DialogUpdate = ({
   const [isSubmittingScore, setIsSubmittingScore] = useState(false);
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
   const [cancellationOption, setCancellationOption] = useState(null);
+  const [showFinishedWarning, setShowFinishedWarning] = useState(false);
   const originalScoresRef = useRef({
     team1: { goals: "", points: "" },
     team2: { goals: "", points: "" }
@@ -155,6 +156,14 @@ const DialogUpdate = ({
       });
   };
 
+  const handleConfirmFinishedEdit = () => {
+    setShowFinishedWarning(false);
+  };
+
+  const handleCancelFinishedEdit = () => {
+    setShowFinishedWarning(false);
+  };
+
   const renderTabContent = () => {
     // Don't render tabs until fixture data is loaded
     if (!fixture) return <div>Loading...</div>;
@@ -168,6 +177,14 @@ const DialogUpdate = ({
             fixture={fixture}
             onProceed={handleScoreSubmit}
             isSubmitting={isSubmittingScore}
+            onEditStart={() => {
+              console.log('onEditStart called, fixture.ended:', fixture.ended);
+              if (fixture.ended) {
+                setShowFinishedWarning(true);
+                return false;
+              }
+              return true;
+            }}
           />
         );
       case "cancel":
@@ -190,6 +207,14 @@ const DialogUpdate = ({
             cardedPlayers={cardedPlayers}
             setCardedPlayer={registerCardedPlayer}
             fixture={fixture}
+            onEditStart={() => {
+              console.log('onEditStart called, fixture.ended:', fixture.ended);
+              if (fixture.ended) {
+                setShowFinishedWarning(true);
+                return false;
+              }
+              return true;
+            }}
           />
         );
       default:
@@ -233,6 +258,18 @@ const DialogUpdate = ({
           {renderTabContent()}
         </div>
       </div>
+      {showFinishedWarning && (
+        <div className="reschedule-message-overlay">
+          <div className="reschedule-message">
+            <div className="warning-icon">⚠️</div>
+            <div className="warning-message">This match is finished. Are you sure you want to edit it?</div>
+            <div className="warning-actions">
+              <button onClick={handleCancelFinishedEdit}>No</button>
+              <button onClick={handleConfirmFinishedEdit}>Yes</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
