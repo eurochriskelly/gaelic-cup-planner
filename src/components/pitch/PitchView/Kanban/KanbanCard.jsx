@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './KanbanCard.scss';
 import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
@@ -11,20 +11,29 @@ import '../../../../components/web/gaelic-score.js';
 
 const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPanel, moveBarFixtureId, setMoveBarFixtureId, pendingMove, setPendingMove, recentlyMovedFixtureId, findAdjacentFixture, fetchFixtures }) => {
   const toolboxRef = useRef(null);
+  const [showMessage, setShowMessage] = useState(false);
 
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : '';
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const displayNumber = fixture?.groupNumber || '0';
   const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
-  const hasScore = typeof fixture.goals1 === 'number' &&
-    typeof fixture.goals2 === 'number' &&
-    typeof fixture.points1 === 'number' &&
-    typeof fixture.points2 === 'number' &&
-    !isNaN(fixture.goals1) &&
-    !isNaN(fixture.goals2) &&
-    !isNaN(fixture.points1) &&
-    !isNaN(fixture.points2);
-  const vspace = hasScore ? '2.1rem' : 0;
+   const hasScore = typeof fixture.goals1 === 'number' &&
+     typeof fixture.goals2 === 'number' &&
+     typeof fixture.points1 === 'number' &&
+     typeof fixture.points2 === 'number' &&
+     !isNaN(fixture.goals1) &&
+     !isNaN(fixture.goals2) &&
+     !isNaN(fixture.points1) &&
+     !isNaN(fixture.points2);
+   const vspace = hasScore ? '2.1rem' : 0;
+
+   // Calculate totals for determining winner
+   const total1 = hasScore ? (fixture.goals1 * 3 + fixture.points1) : 0;
+   const total2 = hasScore ? (fixture.goals2 * 3 + fixture.points2) : 0;
+   const isFinished = fixture.outcome === 'played';
+   const team1Won = isFinished && total1 > total2;
+   const team2Won = isFinished && total2 > total1;
+   const isDraw = isFinished && total1 === total2;
 
   useEffect(() => {
     const positionToolbox = () => {
@@ -89,17 +98,17 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               logo-margin-right="0.5rem"
             ></team-name>
             {/* Team 1 score under name, right-aligned */}
-            {hasScore && (
-              <div className="score-row">
-                <gaelic-score
-                  goals={fixture.goals1 ?? 0}
-                  points={fixture.points1 ?? 0}
-                  goalsagainst={fixture.goals2 ?? 0}
-                  pointsagainst={fixture.points2 ?? 0}
-                  played={fixture.outcome === 'played'}
-                ></gaelic-score>
-              </div>
-            )}
+             {hasScore && (
+               <div className={`score-row ${team1Won ? 'winner' : team2Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                 <gaelic-score
+                   goals={fixture.goals1 ?? 0}
+                   points={fixture.points1 ?? 0}
+                   goalsagainst={fixture.goals2 ?? 0}
+                   pointsagainst={fixture.points2 ?? 0}
+                   played={fixture.outcome === 'played'}
+                 ></gaelic-score>
+               </div>
+             )}
           </div>
 
           <div className="vs-row">vs</div>
@@ -115,17 +124,17 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               title-margin-below={vspace}
               logo-margin-right="0.5rem"
             ></team-name>
-            {hasScore && (
-              <div className="score-row">
-                <gaelic-score
-                  goals={fixture.goals2 ?? 0}
-                  points={fixture.points2 ?? 0}
-                  goalsagainst={fixture.goals1 ?? 0}
-                  pointsagainst={fixture.points1 ?? 0}
-                  played={fixture.outcome === 'played'}
-                ></gaelic-score>
-              </div>
-            )}
+             {hasScore && (
+               <div className={`score-row ${team2Won ? 'winner' : team1Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                 <gaelic-score
+                   goals={fixture.goals2 ?? 0}
+                   points={fixture.points2 ?? 0}
+                   goalsagainst={fixture.goals1 ?? 0}
+                   pointsagainst={fixture.points1 ?? 0}
+                   played={fixture.outcome === 'played'}
+                 ></gaelic-score>
+               </div>
+             )}
           </div>
         </div>
         {(fixture?.lane?.current === 'planned') &&
@@ -177,26 +186,34 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
            </>
          ) : (
            <>
-              <button className="tool-btn" aria-label="Move up" onClick={(e) => {
-                e.stopPropagation();
-                const prev = findAdjacentFixture(fixture, 'up');
-                if (prev) setPendingMove({ type: 'up', targetFixtureId: prev.id });
-              }}>▲</button>
+               <button className="tool-btn" aria-label="Move up" onClick={(e) => {
+                 e.stopPropagation();
+                 setShowMessage(true);
+                 setMoveBarFixtureId(null);
+               }}>▲</button>
               <button className="tool-btn" aria-label="More" onClick={(e) => {
                 e.stopPropagation();
                 showDetailsPanel('move');
               }}>⋯</button>
-              <button className="tool-btn" aria-label="Move down" onClick={(e) => {
-                e.stopPropagation();
-                const next = findAdjacentFixture(fixture, 'down');
-                if (next) setPendingMove({ type: 'down', targetFixtureId: next.id });
-              }}>▼</button>
+               <button className="tool-btn" aria-label="Move down" onClick={(e) => {
+                 e.stopPropagation();
+                 setShowMessage(true);
+                 setMoveBarFixtureId(null);
+               }}>▼</button>
            </>
          )}
-       </div>
-     </div>
-   );
- };
+        </div>
+        {showMessage && (
+          <div className="reschedule-message-overlay">
+            <div className="reschedule-message">
+              In this tournament, rescheduling requires CCO approval
+              <button onClick={() => setShowMessage(false)}>OK</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
 
 

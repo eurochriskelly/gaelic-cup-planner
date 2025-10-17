@@ -48,7 +48,7 @@ $muted: #3d3d3d;
   }
 
   .pitch-chip {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba($surface, 0.6);
     border: 2px solid transparent;
     border-radius: 1rem;
     padding: 1.4rem 1.25rem;
@@ -69,7 +69,7 @@ $muted: #3d3d3d;
     }
 
     &.selected {
-      border-color: $primary;
+      border-color: white;
       background: $primary;
       box-shadow: 0 0 0.75rem rgba($primary, 0.25);
       color: #fff;
