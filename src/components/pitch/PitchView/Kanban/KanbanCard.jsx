@@ -206,7 +206,8 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
         {showMessage && (
           <div className="reschedule-message-overlay">
             <div className="reschedule-message">
-              In this tournament, rescheduling requires CCO approval
+              <div className="warning-icon">⚠️</div>
+              <div className="warning-message">In this tournament, rescheduling requires CCO approval</div>
               <button onClick={() => setShowMessage(false)}>OK</button>
             </div>
           </div>
