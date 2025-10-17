@@ -6,14 +6,14 @@ To import, add the following to the top of your scss file:
 $menu-bg-color:  desaturate(darken(#272f0e, 10%), 20%); 
 $menu-grid-color: lighten($menu-bg-color, 13%);
 
-$primary-color: #657338;
+$primary-color: #4a5a28;
 $mainColor: $primary-color;
-$secondary-color: #463873;
-$background-color: #f8f9fa;
+$secondary-color: #2a1f4a;
+$background-color: #e0e0e0;
 $pc: $primary-color;
 $sc: $secondary-color;
 $bg: $background-color;
-$text-color: #333;
+$text-color: #000000;
 $rcol: #d4e79b;
 
 // darken by 10%
