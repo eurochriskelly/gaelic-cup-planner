@@ -397,6 +397,11 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     margin-bottom: 1rem;
   }
 
+  .warning-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
   button {
     padding: 1.5rem 3rem;
     background: #ffc107;
@@ -406,11 +411,6 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     cursor: pointer;
     font-size: 2rem;
     font-weight: bold;
-  }
-
-
-  .warning-message {
-    margin-bottom: 1rem;
   }
 
   button {

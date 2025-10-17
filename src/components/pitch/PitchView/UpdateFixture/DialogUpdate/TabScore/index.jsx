@@ -2,12 +2,13 @@ import { useMemo, useState } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
-const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false }) => {
+const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false, onEditStart }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
 
   const actions = {
     updateScore: (team) => {
+      if (onEditStart && !onEditStart()) return;
       setCurrentTeam(team);
       setScorePicker({ visible: true });
     },
