@@ -26,14 +26,26 @@ build:
 	  echo "Usage: make build [production|acceptance|test]"; \
 	  exit 1; \
 	fi
-	@if [ "$(ENV)" = "production" ]; then \
-	  bash scripts/bump.sh --release; \
-	elif [ "$(ENV)" = "acceptance" ]; then \
-	  bash scripts/bump.sh --release-candidate; \
+	@if [ -z "$(BUMP)" ]; then \
+	  echo -e "\033[33mDo you want to bump the version? (y/n): \033[0m"; \
+	  echo "To suppress this prompt, use 'make build $(ENV) BUMP=[true|false]'"; \
+	  read answer; \
+	  if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
+	    BUMP=true; \
+	  else \
+	    BUMP=false; \
+	  fi; \
+	fi
+	@if [ "$(BUMP)" = "true" ]; then \
+	  if [ "$(ENV)" = "production" ]; then \
+	    bash scripts/bump.sh --release; \
+	  elif [ "$(ENV)" = "acceptance" ]; then \
+	    bash scripts/bump.sh --release-candidate; \
+	  fi; \
 	fi
 	$(call banner,Building $(ENV))
 	@BUILD_ENV=$(ENV) npm run build:mobile
-	@if [ "$(ENV)" = "production" ]; then \
+	@if [ "$(BUMP)" = "true" ] && [ "$(ENV)" = "production" ]; then \
 	  bash scripts/bump.sh --release-candidate; \
 	fi
 	$(call banner,Done $(ENV))
