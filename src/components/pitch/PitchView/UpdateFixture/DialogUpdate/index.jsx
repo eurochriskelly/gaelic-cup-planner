@@ -25,6 +25,7 @@ const DialogUpdate = ({
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
   const [cancellationOption, setCancellationOption] = useState(null);
   const [showFinishedWarning, setShowFinishedWarning] = useState(false);
+  const [allowEditingFinished, setAllowEditingFinished] = useState(false);
   const originalScoresRef = useRef({
     team1: { goals: "", points: "" },
     team2: { goals: "", points: "" }
@@ -45,6 +46,9 @@ const DialogUpdate = ({
             team1: { goals: goals1 ?? "", points: points1 ?? "" },
             team2: { goals: goals2 ?? "", points: points2 ?? "" }
           };
+
+          // Reset editing permission for finished fixtures when fixture changes
+          setAllowEditingFinished(false);
 
           setScores({
             team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
@@ -157,6 +161,7 @@ const DialogUpdate = ({
   };
 
   const handleConfirmFinishedEdit = () => {
+    setAllowEditingFinished(true);
     setShowFinishedWarning(false);
   };
 
@@ -178,8 +183,8 @@ const DialogUpdate = ({
             onProceed={handleScoreSubmit}
             isSubmitting={isSubmittingScore}
             onEditStart={() => {
-              console.log('onEditStart called, fixture.ended:', fixture.ended);
-              if (fixture.ended) {
+              console.log('onEditStart called, fixture.outcome:', fixture.outcome);
+              if (fixture.outcome === 'played' && !allowEditingFinished) {
                 setShowFinishedWarning(true);
                 return false;
               }
@@ -208,8 +213,8 @@ const DialogUpdate = ({
             setCardedPlayer={registerCardedPlayer}
             fixture={fixture}
             onEditStart={() => {
-              console.log('onEditStart called, fixture.ended:', fixture.ended);
-              if (fixture.ended) {
+              console.log('onEditStart called, fixture.outcome:', fixture.outcome);
+              if (fixture.outcome === 'played' && !allowEditingFinished) {
                 setShowFinishedWarning(true);
                 return false;
               }

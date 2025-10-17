@@ -293,7 +293,6 @@ function CardEntryWrapper({ fixture, closePanel }) {
         team1: fixture.cards.filter(p => p.team === fixture.team1),
         team2: fixture.cards.filter(p => p.team === fixture.team2),
       }
-      console.log('aaa', res);
       setCardedPlayers(res);
     } else {
       setCardedPlayers({ team1: [], team2: [] });
