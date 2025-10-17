@@ -161,7 +161,6 @@ const TabCards = ({
       )}
     </div>
   );
- console.log('eee', cardedPlayers)
   return (
     <div className="TabCards">
       {showForm ? (
