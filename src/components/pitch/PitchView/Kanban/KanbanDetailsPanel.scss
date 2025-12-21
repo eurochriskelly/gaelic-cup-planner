@@ -358,6 +358,71 @@
   }
 }
 
+.score-action-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10rem;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.5rem;
+    font-size: 1.9rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+    min-height: 135px;
+    background: none;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.btn-secondary {
+      color: #6c757d;
+
+      &:hover:not(:disabled) {
+        color: #5a6268;
+      }
+    }
+
+    &.btn-primary {
+      color: #007bff;
+
+      &:hover:not(:disabled) {
+        color: #0056b3;
+      }
+    }
+
+    &.btn-warning {
+      color: #ffc107;
+
+      &:hover:not(:disabled) {
+        color: #e0a800;
+      }
+    }
+
+    .button-icon {
+      font-size: 6.75rem;
+      line-height: 1;
+    }
+  }
+}
+
 .panel-backdrop {
   position: fixed;
   top: 0;
@@ -368,4 +433,59 @@
   height: 100%;
   z-index: 19;
   background-color: rgba(0, 0, 0, 0.1); // Semi-transparent overlay
+}
+
+.reschedule-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.reschedule-message {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-size: 3rem;
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  .warning-icon {
+    font-size: 5rem;
+  }
+
+  .warning-message {
+    margin-bottom: 1rem;
+  }
+
+  .warning-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  button {
+    padding: 1.5rem 3rem;
+    background: #ffc107;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 2rem;
+
+    &:hover {
+      background: #e0a800;
+    }
+  }
 }

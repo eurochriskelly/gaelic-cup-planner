@@ -4,6 +4,7 @@ import FixtureBar from './FixtureBar'; // Import FixtureBar
 import TimeDisplay from './TimeDisplay'; // Import TimeDisplay component
 import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react';
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react';
+import CancelIcon from '../../../../shared/icons/icon-cancel.svg?react';
 import API from '../../../../shared/api/endpoints';
 import '../../../../components/web/logo-box.js';
 import '../../../../components/web/team-name.js';
@@ -27,13 +28,14 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
      !isNaN(fixture.points2);
    const vspace = hasScore ? '2.1rem' : 0;
 
-   // Calculate totals for determining winner
-   const total1 = hasScore ? (fixture.goals1 * 3 + fixture.points1) : 0;
-   const total2 = hasScore ? (fixture.goals2 * 3 + fixture.points2) : 0;
-   const isFinished = fixture.outcome === 'played';
-   const team1Won = isFinished && total1 > total2;
-   const team2Won = isFinished && total2 > total1;
-   const isDraw = isFinished && total1 === total2;
+    // Calculate totals for determining winner
+    const total1 = hasScore ? (fixture.goals1 * 3 + fixture.points1) : 0;
+    const total2 = hasScore ? (fixture.goals2 * 3 + fixture.points2) : 0;
+    const isFinished = fixture.outcome === 'played';
+    const isOngoingWithScore = !isFinished && hasScore;
+    const team1Won = isFinished && total1 > total2;
+    const team2Won = isFinished && total2 > total1;
+    const isDraw = isFinished && total1 === total2;
 
   useEffect(() => {
     const positionToolbox = () => {
@@ -77,6 +79,11 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
         competitionPrefix={fixture?.competition?.initials}
         competitionOffset={fixture?.competition?.offset}
       />
+      {fixture.endedWithoutScore && (
+        <div className="warning-icon" style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', color: 'orange', fontSize: '2rem' }}>
+          <CancelIcon width="24" height="24" />
+        </div>
+      )}
       {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
         <TimeDisplay
           scheduledTime={fixture.scheduledTime}
@@ -97,18 +104,18 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               title-margin-below={vspace}
               logo-margin-right="0.5rem"
             ></team-name>
-            {/* Team 1 score under name, right-aligned */}
-             {hasScore && (
-               <div className={`score-row ${team1Won ? 'winner' : team2Won ? 'loser' : isDraw ? 'draw' : ''}`}>
-                 <gaelic-score
-                   goals={fixture.goals1 ?? 0}
-                   points={fixture.points1 ?? 0}
-                   goalsagainst={fixture.goals2 ?? 0}
-                   pointsagainst={fixture.points2 ?? 0}
-                   played={fixture.outcome === 'played'}
-                 ></gaelic-score>
-               </div>
-             )}
+             {/* Team 1 score under name, right-aligned */}
+              {hasScore && (
+                <div className={`score-row ${isOngoingWithScore ? '' : team1Won ? 'winner' : team2Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                  <gaelic-score
+                    goals={fixture.goals1 ?? 0}
+                    points={fixture.points1 ?? 0}
+                    goalsagainst={fixture.goals2 ?? 0}
+                    pointsagainst={fixture.points2 ?? 0}
+                    played={fixture.outcome === 'played'}
+                  ></gaelic-score>
+                </div>
+              )}
           </div>
 
           <div className="vs-row">vs</div>
@@ -124,17 +131,17 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               title-margin-below={vspace}
               logo-margin-right="0.5rem"
             ></team-name>
-             {hasScore && (
-               <div className={`score-row ${team2Won ? 'winner' : team1Won ? 'loser' : isDraw ? 'draw' : ''}`}>
-                 <gaelic-score
-                   goals={fixture.goals2 ?? 0}
-                   points={fixture.points2 ?? 0}
-                   goalsagainst={fixture.goals1 ?? 0}
-                   pointsagainst={fixture.points1 ?? 0}
-                   played={fixture.outcome === 'played'}
-                 ></gaelic-score>
-               </div>
-             )}
+              {hasScore && (
+                <div className={`score-row ${isOngoingWithScore ? '' : team2Won ? 'winner' : team1Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                  <gaelic-score
+                    goals={fixture.goals2 ?? 0}
+                    points={fixture.points2 ?? 0}
+                    goalsagainst={fixture.goals1 ?? 0}
+                    pointsagainst={fixture.points1 ?? 0}
+                    played={fixture.outcome === 'played'}
+                  ></gaelic-score>
+                </div>
+              )}
           </div>
         </div>
         {(fixture?.lane?.current === 'planned') &&
