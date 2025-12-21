@@ -223,8 +223,9 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
     },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showEndMatchWarning, setShowEndMatchWarning] = useState(false);
 
-  const handleScoreProceed = async () => {
+  const handleUpdateScore = async () => {
     if (isSubmitting) return;
 
     try {
@@ -246,16 +247,68 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
         // outcome might be needed by API.updateScore, adjust if necessary
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);
+      await fetchFixtures(true); // Refresh fixtures
+      closePanel(); // Close the panel
+    } catch (error) {
+      console.error("Error updating score:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFinalScore = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      const result = {
+        outcome: 'played',
+        scores: {
+          team1: {
+            name: fixture.team1,
+            goals: parseInt(scores.team1.goals, 10) || 0,
+            points: parseInt(scores.team1.points, 10) || 0,
+          },
+          team2: {
+            name: fixture.team2,
+            goals: parseInt(scores.team2.goals, 10) || 0,
+            points: parseInt(scores.team2.points, 10) || 0,
+          },
+        },
+      };
+      await API.updateScore(fixture.tournamentId, fixture.id, result);
       await API.endMatch(fixture.tournamentId, fixture.id); // End the match
       await fetchFixtures(true); // Refresh fixtures, progressing nextFixture
       moveToNextFixture && moveToNextFixture(); // Move to next fixture in UI if applicable
       closePanel(); // Close the panel
     } catch (error) {
-      console.error("Error proceeding with score:", error);
-      // Optionally, show an error message to the user
+      console.error("Error finalizing score:", error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleEndMatch = () => {
+    setShowEndMatchWarning(true);
+  };
+
+  const confirmEndMatch = async () => {
+    try {
+      setIsSubmitting(true);
+      setShowEndMatchWarning(false);
+      await API.endMatch(fixture.tournamentId, fixture.id);
+      await fetchFixtures(true);
+      moveToNextFixture && moveToNextFixture();
+      closePanel();
+    } catch (error) {
+      console.error("Error ending match:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const cancelEndMatch = () => {
+    setShowEndMatchWarning(false);
   };
 
   return (
@@ -264,9 +317,47 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
         fixture={fixture}
         scores={scores}
         setScores={setScores}
-        onProceed={handleScoreProceed}
+        onProceed={null} // Remove single proceed, we'll add buttons below
         isSubmitting={isSubmitting}
       />
+      <div className="score-action-buttons">
+        <button
+          className="btn btn-secondary"
+          onClick={handleUpdateScore}
+          disabled={isSubmitting}
+        >
+          <span className="button-icon">✏️</span>
+          Update Score
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={handleFinalScore}
+          disabled={isSubmitting}
+        >
+          <span className="button-icon">✅</span>
+          Final Score
+        </button>
+        <button
+          className="btn btn-warning"
+          onClick={handleEndMatch}
+          disabled={isSubmitting}
+        >
+          <span className="button-icon">🛑</span>
+          End Match
+        </button>
+      </div>
+      {showEndMatchWarning && (
+        <div className="reschedule-message-overlay">
+          <div className="reschedule-message">
+            <div className="warning-icon">⚠️</div>
+            <div className="warning-message">This will end the match without a score, freeing up the pitch for other teams. Are you sure?</div>
+            <div className="warning-actions">
+              <button onClick={cancelEndMatch}>No</button>
+              <button onClick={confirmEndMatch}>Yes</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
