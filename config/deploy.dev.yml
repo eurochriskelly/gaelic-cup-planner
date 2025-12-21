@@ -1,0 +1,34 @@
+service: pp-coord-dev
+
+servers:
+  web:
+    hosts:
+      - kamal-dev
+    options:
+      publish:
+        - '7002:7002'
+
+ssh:
+  user: ubuntu
+
+# dev: no TLS; unique proxy host to avoid conflicts with prod
+proxy:
+  host: dev-coord.pitchperfect.eu.com
+  ssl: false
+  app_port: 7002
+  healthcheck:
+    path: /health
+    timeout: 10
+    interval: 2
+
+env:
+  clear:
+    PORT: 7002
+    API_URL: http://kamal-dev:7001
+
+
+builder:
+  dockerfile: ./Dockerfile
+  local: false
+  arch: arm64
+  remote: ssh://ubuntu@kamal-dev
