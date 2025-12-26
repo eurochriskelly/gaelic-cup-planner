@@ -24,7 +24,7 @@ proxy:
 env:
   clear:
     PORT: 7002
-    API_URL: http://kamal-dev:7001
+    API_URL: http://172.18.0.1:7001
 
 
 builder:
