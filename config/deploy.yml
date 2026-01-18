@@ -2,21 +2,12 @@ service: pp-coord
 
 image: pp-coord
 
-servers:
-  web:
-    hosts:
-      - 10.8.0.1
-    options:
-      publish:
-        - '7002:7002'
-
 ssh:
   user: pp-admin
 
 proxy:
   host: coordinate.pitchperfect.eu.com
   ssl: true
-  app_port: 7002
   healthcheck:
     path: /health
     timeout: 10
@@ -24,7 +15,9 @@ proxy:
 
 env:
   clear:
-    PORT: 7002
+    PP_DATABASE: <%= ENV['PP_DATABASE'] %>
+    SMTP_PORT: <%= ENV['SMTP_PORT'] %>
+    PORT: <%= ENV['PP_PORT_COORD'] %>
     API_URL: https://api.pitchperfect.eu.com
 
 registry:
@@ -34,4 +27,4 @@ builder:
   dockerfile: ./Dockerfile
   local: false
   arch: amd64
-  remote: ssh://10.8.0.1
+  remote: ssh://pp-admin@<%= ENV['PP_HOSTNAME_SSH_TST'] %>
