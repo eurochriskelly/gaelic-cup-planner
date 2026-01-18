@@ -2,12 +2,9 @@ service: pp-coord-prd
 
 env:
   clear:
-    PP_DATABASE: '<%= ENV["PP_DATABASE"] %>'
     PP_HST: '<%= ENV["PP_HOSTNAME_SSH_PRD"] %>'
     PP_USR: '<%= ENV["PP_USR_PRD"] %>'
     API_URL: 'http://<%= ENV["PP_HOSTNAME_SSH_PRD"] %>:<%= ENV["PP_PORT_API_PRD"] %>'
-    PP_PORT_API: '<%= ENV["PP_PORT_COORD"] %>'
-    PORT: '<%= ENV["PP_PORT_COORD"] %>'
 
 servers:
   web:
@@ -23,15 +20,8 @@ ssh:
 proxy:
   host: coordinate.pitchperfect.eu.com
   ssl: true
-  app_port: <%= ENV["PP_PORT_COORD"] %>
-  healthcheck:
-    path: /health
-    timeout: 10
-    interval: 2
 
 builder:
-  dockerfile: ./Dockerfile
-  local: false
   arch: amd64
   remote: 'ssh://<%= ENV["PP_USR_SSH_PRD"] %>@<%= ENV["PP_HOSTNAME_SSH_PRD"] %>'
 

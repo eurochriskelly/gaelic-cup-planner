@@ -8,6 +8,7 @@ ssh:
 proxy:
   host: coordinate.pitchperfect.eu.com
   ssl: true
+  app_port: <%= ENV['PP_PORT_COORD'] %>
   healthcheck:
     path: /health
     timeout: 10
@@ -18,8 +19,13 @@ env:
     PP_DATABASE: <%= ENV['PP_DATABASE'] %>
     SMTP_PORT: <%= ENV['SMTP_PORT'] %>
     PORT: <%= ENV['PP_PORT_COORD'] %>
+
     API_URL: https://api.pitchperfect.eu.com
 
 registry:
   server: localhost:5555
+
+builder:
+  dockerfile: ./Dockerfile
+  local: false
 
