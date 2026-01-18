@@ -12,7 +12,6 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist/mobile /app/dist/mobile
 COPY server.js /app/server.js
 ENV NODE_ENV=production \
-    PORT=7002 \
-    API_URL=http://localhost:7001
-EXPOSE 7002
+    PORT=4002 \
+    API_URL=http://localhost:4001
 CMD ["node", "server.js"]
