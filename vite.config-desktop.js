@@ -48,7 +48,7 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'src/interfaces/desktop/public'),
   server: {
     proxy: {
-      '/api': 'http://localhost:4000',
+      '/api': 'http://localhost:4001',
     },
     port: 5174
   },

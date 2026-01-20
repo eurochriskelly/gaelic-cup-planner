@@ -1,47 +1,63 @@
 const express = require('express')
 const path = require('path')
-const { Readable } = require('stream')
+const http = require('http')
+const https = require('https')
 
 const app = express()
-const port = Number(process.env.PORT) || 7002
-const apiUrl = process.env.API_URL || 'http://localhost:7001'
+const port = Number(process.env.PORT) || 4002
+const apiUrl = process.env.API_URL || 'http://localhost:4001'
 const distPath = path.resolve(__dirname, 'dist', 'mobile')
 
+// fixed headers (e.g. Host) for routing through kamal-proxy
+// e.g. curl -H 'Host: tst-api.lan' http://kamal-proxy/health
+console.log(`v3: Running server. API on ${apiUrl}`)
+
 app.get('/health', (req, res) => {
+  console.log(process.env)
   res.type('text').send('ok')
 })
 
-app.use('/api', async (req, res) => {
+app.use('/api', (req, res) => {
   const targetUrl = new URL(req.originalUrl, apiUrl)
+
   const headers = { ...req.headers }
   delete headers.host
+  headers.host = process.env.API_HOST   // critical line
 
-  try {
-    const response = await fetch(targetUrl, {
-      method: req.method,
-      headers,
-      body: req.method === 'GET' || req.method === 'HEAD' ? undefined : req,
-      duplex: req.method === 'GET' || req.method === 'HEAD' ? undefined : 'half'
+  console.log('proxy →', targetUrl.toString(), 'host=', headers.host)
+
+  const requestFn = targetUrl.protocol === 'https:' ? https.request : http.request
+
+  const proxyReq = requestFn(targetUrl, {
+    method: req.method,
+    headers
+  }, (proxyRes) => {
+    res.status(proxyRes.statusCode)
+    Object.keys(proxyRes.headers).forEach((key) => {
+      if (key === 'transfer-encoding') return
+      res.setHeader(key, proxyRes.headers[key])
     })
+    proxyRes.pipe(res)
+  })
 
-    res.status(response.status)
-    response.headers.forEach((value, key) => {
-      if (key.toLowerCase() === 'transfer-encoding') return
-      res.setHeader(key, value)
-    })
-
-    if (response.body) {
-      Readable.fromWeb(response.body).pipe(res)
-      return
+  proxyReq.on('error', (err) => {
+    console.error(err)
+    if (!res.headersSent) {
+      res.status(502).json({ error: 'api_proxy_failed' })
     }
+  })
 
-    res.end()
-  } catch (error) {
-    res.status(502).json({ error: 'api_proxy_failed' })
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    proxyReq.end()
+  } else {
+    req.pipe(proxyReq)
   }
 })
 
-app.use(express.static(distPath))
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/')) return next()
+  return express.static(distPath)(req, res, next)
+})
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'))
