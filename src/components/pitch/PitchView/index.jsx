@@ -27,6 +27,10 @@ const PitchView = () => {
 
   // Function to explicitly move focus to the next unplayed fixture
   const moveToNextFixture = async () => {
+    if (!fixtures || !fixtures.length) {
+      console.log("PitchView: No fixtures available.");
+      return;
+    }
     const currentFocusIndex = fixtures.findIndex(f => f.id === currentFocusFixtureId);
     let nextUnplayedFixture = null;
 

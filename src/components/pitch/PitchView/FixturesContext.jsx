@@ -18,15 +18,16 @@ export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
 
   const fetchFixtures = async (progress = false) => {
     const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections);
-    setFixtures(data);
+    const fixturesData = data || [];
+    setFixtures(fixturesData);
     if (progress) {
-        setNextFixture(data.find((f) => !f.played));
+        setNextFixture(fixturesData.find((f) => !f.played));
     } else {
-        const nf = data.find((f) => f?.id === nextFixture?.id);
+        const nf = fixturesData.find((f) => f?.id === nextFixture?.id);
         if (nf) {
             setNextFixture(nf);
         } else {
-            setNextFixture(data.find((f) => !f.played));
+            setNextFixture(fixturesData.find((f) => !f.played));
         }
     }
   };
@@ -47,8 +48,9 @@ export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
   useEffect(() => {
     const initialFetch = async () => {
       const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections)
-      setFixtures(data);
-      const nextFixture = data.find((f) => !f.played);
+      const fixturesData = data || [];
+      setFixtures(fixturesData);
+      const nextFixture = fixturesData.find((f) => !f.played);
       setNextFixture(nextFixture);
     };
     initialFetch();
