@@ -71,7 +71,7 @@ const PitchView = () => {
   const listTabNames = tabNames.filter(t => t.toLowerCase() !== "kanban");
 
   let displayFixtures = listTabNames.map((tab) => {
-    return fixtures
+    return (fixtures || [])
       .filter((f) => {
         const focusFixture = currentFocusFixtureId && currentFocusFixtureId === f.id;
         switch (tab.toLowerCase()) {

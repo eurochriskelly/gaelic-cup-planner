@@ -213,10 +213,10 @@ const LandingPage = () => {
         {/* New: Add banner container */}
         <div className="banner-container">
           <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
-          <h1>
-            <div className='version-info'>Pitch Perfect. V{versionInfo.mobile.replace(/%/g, '')}</div>
-            <div>{t('landingPage_heading', 'Pitch Perfect')}</div>
-          </h1>
+          <div className="banner-footer-bar">
+            <div className="banner-title">{t('landingPage_heading', 'Pitch Perfect')}</div>
+            <div className="banner-version">V{versionInfo.mobile.replace(/%/g, '')}</div>
+          </div>
         </div>
         <header>
           <table>
