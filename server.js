@@ -22,16 +22,30 @@ app.use('/api', (req, res) => {
 
   const headers = { ...req.headers }
   delete headers.host
-  headers.host = process.env.API_HOST   // critical line
+
+  // If we have an explicit API_HOST env var, use it (legacy kamal-proxy mode)
+  // Otherwise, use the host from the API_URL (modern direct mode)
+  if (process.env.API_HOST) {
+    headers.host = process.env.API_HOST
+  } else {
+    headers.host = targetUrl.host
+  }
 
   console.log('proxy →', targetUrl.toString(), 'host=', headers.host)
 
+  const requestOptions = {
+    method: req.method,
+    headers,
+    // Ensure we use the correct protocol/port from the target URL
+    protocol: targetUrl.protocol,
+    hostname: targetUrl.hostname,
+    port: targetUrl.port,
+    path: targetUrl.pathname + targetUrl.search
+  }
+
   const requestFn = targetUrl.protocol === 'https:' ? https.request : http.request
 
-  const proxyReq = requestFn(targetUrl, {
-    method: req.method,
-    headers
-  }, (proxyRes) => {
+  const proxyReq = requestFn(requestOptions, (proxyRes) => {
     res.status(proxyRes.statusCode)
     Object.keys(proxyRes.headers).forEach((key) => {
       if (key === 'transfer-encoding') return
