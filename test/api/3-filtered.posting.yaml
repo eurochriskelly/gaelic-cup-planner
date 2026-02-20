@@ -1,0 +1,3 @@
+name: 3-filtered
+method: POST
+url: http://localhost:4001/api/tournaments/$TID/fixtures/filtered

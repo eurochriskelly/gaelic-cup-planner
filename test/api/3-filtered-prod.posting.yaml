@@ -1,0 +1,3 @@
+name: 3-filtered-prod
+method: POST
+url: https://api.pitchperfect.eu.com/api/tournaments/$TID/fixtures/filtered
