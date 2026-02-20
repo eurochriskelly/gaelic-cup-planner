@@ -1,0 +1,9 @@
+name: 2-score-cancel
+method: POST
+url: localhost:4001/api/tournaments/$TID/fixtures/$FID1/score
+body:
+  content: '{"scores":{"team1":{"goals":0,"points":1},"team2":{"goals":0,"points":0}},"outcome":"skipped"}'
+  content_type: application/json
+headers:
+- name: content-type
+  value: application/json
