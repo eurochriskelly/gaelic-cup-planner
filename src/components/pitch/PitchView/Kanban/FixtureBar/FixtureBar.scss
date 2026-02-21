@@ -1,6 +1,7 @@
 @import "src/shared/css/_colors.scss";
 
 .FixtureBar {
+  background-color: #666666; // Fallback default
   display: flex;
   align-items: center;
   gap: 2rem;
