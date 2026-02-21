@@ -32,35 +32,52 @@
   .extra-time-label {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     cursor: pointer;
-    padding: 1.2rem 2.4rem;
-    background-color: $sc-light-40;
-    border-radius: 0.8rem;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
 
-    &:hover {
-      background-color: darken($sc-light-40, 5%);
+    // Disabled state - always visible but faded
+    &.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+
+      input[type="checkbox"] {
+        cursor: not-allowed;
+      }
     }
 
     input[type="checkbox"] {
-      width: 2.4rem;
-      height: 2.4rem;
+      width: 4rem;
+      height: 4rem;
       cursor: pointer;
       accent-color: $pc;
+      flex-shrink: 0;
+      border: 4px solid $sc-dark-20;
+      border-radius: 0.6rem;
+      appearance: none;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:checked {
+        background-color: white;
+        border-color: $pc;
+      }
+
+      &:checked::after {
+        content: '';
+        width: 2rem;
+        height: 2rem;
+        background-color: $pc;
+        border-radius: 0.3rem;
+      }
     }
 
     span {
-      font-size: 2rem;
-      font-weight: 600;
+      font-size: 2.4rem;
+      font-weight: 500;
       color: $sc-dark-20;
       user-select: none;
-    }
-
-    &:has(input:checked) {
-      background-color: lighten($pc, 35%);
-      border-color: $pc;
     }
   }
 }

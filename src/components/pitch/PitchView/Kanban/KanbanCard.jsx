@@ -18,19 +18,40 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
   const displayStage = fixture.stage ? fixture.stage.toUpperCase().replace('PLT', 'Plate').replace('CUP', 'Cup').replace('SHD', 'Shield').replace('_', '/') : '';
   const displayNumber = fixture?.groupNumber || '0';
   const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
-   const hasScore = typeof fixture.goals1 === 'number' &&
-     typeof fixture.goals2 === 'number' &&
-     typeof fixture.points1 === 'number' &&
-     typeof fixture.points2 === 'number' &&
-     !isNaN(fixture.goals1) &&
-     !isNaN(fixture.goals2) &&
-     !isNaN(fixture.points1) &&
-     !isNaN(fixture.points2);
+
+    const getNumber = (val) => {
+        if (val === null || val === undefined || val === '') return 0;
+        const num = Number(val);
+        return isNaN(num) ? 0 : num;
+    };
+
+
+    const hasScore = (fixture.goals1 !== null && fixture.goals1 !== undefined) &&
+                     (fixture.goals2 !== null && fixture.goals2 !== undefined) &&
+                     (fixture.points1 !== null && fixture.points1 !== undefined) &&
+                     (fixture.points2 !== null && fixture.points2 !== undefined);
+
+   // Check if extra time exists (values are defined, even if 0)
+   const hasExtraTime = hasScore && (
+       (fixture.goals1Extra !== null && fixture.goals1Extra !== undefined) ||
+       (fixture.points1Extra !== null && fixture.points1Extra !== undefined) ||
+       (fixture.goals2Extra !== null && fixture.goals2Extra !== undefined) ||
+       (fixture.points2Extra !== null && fixture.points2Extra !== undefined)
+   );
+
    const vspace = hasScore ? '2.1rem' : 0;
 
-    // Calculate totals for determining winner
-    const total1 = hasScore ? (fixture.goals1 * 3 + fixture.points1) : 0;
-    const total2 = hasScore ? (fixture.goals2 * 3 + fixture.points2) : 0;
+    // Calculate totals for determining winner (including extra time if present)
+    // We strictly convert to Number to avoid string concatenation bugs
+    const goals1Total = hasScore ? getNumber(fixture.goals1) + getNumber(fixture.goals1Extra) : 0;
+    const points1Total = hasScore ? getNumber(fixture.points1) + getNumber(fixture.points1Extra) : 0;
+    const goals2Total = hasScore ? getNumber(fixture.goals2) + getNumber(fixture.goals2Extra) : 0;
+    const points2Total = hasScore ? getNumber(fixture.points2) + getNumber(fixture.points2Extra) : 0;
+
+
+
+    const total1 = goals1Total * 3 + points1Total;
+    const total2 = goals2Total * 3 + points2Total;
     const isFinished = fixture.outcome === 'played';
     const isOngoingWithScore = !isFinished && hasScore;
     const team1Won = isFinished && total1 > total2;
@@ -104,18 +125,22 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               title-margin-below={vspace}
               logo-margin-right="0.5rem"
             ></team-name>
-             {/* Team 1 score under name, right-aligned */}
-              {hasScore && (
-                <div className={`score-row ${isOngoingWithScore ? '' : team1Won ? 'winner' : team2Won ? 'loser' : isDraw ? 'draw' : ''}`}>
-                  <gaelic-score
-                    goals={fixture.goals1 ?? 0}
-                    points={fixture.points1 ?? 0}
-                    goalsagainst={fixture.goals2 ?? 0}
-                    pointsagainst={fixture.points2 ?? 0}
-                    played={fixture.outcome === 'played'}
-                  ></gaelic-score>
-                </div>
-              )}
+              {/* Team 1 score under name, right-aligned */}
+               {hasScore && (
+                 <div className="score-container">
+                   <div className={`score-badge ${isOngoingWithScore ? '' : team1Won ? 'winner' : team2Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                     <gaelic-score
+                       style={{ width: 'auto' }}
+                       goals={goals1Total}
+                       points={points1Total}
+                       goalsagainst={goals2Total}
+                       pointsagainst={points2Total}
+                       played={fixture.outcome === 'played'}
+                     ></gaelic-score>
+                   </div>
+                   {hasExtraTime && <span className="aet-label">AET</span>}
+                 </div>
+               )}
           </div>
 
           <div className="vs-row">vs</div>
@@ -132,14 +157,18 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
               logo-margin-right="0.5rem"
             ></team-name>
               {hasScore && (
-                <div className={`score-row ${isOngoingWithScore ? '' : team2Won ? 'winner' : team1Won ? 'loser' : isDraw ? 'draw' : ''}`}>
-                  <gaelic-score
-                    goals={fixture.goals2 ?? 0}
-                    points={fixture.points2 ?? 0}
-                    goalsagainst={fixture.goals1 ?? 0}
-                    pointsagainst={fixture.points1 ?? 0}
-                    played={fixture.outcome === 'played'}
-                  ></gaelic-score>
+                <div className="score-container">
+                  <div className={`score-badge ${isOngoingWithScore ? '' : team2Won ? 'winner' : team1Won ? 'loser' : isDraw ? 'draw' : ''}`}>
+                    <gaelic-score
+                      style={{ width: 'auto' }}
+                      goals={goals2Total}
+                      points={points2Total}
+                      goalsagainst={goals1Total}
+                      pointsagainst={points1Total}
+                      played={fixture.outcome === 'played'}
+                    ></gaelic-score>
+                  </div>
+                  {hasExtraTime && <span className="aet-label">AET</span>}
                 </div>
               )}
           </div>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
@@ -53,6 +53,34 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
     if (!onProceed || !isScoreComplete || isSubmitting) return;
     onProceed();
   };
+
+  // Check if we should show the extra time toggle
+  // Only show when both scores are set AND totals are equal (draw)
+  const shouldShowExtraTime = useMemo(() => {
+    // First check if normal scores are complete
+    const normalComplete = scores &&
+      scores.team1 &&
+      scores.team2 &&
+      isScoreValueSet(scores.team1.goals) &&
+      isScoreValueSet(scores.team1.points) &&
+      isScoreValueSet(scores.team2.goals) &&
+      isScoreValueSet(scores.team2.points);
+
+    if (!normalComplete) return false;
+
+    // Calculate totals: (goals * 3) + points
+    const total1 = (Number(scores.team1.goals) * 3) + Number(scores.team1.points);
+    const total2 = (Number(scores.team2.goals) * 3) + Number(scores.team2.points);
+
+    return total1 === total2;
+  }, [scores]);
+
+  // Auto-disable extra time if scores change and are no longer tied
+  useEffect(() => {
+    if (isExtraTime && !shouldShowExtraTime) {
+      setIsExtraTime(false);
+    }
+  }, [shouldShowExtraTime, isExtraTime]);
 
   const displayScore = (team, type) => {
     const ozp = (n) => `00${n}`.slice(-2);
@@ -111,10 +139,11 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   return (
     <div className="tab-score-content drawerFinish">
       <div className="extra-time-toggle">
-        <label className="extra-time-label">
+        <label className={`extra-time-label ${!shouldShowExtraTime ? 'disabled' : ''}`}>
           <input
             type="checkbox"
             checked={isExtraTime}
+            disabled={!shouldShowExtraTime}
             onChange={(e) => setIsExtraTime(e.target.checked)}
           />
           <span>Extra Time</span>
