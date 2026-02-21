@@ -176,7 +176,7 @@ const StatusContent = ({
                 } else if (numTeams > 1) {
                   const totalMatches = (numTeams * (numTeams - 1)) / 2;
                   const playedMatches =
-                    rows.reduce((sum, row) => sum + (row.MatchesPlayed || 0), 0) / 2;
+                    rows.reduce((sum, row) => sum + (row.matchesPlayed || 0), 0) / 2;
                   remainingMatches = totalMatches - playedMatches;
                   isComplete = remainingMatches <= 0;
                 } else {
@@ -551,7 +551,7 @@ const normalizeFixture = (fixture) => {
 
   const score1 = extractScore(team1Data);
   const score2 = extractScore(team2Data);
-  const hasResult = score1 || score2;
+  const hasResult = score1 !== null || score2 !== null;
 
   const rawOutcome = fixture.outcome ? String(fixture.outcome).toLowerCase() : null;
   const outcome = rawOutcome || (hasResult ? "played" : "not played");

@@ -50,7 +50,7 @@ build:
 	fi
 	$(call banner,Done $(ENV))
 
-dev-mobile:
+dev:
 	$(call banner,Dev mobile)
 	@npm run dev:mobile
 
