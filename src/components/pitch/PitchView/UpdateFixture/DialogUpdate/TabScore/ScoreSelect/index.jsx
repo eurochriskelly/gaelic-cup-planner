@@ -56,7 +56,7 @@ const Footer = ({ name, fieldName, team, pages, setPages, scores, setScores }) =
   );
 };
 
-const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', pointField = 'points', onScoreCompleteForTeam }) => {
+const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', pointField = 'points', isPenalties = false, onScoreCompleteForTeam }) => {
   const [pages, setPages] = useState({
     goals: 0,
     points: 0,
@@ -74,10 +74,18 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
       };
       setScores(newScores);
 
-      // Check if both goals and points for the current team are set
-      if (newScores[team]?.[goalField] !== null && newScores[team]?.[goalField] !== undefined &&
-        newScores[team]?.[pointField] !== null && newScores[team]?.[pointField] !== undefined) {
-        onScoreCompleteForTeam(); // Notify parent to close this picker
+      // Check if scores for the current team are set
+      // In penalties mode, only goals need to be set
+      if (isPenalties) {
+        if (newScores[team]?.[goalField] !== null && newScores[team]?.[goalField] !== undefined) {
+          onScoreCompleteForTeam(); // Notify parent to close this picker
+        }
+      } else {
+        // Normal/extra time mode: both goals and points must be set
+        if (newScores[team]?.[goalField] !== null && newScores[team]?.[goalField] !== undefined &&
+          newScores[team]?.[pointField] !== null && newScores[team]?.[pointField] !== undefined) {
+          onScoreCompleteForTeam(); // Notify parent to close this picker
+        }
       }
     },
   };
@@ -106,7 +114,6 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
   };
 
   const squaresGoals = updateSquares(currentTeam, goalField, "goals", 9);
-  const squaresPoints = updateSquares(currentTeam, pointField, "points", 19);
 
   return (
     <div className='scoreSelect'>
@@ -123,20 +130,24 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
           setScores={setScores}
         />
       </div>
-      <div />
-      <div className="score-column">
-        <Header name="points" />
-        <div className='points'>{squaresPoints}</div>
-        <Footer
-          name="points"
-          fieldName={pointField}
-          team={currentTeam}
-          pages={pages}
-          setPages={setPages}
-          scores={scores}
-          setScores={setScores}
-        />
-      </div>
+      {!isPenalties && (
+        <>
+          <div />
+          <div className="score-column">
+            <Header name="points" />
+            <div className='points'>{updateSquares(currentTeam, pointField, "points", 19)}</div>
+            <Footer
+              name="points"
+              fieldName={pointField}
+              team={currentTeam}
+              pages={pages}
+              setPages={setPages}
+              scores={scores}
+              setScores={setScores}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

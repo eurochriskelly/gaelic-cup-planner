@@ -218,12 +218,16 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
       points: fixture.points1 !== undefined ? fixture.points1 : null,
       goalsExtra: fixture.goals1Extra !== undefined ? fixture.goals1Extra : null,
       pointsExtra: fixture.points1Extra !== undefined ? fixture.points1Extra : null,
+      goalsPenalties: fixture.goals1Penalties !== undefined ? fixture.goals1Penalties : null,
+      pointsPenalties: fixture.points1Penalties !== undefined ? fixture.points1Penalties : null,
     },
     team2: {
       goals: fixture.goals2 !== undefined ? fixture.goals2 : null,
       points: fixture.points2 !== undefined ? fixture.points2 : null,
       goalsExtra: fixture.goals2Extra !== undefined ? fixture.goals2Extra : null,
       pointsExtra: fixture.points2Extra !== undefined ? fixture.points2Extra : null,
+      goalsPenalties: fixture.goals2Penalties !== undefined ? fixture.goals2Penalties : null,
+      pointsPenalties: fixture.points2Penalties !== undefined ? fixture.points2Penalties : null,
     },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -235,28 +239,38 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
     return parseInt(val, 10);
   };
 
+  // Build scores object conditionally
+  const buildTeamScores = (teamData, teamName) => {
+    const result = {
+      name: teamName,
+      goals: parseInt(teamData.goals, 10) || 0,
+      points: parseInt(teamData.points, 10) || 0,
+    };
+
+    const goalsExtra = toScoreValue(teamData.goalsExtra);
+    const pointsExtra = toScoreValue(teamData.pointsExtra);
+    if (goalsExtra !== null) result.goalsExtra = goalsExtra;
+    if (pointsExtra !== null) result.pointsExtra = pointsExtra;
+
+    const goalsPenalties = toScoreValue(teamData.goalsPenalties);
+    const pointsPenalties = toScoreValue(teamData.pointsPenalties);
+    if (goalsPenalties !== null) result.goalsPenalties = goalsPenalties;
+    if (pointsPenalties !== null) result.pointsPenalties = pointsPenalties;
+
+    return result;
+  };
+
   const handleUpdateScore = async () => {
     if (isSubmitting) return;
 
     try {
       setIsSubmitting(true);
+
       const result = {
         outcome: 'played',
         scores: {
-          team1: {
-            name: fixture.team1,
-            goals: parseInt(scores.team1.goals, 10) || 0,
-            points: parseInt(scores.team1.points, 10) || 0,
-            goalsExtra: toScoreValue(scores.team1.goalsExtra),
-            pointsExtra: toScoreValue(scores.team1.pointsExtra),
-          },
-          team2: {
-            name: fixture.team2,
-            goals: parseInt(scores.team2.goals, 10) || 0,
-            points: parseInt(scores.team2.points, 10) || 0,
-            goalsExtra: toScoreValue(scores.team2.goalsExtra),
-            pointsExtra: toScoreValue(scores.team2.pointsExtra),
-          },
+          team1: buildTeamScores(scores.team1, fixture.team1),
+          team2: buildTeamScores(scores.team2, fixture.team2),
         },
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);
@@ -277,20 +291,8 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
       const result = {
         outcome: 'played',
         scores: {
-          team1: {
-            name: fixture.team1,
-            goals: parseInt(scores.team1.goals, 10) || 0,
-            points: parseInt(scores.team1.points, 10) || 0,
-            goalsExtra: toScoreValue(scores.team1.goalsExtra),
-            pointsExtra: toScoreValue(scores.team1.pointsExtra),
-          },
-          team2: {
-            name: fixture.team2,
-            goals: parseInt(scores.team2.goals, 10) || 0,
-            points: parseInt(scores.team2.points, 10) || 0,
-            goalsExtra: toScoreValue(scores.team2.goalsExtra),
-            pointsExtra: toScoreValue(scores.team2.pointsExtra),
-          },
+          team1: buildTeamScores(scores.team1, fixture.team1),
+          team2: buildTeamScores(scores.team2, fixture.team2),
         },
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);

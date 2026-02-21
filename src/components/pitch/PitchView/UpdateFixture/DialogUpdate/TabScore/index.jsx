@@ -6,10 +6,11 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
   const [isExtraTime, setIsExtraTime] = useState(false);
+  const [isPenalties, setIsPenalties] = useState(false);
 
   // Determine field names based on mode
-  const goalField = isExtraTime ? 'goalsExtra' : 'goals';
-  const pointField = isExtraTime ? 'pointsExtra' : 'points';
+  const goalField = isPenalties ? 'goalsPenalties' : isExtraTime ? 'goalsExtra' : 'goals';
+  const pointField = isPenalties ? 'pointsPenalties' : isExtraTime ? 'pointsExtra' : 'points';
 
   const actions = {
     updateScore: (team) => {
@@ -20,6 +21,16 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   };
 
   const handleScoreSelectedForTeam = () => {
+    // In penalties mode, automatically set points to 0 for the current team
+    if (isPenalties && currentTeam) {
+      setScores(prevScores => ({
+        ...prevScores,
+        [currentTeam]: {
+          ...prevScores[currentTeam],
+          pointsPenalties: 0
+        }
+      }));
+    }
     setScorePicker({ visible: false }); // Close the ScoreSelect sub-dialog
   };
 
@@ -37,6 +48,12 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
       isScoreValueSet(scores.team2.points);
 
     if (!normalComplete) return false;
+
+    // If penalties mode is active, only penalties goals must be complete
+    if (isPenalties) {
+      return isScoreValueSet(scores.team1.goalsPenalties) &&
+        isScoreValueSet(scores.team2.goalsPenalties);
+    }
 
     // If extra time mode is active, extra time scores must also be complete
     if (isExtraTime) {
@@ -75,12 +92,47 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
     return total1 === total2;
   }, [scores]);
 
+  // Check if we should show the penalties toggle
+  // Only show when extra time is enabled AND complete AND totals are still equal
+  const shouldShowPenalties = useMemo(() => {
+    if (!isExtraTime) return false;
+
+    // Check if extra time scores are complete
+    const extraTimeComplete = scores &&
+      scores.team1 &&
+      scores.team2 &&
+      isScoreValueSet(scores.team1.goalsExtra) &&
+      isScoreValueSet(scores.team1.pointsExtra) &&
+      isScoreValueSet(scores.team2.goalsExtra) &&
+      isScoreValueSet(scores.team2.pointsExtra);
+
+    if (!extraTimeComplete) return false;
+
+    // Calculate totals including extra time: (goals * 3) + points
+    const goals1Total = Number(scores.team1.goals) + Number(scores.team1.goalsExtra);
+    const points1Total = Number(scores.team1.points) + Number(scores.team1.pointsExtra);
+    const goals2Total = Number(scores.team2.goals) + Number(scores.team2.goalsExtra);
+    const points2Total = Number(scores.team2.points) + Number(scores.team2.pointsExtra);
+
+    const total1 = (goals1Total * 3) + points1Total;
+    const total2 = (goals2Total * 3) + points2Total;
+
+    return total1 === total2;
+  }, [scores, isExtraTime]);
+
   // Auto-disable extra time if scores change and are no longer tied
   useEffect(() => {
     if (isExtraTime && !shouldShowExtraTime) {
       setIsExtraTime(false);
     }
   }, [shouldShowExtraTime, isExtraTime]);
+
+  // Auto-disable penalties if extra time unchecked or scores no longer tied
+  useEffect(() => {
+    if (isPenalties && (!isExtraTime || !shouldShowPenalties)) {
+      setIsPenalties(false);
+    }
+  }, [isPenalties, isExtraTime, shouldShowPenalties]);
 
   const displayScore = (team, type) => {
     const ozp = (n) => `00${n}`.slice(-2);
@@ -91,13 +143,23 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
     let showScore = '';
     switch (type) {
       case 'points':
-        showScore = isScoreSet(points) ? ozp(points) : '##';
+        // In penalties mode, always show 00 for points (penalties are goals only)
+        if (isPenalties) {
+          showScore = '00';
+        } else {
+          showScore = isScoreSet(points) ? ozp(points) : '##';
+        }
         break;
       case 'goals':
         showScore = isScoreSet(goals) ? `${goals}` : '#';
         break;
       case 'total':
-        showScore = isScoreSet(goals) && isScoreSet(points) ? ozp((goals * 3) + points) : '##';
+        if (isPenalties) {
+          // In penalties mode, total is just the goals value
+          showScore = isScoreSet(goals) ? ozp(goals) : '##';
+        } else {
+          showScore = isScoreSet(goals) && isScoreSet(points) ? ozp((goals * 3) + points) : '##';
+        }
         break;
       default:
         showScore = '??';
@@ -150,6 +212,18 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
         </label>
       </div>
 
+      <div className="extra-time-toggle penalties-toggle">
+        <label className={`extra-time-label ${!shouldShowPenalties ? 'disabled' : ''}`}>
+          <input
+            type="checkbox"
+            checked={isPenalties}
+            disabled={!shouldShowPenalties}
+            onChange={(e) => setIsPenalties(e.target.checked)}
+          />
+          <span>Penalties</span>
+        </label>
+      </div>
+
       <div className="score-container" style={{ position: "relative" }}>
         <div className="side-by-side">
           <TeamScore id="team1" team={fixture.team1} />
@@ -164,6 +238,7 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
                 currentTeam={currentTeam}
                 goalField={goalField}
                 pointField={pointField}
+                isPenalties={isPenalties}
                 onScoreCompleteForTeam={handleScoreSelectedForTeam}
               />
             </div>

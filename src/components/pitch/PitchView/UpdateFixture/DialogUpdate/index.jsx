@@ -18,8 +18,8 @@ const DialogUpdate = ({
   const [currentTab, setCurrentTab] = useState("score");
   // Initialize with empty values since we'll get real data from the API
   const [scores, setScores] = useState({
-    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "", name: "" },
-    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "", name: "" },
+    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "", goalsPenalties: "", pointsPenalties: "", name: "" },
+    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "", goalsPenalties: "", pointsPenalties: "", name: "" },
   });
   const [isSubmittingScore, setIsSubmittingScore] = useState(false);
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
@@ -27,8 +27,8 @@ const DialogUpdate = ({
   const [showFinishedWarning, setShowFinishedWarning] = useState(false);
   const [allowEditingFinished, setAllowEditingFinished] = useState(false);
   const originalScoresRef = useRef({
-    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "" },
-    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "" }
+    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "", goalsPenalties: "", pointsPenalties: "" },
+    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "", goalsPenalties: "", pointsPenalties: "" }
   });
 
   // Helper function to refresh fixture data
@@ -39,20 +39,20 @@ const DialogUpdate = ({
         if (data) {
           setFixture(data); // Store the complete fixture data
 
-          const { cardedPlayers, goals1, goals2, points1, points2, goals1Extra, points1Extra, goals2Extra, points2Extra, team1, team2, outcome } = data;
+          const { cardedPlayers, goals1, goals2, points1, points2, goals1Extra, points1Extra, goals2Extra, points2Extra, goals1Penalties, points1Penalties, goals2Penalties, points2Penalties, team1, team2, outcome } = data;
 
           // Update original scores reference
           originalScoresRef.current = {
-            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "" },
-            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "" }
+            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "", goalsPenalties: goals1Penalties ?? "", pointsPenalties: points1Penalties ?? "" },
+            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "", goalsPenalties: goals2Penalties ?? "", pointsPenalties: points2Penalties ?? "" }
           };
 
           // Reset editing permission for finished fixtures when fixture changes
           setAllowEditingFinished(false);
 
           setScores({
-            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "", name: team1 },
-            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "", name: team2 },
+            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "", goalsPenalties: goals1Penalties ?? "", pointsPenalties: points1Penalties ?? "", name: team1 },
+            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "", goalsPenalties: goals2Penalties ?? "", pointsPenalties: points2Penalties ?? "", name: team2 },
           });
 
           setCardedPlayers({
@@ -114,7 +114,11 @@ const DialogUpdate = ({
       scores.team1.goalsExtra !== originalScoresRef.current.team1.goalsExtra ||
       scores.team1.pointsExtra !== originalScoresRef.current.team1.pointsExtra ||
       scores.team2.goalsExtra !== originalScoresRef.current.team2.goalsExtra ||
-      scores.team2.pointsExtra !== originalScoresRef.current.team2.pointsExtra
+      scores.team2.pointsExtra !== originalScoresRef.current.team2.pointsExtra ||
+      scores.team1.goalsPenalties !== originalScoresRef.current.team1.goalsPenalties ||
+      scores.team1.pointsPenalties !== originalScoresRef.current.team1.pointsPenalties ||
+      scores.team2.goalsPenalties !== originalScoresRef.current.team2.goalsPenalties ||
+      scores.team2.pointsPenalties !== originalScoresRef.current.team2.pointsPenalties
     );
 
     if (!scoresHaveChanged) {
@@ -128,25 +132,55 @@ const DialogUpdate = ({
       return Number(val);
     };
 
+    // Build scores object conditionally - only include extra/penalty fields if they have values
+    const buildTeamScores = (team) => {
+      console.log(`buildTeamScores for ${team}:`, {
+        goalsPenalties: scores[team].goalsPenalties,
+        pointsPenalties: scores[team].pointsPenalties,
+        raw: scores[team]
+      });
+      
+      const result = {
+        name: scores[team].name || fixture[team],
+        goals: Number(scores[team].goals) || 0,
+        points: Number(scores[team].points) || 0,
+      };
+
+      // Only add extra time fields if they have values
+      const goalsExtra = toScoreValue(scores[team].goalsExtra);
+      const pointsExtra = toScoreValue(scores[team].pointsExtra);
+      if (goalsExtra !== null) {
+        result.goalsExtra = goalsExtra;
+      }
+      if (pointsExtra !== null) {
+        result.pointsExtra = pointsExtra;
+      }
+
+      // Only add penalties fields if they have values
+      const goalsPenalties = toScoreValue(scores[team].goalsPenalties);
+      const pointsPenalties = toScoreValue(scores[team].pointsPenalties);
+      console.log(`Converted penalties for ${team}:`, { goalsPenalties, pointsPenalties });
+      
+      if (goalsPenalties !== null) {
+        result.goalsPenalties = goalsPenalties;
+      }
+      if (pointsPenalties !== null) {
+        result.pointsPenalties = pointsPenalties;
+      }
+
+      console.log(`Result for ${team}:`, result);
+      return result;
+    };
+
     const payload = {
       outcome: 'played',
       scores: {
-        team1: {
-          name: scores.team1.name || fixture.team1,
-          goals: Number(scores.team1.goals) || 0,
-          points: Number(scores.team1.points) || 0,
-          goalsExtra: toScoreValue(scores.team1.goalsExtra),
-          pointsExtra: toScoreValue(scores.team1.pointsExtra),
-        },
-        team2: {
-          name: scores.team2.name || fixture.team2,
-          goals: Number(scores.team2.goals) || 0,
-          points: Number(scores.team2.points) || 0,
-          goalsExtra: toScoreValue(scores.team2.goalsExtra),
-          pointsExtra: toScoreValue(scores.team2.pointsExtra),
-        },
+        team1: buildTeamScores('team1'),
+        team2: buildTeamScores('team2'),
       },
     };
+
+    console.log('Sending payload:', JSON.stringify(payload, null, 2));
 
     try {
       setIsSubmittingScore(true);
