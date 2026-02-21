@@ -339,14 +339,12 @@ const PinLogin = () => {
                   ))}
                 </div>
                   <div className="pin-message">&nbsp;{message}&nbsp;</div>
-                  {false && (
-                    <div className="spectator-access-prompt">
-                      <div>Spectator access? </div>
-                      <button onClick={handleContinueAsSpectator} className="spectator-access-button">
-                        Continue without login
-                      </button>
-                    </div>
-                  )}
+                  <div className="spectator-access-prompt">
+                    <div>Spectator access? </div>
+                    <button onClick={handleContinueAsSpectator} className="spectator-access-button">
+                      Continue without login
+                    </button>
+                  </div>
               </div>
             )}
           </>

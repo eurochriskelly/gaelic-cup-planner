@@ -176,7 +176,7 @@ const StatusContent = ({
                 } else if (numTeams > 1) {
                   const totalMatches = (numTeams * (numTeams - 1)) / 2;
                   const playedMatches =
-                    rows.reduce((sum, row) => sum + (row.matchesPlayed || 0), 0) / 2;
+                    rows.reduce((sum, row) => sum + (row.MatchesPlayed || 0), 0) / 2;
                   remainingMatches = totalMatches - playedMatches;
                   isComplete = remainingMatches <= 0;
                 } else {
