@@ -216,14 +216,24 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
     team1: {
       goals: fixture.goals1 !== undefined ? fixture.goals1 : null,
       points: fixture.points1 !== undefined ? fixture.points1 : null,
+      goalsExtra: fixture.goals1Extra !== undefined ? fixture.goals1Extra : null,
+      pointsExtra: fixture.points1Extra !== undefined ? fixture.points1Extra : null,
     },
     team2: {
       goals: fixture.goals2 !== undefined ? fixture.goals2 : null,
       points: fixture.points2 !== undefined ? fixture.points2 : null,
+      goalsExtra: fixture.goals2Extra !== undefined ? fixture.goals2Extra : null,
+      pointsExtra: fixture.points2Extra !== undefined ? fixture.points2Extra : null,
     },
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEndMatchWarning, setShowEndMatchWarning] = useState(false);
+
+  // Helper to convert score value
+  const toScoreValue = (val) => {
+    if (val === "" || val === null || val === undefined) return null;
+    return parseInt(val, 10);
+  };
 
   const handleUpdateScore = async () => {
     if (isSubmitting) return;
@@ -237,14 +247,17 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
             name: fixture.team1,
             goals: parseInt(scores.team1.goals, 10) || 0,
             points: parseInt(scores.team1.points, 10) || 0,
+            goalsExtra: toScoreValue(scores.team1.goalsExtra),
+            pointsExtra: toScoreValue(scores.team1.pointsExtra),
           },
           team2: {
             name: fixture.team2,
             goals: parseInt(scores.team2.goals, 10) || 0,
             points: parseInt(scores.team2.points, 10) || 0,
+            goalsExtra: toScoreValue(scores.team2.goalsExtra),
+            pointsExtra: toScoreValue(scores.team2.pointsExtra),
           },
         },
-        // outcome might be needed by API.updateScore, adjust if necessary
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);
       await fetchFixtures(true); // Refresh fixtures
@@ -268,11 +281,15 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
             name: fixture.team1,
             goals: parseInt(scores.team1.goals, 10) || 0,
             points: parseInt(scores.team1.points, 10) || 0,
+            goalsExtra: toScoreValue(scores.team1.goalsExtra),
+            pointsExtra: toScoreValue(scores.team1.pointsExtra),
           },
           team2: {
             name: fixture.team2,
             goals: parseInt(scores.team2.goals, 10) || 0,
             points: parseInt(scores.team2.points, 10) || 0,
+            goalsExtra: toScoreValue(scores.team2.goalsExtra),
+            pointsExtra: toScoreValue(scores.team2.pointsExtra),
           },
         },
       };

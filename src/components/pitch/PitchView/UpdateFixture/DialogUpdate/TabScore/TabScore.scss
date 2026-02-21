@@ -23,6 +23,48 @@
   }
 }
 
+.extra-time-toggle {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 0;
+  margin-top: 8rem;
+
+  .extra-time-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 1.2rem 2.4rem;
+    background-color: $sc-light-40;
+    border-radius: 0.8rem;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: darken($sc-light-40, 5%);
+    }
+
+    input[type="checkbox"] {
+      width: 2.4rem;
+      height: 2.4rem;
+      cursor: pointer;
+      accent-color: $pc;
+    }
+
+    span {
+      font-size: 2rem;
+      font-weight: 600;
+      color: $sc-dark-20;
+      user-select: none;
+    }
+
+    &:has(input:checked) {
+      background-color: lighten($pc, 35%);
+      border-color: $pc;
+    }
+  }
+}
+
 .square {
   width: 100%;
   height: 100px;
@@ -73,7 +115,7 @@
 
 .score-container {
   position: relative;
-  margin-top: 10rem;
+  margin-top: 2rem;
   .side-by-side {
     width: 100%;
     display: grid;

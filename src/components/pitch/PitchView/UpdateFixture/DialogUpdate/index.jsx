@@ -18,8 +18,8 @@ const DialogUpdate = ({
   const [currentTab, setCurrentTab] = useState("score");
   // Initialize with empty values since we'll get real data from the API
   const [scores, setScores] = useState({
-    team1: { goals: "", points: "", name: "" },
-    team2: { goals: "", points: "", name: "" },
+    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "", name: "" },
+    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "", name: "" },
   });
   const [isSubmittingScore, setIsSubmittingScore] = useState(false);
   const [cardedPlayers, setCardedPlayers] = useState({ team1: [], team2: [] });
@@ -27,8 +27,8 @@ const DialogUpdate = ({
   const [showFinishedWarning, setShowFinishedWarning] = useState(false);
   const [allowEditingFinished, setAllowEditingFinished] = useState(false);
   const originalScoresRef = useRef({
-    team1: { goals: "", points: "" },
-    team2: { goals: "", points: "" }
+    team1: { goals: "", points: "", goalsExtra: "", pointsExtra: "" },
+    team2: { goals: "", points: "", goalsExtra: "", pointsExtra: "" }
   });
 
   // Helper function to refresh fixture data
@@ -39,20 +39,20 @@ const DialogUpdate = ({
         if (data) {
           setFixture(data); // Store the complete fixture data
 
-          const { cardedPlayers, goals1, goals2, points1, points2, team1, team2, outcome } = data;
+          const { cardedPlayers, goals1, goals2, points1, points2, goals1Extra, points1Extra, goals2Extra, points2Extra, team1, team2, outcome } = data;
 
           // Update original scores reference
           originalScoresRef.current = {
-            team1: { goals: goals1 ?? "", points: points1 ?? "" },
-            team2: { goals: goals2 ?? "", points: points2 ?? "" }
+            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "" },
+            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "" }
           };
 
           // Reset editing permission for finished fixtures when fixture changes
           setAllowEditingFinished(false);
 
           setScores({
-            team1: { goals: goals1 ?? "", points: points1 ?? "", name: team1 },
-            team2: { goals: goals2 ?? "", points: points2 ?? "", name: team2 },
+            team1: { goals: goals1 ?? "", points: points1 ?? "", goalsExtra: goals1Extra ?? "", pointsExtra: points1Extra ?? "", name: team1 },
+            team2: { goals: goals2 ?? "", points: points2 ?? "", goalsExtra: goals2Extra ?? "", pointsExtra: points2Extra ?? "", name: team2 },
           });
 
           setCardedPlayers({
@@ -110,13 +110,23 @@ const DialogUpdate = ({
       scores.team1.goals !== originalScoresRef.current.team1.goals ||
       scores.team1.points !== originalScoresRef.current.team1.points ||
       scores.team2.goals !== originalScoresRef.current.team2.goals ||
-      scores.team2.points !== originalScoresRef.current.team2.points
+      scores.team2.points !== originalScoresRef.current.team2.points ||
+      scores.team1.goalsExtra !== originalScoresRef.current.team1.goalsExtra ||
+      scores.team1.pointsExtra !== originalScoresRef.current.team1.pointsExtra ||
+      scores.team2.goalsExtra !== originalScoresRef.current.team2.goalsExtra ||
+      scores.team2.pointsExtra !== originalScoresRef.current.team2.pointsExtra
     );
 
     if (!scoresHaveChanged) {
       console.log('Skipping score submission – no score changes detected');
       return;
     }
+
+    // Helper to convert score value - empty string becomes null, otherwise number
+    const toScoreValue = (val) => {
+      if (val === "" || val === null || val === undefined) return null;
+      return Number(val);
+    };
 
     const payload = {
       outcome: 'played',
@@ -125,11 +135,15 @@ const DialogUpdate = ({
           name: scores.team1.name || fixture.team1,
           goals: Number(scores.team1.goals) || 0,
           points: Number(scores.team1.points) || 0,
+          goalsExtra: toScoreValue(scores.team1.goalsExtra),
+          pointsExtra: toScoreValue(scores.team1.pointsExtra),
         },
         team2: {
           name: scores.team2.name || fixture.team2,
           goals: Number(scores.team2.goals) || 0,
           points: Number(scores.team2.points) || 0,
+          goalsExtra: toScoreValue(scores.team2.goalsExtra),
+          pointsExtra: toScoreValue(scores.team2.pointsExtra),
         },
       },
     };

@@ -5,6 +5,11 @@ import './TabScore.scss';
 const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false, onEditStart }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
+  const [isExtraTime, setIsExtraTime] = useState(false);
+
+  // Determine field names based on mode
+  const goalField = isExtraTime ? 'goalsExtra' : 'goals';
+  const pointField = isExtraTime ? 'pointsExtra' : 'points';
 
   const actions = {
     updateScore: (team) => {
@@ -20,15 +25,29 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
 
   const isScoreValueSet = (value) => value !== null && value !== undefined && value !== "";
 
-  const isScoreComplete = useMemo(() => (
-    scores &&
-    scores.team1 &&
-    scores.team2 &&
-    isScoreValueSet(scores.team1.goals) &&
-    isScoreValueSet(scores.team1.points) &&
-    isScoreValueSet(scores.team2.goals) &&
-    isScoreValueSet(scores.team2.points)
-  ), [scores]);
+  // Normal time scores must always be complete
+  // Extra time scores only need to be complete if extra time mode is active
+  const isScoreComplete = useMemo(() => {
+    const normalComplete = scores &&
+      scores.team1 &&
+      scores.team2 &&
+      isScoreValueSet(scores.team1.goals) &&
+      isScoreValueSet(scores.team1.points) &&
+      isScoreValueSet(scores.team2.goals) &&
+      isScoreValueSet(scores.team2.points);
+
+    if (!normalComplete) return false;
+
+    // If extra time mode is active, extra time scores must also be complete
+    if (isExtraTime) {
+      return isScoreValueSet(scores.team1.goalsExtra) &&
+        isScoreValueSet(scores.team1.pointsExtra) &&
+        isScoreValueSet(scores.team2.goalsExtra) &&
+        isScoreValueSet(scores.team2.pointsExtra);
+    }
+
+    return true;
+  }, [scores, isExtraTime]);
 
   const handleSubmitScores = () => {
     if (!onProceed || !isScoreComplete || isSubmitting) return;
@@ -36,10 +55,9 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   };
 
   const displayScore = (team, type) => {
-    const score = scores[team][type];
     const ozp = (n) => `00${n}`.slice(-2);
-    const goals = scores[team].goals;
-    const points = scores[team].points;
+    const goals = scores[team][goalField];
+    const points = scores[team][pointField];
     const isScoreSet = (value) => value !== null && value !== undefined && value !== "";
 
     let showScore = '';
@@ -92,6 +110,17 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
 
   return (
     <div className="tab-score-content drawerFinish">
+      <div className="extra-time-toggle">
+        <label className="extra-time-label">
+          <input
+            type="checkbox"
+            checked={isExtraTime}
+            onChange={(e) => setIsExtraTime(e.target.checked)}
+          />
+          <span>Extra Time</span>
+        </label>
+      </div>
+
       <div className="score-container" style={{ position: "relative" }}>
         <div className="side-by-side">
           <TeamScore id="team1" team={fixture.team1} />
@@ -104,6 +133,8 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
                 scores={scores}
                 setScores={setScores}
                 currentTeam={currentTeam}
+                goalField={goalField}
+                pointField={pointField}
                 onScoreCompleteForTeam={handleScoreSelectedForTeam}
               />
             </div>

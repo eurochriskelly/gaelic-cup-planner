@@ -1,4 +1,4 @@
-import { useState } from "react"; // Removed useEffect as it's not used
+import { useState } from "react";
 import './ScoreSelect.scss';
 
 const Header = ({ name }) => {
@@ -9,11 +9,11 @@ const Header = ({ name }) => {
   );
 };
 
-const Footer = ({ name, team, pages, setPages, scores, setScores }) => {
+const Footer = ({ name, fieldName, team, pages, setPages, scores, setScores }) => {
   const updateScoreValue = () => {
     const newTeamScores = {
       ...scores[team],
-      [name]: null,
+      [fieldName]: null,
     };
     setScores({
       ...scores,
@@ -56,17 +56,17 @@ const Footer = ({ name, team, pages, setPages, scores, setScores }) => {
   );
 };
 
-const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam }) => {
+const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', pointField = 'points', onScoreCompleteForTeam }) => {
   const [pages, setPages] = useState({
     goals: 0,
     points: 0,
   });
 
   const actions = {
-    setScore: (i, team, type) => {
+    setScore: (i, team, fieldName) => {
       const newTeamScore = {
         ...scores[team],
-        [type]: i,
+        [fieldName]: i,
       };
       const newScores = {
         ...scores,
@@ -75,28 +75,28 @@ const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam })
       setScores(newScores);
 
       // Check if both goals and points for the current team are set
-      if (newScores[team]?.goals !== null && newScores[team]?.goals !== undefined &&
-        newScores[team]?.points !== null && newScores[team]?.points !== undefined) {
+      if (newScores[team]?.[goalField] !== null && newScores[team]?.[goalField] !== undefined &&
+        newScores[team]?.[pointField] !== null && newScores[team]?.[pointField] !== undefined) {
         onScoreCompleteForTeam(); // Notify parent to close this picker
       }
     },
   };
 
-  const updateSquares = (team, currentType, totalNumbersPerPage) => {
+  const updateSquares = (team, fieldName, displayName, totalNumbersPerPage) => {
     let squares = [];
-    const from = pages[currentType] * totalNumbersPerPage;
+    const from = pages[displayName] * totalNumbersPerPage;
     const to = from + totalNumbersPerPage;
-    // Ensure scores[team] exists before trying to access scores[team][currentType]
-    const currentScoreValue = scores && scores[team] ? scores[team][currentType] : null;
-    for (let i = from; i <= to; i++) { // Changed: iterate from 'from' to 'to' based on pagination
+    // Ensure scores[team] exists before trying to access scores[team][fieldName]
+    const currentScoreValue = scores && scores[team] ? scores[team][fieldName] : null;
+    for (let i = from; i <= to; i++) {
       const cname =
         'square ' +
-        (currentScoreValue === i ? 'active' : ""); // Use currentScoreValue
+        (currentScoreValue === i ? 'active' : "");
       squares.push(
         <div
           key={i}
           className={cname}
-          onClick={() => actions.setScore(i, team, currentType)} // Pass only needed params
+          onClick={() => actions.setScore(i, team, fieldName)}
         >
           {i}
         </div>
@@ -105,13 +105,8 @@ const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam })
     return squares;
   };
 
-  // The pagination logic in updateSquares needs to use the `pages` state.
-  // Assuming goals show 0-9 (10 items) and points 0-19 (20 items) without pagination for now,
-  // as the original `updateSquares` was called with max values.
-  // If pagination of numbers is intended, `updateSquares` needs to be adjusted.
-  // For now, sticking to the simpler interpretation where `totalNumbersPerPage` is the max value.
-  const squaresGoals = updateSquares(currentTeam, "goals", 9);
-  const squaresPoints = updateSquares(currentTeam, "points", 19);
+  const squaresGoals = updateSquares(currentTeam, goalField, "goals", 9);
+  const squaresPoints = updateSquares(currentTeam, pointField, "points", 19);
 
   return (
     <div className='scoreSelect'>
@@ -120,6 +115,7 @@ const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam })
         <div className='goals'>{squaresGoals}</div>
         <Footer
           name="goals"
+          fieldName={goalField}
           team={currentTeam}
           pages={pages}
           setPages={setPages}
@@ -133,6 +129,7 @@ const ScoreSelect = ({ scores, setScores, currentTeam, onScoreCompleteForTeam })
         <div className='points'>{squaresPoints}</div>
         <Footer
           name="points"
+          fieldName={pointField}
           team={currentTeam}
           pages={pages}
           setPages={setPages}

@@ -16,7 +16,7 @@ const SelectTournamentView = () => {
     fetch(`/api/tournaments/${tournamentId}/categories`)
       .then((response) => response.json())
       .then((data) => {
-        const payload = Array.isArray(data) ? data : data?.data;
+        const payload = Array.isArray(data) ? data : data?.data?.categories || data?.data;
         setCategories(Array.isArray(payload) ? payload : []);
       })
       .catch((error) => {
@@ -66,13 +66,11 @@ const SelectTournamentView = () => {
                     <td>Brackets</td>
                     <td>
                       <div className="pills">
-                        {brackets.map((b, i) => {
-                          return (
+                        {brackets?.length > 0 ? brackets.map((b, i) => (
                             <span key={`bracket-${i}`} className="pill">
                               {b}
                             </span>
-                          );
-                        })}
+                          )) : <span className="no-brackets">—</span>}
                       </div>
                     </td>
                   </tr>
