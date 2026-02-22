@@ -52,7 +52,7 @@ build:
 
 dev:
 	$(call banner,Dev mobile)
-	@npm run dev:mobile
+	@set -a && source .env && set +a && npm run dev:mobile -- --port $${PP_PORT_COORD}
 
 build-storybook:
 	$(call banner,Building storybook $(ENV))
