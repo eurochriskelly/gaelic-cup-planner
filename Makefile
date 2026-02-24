@@ -9,7 +9,7 @@ help:
 	$(call banner,Commands)
 	@echo "make build [production|acceptance|test]    Build mobile target"
 	@echo "make build-storybook [production|...]      Build storybook"
-	@echo "make dev-mobile                            Start mobile dev server"
+	@echo "make dev                                   Start dev server"
 	@echo "make story                                 Run Storybook"
 
 production:
@@ -50,8 +50,7 @@ build:
 	$(call banner,Done $(ENV))
 
 dev:
-	$(call banner,Dev mobile)
-	@set -a && source .env && set +a && npm run dev:mobile -- --port $${PP_PORT_COORD}
+	@bash scripts/make/start-on-port.sh
 
 build-storybook:
 	$(call banner,Building storybook $(ENV))
