@@ -3,7 +3,7 @@ SHELL := bash
 
 ENV := $(firstword $(filter production acceptance test,$(MAKECMDGOALS)))
 
-.PHONY: help build build-storybook production acceptance test dev-mobile story home
+.PHONY: help build build-storybook production acceptance test dev-mobile story
 
 help:
 	$(call banner,Commands)
@@ -11,7 +11,6 @@ help:
 	@echo "make build-storybook [production|...]      Build storybook"
 	@echo "make dev-mobile                            Start mobile dev server"
 	@echo "make story                                 Run Storybook"
-	@echo "make home                                  Serve home interface"
 
 production:
 acceptance:
@@ -61,6 +60,3 @@ build-storybook:
 story:
 	$(call banner,Storybook)
 	@npm run storybook
-
-home:
-	@httpster -p 5175 -d src/interfaces/home

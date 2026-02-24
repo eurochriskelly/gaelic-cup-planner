@@ -1,7 +1,6 @@
 // tailwind.config.js
 module.exports = {
   content: [
-    './src/interfaces/desktop/index.html',
     './src/**/*.{html,js,ts,jsx,tsx}',
   ],
   theme: {

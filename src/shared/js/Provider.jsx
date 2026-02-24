@@ -5,7 +5,6 @@ const Context = createContext();
 
 const versionInfo = {
   mobile: "%%0.6.80_RC%%".replace(/%/g, ''),
-  desktop: "%%0.0.80_RC%%".replace(/%/g, ''),
 };
 
 export const Provider = ({ children }) => {

@@ -11,14 +11,6 @@
     "watch:mobile": "vite --config vite.config-mobile.js",
     "dev:mobile": "vite --config vite.config-mobile.js --host",
 
-    "build:desktop": "BUILD_ENV=${BUILD_ENV} vite build --config vite.config-desktop.js",
-    "watch:desktop": "vite --config vite.config-desktop.js",
-    "dev:desktop": "vite --config vite.config-desktop.js --host",
-
-    "build:report": "BUILD_ENV=${BUILD_ENV} vite build --config vite.config-report.js",
-    "watch:report": "vite --config vite.config-report.js",
-    "dev:report": "vite --config vite.config-report.js --host",
-
     "help": "clear;cat docs/developers-guide.md",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
