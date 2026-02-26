@@ -1,18 +1,26 @@
 .card-button {
-  width: 10px;
-  height: 50px;
-  margin: 0 5px;
-  border-radius: 5px;
-  border: none;
+  width: 5.8rem;
+  height: 8rem;
+  margin: 0;
+  border-radius: 1rem;
+  border: 2px solid transparent;
   color: white;
-  font-size: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
   &.r { background-color: red; }
   &.y { background-color: yellow; color: black; }
   &.b { background-color: black; }
 
   box-sizing: border-box;
   &.active {
-    border: 5px solid blue;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 0.3rem rgba(14, 165, 233, 0.2);
+  }
+
+  &:hover {
+    transform: translateY(-1px);
   }
 }
