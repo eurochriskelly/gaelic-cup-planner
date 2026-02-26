@@ -5,7 +5,6 @@ const CardButton = ({ type, onClick, active }) => {
   return (
     <button
       className={buttonClass.trim()}
-      style={{ minWidth: '70px', minHeight: '100px', margin: '7px' }}
       onClick={onClick}
     >
       {type}
