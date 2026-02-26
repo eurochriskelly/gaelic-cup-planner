@@ -89,7 +89,12 @@ section.MobileLayout {
   }
   > section:last-child {
     margin: 0;
-    margin-top: 10rem;
+    // Hide scrollbar while keeping scroll functionality
+    -ms-overflow-style: none;    // IE and Edge
+    scrollbar-width: none;       // Firefox
+    &::-webkit-scrollbar {
+      display: none;             // Chrome, Safari, Opera
+    }
     > article table {
       width: 100%;
     }

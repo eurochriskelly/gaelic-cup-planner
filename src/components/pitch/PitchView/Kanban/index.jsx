@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
@@ -6,7 +6,7 @@ import KanbanColumn from './KanbanColumn';
 import KanbanFilters from './KanbanFilters';
 import KanbanDetailsPanel from './KanbanDetailsPanel';
 import KanbanErrorMessage from './KanbanErrorMessage';
-import { useMemo } from 'react'; // Import useMemo
+import PitchSelector from './PitchSelector'; // Import PitchSelector
 import UpdateFixture from '../UpdateFixture';
 import './Kanban.scss';
 
@@ -56,22 +56,22 @@ const Kanban = ({
     toggleMaximizeColumn, // New function from hook
   } = useKanbanBoard(initialFixtures, fetchFixtures, startMatchOriginal);
 
-  const relevantPitchNamesForOngoing = useMemo(() => {
-    const pitchNames = new Set();
-    // Use filteredFixtures to determine relevant pitches for the "Ongoing" column display
-    if (filteredFixtures && filteredFixtures.length > 0) {
-      filteredFixtures.forEach(fixture => {
-        // The getKanbanColumnLogic determines the true state (planned, started, finished)
-        // For the "Ongoing" column, we are interested in pitches that have fixtures
-        // that are either 'planned' or 'started' *within the current filtered view*.
-        const status = getKanbanColumnLogic(fixture);
-        if ((status === 'planned' || status === 'started') && fixture.pitch) {
-          pitchNames.add(fixture.pitch);
-        }
-      });
+  // Derive available pitches for the selector (exclude 'All Pitches')
+  const availablePitches = useMemo(() => {
+    return pitches.filter(p => p !== 'All Pitches').sort();
+  }, [pitches]);
+
+  // State for the focused pitch in the top section
+  const [focusedPitch, setFocusedPitch] = useState(null);
+
+  // Initialize focusedPitch
+  useEffect(() => {
+    if (!focusedPitch && availablePitches.length > 0) {
+      setFocusedPitch(availablePitches[0]);
+    } else if (focusedPitch && !availablePitches.includes(focusedPitch) && availablePitches.length > 0) {
+       setFocusedPitch(availablePitches[0]);
     }
-    return Array.from(pitchNames).sort();
-  }, [filteredFixtures]); // Depend on filteredFixtures
+  }, [availablePitches, focusedPitch]);
 
   const globalPlannedFixtures = useMemo(() => {
     // For the warning icon, we still need to know about all planned fixtures globally
@@ -127,16 +127,6 @@ const Kanban = ({
 
   return (
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
-      {!selectedFixture && (
-        <KanbanFilters
-          pitches={pitches}
-          selectedPitch={selectedPitch}
-          onPitchChange={handlePitchChange}
-          teams={teams}
-          selectedTeam={selectedTeam}
-          onTeamChange={handleTeamChange}
-        />
-      )}
       <KanbanErrorMessage message={errorMessage} />
       <div className={`kanban-board-area ${
         maximizedColumnKey === 'planned' ? 'maximized-planned' :
@@ -158,18 +148,6 @@ const Kanban = ({
               return dateB - dateA; // Sort descending, most recent first
             });
 
-          const relevantPitchNamesForQueued = useMemo(() => {
-            const pitchNames = new Set();
-            if (queuedFixtures && queuedFixtures.length > 0) {
-              queuedFixtures.forEach(fixture => {
-                if (fixture.pitch) {
-                  pitchNames.add(fixture.pitch);
-                }
-              });
-            }
-            return Array.from(pitchNames).sort();
-          }, [queuedFixtures]);
-
           return (
             <>
               {/* Columns are now direct children of kanban-board-area, ordered for grid placement */}
@@ -187,7 +165,7 @@ const Kanban = ({
                  handleFixtureClick={handleFixtureClick}
                  selectedFixture={selectedFixture}
                  getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
-                 allTournamentPitches={relevantPitchNamesForQueued}
+                 allTournamentPitches={focusedPitch ? [focusedPitch] : []} // Only render slot for focused pitch
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
@@ -213,7 +191,7 @@ const Kanban = ({
                  handleFixtureClick={handleFixtureClick}
                  selectedFixture={selectedFixture}
                  getPitchColor={getPitchColor}
-                 allTournamentPitches={relevantPitchNamesForOngoing}
+                 allTournamentPitches={focusedPitch ? [focusedPitch] : []} // Only render slot for focused pitch
                  showDetailsPanel={showDetailsPanel}
                  moveBarFixtureId={moveBarFixtureId}
                  setMoveBarFixtureId={setMoveBarFixtureId}
@@ -223,6 +201,15 @@ const Kanban = ({
                  findAdjacentFixture={findAdjacentFixture}
                  fetchFixtures={fetchFixtures}
                />
+               
+               <div className="kanban-pitch-selector-area">
+                   <PitchSelector 
+                     pitches={availablePitches} 
+                     selectedPitch={focusedPitch} 
+                     onSelectPitch={setFocusedPitch} 
+                   />
+                </div>
+
                <KanbanColumn
                  key="planned"
                  columnKey="planned"
@@ -247,7 +234,7 @@ const Kanban = ({
                  findAdjacentFixture={findAdjacentFixture}
                  fetchFixtures={fetchFixtures}
                />
-               <KanbanColumn
+                <KanbanColumn
                  key="finished"
                  columnKey="finished"
                  title="Finished"
@@ -271,21 +258,28 @@ const Kanban = ({
                  findAdjacentFixture={findAdjacentFixture}
                  fetchFixtures={fetchFixtures}
                />
+               
+                {/* Action panel with buttons - positioned at row 4 */}
+                <div className="kanban-action-panel">
+                  {selectedFixture ? (
+                    <UpdateFixture
+                      moveToNextFixture={moveToNextFixture}
+                      fixture={selectedFixture}
+                      showDetails={showDetailsPanel}
+                      closeDetails={closeDetailsPanel}
+                      isDetailsMode={showingDetails}
+                      setMoveBarFixtureId={setMoveBarFixtureId}
+                    />
+                  ) : (
+                    <div className="no-fixture-selected-banner">
+                      <span>Touch fixture to view options</span>
+                    </div>
+                  )}
+                </div>
             </>
           );
         })()}
       </div>
-
-       {selectedFixture && (
-         <UpdateFixture
-           moveToNextFixture={moveToNextFixture}
-           fixture={selectedFixture}
-           showDetails={showDetailsPanel}
-           closeDetails={closeDetailsPanel}
-           isDetailsMode={showingDetails}
-           setMoveBarFixtureId={setMoveBarFixtureId}
-         />
-       )}
 
       {/* Show details panel when showingDetails is true */}
       {selectedFixture && showingDetails && (

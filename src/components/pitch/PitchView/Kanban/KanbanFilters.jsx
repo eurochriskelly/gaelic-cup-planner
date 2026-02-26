@@ -10,10 +10,6 @@ const KanbanFilters = ({
 }) => {
   return (
     <div className="kanban-filters">
-      <div className="filter-group text-gray-400 mt-2 text-4xl uppercase"
-           style={{ cursor: 'pointer', marginLeft: '-6.5rem' }}>
-        <div>Touch fixture to view options</div>
-      </div>
       {false && (
         <div className="filter-group">
           <label htmlFor="teamFilter">Filter by Team:</label>

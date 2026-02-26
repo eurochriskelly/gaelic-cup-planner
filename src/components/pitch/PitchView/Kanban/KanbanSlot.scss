@@ -1,67 +1,10 @@
 @import "src/shared/css/_colors.scss";
 
-.pitch-slot {
-  border: 0.5rem solid #a1ac87;
-  margin-bottom: 0.5rem;
-  .kanban-card:not(.selected) {
-    // special case with no border
-    border-color:#44493496;
-    border-style:inset;
-  }
-}
-
 .kanban-slot {
-  // padding-top: 0.3rem; // Removed, header/card will manage internal padding
-  // padding-bottom: 0.3rem; // Removed
-  margin: 0.3rem 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  min-height: 5rem; // Ensure all slots have a minimum base height, card height will expand this
-
-  .slot-pitch-name { // Header for Ongoing slots
-    width: 100%;
-    display: flex;
-    justify-content: space-between; // Pushes pitch identifier to left, status to right
-    align-items: center;
-    padding: 0.5rem; // Padding for the header itself
-    box-sizing: border-box;
-    color: #333333aa; // Default text color for header
-    font-weight: bold;
-    font-size: 1.2rem;
-    // background-color is applied via inline style for ongoing slots with a pitchColor
-    // border-bottom: 1px solid rgba(0,0,0,0.1); // Optional: if a card is below
-    text-transform: uppercase;
-    user-select: none; // Prevent text selection
-
-    .pitch-identifier {
-      display: flex; // For aligning icon and text
-      align-items: center;
-      
-      svg {
-        margin-right: 0.5rem; // Space between icon and text
-        path {
-          fill: black;
-          fill-opacity: 0.7;
-        }
-      }
-
-      span {
-        font-size: 1.5rem; // Pitch name text
-      }
-    }
-
-    // Renamed from .slot-status-text to .slot-status-light
-    // This container will hold the OnAirLight component
-    .slot-status-light {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end; // Align light to the right
-      // Adjust min-height for larger clock, remove min-width to allow content to define width
-      min-height: 56px; // To accommodate the new clock height
-    }
-    // Removed .warning-icon, .warn, .no-warn, .status-in-progress styles
-    // as OnAirLight component handles its own styling.
-  }
+  min-height: 5rem;
 
   .slot-card-container {
     // Container for the KanbanCard when it's present below the header

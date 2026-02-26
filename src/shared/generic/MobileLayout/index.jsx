@@ -26,9 +26,6 @@ const MobileLayout = ({
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
-      <footer className="options">
-        {pitchId && <MainMenu></MainMenu>}
-      </footer>
     </section>
     <NavFooter />
   </> 
