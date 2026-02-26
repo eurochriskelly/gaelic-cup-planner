@@ -2,71 +2,193 @@
 
 .drawerCancel {
   width: 100%;
-  background-color: white;
-  border-radius: 2rem;
+  background-color: #fff;
+  border-radius: 1.6rem;
+}
 
+.drawerCancel .cancelForm {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.2rem 0.8rem 1.4rem;
+}
 
-  .non-played-outcome {
-    div {
-      margin-bottom: 1rem;
-    }
-    span {
-       margin: 0.4rem;
-    }
-    .decision {
-      color: white;
-      padding: 0.5rem 1rem;
-      background-color: #ddd;
-      border-radius: 0.4rem;
-    }
-    .forfeit{
-      background-color: lighten(red, 20%);
-    }
-    .walkover{
-      background-color: darken(green, 10%);
-    }
+.drawerCancel .options-view,
+.drawerCancel .confirm-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.drawerCancel h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 2.3rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.drawerCancel .options-subtitle,
+.drawerCancel .confirm-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.drawerCancel .outcome-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  width: min(92rem, 100%);
+}
+
+.drawerCancel .outcome-option {
+  width: 100%;
+  border: 1px solid rgba(51, 65, 85, 0.2);
+  border-radius: 1.2rem;
+  background: #f8fafc;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 0.6rem 1.4rem rgba(15, 23, 42, 0.08);
+}
+
+.drawerCancel .option-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.drawerCancel .option-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.drawerCancel .option-subtitle {
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.drawerCancel .outcome-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 0.9rem;
+  background: #fff;
+  padding: 0.85rem 1rem;
+}
+
+.drawerCancel .team {
+  min-width: 0;
+  overflow: visible;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.2;
+  color: #334155;
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.drawerCancel .status-badge {
+  border-radius: 9999px;
+  padding: 0.55rem 1rem;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 2px solid transparent;
+  box-shadow: 0 0.2rem 0.6rem rgba(15, 23, 42, 0.1);
+}
+
+.drawerCancel .status-badge.forfeit {
+  background: #fecaca;
+  color: #7f1d1d;
+  border-color: #ef4444;
+}
+
+.drawerCancel .status-badge.walkover {
+  background: #bbf7d0;
+  color: #14532d;
+  border-color: #22c55e;
+}
+
+.drawerCancel .status-badge.draw {
+  background: #e0f2fe;
+  color: #0c4a6e;
+}
+
+.drawerCancel .draw-option {
+  width: min(92rem, 100%);
+  border: 1px solid rgba(14, 116, 144, 0.25);
+  border-radius: 1.2rem;
+  background: #ecfeff;
+  padding: 1.6rem 1.4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 0.6rem 1.4rem rgba(14, 116, 144, 0.12);
+}
+
+.drawerCancel .draw-title {
+  color: #0e7490;
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.drawerCancel .draw-teams {
+  color: #155e75;
+  font-size: 1.9rem;
+  font-weight: 600;
+}
+
+.drawerCancel .outcome-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.3rem;
+  width: min(80rem, 100%);
+}
+
+.drawerCancel .confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.drawerCancel .btn-no,
+.drawerCancel .btn-yes {
+  border: none;
+  border-radius: 1rem;
+  min-height: 4.8rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .drawerCancel .outcome-options-grid {
+    grid-template-columns: 1fr;
   }
+}
 
-  .cancelForm {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 2rem;
+.drawerCancel .btn-no {
+  background: #e2e8f0;
+  color: #334155;
+}
 
-    .drawer-content-row {
-      align-items: center;
-      text-align: center;
-    }
-  }
-
-  .footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    button {
-      margin: 1rem;
-      padding: 1rem 2rem;
-      font-size: 2rem;
-      border-radius: 1rem;
-    }
-
-    .btn-primary {
-      background-color: $primary-color;
-      color: white;
-      border: none;
-      span:first-child {
-        flex-grow: 1;
-        text-align: left;
-        padding-left: 1rem;
-      }
-      span:last-child {
-        padding-right: 1rem;
-        font-size: 2.8rem;
-      }
-    }
-
-    .btn-secondary {
-      background-color: $secondary-color;
-      color: white;
-      border: none;
-    }
-  }
+.drawerCancel .btn-yes {
+  background: #0f766e;
+  color: #fff;
 }
