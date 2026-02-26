@@ -25,3 +25,4 @@ storybook-static
 .kamal/
 config
 .env.local
+.opencode/

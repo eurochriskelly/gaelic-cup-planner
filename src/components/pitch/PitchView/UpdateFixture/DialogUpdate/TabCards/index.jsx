@@ -1,5 +1,4 @@
 import { useState } from "react";
-// API import removed, as parent will handle API calls
 import CardButton from "./CardButton";
 import './TabCards.scss';
 
@@ -16,17 +15,24 @@ const TabCards = ({
   const [editingCard, setEditingCard] = useState(null);
   const [formData, setFormData] = useState({
     team: team1,
-    cardColor: 'red',
+    cardColor: '',
     playerNumber: '',
     playerName: ''
   });
+  const [useCustomNumber, setUseCustomNumber] = useState(false);
+  const [editingStep, setEditingStep] = useState(null);
 
   // handleSaveCards function (previously handleSaveCardsAndClose) is removed as API call moves to parent.
 
   const actions = {
     addOrUpdateCard: () => {
-      if (!formData.playerNumber) {
+      const playerNumber = parseInt(formData.playerNumber, 10);
+      if (!playerNumber) {
         alert('Player number is required.');
+        return;
+      }
+      if (!formData.playerName.trim()) {
+        alert('Player name is required.');
         return;
       }
       // no id means new card 
@@ -34,8 +40,8 @@ const TabCards = ({
         id: editingCard ? editingCard.id : null, 
         team: formData.team,
         cardColor: formData.cardColor,
-        playerNumber: parseInt(formData.playerNumber, 10), // Ensure number
-        playerName: formData.playerName || 'Not provided',
+        playerNumber,
+        playerName: formData.playerName.trim(),
         confirmed: true // Assuming cards added this way are confirmed
       };
       setCardedPlayer(card); // This updates the state in CardEntryWrapper
@@ -46,50 +52,149 @@ const TabCards = ({
     },
     editCard: (card) => {
       setEditingCard(card);
+      const isCustomNumber = Number(card.playerNumber) < 1 || Number(card.playerNumber) > 20;
       setFormData({
         team: card.team,
         cardColor: card.cardColor,
         playerNumber: card.playerNumber,
         playerName: card.playerName === 'Not provided' ? '' : card.playerName
       });
+      setUseCustomNumber(isCustomNumber);
       setShowForm(true);
+      setEditingStep(null);
     },
   };
 
   const resetForm = () => {
     setShowForm(false);
     setEditingCard(null);
-    setFormData({ team: team1, cardColor: 'red', playerNumber: '', playerName: '' });
+    setUseCustomNumber(false);
+    setEditingStep(null);
+    setFormData({ team: team1, cardColor: '', playerNumber: '', playerName: '' });
   };
+
+  const selectedNumber = parseInt(formData.playerNumber, 10);
+  const hasCardType = !!formData.cardColor;
+  const hasNumber = !!selectedNumber;
+  const canSave = hasCardType && hasNumber && !!formData.playerName.trim();
+  const numberChoices = Array.from({ length: 20 }, (_, idx) => idx + 1);
+  const cardLabel = formData.cardColor ? formData.cardColor.charAt(0).toUpperCase() : '-';
+  const showCardStep = !hasCardType || editingStep === 'card';
+  const showNumberStep = hasCardType && (!hasNumber || editingStep === 'number') && !showCardStep;
+  const showNameStep = hasNumber && !showCardStep && !showNumberStep;
 
   const renderCardForm = () => (
     <div className="card-form-overlay">
-      <div className="card-form AscendantPanel">
-        <h3>{editingCard ? 'Edit Carded Player' : 'Add Carded Player'}</h3>
-        <div className="form-group">
-          <label>Team</label>
-          <span className="selected-team-display">{formData.team}</span>
-        </div>
-        <div className="form-group">
-          <label>Card Type</label>
-          <div className="card-type-selection">
-            <CardButton type="R" onClick={() => setFormData({ ...formData, cardColor: 'red' })} active={formData.cardColor === 'red'} />
-            <CardButton type="Y" onClick={() => setFormData({ ...formData, cardColor: 'yellow' })} active={formData.cardColor === 'yellow'} />
-            <CardButton type="B" onClick={() => setFormData({ ...formData, cardColor: 'black' })} active={formData.cardColor === 'black'} />
+      <div className="card-form card-wizard AscendantPanel">
+        <h3>{editingCard ? 'Edit Card' : 'Add Card'}</h3>
+
+        <div className="wizard-summary-row">
+          <div className="summary-item team">
+            <span className="label">Team</span>
+            <span className="value">{formData.team}</span>
           </div>
+          {hasCardType && (
+            <button
+              type="button"
+              className={`summary-item editable card card-${formData.cardColor}`}
+              onClick={() => setEditingStep('card')}
+            >
+              <span className="label">Card</span>
+              <span className="value">{cardLabel}</span>
+              <span className="edit-hint">Edit</span>
+            </button>
+          )}
+          {hasNumber && (
+            <button
+              type="button"
+              className="summary-item editable number"
+              onClick={() => setEditingStep('number')}
+            >
+              <span className="label">Shirt #</span>
+              <span className="value">{selectedNumber}</span>
+              <span className="edit-hint">Edit</span>
+            </button>
+          )}
         </div>
-        <div className="form-group">
-          <label>Player Number</label>
-          <input
-            type="number"
-            value={formData.playerNumber}
-            onChange={(e) => setFormData({ ...formData, playerNumber: e.target.value })}
-            placeholder="Enter player number"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Player Name</label>
+
+        {showCardStep && (
+          <div className="wizard-step">
+            <label>1. Select Card</label>
+            <div className="card-type-selection">
+              <CardButton
+                type="R"
+                onClick={() => {
+                  setFormData({ ...formData, cardColor: 'red' });
+                  setEditingStep(null);
+                }}
+                active={formData.cardColor === 'red'}
+              />
+              <CardButton
+                type="Y"
+                onClick={() => {
+                  setFormData({ ...formData, cardColor: 'yellow' });
+                  setEditingStep(null);
+                }}
+                active={formData.cardColor === 'yellow'}
+              />
+              <CardButton
+                type="B"
+                onClick={() => {
+                  setFormData({ ...formData, cardColor: 'black' });
+                  setEditingStep(null);
+                }}
+                active={formData.cardColor === 'black'}
+              />
+            </div>
+          </div>
+        )}
+
+        {showNumberStep && (
+          <div className="wizard-step">
+            <label>2. Pick Shirt Number</label>
+            <div className="number-grid">
+              {numberChoices.map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  className={`number-button ${selectedNumber === num ? 'active' : ''}`}
+                  onClick={() => {
+                    setUseCustomNumber(false);
+                    setFormData({ ...formData, playerNumber: num });
+                    setEditingStep(null);
+                  }}
+                >
+                  {num}
+                </button>
+              ))}
+              <button
+                type="button"
+                className={`number-button custom ${useCustomNumber ? 'active' : ''}`}
+                onClick={() => {
+                  setUseCustomNumber(true);
+                  setFormData({ ...formData, playerNumber: '' });
+                  setEditingStep(null);
+                }}
+              >
+                Other
+              </button>
+            </div>
+            {useCustomNumber && (
+              <input
+                type="number"
+                min="1"
+                value={formData.playerNumber}
+                onChange={(e) => setFormData({ ...formData, playerNumber: e.target.value })}
+                placeholder="Enter number"
+                className="custom-number-input"
+              />
+            )}
+          </div>
+        )}
+
+        {showNameStep && (
+          <div className="wizard-step">
+          <label>3. Player Name</label>
           <input
             type="text"
             value={formData.playerName}
@@ -98,12 +203,14 @@ const TabCards = ({
             placeholder="Enter player name"
           />
         </div>
+        )}
+
         <div className="form-actions">
           <button className="cancel-button" onClick={resetForm}>
             <i className="pi pi-times"></i> Cancel
           </button>
-          <button className="save-button" onClick={actions.addOrUpdateCard}>
-            <i className="pi pi-check"></i> {editingCard ? 'Save' : 'Add'}
+          <button className="save-button" onClick={actions.addOrUpdateCard} disabled={!canSave}>
+            <i className="pi pi-check"></i> {editingCard ? 'Save Card' : 'Add Card'}
           </button>
         </div>
       </div>
@@ -113,7 +220,10 @@ const TabCards = ({
   const renderTeamSection = (team, cards, suffix) => (
     <div className={`team-section team-${suffix}`}>
          <div className="team-header">
-           <h4>Team: {team}</h4>
+           <h4>
+             <span className="team-label">Team</span>
+             <span className="team-name">{team}</span>
+           </h4>
            {!showForm && (
              <button
                className="add-card-button"
@@ -157,7 +267,7 @@ const TabCards = ({
           ))}
         </div>
       ) : (
-        <p className="no-cards">No cards recorded for this team.</p>
+        <p className="no-cards">No cards recorded yet</p>
       )}
     </div>
   );

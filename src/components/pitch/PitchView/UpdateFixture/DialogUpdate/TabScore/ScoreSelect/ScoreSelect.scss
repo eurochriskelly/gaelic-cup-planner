@@ -1,119 +1,156 @@
 @import "src/shared/css/_colors.scss";
 
 .scoreSelect {
+  --score-cell-size: clamp(5.8rem, 15vw, 7.2rem);
   display: grid;
-  grid-template-columns: 2fr 4fr 4fr;
-  align-items: normal;
+  grid-template-columns: max-content max-content;
+  gap: 1.4rem;
+  align-items: stretch;
   width: 100%;
-  padding: 0rem;
-  background: white;
-  
-    .score-column {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+  padding: 0;
+  background: transparent;
+  justify-content: center;
+
+  &.penalties-mode {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+
+  .score-column {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
 
   .goals {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 20px;
-    margin: auto;
+    grid-template-columns: repeat(2, var(--score-cell-size));
+    grid-auto-rows: var(--score-cell-size);
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0;
   }
 
   .points {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 20px;
-    font-weight:normal;
+    grid-template-columns: repeat(4, var(--score-cell-size));
+    grid-auto-rows: var(--score-cell-size);
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0;
   }
 
   .header {
     display: flex;
-      justify-content: center;
-    margin-bottom: 20px;
+    justify-content: center;
+    margin-bottom: 0.7rem;
     padding: 0.2rem;
     background: transparent;
 
     span {
-      color: $sc-dark-20;
-      padding: 1.5rem 0;
+      color: #334155;
+      padding: 0.5rem 0;
       text-align: center;
-      font-size: 2.1em;
-      font-weight: bold;
+      font-size: 1.6rem;
+      font-weight: 700;
       background: transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
   }
 
-                                .footer {
-                                  display: flex;
-                                  justify-content: space-between;
-                                  margin-top: 10px;
-                                  padding: 0.5rem;
-                                }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.7rem;
+    padding: 0;
+  }
+
   .navigate {
-    background: #f0f0f0;
-    border: none;
-    color: $sc-dark-20;
-    font-size: 2.5rem;
-      padding: 0.8rem 1.5rem !important;
+    background: #f1f5f9;
+    border: 1px solid rgba(51, 65, 85, 0.2);
+    color: #334155;
+    font-size: 2.4rem;
+    width: var(--score-cell-size) !important;
+    height: var(--score-cell-size) !important;
+    padding: 0 !important;
+    display: grid;
+    place-items: center;
     cursor: pointer;
     transition: all 0.2s ease;
-      width: auto !important;
-      min-width: auto !important;
-      border-radius: 0.5rem;
-      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    min-width: auto !important;
+    border-radius: 0.7rem;
+    box-shadow: none;
 
     &:disabled {
       opacity: 1;
-        /* Keep button visible */
-        cursor: default;
-      
-        &::before {
-          opacity: 0;
-          /* Hide only the icon */
-        }
+      cursor: default;
+
+      &::before {
+        opacity: 0;
       }
-      
-      &:hover:not(:disabled) {
-        background: #e0e0e0;
-        color: darken($sc, 10%);
-      }
-      
-      &:active:not(:disabled) {
-        background: #d0d0d0;
-        box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:hover:not(:disabled) {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    &:active:not(:disabled) {
+      background: #cbd5e1;
     }
   }
 
-  .points>div,
-  .goals>div {
-    width: 7rem;
-    padding: 0.1rem 0.7rem;
-    color: white;
+  .points > div,
+  .goals > div {
+    width: 100%;
+    min-height: var(--score-cell-size);
+    padding: 0;
+    color: #334155;
     text-align: center;
-    vertical-align: top;
+    border: 1px solid rgba(51, 65, 85, 0.18);
+    border-radius: 0.8rem;
+    background: #f8fafc;
+    font-weight: 700;
   }
 
-  .goals>div {
-    background: darken($sc, 5%);
+  .goals > div {
+    background: #eef6ea;
   }
 
-  .points>div {
-    background: lighten($sc, 5%);
-    color: white;
-    font-size: 3rem;
+  .points > div {
+    background: #eef1fa;
+  }
+
+  .points > div {
+    font-size: 2.6rem;
+  }
+
+  .goals > div {
+    font-size: 2.6rem;
   }
 
   .square {
     width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    line-height: 1;
     cursor: pointer;
 
     &.active {
-      background-color: #007bff;
-      color: white;
+      background-color: #0f766e;
+      border-color: #0f766e;
+      color: #ffffff;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .scoreSelect {
+    grid-template-columns: 1fr;
   }
 }

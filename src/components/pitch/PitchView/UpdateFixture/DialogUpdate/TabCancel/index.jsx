@@ -1,13 +1,39 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import API from "../../../../../../shared/api/endpoints";
 import './TabCancel.scss';
 
-const TabCancel = ({ 
-  cancellationOption, 
-  setCancellationOption, 
-  onConfirm, onClose, team1, team2, fixture 
+const optionMeta = {
+  team1_forfeit: {
+    id: 'team1_forfeit',
+    title: 'Team 1 Forfeit',
+    subtitle: 'Team 2 gets the walkover',
+  },
+  team2_forfeit: {
+    id: 'team2_forfeit',
+    title: 'Team 2 Forfeit',
+    subtitle: 'Team 1 gets the walkover',
+  },
+  draw: {
+    id: 'draw',
+    title: 'Mutual Draw',
+    subtitle: 'No forfeit or walkover',
+  },
+}
+
+const TabCancel = ({
+  cancellationOption,
+  setCancellationOption,
+  onConfirm,
+  team1,
+  team2,
+  fixture
 }) => {
   const [confirming, setConfirming] = useState(false);
+
+  const selectedMeta = useMemo(
+    () => optionMeta[cancellationOption] || null,
+    [cancellationOption]
+  );
 
   const handleConfirm = (type) => {
     setCancellationOption(type);
@@ -15,7 +41,6 @@ const TabCancel = ({
   };
 
   const handleFinalConfirm = async () => {
-    // Create the result object with the appropriate scores
     const result = {
       scores: {
         team1: { goals: 0, points: 0 },
@@ -23,36 +48,33 @@ const TabCancel = ({
       },
       outcome: "skipped",
     };
-    
-    // Set the appropriate scores based on selected option
+
     if (cancellationOption === 'team1_forfeit') {
       result.scores.team2.points = 1;
     } else if (cancellationOption === 'team2_forfeit') {
       result.scores.team1.points = 1;
     }
-    
-    // Update score via API
+
     if (!fixture.started) {
       await API.startMatch(fixture.tournamentId, fixture.id);
     }
+
     await API.updateScore(fixture.tournamentId, fixture.id, result)
       .then(() => {
-        console.log("Match settled without playing:", result);
         setConfirming(false);
-        onConfirm && onConfirm(); // Call onConfirm prop
+        onConfirm && onConfirm();
       })
       .catch((error) => {
         console.error("Error updating match outcome:", error);
-        setConfirming(false); // Ensure confirming is reset on error too
+        setConfirming(false);
       });
+
     if (!fixture.ended) {
-      console.log("Ending match", fixture.id);
       await API.endMatch(fixture.tournamentId, fixture.id);
     }
   };
-  
+
   const cancelConfirmation = () => {
-    // Only reset confirming state without closing the dialog
     setConfirming(false);
   };
 
@@ -64,104 +86,103 @@ const TabCancel = ({
 
   return (
     <div className="drawerCancel">
-      <div>
-          <div className="cancelForm">
-            {confirming ? (
-              <div className="flex flex-col gap-4">
-                <div className="text-center text-4xl mb-6">
-                  {cancellationOption === 'draw' ? (
-                    `Click 'YES' to confirm a draw between ${team1} and ${team2}`
-                  ) : (
-                    <div className="non-played-outcome">
-                      <div>Click <b>YES</b> to confirm</div>
-                      <div className="p-8">
-                        <span className={`decision ${cancellationOption === 'team2_forfeit' ? 'walkover bg-rose-400' : 'forfeit bg-green-400'}`}>
-                          {cancellationOption === 'team2_forfeit' ? 'Walkover' : 'Forfeit'}
-                        </span> 
-                        <span>for</span>
-                        <span>{team1}</span>
-                      </div>
-                      <div className="color-gray-200 pb-4">and ..</div>
-                      <div className="p-8">
-                        <span className={`decision ${cancellationOption === 'team2_forfeit' ? 'forfeit' : 'walkover bg-rose-400'}`}>
-                          {cancellationOption === 'team2_forfeit' ? 'Forfeit' : 'Walkover'}
-                        </span>
-                        <span>for</span>
-                        <span>{team2}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-4 text-9xl">
-                  <button
-                    className="btn btn-primary flex-1 py-8 text-3xl text-green-700 mr-1"
-                    onClick={handleFinalConfirm}
-                  >
-                    Yes
-                  </button>
-                  <button
-                    className="btn btn-secondary flex-1 py-8 text-3xl text-rose-500"
-                    onClick={cancelConfirmation}
-                  >
-                    No
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4 ">
-                <ForfeitButton forfeitTeam={team2} walkoverTeam={team1} confirmOpt={'team1_forfeit'} onClick={handleConfirm} />
-                <ForfeitButton forfeitTeam={team1} walkoverTeam={team2} confirmOpt={'team2_forfeit'} reverse={true} onClick={handleConfirm} />
-                <div className="bg-gray-200 mb-3 p-7 rounded-1xl">
-                  <button
-                    className="btn btn-primary w-full py-4 text-xl bg-gray-200 mb-3 p-7 rounded-1xl"
-                    onClick={() => handleConfirm('draw')}
-                  >
-                    <div className="text-3xl mb-8 ">
-                      {team1.length > 22 ? `${team1.substring(0, 22)}...` : team1}
-                      {' & '}
-                      {team2.length > 22 ? `${team2.substring(0, 22)}...` : team2}
-                    </div>
-                    <div className="font-bold text-5xl text-sky-700">Teams agree draw</div>
-                  </button>
-                </div>
-              </div>
-            )}
+      <div className="cancelForm">
+        {confirming ? (
+          <div className="confirm-view">
+            <h3>Confirm Not Played Outcome</h3>
+            <p className="confirm-subtitle">{selectedMeta?.title}</p>
+            <OutcomeMatrix option={cancellationOption} team1={team1} team2={team2} />
+            <div className="confirm-actions">
+              <button className="btn-no" onClick={cancelConfirmation}>No, go back</button>
+              <button className="btn-yes" onClick={handleFinalConfirm}>Yes, confirm</button>
+            </div>
           </div>
+        ) : (
+          <div className="options-view">
+            <h3>Mark Match As Not Played</h3>
+            <p className="options-subtitle">Pick one outcome below</p>
+            <div className="outcome-options-grid">
+              <OutcomeOption
+                option="team1_forfeit"
+                title={optionMeta.team1_forfeit.title}
+                subtitle={optionMeta.team1_forfeit.subtitle}
+                team1={team1}
+                team2={team2}
+                onClick={handleConfirm}
+              />
+
+              <OutcomeOption
+                option="team2_forfeit"
+                title={optionMeta.team2_forfeit.title}
+                subtitle={optionMeta.team2_forfeit.subtitle}
+                team1={team1}
+                team2={team2}
+                onClick={handleConfirm}
+              />
+            </div>
+
+            <button className="draw-option" onClick={() => handleConfirm('draw')}>
+              <span className="draw-title">Teams Agree Draw</span>
+              <span className="draw-teams">{team1} vs {team2}</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-function ForfeitButton({ forfeitTeam, walkoverTeam, confirmOpt, reverse = false, onClick }) {
-  const maxTeamNameLen = 16;
+function OutcomeOption({ option, title, subtitle, team1, team2, onClick }) {
+  const team1Status = option === 'team1_forfeit' ? 'forfeit' : 'walkover';
+  const team2Status = option === 'team2_forfeit' ? 'forfeit' : 'walkover';
+
   return (
-    <button
-      className="btn btn-primary w-full py-4 text-xl"
-      onClick={() => onClick(confirmOpt)}
-    >
-      <div className="flex justify-between items-center bg-gray-200 mb-3 p-7 rounded-1xl">
-        <div className="text-left pr-3 pl-3">
-          <div className="text-3xl mb-8 ">
-            {(reverse ? forfeitTeam : walkoverTeam).length > maxTeamNameLen
-              ? `${(reverse ? forfeitTeam : walkoverTeam).substring(0, maxTeamNameLen)}...`
-              : (reverse ? forfeitTeam : walkoverTeam)}
-          </div>
-          <div className={`text-5xl whitespace-nowrap font-bold ${reverse ? 'text-lime-700' : 'text-rose-500'} `}>
-            {reverse ? '🏆 Walkover' : 'Forfeit'}
-          </div>
+    <button className="outcome-option" onClick={() => onClick(option)}>
+      <div className="option-header">
+        <span className="option-title">{title}</span>
+        <span className="option-subtitle">{subtitle}</span>
+      </div>
+      <OutcomeRow team={team1} status={team1Status} />
+      <OutcomeRow team={team2} status={team2Status} />
+    </button>
+  );
+}
+
+function OutcomeMatrix({ option, team1, team2 }) {
+  if (option === 'draw') {
+    return (
+      <div className="outcome-matrix draw">
+        <div className="outcome-row draw-row">
+          <span className="team">{team1}</span>
+          <span className="status-badge draw">DRAW</span>
         </div>
-        <div className="text-right pr-3 pl-3">
-          <div className="text-3xl mb-8">
-            {(reverse ? walkoverTeam : forfeitTeam).length > maxTeamNameLen
-              ? `${(reverse ? walkoverTeam : forfeitTeam).substring(0, maxTeamNameLen)}...`
-              : (reverse ? walkoverTeam : forfeitTeam)}
-          </div>
-          <div className={`text-5xl whitespace-nowrap font-bold ${reverse ? 'text-rose-500' : 'text-lime-700'}`}>
-            {reverse ? 'Forfeit' : 'Walkover 🏆'}
-          </div>
+        <div className="outcome-row draw-row">
+          <span className="team">{team2}</span>
+          <span className="status-badge draw">DRAW</span>
         </div>
       </div>
-    </button>
+    );
+  }
+
+  const team1Status = option === 'team1_forfeit' ? 'forfeit' : 'walkover';
+  const team2Status = option === 'team2_forfeit' ? 'forfeit' : 'walkover';
+
+  return (
+    <div className="outcome-matrix">
+      <OutcomeRow team={team1} status={team1Status} />
+      <OutcomeRow team={team2} status={team2Status} />
+    </div>
+  );
+}
+
+function OutcomeRow({ team, status }) {
+  return (
+    <div className="outcome-row">
+      <span className="team">{team}</span>
+      <span className={`status-badge ${status}`}>
+        {status.toUpperCase()}
+      </span>
+    </div>
   );
 }
 
