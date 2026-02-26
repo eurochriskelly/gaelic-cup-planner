@@ -228,6 +228,16 @@
   }
 }
 
+.kanban-details-panel.score-picker-open {
+  .match-up,
+  .match-teams,
+  .team,
+  logo-box,
+  team-name {
+    visibility: hidden !important;
+  }
+}
+
 .move-entry-wrapper {
   margin-top: 2.4rem;
   padding: 0 2.4rem 3.2rem;
@@ -358,68 +368,92 @@
   }
 }
 
-.score-action-buttons {
+.score-entry-container {
+  margin-top: 4.8rem;
   display: flex;
-  justify-content: space-around;
-  margin-top: 10rem;
-  gap: 1rem;
-  padding: 1rem 0;
+  flex-direction: column;
+  gap: 3.2rem;
+}
+
+.score-action-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.6rem;
+  gap: 1.2rem;
+  padding: 1.2rem 1.2rem 1rem;
+  border-top: 1px solid rgba(51, 65, 85, 0.12);
+  position: relative;
+  z-index: 3;
 
   button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0 1.5rem;
-    font-size: 1.9rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 0.5rem;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 0.9rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1.2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex: 1;
-    justify-content: center;
-    min-height: 135px;
-    background: none;
+    min-height: 4.8rem;
+    background: #fff;
+    box-shadow: 0 0.4rem 1.1rem rgba(0, 0, 0, 0.08);
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    text-align: center;
 
     &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 0.9rem 1.8rem rgba(0, 0, 0, 0.12);
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.55;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     &.btn-secondary {
-      color: #6c757d;
+      color: #475569;
+      border-color: rgba(#475569, 0.25);
+      background: #f8fafc;
 
       &:hover:not(:disabled) {
-        color: #5a6268;
+        color: #334155;
       }
     }
 
     &.btn-primary {
-      color: #007bff;
+      color: #0f766e;
+      border-color: rgba(#0f766e, 0.3);
+      background: #f0fdfa;
 
       &:hover:not(:disabled) {
-        color: #0056b3;
+        color: #115e59;
       }
     }
 
     &.btn-warning {
-      color: #ffc107;
+      color: #b45309;
+      border-color: rgba(#b45309, 0.3);
+      background: #fffbeb;
 
       &:hover:not(:disabled) {
-        color: #e0a800;
+        color: #92400e;
       }
     }
 
     .button-icon {
-      font-size: 6.75rem;
+      font-size: 2.8rem;
       line-height: 1;
     }
+  }
+
+  @media (max-width: 920px) {
+    grid-template-columns: 1fr;
   }
 }
 

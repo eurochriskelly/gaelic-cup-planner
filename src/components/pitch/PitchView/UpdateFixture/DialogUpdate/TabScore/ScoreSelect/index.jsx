@@ -116,7 +116,7 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
   const squaresGoals = updateSquares(currentTeam, goalField, "goals", 9);
 
   return (
-    <div className='scoreSelect'>
+    <div className={`scoreSelect ${isPenalties ? 'penalties-mode' : ''}`}>
       <div className="score-column">
         <Header name="goals" />
         <div className='goals'>{squaresGoals}</div>
@@ -131,22 +131,19 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
         />
       </div>
       {!isPenalties && (
-        <>
-          <div />
-          <div className="score-column">
-            <Header name="points" />
-            <div className='points'>{updateSquares(currentTeam, pointField, "points", 19)}</div>
-            <Footer
-              name="points"
-              fieldName={pointField}
-              team={currentTeam}
-              pages={pages}
-              setPages={setPages}
-              scores={scores}
-              setScores={setScores}
-            />
-          </div>
-        </>
+        <div className="score-column">
+          <Header name="points" />
+          <div className='points'>{updateSquares(currentTeam, pointField, "points", 19)}</div>
+          <Footer
+            name="points"
+            fieldName={pointField}
+            team={currentTeam}
+            pages={pages}
+            setPages={setPages}
+            scores={scores}
+            setScores={setScores}
+          />
+        </div>
       )}
     </div>
   );

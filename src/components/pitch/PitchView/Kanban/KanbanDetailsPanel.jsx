@@ -21,6 +21,7 @@ const KanbanDetailsPanel = ({
   moveToNextFixture // Accept moveToNextFixture
 }) => {
   if (!fixture) return null;
+  const [isAnyScorePickerOpen, setIsAnyScorePickerOpen] = useState(false);
 
   const displayCategory = fixture.category
     ? fixture.category.substring(0, 9).toUpperCase()
@@ -36,7 +37,7 @@ const KanbanDetailsPanel = ({
   // Check if all score values are valid
 
   return (
-    <div className="kanban-details-panel">
+    <div className={`kanban-details-panel ${isAnyScorePickerOpen ? 'score-picker-open' : ''}`}>
       <FixtureBar
         fixtureId={fixture.id}
         category={displayCategory}
@@ -89,6 +90,7 @@ const KanbanDetailsPanel = ({
                 fixture={fixture}
                 closePanel={closePanel}
                 moveToNextFixture={moveToNextFixture}
+                onScorePickerVisibilityChange={setIsAnyScorePickerOpen}
               />
             )}
              {mode === 'move' && (
@@ -210,7 +212,7 @@ function ShowForfeitOptions({
   );
 }
 
-function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
+function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture, onScorePickerVisibilityChange }) {
   const { fetchFixtures } = useFixtureContext();
   const [scores, setScores] = useState({
     team1: {
@@ -232,6 +234,11 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEndMatchWarning, setShowEndMatchWarning] = useState(false);
+  const [isScorePickerOpen, setIsScorePickerOpen] = useState(false);
+
+  useEffect(() => {
+    onScorePickerVisibilityChange && onScorePickerVisibilityChange(isScorePickerOpen);
+  }, [isScorePickerOpen, onScorePickerVisibilityChange]);
 
   // Helper to convert score value
   const toScoreValue = (val) => {
@@ -331,21 +338,22 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
   };
 
   return (
-    <div className="score-entry-container" style={{ marginTop: '2rem' }}>
+    <div className="score-entry-container">
       <TabScore
         fixture={fixture}
         scores={scores}
         setScores={setScores}
         onProceed={null} // Remove single proceed, we'll add buttons below
         isSubmitting={isSubmitting}
+        onScorePickerVisibilityChange={setIsScorePickerOpen}
       />
-      <div className="score-action-buttons">
+      {!isScorePickerOpen && <div className="score-action-buttons">
         <button
           className="btn btn-secondary"
           onClick={handleUpdateScore}
           disabled={isSubmitting}
         >
-          <span className="button-icon">✏️</span>
+          <i className="pi pi-pencil button-icon" aria-hidden="true" />
           Update Score
         </button>
         <button
@@ -353,7 +361,7 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
           onClick={handleFinalScore}
           disabled={isSubmitting}
         >
-          <span className="button-icon">✅</span>
+          <i className="pi pi-check-circle button-icon" aria-hidden="true" />
           Final Score
         </button>
         <button
@@ -361,10 +369,10 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture }) {
           onClick={handleEndMatch}
           disabled={isSubmitting}
         >
-          <span className="button-icon">🛑</span>
+          <i className="pi pi-stop-circle button-icon" aria-hidden="true" />
           End Match
         </button>
-      </div>
+      </div>}
       {showEndMatchWarning && (
         <div className="reschedule-message-overlay">
           <div className="reschedule-message">

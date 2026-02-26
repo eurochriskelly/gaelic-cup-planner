@@ -2,11 +2,15 @@ import { useMemo, useState, useEffect } from "react";
 import ScoreSelect from "./ScoreSelect";
 import './TabScore.scss';
 
-const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false, onEditStart }) => {
+const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false, onEditStart, onScorePickerVisibilityChange }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
   const [isExtraTime, setIsExtraTime] = useState(false);
   const [isPenalties, setIsPenalties] = useState(false);
+
+  useEffect(() => {
+    onScorePickerVisibilityChange && onScorePickerVisibilityChange(scorePicker.visible);
+  }, [scorePicker.visible, onScorePickerVisibilityChange]);
 
   // Determine field names based on mode
   const goalField = isPenalties ? 'goalsPenalties' : isExtraTime ? 'goalsExtra' : 'goals';
@@ -169,6 +173,20 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   };
 
   const TeamScore = ({ id, team }) => {
+    if (isPenalties) {
+      const penaltyGoals = scores?.[id]?.[goalField];
+      const showPenalties = penaltyGoals !== null && penaltyGoals !== undefined && penaltyGoals !== ""
+        ? `${penaltyGoals}`
+        : <span className="grayed-score">#</span>;
+      return (
+        <div className="teamScore penalties-score" onClick={() => actions.updateScore(id)}>
+          <div>
+            <div>{showPenalties}</div>
+          </div>
+        </div>
+      );
+    }
+
     let showGoals = displayScore(id, 'goals');
     let showPoints = displayScore(id, 'points');
     let showTotal = displayScore(id, 'total');
