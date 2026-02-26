@@ -3,15 +3,13 @@
 .updateFixture {
   position: fixed;
   top: 0;
-  background-color: desaturate(darken($sc, 10%), 10%);
+  background-color: rgb(94, 111, 60);
   height: 9rem;
   width: 100%;
   max-width: 1024px;
   z-index: 1000;
   //background: #788356;
-  .bg {
-    fill: none;
-  }
+  // .bg fill is inherited from the SVG to show button backgrounds
   border-radius: 0.5rem;
   padding: 0;
   .drawer {
