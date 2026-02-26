@@ -18,17 +18,14 @@ const MobileLayout = ({
 
   const childrenArray = React.Children.toArray(children);
   const [SubHeading] = childrenArray;
-  return <> 
+  return <>
     <section className="MobileLayout mobile">
-      <section style={{overflowY: 'scroll'}}>
-        <div className="comp-status">Competition status</div>
-      </section>
       <section style={{overflowY: 'scroll'}}>{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
     </section>
     <NavFooter />
-  </> 
+  </>
 };
 
 export default MobileLayout;

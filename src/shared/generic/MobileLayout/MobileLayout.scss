@@ -1,7 +1,7 @@
 @import "../../css/_colors.scss";
 
-$grid-bg:    darken(#494c44, 10%);
-$grid-lines: darken(#7d8371, 18%);
+$grid-bg:    #2a2a2a;
+$grid-lines: #3d3d3d;
 .mobile {
   * { user-select: none; }
   article: {
@@ -36,7 +36,7 @@ section.MobileLayout {
   margin-left: auto;
   margin-right: auto;
   background-color: #494c44;
-  opacity: 0.8;
+  opacity: 1.0;
   background-image:  linear-gradient($grid-lines 4.2px, transparent 4.2px), linear-gradient(90deg, $grid-lines 4.2px, transparent 4.2px), linear-gradient($grid-lines 2.1px, transparent 2.1px), linear-gradient(90deg, $grid-lines 2.1px, $grid-bg 2.1px);
   background-size: 105px 105px, 105px 105px, 21px 21px, 21px 21px;
   background-position: -4.2px -4.2px, -4.2px -4.2px, -2.1px -2.1px, -2.1px -2.1px;
@@ -45,19 +45,6 @@ section.MobileLayout {
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  .comp-status {
-    background: $crosses;
-    background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
-    opacity: 1.0;
-    font-size: 3rem;
-    text-transform:uppercase;
-    color: #888;
-    text-align: center;
-    vertical-align: center;
-    padding-top: 3rem;
-    height: 9rem;
-    border-bottom: 2px solid #777;
-  }
   $shadow-x-offset: 10px;  // Horizontal offset
   $shadow-y-offset: 10px;  // Vertical offset
   $shadow-blur-radius: 1rem; // Blur radius
@@ -87,7 +74,7 @@ section.MobileLayout {
     position:absolute;
     top: 0;
   }
-  > section:last-child {
+  > section {
     margin: 0;
     // Hide scrollbar while keeping scroll functionality
     -ms-overflow-style: none;    // IE and Edge
