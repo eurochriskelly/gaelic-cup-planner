@@ -26,6 +26,17 @@ const PinLogin = () => {
   const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
 
   useEffect(() => {
+    // Check for auth bypass in development
+    if (import.meta.env.VITE_BYPASS_AUTH === '1') {
+      const bypassTournamentId = import.meta.env.VITE_TOURNAMENT_ID
+      if (bypassTournamentId) {
+        setupTournament(bypassTournamentId)
+        Cookies.set('tournamentId', bypassTournamentId, { expires: 1 / 24, path: '/' })
+        navigate(`/tournament/${bypassTournamentId}`, { replace: true })
+        return
+      }
+    }
+
     // userRole is now managed by AppContext/Provider, which initializes from cookie.
     // PinLogin consumes this userRole directly from useAppContext.
 
