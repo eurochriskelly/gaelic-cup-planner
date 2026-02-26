@@ -5,6 +5,7 @@ import { useFixtureContext } from '../../PitchView/FixturesContext';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
+import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
 import API from '../../../../shared/api/endpoints'; // Import API
 import '../../../../components/web/gaelic-score';
 import '../../../../components/web/logo-box';
@@ -37,15 +38,25 @@ const KanbanDetailsPanel = ({
   // Check if all score values are valid
 
   return (
-    <div className={`kanban-details-panel ${isAnyScorePickerOpen ? 'score-picker-open' : ''}`}>
-      <FixtureBar
-        fixtureId={fixture.id}
-        category={displayCategory}
-        stage={displayStage}
-        number={fixture.groupNumber || '0'}
-        competitionPrefix={fixture?.competition?.initials}
-        competitionOffset={fixture?.competition?.offset}
-      />
+    <>
+      <div className="kanban-details-panel-backdrop" onClick={closePanel} />
+      <div className={`kanban-details-panel ${isAnyScorePickerOpen ? 'score-picker-open' : ''}`}>
+        <button
+          className="kanban-details-panel-close"
+          onClick={closePanel}
+          aria-label="Close panel"
+          type="button"
+        >
+          <CloseIcon width="32" height="32" />
+        </button>
+        <FixtureBar
+          fixtureId={fixture.id}
+          category={displayCategory}
+          stage={displayStage}
+          number={fixture.groupNumber || '0'}
+          competitionPrefix={fixture?.competition?.initials}
+          competitionOffset={fixture?.competition?.offset}
+        />
 
       <div className="details-content-wrapper">
         <section className="mt-7 mr-0 pr-0">
@@ -104,6 +115,7 @@ const KanbanDetailsPanel = ({
         </section>
       </div>
     </div>
+  </>
   );
 };
 
