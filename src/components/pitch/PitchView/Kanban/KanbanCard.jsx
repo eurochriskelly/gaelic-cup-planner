@@ -92,28 +92,29 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
       onClick={handleClick}
       className={`kanban-card ${isSelected ? 'selected' : ''} ${isPendingMove ? 'pending-move' : ''} ${isRecentlyMoved ? 'recently-moved' : ''}`}
     >
-      <FixtureBar
-        fixtureId={fixture.id}
-        category={displayCategory}
-        stage={displayStage}
-        number={displayNumber}
-        competitionPrefix={fixture?.competition?.initials}
-        competitionOffset={fixture?.competition?.offset}
-      />
-      {fixture.endedWithoutScore && (
-        <div className="warning-icon" style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', color: 'orange', fontSize: '2rem' }}>
-          <CancelIcon width="24" height="24" />
-        </div>
-      )}
-      {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
-        <TimeDisplay
-          scheduledTime={fixture.scheduledTime}
-          startedTime={fixture.startedTime}
+      <div className="kanban-card-inner">
+        <FixtureBar
+          fixtureId={fixture.id}
+          category={displayCategory}
+          stage={displayStage}
+          number={displayNumber}
+          competitionPrefix={fixture?.competition?.initials}
+          competitionOffset={fixture?.competition?.offset}
         />
-      ) : (
-        <div style={{height:'2.4rem'}}>&nbsp;</div>
-      )}
-      <div className="kanban-card-content-wrapper">
+        {fixture.endedWithoutScore && (
+          <div className="warning-icon" style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', color: 'orange', fontSize: '2rem' }}>
+            <CancelIcon width="24" height="24" />
+          </div>
+        )}
+        {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
+          <TimeDisplay
+            scheduledTime={fixture.scheduledTime}
+            startedTime={fixture.startedTime}
+          />
+        ) : (
+          <div style={{height:'2.4rem'}}>&nbsp;</div>
+        )}
+        <div className="kanban-card-content-wrapper">
         <div className="teams-container">
           <div className="team-row pb-1">
             <team-name
@@ -248,6 +249,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
             </div>
           </div>
         )}
+      </div>
       </div>
     );
   };
