@@ -46,4 +46,4 @@ set -a
 set +a
 
 echo "Starting dev server on port $PORT..."
-pnpm dev --port "$PORT"
+pnpm dev --port "$PORT" --host
