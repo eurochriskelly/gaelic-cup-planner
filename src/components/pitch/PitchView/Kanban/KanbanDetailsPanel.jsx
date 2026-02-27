@@ -186,6 +186,36 @@ function ShowFixtureDetails({
     return { yellowCards, redCards, blackCards };
   };
 
+  const getPlannedDurationText = () => {
+    const duration = fixture.durationPlanned;
+    if (!duration || duration <= 0) return null;
+    
+    const hours = Math.floor(duration / 60);
+    const mins = duration % 60;
+    
+    // Format the main duration
+    let durationText;
+    if (hours > 0) {
+      durationText = `${hours}h${mins > 0 ? mins + 'm' : ''}`;
+    } else {
+      durationText = `${mins}m`;
+    }
+    
+    // Calculate halves (assuming 2 equal halves)
+    const halfDuration = Math.floor(duration / 2);
+    const halfHours = Math.floor(halfDuration / 60);
+    const halfMins = halfDuration % 60;
+    
+    let halfText;
+    if (halfHours > 0) {
+      halfText = `${halfHours}h${halfMins > 0 ? halfMins + 'm' : ''}`;
+    } else {
+      halfText = `${halfMins}m`;
+    }
+    
+    return `Duration ${durationText} (2x ${halfText} halves)`;
+  };
+
   const matchDuration = getMatchDuration();
   const delayMinutes = getDelayMinutes();
   const intensity = getMatchIntensity();
@@ -252,6 +282,15 @@ function ShowFixtureDetails({
               <div className="detail-content">
                 <div className="detail-label">Pitch</div>
                 <div className="detail-value">{fixture.pitch}</div>
+              </div>
+            </div>
+          )}
+
+          {getPlannedDurationText() && (
+            <div className="detail-card duration-planned">
+              <div className="detail-icon">⏱️</div>
+              <div className="detail-content">
+                <div className="detail-value" style={{ fontSize: '1.3rem' }}>{getPlannedDurationText()}</div>
               </div>
             </div>
           )}
