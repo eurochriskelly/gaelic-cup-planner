@@ -10,6 +10,38 @@ import PitchSelector from './PitchSelector'; // Import PitchSelector
 import UpdateFixture from '../UpdateFixture';
 import './Kanban.scss';
 
+const parseFixtureTime = (value) => {
+  if (!value) return null;
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  if (typeof value === 'number') {
+    const fromNumber = new Date(value);
+    return Number.isNaN(fromNumber.getTime()) ? null : fromNumber;
+  }
+
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const parsed = new Date(value);
+  if (!Number.isNaN(parsed.getTime())) {
+    return parsed;
+  }
+
+  const timeOnlyMatch = value.match(/^(\d{1,2}):(\d{2})$/);
+  if (!timeOnlyMatch) {
+    return null;
+  }
+
+  const [, hh, mm] = timeOnlyMatch;
+  const d = new Date();
+  d.setHours(Number(hh), Number(mm), 0, 0);
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+
 // Helper function to determine fixture status (similar to useKanbanBoard.js)
 const getKanbanColumnLogic = (fixture) => {
   if (!fixture) return 'planned'; // Default for safety, though fixtures should be valid
@@ -73,12 +105,54 @@ const Kanban = ({
     }
   }, [availablePitches, focusedPitch]);
 
+  const pitchFilteredFixtures = useMemo(() => {
+    if (!focusedPitch) return filteredFixtures;
+    return filteredFixtures.filter((fixture) => fixture.pitch === focusedPitch);
+  }, [filteredFixtures, focusedPitch]);
+
   const globalPlannedFixtures = useMemo(() => {
     // For the warning icon, we still need to know about all planned fixtures globally
     if (initialFixtures && initialFixtures.length > 0) {
       return initialFixtures.filter(fixture => getKanbanColumnLogic(fixture) === 'planned');
     }
     return [];
+  }, [initialFixtures]);
+
+  const pitchStatuses = useMemo(() => {
+    const grouped = {};
+
+    (initialFixtures || []).forEach((fixture) => {
+      const pitch = fixture?.pitch;
+      if (!pitch) return;
+
+      if (!grouped[pitch]) {
+        grouped[pitch] = {
+          hasLiveMatch: false,
+          liveStartedAtMs: null,
+        };
+      }
+
+      const lane = fixture?.lane?.current;
+
+      if (lane === 'started') {
+        const startedAt =
+          parseFixtureTime(fixture.actualStartedTime) ||
+          parseFixtureTime(fixture.started) ||
+          parseFixtureTime(fixture.startedTime);
+
+        const startedMs = startedAt ? startedAt.getTime() : null;
+        const currentMs = grouped[pitch].liveStartedAtMs;
+
+        grouped[pitch].hasLiveMatch = true;
+        grouped[pitch].liveStartedAtMs =
+          startedMs && (!currentMs || startedMs < currentMs)
+            ? startedMs
+            : (currentMs || startedMs);
+      }
+
+    });
+
+    return grouped;
   }, [initialFixtures]);
 
   // Effect to update selectedFixture when initialFixtures (from context) changes
@@ -100,6 +174,15 @@ const Kanban = ({
     }
   }, [initialFixtures, selectedFixture?.id, setSelectedFixture, selectedFixture]);
 
+  useEffect(() => {
+    if (!selectedFixture) return;
+
+    const fixtureVisible = pitchFilteredFixtures.some((fixture) => fixture.id === selectedFixture.id);
+    if (!fixtureVisible) {
+      setSelectedFixture(null);
+    }
+  }, [pitchFilteredFixtures, selectedFixture, setSelectedFixture]);
+
 
    // Function to show full details panel
    const showDetailsPanel = (mode = 'score') => {
@@ -117,7 +200,7 @@ const Kanban = ({
 
    // Helper function to find adjacent fixture on same pitch
     const findAdjacentFixture = (currentFixture, direction) => {
-      const samePitchFixtures = filteredFixtures
+      const samePitchFixtures = pitchFilteredFixtures
         .filter(f => f.pitch === currentFixture.pitch)
         .sort((a, b) => new Date(a.scheduledTime || a.plannedStart) - new Date(b.scheduledTime || b.plannedStart));
 
@@ -137,10 +220,10 @@ const Kanban = ({
       }`}>
         {(() => {
           // Assuming 'queued' fixtures are identified by fixture.lane.current === 'queued'
-          const queuedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'queued');
-          const plannedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'planned');
-          const startedFixtures = filteredFixtures.filter(f => f?.lane?.current === 'started');
-          const finishedFixtures = filteredFixtures
+          const queuedFixtures = pitchFilteredFixtures.filter(f => f?.lane?.current === 'queued');
+          const plannedFixtures = pitchFilteredFixtures.filter(f => f?.lane?.current === 'planned');
+          const startedFixtures = pitchFilteredFixtures.filter(f => f?.lane?.current === 'started');
+          const finishedFixtures = pitchFilteredFixtures
             .filter(f => f?.lane?.current === 'finished')
             .sort((a, b) => {
               const dateA = a.ended ? new Date(a.ended) : 0;
@@ -202,13 +285,14 @@ const Kanban = ({
                  fetchFixtures={fetchFixtures}
                />
                
-               <div className="kanban-pitch-selector-area">
-                   <PitchSelector 
-                     pitches={availablePitches} 
-                     selectedPitch={focusedPitch} 
-                     onSelectPitch={setFocusedPitch} 
-                   />
-                </div>
+                <div className="kanban-pitch-selector-area">
+                    <PitchSelector 
+                      pitches={availablePitches} 
+                      selectedPitch={focusedPitch} 
+                      onSelectPitch={setFocusedPitch} 
+                      pitchStatuses={pitchStatuses}
+                    />
+                 </div>
 
                <KanbanColumn
                  key="planned"
