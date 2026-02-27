@@ -57,6 +57,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
     const team1Won = isFinished && total1 > total2;
     const team2Won = isFinished && total2 > total1;
     const isDraw = isFinished && total1 === total2;
+    const isOngoing = fixture?.lane?.current === 'started' && fixture.startedTime;
 
   useEffect(() => {
     const positionToolbox = () => {
@@ -108,10 +109,12 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
             <CancelIcon width="24" height="24" />
           </div>
         )}
-        {(fixture.scheduledTime && fixture?.lane?.current !== 'finished')? (
+        {fixture.scheduledTime ? (
           <TimeDisplay
             scheduledTime={fixture.scheduledTime}
             startedTime={fixture.startedTime}
+            durationPlanned={fixture.durationPlanned}
+            isOngoing={isOngoing}
           />
         ) : (
           <div style={{height:'2.4rem'}}>&nbsp;</div>
