@@ -614,7 +614,14 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
   const tournamentId = fixture.tournamentId;
+
+  const placementOptions = [
+    { value: 'before', icon: '⬆️', label: 'Before' },
+    { value: 'after', icon: '⬇️', label: 'After' },
+    { value: 'swap', icon: '🔀', label: 'Swap' },
+  ];
 
   useEffect(() => {
     let cancelled = false;
@@ -714,6 +721,26 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
     }
   };
 
+  const handlePitchSelect = (pitch) => {
+    setSelectedPitch(pitch);
+    setTimeout(() => setCurrentStep(2), 500);
+  };
+
+  const handlePlacementSelect = (placementValue) => {
+    setPlacement(placementValue);
+    setTimeout(() => setCurrentStep(3), 500);
+  };
+
+  const handleFixtureSelect = (option) => {
+    setTargetFixtureId(option?.value || null);
+    if (option?.value) {
+      setTimeout(() => setCurrentStep(4), 500);
+    }
+  };
+
+  const selectedPlacement = placementOptions.find(opt => opt.value === placement);
+  const selectedFixture = selectOptions.find(opt => opt.value === targetFixtureId);
+
   const formatOptionLabel = ({ meta }) => (
     <div className="move-option-label">
       <span className="move-option-time">{meta.scheduledTime || meta.plannedStart || 'TBD'}</span>
@@ -725,79 +752,178 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
     <div className="move-entry-wrapper">
       <header className="move-entry-header">
         <h3>Move Fixture</h3>
-        <p>Select the destination pitch, the relative position, and the match to anchor this move.</p>
+        <p>Step {currentStep} of 4</p>
       </header>
 
       {errorMessage && (
         <div className="move-entry-alert" role="alert">{errorMessage}</div>
       )}
 
-      <div className="move-entry-grid">
-        <div className="move-entry-group">
-          <label htmlFor="move-pitch">Destination pitch</label>
-          <Select
-            inputId="move-pitch"
-            classNamePrefix="move-select"
-            isLoading={isLoading}
-            options={pitches.map((pitch) => ({ value: pitch, label: pitch }))}
-            value={selectedPitch ? { value: selectedPitch, label: selectedPitch } : null}
-            onChange={(option) => setSelectedPitch(option?.value || '')}
-            placeholder={isLoading ? 'Loading pitches…' : 'Select pitch'}
-            isDisabled={isLoading || !pitches.length}
-          />
-        </div>
-
-        <div className="move-entry-group">
-          <span className="move-entry-label">Placement</span>
-          <div className="move-entry-placement">
-            {['before', 'after', 'swap'].map((value) => (
-              <label key={value}>
-                <input
-                  type="radio"
-                  name="move-placement"
-                  value={value}
-                  checked={placement === value}
-                  onChange={(event) => setPlacement(event.target.value)}
-                />
-                <span className="move-entry-placement-text">{value === 'swap' ? 'Swap with fixture' : `${value.charAt(0).toUpperCase()}${value.slice(1)} fixture`}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="move-entry-group">
-          <label htmlFor="move-anchor">Anchor fixture</label>
-          <Select
-            inputId="move-anchor"
-            classNamePrefix="move-select"
-            isLoading={isLoading}
-            options={selectOptions}
-            value={selectOptions.find((option) => option.value === targetFixtureId) || null}
-            onChange={(option) => setTargetFixtureId(option?.value || null)}
-            placeholder={
-              fixturesOnSelectedPitch.length
-                ? 'Select reference fixture'
-                : 'No fixtures available on this pitch'
-            }
-            formatOptionLabel={formatOptionLabel}
-            isDisabled={isLoading || !fixturesOnSelectedPitch.length}
-          />
-        </div>
-      </div>
-
-      <div className="move-entry-actions">
-        <button type="button" className="btn btn-tertiary" onClick={closePanel}>
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={!canSubmit || isLoading || isSaving}
-          onClick={handleSubmit}
+      {/* Summary Row */}
+      <div className="move-summary-row">
+        <button 
+          className={`summary-item ${currentStep === 1 ? 'editing' : selectedPitch ? 'completed' : ''}`}
+          onClick={() => setCurrentStep(1)}
         >
-          {isSaving ? 'Saving…' : 'Apply move'}
+          <span className="summary-label">Pitch</span>
+          <span className="summary-value">{selectedPitch || 'Select...'}</span>
+          {selectedPitch && currentStep !== 1 && <span className="edit-hint">Edit</span>}
+        </button>
+        
+        <span className="summary-arrow">→</span>
+        
+        <button 
+          className={`summary-item ${currentStep === 2 ? 'editing' : placement ? 'completed' : ''} ${!selectedPitch ? 'disabled' : ''}`}
+          onClick={() => selectedPitch && setCurrentStep(2)}
+          disabled={!selectedPitch}
+        >
+          <span className="summary-label">Placement</span>
+          <span className="summary-value">{selectedPlacement?.label || 'Select...'}</span>
+          {placement && currentStep !== 2 && <span className="edit-hint">Edit</span>}
+        </button>
+        
+        <span className="summary-arrow">→</span>
+        
+        <button 
+          className={`summary-item ${(currentStep === 3 || currentStep === 4) ? 'editing' : targetFixtureId ? 'completed' : ''} ${!placement ? 'disabled' : ''}`}
+          onClick={() => placement && setCurrentStep(3)}
+          disabled={!placement}
+        >
+          <span className="summary-label">Match</span>
+          <span className="summary-value">{selectedFixture ? (selectedFixture.meta.scheduledTime || selectedFixture.meta.plannedStart || 'TBD') : 'Select...'}</span>
+          {targetFixtureId && currentStep !== 3 && currentStep !== 4 && <span className="edit-hint">Edit</span>}
         </button>
       </div>
+
+      {/* Step Content */}
+      <div className="move-entry-card">
+        {/* Step 1: Destination Pitch */}
+        {currentStep === 1 && (
+          <div className="wizard-step-content">
+            <h4 className="wizard-step-title">Select Destination Pitch</h4>
+            <div className="pitch-selector-grid">
+              {isLoading ? (
+                <div className="loading-state">Loading pitches...</div>
+              ) : (
+                pitches.map((pitch) => (
+                  <button
+                    key={pitch}
+                    type="button"
+                    className={`pitch-grid-option ${selectedPitch === pitch ? 'selected' : ''}`}
+                    onClick={() => handlePitchSelect(pitch)}
+                  >
+                    <span className="pitch-grid-icon">🏟️</span>
+                    <span className="pitch-grid-name">{pitch}</span>
+                    <span className="pitch-check">{selectedPitch === pitch ? '✓' : ''}</span>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Placement */}
+        {currentStep === 2 && (
+          <div className="wizard-step-content">
+            <h4 className="wizard-step-title">Select Placement</h4>
+            <div className="placement-grid-3col">
+              {placementOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`placement-grid-card ${placement === option.value ? 'selected' : ''}`}
+                  onClick={() => handlePlacementSelect(option.value)}
+                >
+                  <span className="placement-grid-check">{placement === option.value ? '✓' : ''}</span>
+                  <span className="placement-grid-icon">{option.icon}</span>
+                  <span className="placement-grid-label">{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Anchor Fixture */}
+        {currentStep === 3 && (
+          <div className="wizard-step-content">
+            <h4 className="wizard-step-title">Select Anchor Match</h4>
+            {fixturesOnSelectedPitch.length === 0 ? (
+              <div className="no-fixtures-message">
+                <p>No other matches available on {selectedPitch}</p>
+              </div>
+            ) : (
+              <div className="fixture-grid-container">
+                {selectOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`fixture-grid-card ${targetFixtureId === option.value ? 'selected' : ''}`}
+                    onClick={() => handleFixtureSelect(option)}
+                  >
+                    <span className="fixture-grid-check">{targetFixtureId === option.value ? '✓' : ''}</span>
+                    <span className="fixture-grid-time">{option.meta.scheduledTime || option.meta.plannedStart || 'TBD'}</span>
+                    <span className="fixture-grid-teams">{option.meta.team1} vs {option.meta.team2}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Step 4: Review */}
+        {currentStep === 4 && (
+          <div className="wizard-step-content">
+            <h4 className="wizard-step-title">Review & Submit</h4>
+            <div className="review-summary">
+              <div className="review-item">
+                <span className="review-label">Pitch</span>
+                <span className="review-value">{selectedPitch}</span>
+              </div>
+              <div className="review-item">
+                <span className="review-label">Placement</span>
+                <span className="review-value">{selectedPlacement?.icon} {selectedPlacement?.label}</span>
+              </div>
+              <div className="review-item">
+                <span className="review-label">Anchor Match</span>
+                <span className="review-value">
+                  <span className="review-time">{selectedFixture?.meta?.scheduledTime || selectedFixture?.meta?.plannedStart || 'TBD'}</span>
+                  <span className="review-teams">{selectedFixture?.meta?.team1} vs {selectedFixture?.meta?.team2}</span>
+                </span>
+              </div>
+            </div>
+            <div className="review-actions">
+              <button type="button" className="btn btn-tertiary" onClick={closePanel}>
+                <i className="pi pi-times" /> Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={!canSubmit || isLoading || isSaving}
+                onClick={handleSubmit}
+              >
+                <i className="pi pi-check" /> {isSaving ? 'Moving…' : 'Apply Move'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Actions only show on steps 1-3 */}
+      {currentStep !== 4 && (
+        <div className="move-entry-actions">
+          <button type="button" className="btn btn-tertiary" onClick={closePanel}>
+            <i className="pi pi-times" /> Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={true}
+            onClick={handleSubmit}
+          >
+            <i className="pi pi-check" /> Apply Move
+          </button>
+        </div>
+      )}
     </div>
   );
 }

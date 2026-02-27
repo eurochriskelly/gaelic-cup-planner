@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import API from "../../../../../../shared/api/endpoints";
+import '../../../../../../components/web/logo-box';
 import './TabCancel.scss';
 
 const optionMeta = {
@@ -99,6 +100,18 @@ const TabCancel = ({
           </div>
         ) : (
           <div className="options-view">
+            <div className="teams-header">
+              <div className="team-badge-container">
+                <logo-box title={team1} size="80px" border-color="#e11d48"></logo-box>
+                <span className="team-name">{team1}</span>
+              </div>
+              <span className="vs-text">vs.</span>
+              <div className="team-badge-container">
+                <logo-box title={team2} size="80px" border-color="#38bdf8"></logo-box>
+                <span className="team-name">{team2}</span>
+              </div>
+            </div>
+
             <h3>Mark Match As Not Played</h3>
             <p className="options-subtitle">Pick one outcome below</p>
             <div className="outcome-options-grid">
