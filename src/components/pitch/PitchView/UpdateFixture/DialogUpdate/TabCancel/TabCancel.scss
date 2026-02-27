@@ -3,240 +3,135 @@
 .drawerCancel {
   width: 100%;
   background-color: #fff;
-  border-radius: 1.6rem;
 }
 
 .drawerCancel .cancelForm {
   width: 100%;
   box-sizing: border-box;
-  padding: 1.5rem 1.2rem 1.8rem;
+  padding: 2rem 1.5rem;
 }
 
-.drawerCancel .options-view,
-.drawerCancel .confirm-view {
+/* Options View */
+.drawerCancel .options-view {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
   align-items: center;
+  gap: 2rem;
 }
 
-/* Teams Header with Badges */
-.drawerCancel .teams-header {
+.drawerCancel .title {
+  margin: 0;
+  color: #1f2937;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Teams Grid */
+.drawerCancel .teams-grid {
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 2rem;
   width: 100%;
-  padding: 0.5rem 0 1rem;
 }
 
-.drawerCancel .team-badge-container {
+.drawerCancel .team-tile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 12rem;
 }
 
-.drawerCancel .team-name {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1f2937;
-  text-align: center;
+.drawerCancel .team-tile:hover {
+  border-color: #94a3b8;
+  background: #f9fafb;
+  transform: translateY(-2px);
 }
 
-.drawerCancel .vs-text {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #1f2937;
-}
-
-.drawerCancel h3 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 2.4rem;
-  font-weight: 800;
-  text-align: center;
-}
-
-.drawerCancel .options-subtitle,
-.drawerCancel .confirm-subtitle {
-  margin: 0;
-  color: #64748b;
+.drawerCancel .team-tile .team-name {
   font-size: 1.6rem;
   font-weight: 600;
+  color: #1f2937;
   text-align: center;
 }
 
-/* Outcome Options Grid */
-.drawerCancel .outcome-options-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.2rem;
-  width: 100%;
-  max-width: 70rem;
-}
-
-.drawerCancel .outcome-option {
-  width: 100%;
-  border: 2px solid #e2e8f0;
-  border-radius: 1.2rem;
-  background: #f8fafc;
-  padding: 1.5rem 1.2rem;
-  text-align: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  transition: all 0.2s ease;
-}
-
-.drawerCancel .outcome-option:hover {
-  border-color: #94a3b8;
-  background: #f1f5f9;
-}
-
-.drawerCancel .option-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.drawerCancel .option-title {
+/* OR Divider */
+.drawerCancel .or-divider {
   font-size: 2rem;
-  font-weight: 800;
-  color: #1f2937;
+  font-weight: 600;
+  color: #6b7280;
 }
 
-.drawerCancel .option-subtitle {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #64748b;
-}
-
-/* Outcome Rows */
-.drawerCancel .outcome-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.9rem;
-  background: #fff;
-  padding: 0.9rem 1.2rem;
-}
-
-.drawerCancel .team {
-  flex: 1;
-  text-align: left;
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #1f2937;
-  line-height: 1.3;
-}
-
-/* Status Badges - Pill Shape */
-.drawerCancel .status-badge {
-  border-radius: 9999px;
-  padding: 0.5rem 1.2rem;
-  font-size: 1.3rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-.drawerCancel .status-badge.forfeit {
-  background: #fecaca;
-  color: #991b1b;
-  border: 2px solid #ef4444;
-}
-
-.drawerCancel .status-badge.walkover {
-  background: #bbf7d0;
-  color: #166534;
-  border: 2px solid #22c55e;
-}
-
-.drawerCancel .status-badge.draw {
-  background: #e0f2fe;
-  color: #0c4a6e;
-  border: 2px solid #38bdf8;
-}
-
-/* Draw Option Button */
-.drawerCancel .draw-option {
+/* Draw Button */
+.drawerCancel .draw-button {
   width: 100%;
-  max-width: 70rem;
-  border: 2px solid rgba(14, 116, 144, 0.3);
-  border-radius: 1.2rem;
-  background: #ecfeff;
-  padding: 1.8rem 1.5rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.drawerCancel .draw-option:hover {
-  background: #cffafe;
-  border-color: rgba(14, 116, 144, 0.5);
-}
-
-.drawerCancel .draw-title {
-  color: #0e7490;
-  font-size: 2.4rem;
-  font-weight: 800;
-}
-
-.drawerCancel .draw-teams {
-  color: #155e75;
+  max-width: 28rem;
+  padding: 1.4rem 2rem;
   font-size: 1.8rem;
   font-weight: 600;
+  color: #0e7490;
+  background: #ecfeff;
+  border: 2px solid #a5f3fc;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Outcome Matrix (Confirm View) */
-.drawerCancel .outcome-matrix {
+.drawerCancel .draw-button:hover {
+  background: #cffafe;
+  border-color: #67e8f9;
+}
+
+/* Confirm View */
+.drawerCancel .confirm-view {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  max-width: 40rem;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 1rem 0;
 }
 
-.drawerCancel .outcome-matrix.draw {
-  gap: 1rem;
+.drawerCancel .confirm-view h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
 }
 
-/* Confirm Actions */
 .drawerCancel .confirm-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 1rem;
   width: 100%;
-  max-width: 40rem;
-  margin-top: 0.5rem;
+  max-width: 32rem;
 }
 
 .drawerCancel .btn-no,
 .drawerCancel .btn-yes {
+  flex: 1;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
   border: none;
-  border-radius: 1rem;
-  min-height: 4.8rem;
-  font-size: 1.75rem;
-  font-weight: 800;
+  border-radius: 0.8rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .drawerCancel .btn-no {
-  background: #e2e8f0;
-  color: #334155;
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .drawerCancel .btn-no:hover {
-  background: #cbd5e1;
+  background: #d1d5db;
 }
 
 .drawerCancel .btn-yes {
@@ -249,32 +144,38 @@
 }
 
 /* Responsive */
-@media (max-width: 700px) {
-  .drawerCancel .outcome-options-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 600px) {
+  .drawerCancel .cancelForm {
+    padding: 1.5rem 1rem;
   }
 
-  .drawerCancel .teams-header {
-    gap: 1.2rem;
+  .drawerCancel .title {
+    font-size: 1.9rem;
   }
 
-  .drawerCancel .vs-text {
+  .drawerCancel .teams-grid {
+    gap: 1rem;
+  }
+
+  .drawerCancel .team-tile {
+    min-width: 10rem;
+    padding: 1.2rem;
+  }
+
+  .drawerCancel .team-tile .team-name {
+    font-size: 1.4rem;
+  }
+
+  .drawerCancel .or-divider {
+    font-size: 1.7rem;
+  }
+
+  .drawerCancel .draw-button {
+    font-size: 1.6rem;
+    padding: 1.2rem 1.5rem;
+  }
+
+  .drawerCancel .confirm-view h3 {
     font-size: 1.8rem;
-  }
-
-  .drawerCancel .team-name {
-    font-size: 1.5rem;
-  }
-
-  .drawerCancel h3 {
-    font-size: 2rem;
-  }
-
-  .drawerCancel .draw-title {
-    font-size: 2rem;
-  }
-
-  .drawerCancel .draw-teams {
-    font-size: 1.5rem;
   }
 }

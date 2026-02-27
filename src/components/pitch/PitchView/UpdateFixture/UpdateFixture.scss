@@ -89,7 +89,7 @@
 
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 0.2rem 1fr 1fr 1fr;
   width: 100%;
   justify-items: center;
   align-items: center;
@@ -98,6 +98,30 @@
   padding: 0;
     gap: 0;
     padding-bottom:0; 
+
+  // View button - first column
+  .info-button {
+    justify-self: center;
+  }
+
+  // Divider - second column
+  .button-divider {
+    width: 0.1rem;
+    height: 70%;
+    background-color: rgba(255, 255, 255, 0.3);
+    justify-self: center;
+  }
+
+  // Slide to unlock container - spans the 3 action button columns
+  .slide-to-unlock-container {
+    grid-column: 3 / 6;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .right-side {
       grid-column: -2; // Position in last column
       justify-self: end;
@@ -138,16 +162,7 @@
 }
 
 .info-button {
-
-}
-
-.slide-to-unlock-container {
-  grid-column: span 3;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  // View button styling if needed
 }
 
 /* DRAWERS */

@@ -218,29 +218,31 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
 
   return (
     <div className="tab-score-content drawerFinish">
-      <div className="extra-time-toggle">
-        <label className={`extra-time-label ${!shouldShowExtraTime ? 'disabled' : ''}`}>
-          <input
-            type="checkbox"
-            checked={isExtraTime}
-            disabled={!shouldShowExtraTime}
-            onChange={(e) => setIsExtraTime(e.target.checked)}
-          />
-          <span>Extra Time</span>
-        </label>
-      </div>
+      {shouldShowExtraTime && (
+        <div className="extra-time-toggle">
+          <label className="extra-time-label">
+            <input
+              type="checkbox"
+              checked={isExtraTime}
+              onChange={(e) => setIsExtraTime(e.target.checked)}
+            />
+            <span>Extra Time</span>
+          </label>
+        </div>
+      )}
 
-      <div className="extra-time-toggle penalties-toggle">
-        <label className={`extra-time-label ${!shouldShowPenalties ? 'disabled' : ''}`}>
-          <input
-            type="checkbox"
-            checked={isPenalties}
-            disabled={!shouldShowPenalties}
-            onChange={(e) => setIsPenalties(e.target.checked)}
-          />
-          <span>Penalties</span>
-        </label>
-      </div>
+      {shouldShowPenalties && (
+        <div className="extra-time-toggle penalties-toggle">
+          <label className="extra-time-label">
+            <input
+              type="checkbox"
+              checked={isPenalties}
+              onChange={(e) => setIsPenalties(e.target.checked)}
+            />
+            <span>Penalties</span>
+          </label>
+        </div>
+      )}
 
       <div className="score-container" style={{ position: "relative" }}>
         <div className="side-by-side">

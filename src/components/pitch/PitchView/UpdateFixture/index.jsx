@@ -220,7 +220,24 @@ const UpdateFixture = ({
   };
 
   const visibleButtons = getVisibleButtons();
-  const mainButtons = visibleButtons.filter(b => !b.isInfoButton).slice(0, 3); // Limit to max 3 buttons
+  
+  // Reorder buttons so cards always comes before score (finish)
+  const reorderButtons = (buttons) => {
+    const cardIndex = buttons.findIndex(b => b.id === 'cards');
+    const finishIndex = buttons.findIndex(b => b.id === 'finish');
+    
+    if (cardIndex !== -1 && finishIndex !== -1 && cardIndex > finishIndex) {
+      // Cards is after finish, swap them
+      const reordered = [...buttons];
+      const [cardButton] = reordered.splice(cardIndex, 1);
+      reordered.splice(finishIndex, 0, cardButton);
+      return reordered;
+    }
+    
+    return buttons;
+  };
+  
+  const mainButtons = reorderButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3); // Limit to max 3 buttons
   const infoButton = visibleButtons.find(b => b.isInfoButton);
   const isLocked = needsSlideToUnlock && !isUnlocked;
 
@@ -238,6 +255,20 @@ const UpdateFixture = ({
   return (
     <div className="updateFixture select-none">
       <div className="button-grid">
+        {/* View button on the left */}
+        {infoButton && (
+          <button
+            className={`space-button info-button ${infoButton.getState()}`}
+            onClick={() => handleButtonClick(infoButton)}
+          >
+            <infoButton.Icon className="icon" />
+          </button>
+        )}
+
+        {/* Divider */}
+        <div className="button-divider" />
+
+        {/* Main action buttons on the right */}
         {isLocked ? (
           // Show slide to unlock in place of main buttons
           <div className="slide-to-unlock-container">
@@ -273,16 +304,6 @@ const UpdateFixture = ({
               ))
             }
           </>
-        )}
-
-        {/* Always show info/view button */}
-        {infoButton && (
-          <button
-            className={`space-button info-button ${infoButton.getState()}`}
-            onClick={() => handleButtonClick(infoButton)}
-          >
-            <infoButton.Icon className="icon" />
-          </button>
         )}
       </div>
 
