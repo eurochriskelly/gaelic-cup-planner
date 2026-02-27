@@ -5,23 +5,30 @@ import './TimeDisplay.scss';
 const TimeDisplay = ({
   scheduledTime,
   startedTime = null,
+  started = null,
   durationPlanned = null,
   isOngoing = false
 }) => {
   // Calculate countdown time remaining
   const getTimeRemaining = useCallback(() => {
-    if (!startedTime || !durationPlanned || !isOngoing) return null;
-    
-    const parseTime = (timeStr) => {
-      const [hours, minutes] = timeStr.split(':').map(num => parseInt(num, 10));
-      return hours * 60 + minutes;
-    };
+    if ((!startedTime && !started) || !durationPlanned || !isOngoing) return null;
     
     try {
       const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const startedMinutes = parseTime(startedTime);
-      const elapsedMinutes = currentMinutes - startedMinutes;
+      let startedDate;
+      
+      if (started) {
+        // Use full ISO timestamp if available (e.g., "2023-11-17T12:18:42.000Z")
+        startedDate = new Date(started);
+      } else {
+        // Fallback to startedTime (e.g., "13:18") - assumes today
+        const [hours, minutes] = startedTime.split(':').map(num => parseInt(num, 10));
+        startedDate = new Date();
+        startedDate.setHours(hours, minutes, 0, 0);
+      }
+      
+      const elapsedMs = now - startedDate;
+      const elapsedMinutes = Math.floor(elapsedMs / 60000);
       const remainingMinutes = durationPlanned - elapsedMinutes;
       
       const absMinutes = Math.abs(remainingMinutes);
@@ -142,6 +149,7 @@ const TimeDisplay = ({
 TimeDisplay.propTypes = {
   scheduledTime: PropTypes.string.isRequired,
   startedTime: PropTypes.string,
+  started: PropTypes.string,
   durationPlanned: PropTypes.number,
   isOngoing: PropTypes.bool
 };
