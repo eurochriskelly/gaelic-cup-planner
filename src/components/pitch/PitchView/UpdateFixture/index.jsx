@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import DialogUpdate from "./DialogUpdate";
 import DrawerPostpone from "./DrawerPostpone";
+import SlideToUnlock from "./SlideToUnlock";
 import { useFixtureContext } from "../FixturesContext";
 import API from "../../../../shared/api/endpoints";
 // icons
@@ -27,10 +28,96 @@ const UpdateFixture = ({
   if (!nextFixture) return null;
 
   const [activeDrawer, setActiveDrawer] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   const hasStarted = !!nextFixture.startedTime;
   const hasResult = !!nextFixture.isResult;
-  const isPlanned = nextFixture.lane?.current === 'planned' || nextFixture.lane?.current === 'queued';
+  const isPlannedLane = nextFixture.lane?.current === 'planned';
+  const isQueuedLane = nextFixture.lane?.current === 'queued';
+  const isPlanned = isPlannedLane || isQueuedLane; // For button visibility logic
+  const isFinished = nextFixture.lane?.current === 'finished';
+  const needsSlideToUnlock = isPlannedLane || isFinished; // Only planned and finished need slide-to-unlock
+
+  // Timeout refs
+  const inactivityTimeoutRef = useRef(null);
+  const unlockTimeoutRef = useRef(null);
+
+  // Clear all timeouts
+  const clearAllTimeouts = useCallback(() => {
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+      inactivityTimeoutRef.current = null;
+    }
+    if (unlockTimeoutRef.current) {
+      clearTimeout(unlockTimeoutRef.current);
+      unlockTimeoutRef.current = null;
+    }
+  }, []);
+
+  // Reset lock state
+  const lockPanel = useCallback(() => {
+    setIsUnlocked(false);
+    clearAllTimeouts();
+  }, [clearAllTimeouts]);
+
+  // Handle unlock
+  const handleUnlock = useCallback(() => {
+    setIsUnlocked(true);
+    clearAllTimeouts();
+    
+    // Start 60-second unlock timeout
+    unlockTimeoutRef.current = setTimeout(() => {
+      lockPanel();
+    }, 60000);
+  }, [clearAllTimeouts, lockPanel]);
+
+  // Reset inactivity timer on user interaction
+  const resetInactivityTimer = useCallback(() => {
+    if (!isUnlocked) return; // Only track inactivity when unlocked
+    
+    clearAllTimeouts();
+    
+    // Start 10-second inactivity timeout
+    inactivityTimeoutRef.current = setTimeout(() => {
+      lockPanel();
+    }, 10000);
+  }, [isUnlocked, clearAllTimeouts, lockPanel]);
+
+  // Reset lock when fixture changes
+  useEffect(() => {
+    lockPanel();
+  }, [fixture?.id, lockPanel]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      clearAllTimeouts();
+    };
+  }, [clearAllTimeouts]);
+
+  // Track user activity when unlocked
+  useEffect(() => {
+    if (!isUnlocked) return;
+
+    const activityEvents = ['mousedown', 'touchstart', 'keydown'];
+    
+    const handleActivity = () => {
+      resetInactivityTimer();
+    };
+
+    activityEvents.forEach(event => {
+      document.addEventListener(event, handleActivity);
+    });
+
+    // Start initial inactivity timer
+    resetInactivityTimer();
+
+    return () => {
+      activityEvents.forEach(event => {
+        document.removeEventListener(event, handleActivity);
+      });
+    };
+  }, [isUnlocked, resetInactivityTimer]);
 
   // Basic buttons definition - won't change
   const buttons = [
@@ -135,33 +222,60 @@ const UpdateFixture = ({
   const visibleButtons = getVisibleButtons();
   const mainButtons = visibleButtons.filter(b => !b.isInfoButton).slice(0, 3); // Limit to max 3 buttons
   const infoButton = visibleButtons.find(b => b.isInfoButton);
+  const isLocked = needsSlideToUnlock && !isUnlocked;
+
+  // Debug logging
+  console.log('UpdateFixture Debug:', {
+    lane: nextFixture.lane?.current,
+    isPlannedLane,
+    isQueuedLane,
+    isFinished,
+    needsSlideToUnlock,
+    isLocked,
+    isUnlocked
+  });
 
   return (
     <div className="updateFixture select-none">
       <div className="button-grid">
-        {mainButtons.map((button) => {
-          const state = button.getState(hasStarted, hasResult, nextFixture);
-          const isDisabled = state === 'disabled';
+        {isLocked ? (
+          // Show slide to unlock in place of main buttons
+          <div className="slide-to-unlock-container">
+            <SlideToUnlock 
+              onUnlock={handleUnlock} 
+              onLock={lockPanel} 
+              isLocked={isLocked}
+            />
+          </div>
+        ) : (
+          // Show main action buttons
+          <>
+            {mainButtons.map((button) => {
+              const state = button.getState(hasStarted, hasResult, nextFixture);
+              const isDisabled = state === 'disabled';
 
-          return (
-            <button
-              key={button.id}
-              className={`space-button ${state}`}
-              disabled={isDisabled}
-              onClick={() => handleButtonClick(button)}
-            >
-              <button.Icon className="icon" />
-            </button>
-          );
-        })}
+              return (
+                <button
+                  key={button.id}
+                  className={`space-button ${state}`}
+                  disabled={isDisabled}
+                  onClick={() => handleButtonClick(button)}
+                >
+                  <button.Icon className="icon" />
+                </button>
+              );
+            })}
 
-        {/* Generate placeholders only if we have fewer than 3 buttons */}
-        {mainButtons.length < 3 &&
-          [...Array(3 - mainButtons.length)].map((_, i) => (
-            <div key={`empty-${i}`} className="space-button empty" />
-          ))
-        }
+            {/* Generate placeholders only if we have fewer than 3 buttons */}
+            {mainButtons.length < 3 &&
+              [...Array(3 - mainButtons.length)].map((_, i) => (
+                <div key={`empty-${i}`} className="space-button empty" />
+              ))
+            }
+          </>
+        )}
 
+        {/* Always show info/view button */}
         {infoButton && (
           <button
             className={`space-button info-button ${infoButton.getState()}`}
