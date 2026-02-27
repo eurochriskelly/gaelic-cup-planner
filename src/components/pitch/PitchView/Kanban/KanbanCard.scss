@@ -4,7 +4,7 @@ $bwid: 0.6rem;
 $bcol: saturate(lighten($sc, 5%), 30%);
 
 .kanban-card {
-  width: 100%;
+  width: calc(100% - 2rem);
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
   // padding: 0.75rem; // Handled by content wrapper or FixtureBar
@@ -13,13 +13,14 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   cursor: grab; // Indicates draggable
   position: relative; // For potential pseudo-elements or absolutely positioned children
   overflow: visible; // Allow toolbox to overhang
+  display: flex;
   flex-direction: column;
-  height: 19rem;
-  background: white;
-  // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
-  // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
+  height: 22rem;
+  background: transparent;
+  margin-left: 1rem;
+  margin-right: 1rem;
   border-radius: 0.8rem;
-  border: $bwid solid white;//darken(rgb(90 94 78), 10%);
+  border: none;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 
@@ -52,9 +53,26 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.08); // Light drop shadow
   &.selected {
-    border: $bwid solid darken(desaturate($bcol, 30%), 10%);
+    outline: $bwid solid #ffeb3b;
+    outline-offset: calc(-1 * #{$bwid});
+    box-shadow: none;
+    animation: shimmer 2s linear infinite;
+
+    .kanban-card-inner {
+      border-radius: calc(0.8rem - #{$bwid});
+    }
+  }
+
+  @keyframes shimmer {
+    from { outline-color: #fff9c4; }
+    16% { outline-color: #ffeb3b; }
+    33% { outline-color: #f57f17; }
+    50% { outline-color: #ffeb3b; }
+    66% { outline-color: #fff9c4; }
+    83% { outline-color: #ffeb3b; }
+    to { outline-color: #fff9c4; }
   }
 
   &.pending-move {
@@ -101,6 +119,23 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
   }
 
+  .kanban-card-inner {
+    background: #ccc;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    flex: 1;
+    margin: $bwid;
+  }
+
+  &.lane-queued .kanban-card-inner,
+  &.lane-started .kanban-card-inner {
+    background: #eee;
+  }
+
+  &.selected .kanban-card-inner {
+    background: white;
+  }
+
   .kanban-card-content-wrapper {
     padding: 0.75rem;
     flex-grow: 1; // If the card content needs to expand
@@ -112,6 +147,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       flex-direction: column;
       width: 100%;
       margin-bottom: 10px;
+      padding: 0 0.5rem 1rem 0.5rem;
     
       .team-row {
         display: flex;
@@ -242,16 +278,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
   .pitch-info {
     position: absolute;
-    bottom: -0.1rem;
-    left: 0.1rem;
-    padding: 0.2rem 0.4rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    padding: 0.3rem 0.5rem;
     font-size: 1.5rem;
     text-transform: uppercase;
     padding-left: 4rem;
     svg {
       position: absolute;
-      bottom : -0.5rem;
-      left: 0.4rem;
+      bottom : 0rem;
+      left: 0.6rem;
       path {
         fill: black;
         fill-opacity: 1;
@@ -260,10 +296,10 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
   .umpire-info{
     position: absolute;
-    bottom: 0.1rem;
-    right: 0.0rem;
-    padding: 0.2rem 0.0rem;
-    width: 100%;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    width: auto;
     svg path {
       fill: black;
       fill-opacity: 1;
@@ -274,8 +310,8 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
     &>div {
       display: grid;
-      gap: -0.8rem;
-      align-items: right;
+      gap: 0.5rem;
+      align-items: center;
       color: #555;
       justify-content: right;
       font-weight: normal;

@@ -1,25 +1,66 @@
 @import "src/shared/css/_colors.scss";
 
-.kanban-details-panel {
-  position: absolute;
-  top: 9rem;
-  bottom: 11rem;
+.kanban-details-panel-backdrop {
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.kanban-details-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 10rem);
+  height: calc(100% - 10rem);
   max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 0;
-  margin: 0;
+  border-radius: 1rem;
   background-color: #ffffff;
-  padding:0; 
-  border-top: 1px solid #dee2e6;
+  padding: 0;
   overflow-y: auto;
-  z-index: 20; // Ensure it's above columns but below modals/alerts
+  z-index: 101;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3);
+
+  &-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    left: auto;
+    z-index: 1000;
+    width: 5rem;
+    height: 5rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    font-size: 3.2rem;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    padding: 0;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.6);
+      border-color: white;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
 
   .match-up {
     display: grid;
@@ -146,6 +187,7 @@
     .stage {
       position: absolute;
       right: 0.3rem;
+      margin-right: 5.5rem;
       top: 1rem;
       font-size: 4rem;
       background: lighten($sc, $amount: 60);

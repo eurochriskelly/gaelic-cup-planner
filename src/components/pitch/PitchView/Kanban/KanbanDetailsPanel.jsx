@@ -37,15 +37,25 @@ const KanbanDetailsPanel = ({
   // Check if all score values are valid
 
   return (
-    <div className={`kanban-details-panel ${isAnyScorePickerOpen ? 'score-picker-open' : ''}`}>
-      <FixtureBar
-        fixtureId={fixture.id}
-        category={displayCategory}
-        stage={displayStage}
-        number={fixture.groupNumber || '0'}
-        competitionPrefix={fixture?.competition?.initials}
-        competitionOffset={fixture?.competition?.offset}
-      />
+    <>
+      <div className="kanban-details-panel-backdrop" onClick={closePanel} />
+      <div className={`kanban-details-panel ${isAnyScorePickerOpen ? 'score-picker-open' : ''}`}>
+        <button
+          className="kanban-details-panel-close"
+          onClick={closePanel}
+          aria-label="Close panel"
+          type="button"
+        >
+          ×
+        </button>
+        <FixtureBar
+          fixtureId={fixture.id}
+          category={displayCategory}
+          stage={displayStage}
+          number={fixture.groupNumber || '0'}
+          competitionPrefix={fixture?.competition?.initials}
+          competitionOffset={fixture?.competition?.offset}
+        />
 
       <div className="details-content-wrapper">
         <section className="mt-7 mr-0 pr-0">
@@ -104,6 +114,7 @@ const KanbanDetailsPanel = ({
         </section>
       </div>
     </div>
+  </>
   );
 };
 
