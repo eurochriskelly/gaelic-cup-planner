@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 3rem;
   box-sizing: border-box;
 
   &.unlocked {
@@ -26,10 +26,10 @@
 
 .slide-track {
   position: relative;
-  width: 100%;
-  height: 93px;
+  width: 80%;
+  height: 102px;
   background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-  border-radius: 46px;
+  border-radius: 51px;
   overflow: hidden;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
   user-select: none;
@@ -68,8 +68,8 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  width: 77px;
-  height: 77px;
+  width: 85px;
+  height: 85px;
   background: #fff;
   border-radius: 50%;
   display: flex;
@@ -98,36 +98,43 @@
 }
 
 .handle-icon {
-  font-size: 3.2rem;
+  font-size: 3.8rem;
   font-weight: 900;
   color: #0056b3;
   pointer-events: none;
   user-select: none;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transform: scale(1.2);
+  display: inline-block;
 }
 
 // Responsive adjustments
 @media (max-width: 576px) {
   .slide-to-unlock {
-    padding: 0.75rem;
+    padding: 0.75rem 2rem;
+  }
+  
+  .slide-track {
+    width: 85%;
   }
 
   .slide-track {
-    height: 82px;
+    height: 90px;
   }
 
   .slide-text {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .slide-handle {
     top: 6px;
     left: 6px;
-    width: 70px;
-    height: 70px;
+    width: 77px;
+    height: 77px;
   }
 
   .handle-icon {
-    font-size: 2.8rem;
+    font-size: 3.4rem;
+    transform: scale(1.2);
   }
 }

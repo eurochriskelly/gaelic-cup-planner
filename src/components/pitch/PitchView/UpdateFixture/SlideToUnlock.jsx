@@ -34,7 +34,7 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
     if (!isDragging || isUnlocked) return;
 
     const deltaX = clientX - startXRef.current;
-    const maxDrag = trackWidthRef.current - 96; // 96px total handle width (77px + margins)
+    const maxDrag = trackWidthRef.current - 101; // 101px total handle width (85px + 16px margins)
     const newPosition = Math.max(0, Math.min(deltaX, maxDrag));
     
     setDragPosition(newPosition);
@@ -45,7 +45,7 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
 
     setIsDragging(false);
     
-    const maxDrag = trackWidthRef.current - 96;
+    const maxDrag = trackWidthRef.current - 101;
     const threshold = maxDrag * 0.8; // 80% threshold
 
     if (dragPosition >= threshold) {
@@ -117,7 +117,7 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
         </div>
         <div 
           className="slide-fill"
-          style={{ width: `${dragPosition + 48}px` }}
+          style={{ width: `${dragPosition + 50}px` }}
         />
         <div
           ref={handleRef}
@@ -130,10 +130,10 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
           aria-label="Slide to unlock fixture controls"
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-valuenow={Math.round((dragPosition / (trackWidthRef.current - 96)) * 100)}
+          aria-valuenow={Math.round((dragPosition / (trackWidthRef.current - 101)) * 100)}
           tabIndex={0}
         >
-          <span className="handle-icon">→</span>
+          <span className="handle-icon">👉</span>
         </div>
       </div>
     </div>
