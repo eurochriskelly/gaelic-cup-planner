@@ -15,7 +15,10 @@ const TournamentView = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [statusView, setStatusView] = useState("preliminary");
+  // Default to "groups" view
+  const [statusView, setStatusView] = useState("groups");
+  const [showOverall, setShowOverall] = useState(false);
+  const [activeGroupIndex, setActiveGroupIndex] = useState(0);
 
   const loadReport = useCallback(async () => {
     try {
@@ -69,6 +72,10 @@ const TournamentView = () => {
         isFallbackCategory={isFallbackCategory}
         statusView={statusView}
         onChangeStatusView={setStatusView}
+        showOverall={showOverall}
+        onToggleOverall={setShowOverall}
+        activeGroupIndex={activeGroupIndex}
+        onGroupChange={setActiveGroupIndex}
       />
     </MobileLayout>
   );
@@ -84,6 +91,10 @@ const StatusContent = ({
   isFallbackCategory,
   statusView,
   onChangeStatusView,
+  showOverall,
+  onToggleOverall,
+  activeGroupIndex,
+  onGroupChange,
 }) => {
   if (loading && !categoryReport) {
     return <div className="status-card status-card--message">Loading competition data...</div>;
@@ -119,11 +130,22 @@ const StatusContent = ({
   return (
     <section className="status-content">
       <div className="status-hero status-card">
-        <p className="status-hero__kicker">Live competition status</p>
-        <h1 className="status-hero__title">{label}</h1>
-        <p className="status-hero__meta">
-          {lastUpdated ? `Updated ${formatTime(lastUpdated)}` : "Waiting for first update"}
-        </p>
+        <div className="status-hero__header">
+          <div className="status-hero__info">
+            <p className="status-hero__kicker">Live competition status</p>
+            <h1 className="status-hero__title">{label}</h1>
+            <p className="status-hero__meta">
+              {lastUpdated ? `Updated ${formatTime(lastUpdated)}` : "Waiting for first update"}
+            </p>
+          </div>
+          <button 
+             className="status-hero__back" 
+             onClick={() => window.history.back()}
+             aria-label="Go back"
+          >
+             Back
+          </button>
+        </div>
       </div>
 
       {isFallbackCategory && requestedCategory ? (
@@ -138,15 +160,15 @@ const StatusContent = ({
         </div>
       ) : null}
 
-      <div className="status-toggle" role="tablist" aria-label="Competition phase">
+      <div className="status-toggle status-toggle--main" role="tablist" aria-label="Competition phase">
         <button
           type="button"
-          className={`status-toggle__button ${statusView === "preliminary" ? "is-active" : ""}`}
-          onClick={() => onChangeStatusView("preliminary")}
+          className={`status-toggle__button ${statusView === "groups" ? "is-active" : ""}`}
+          onClick={() => onChangeStatusView("groups")}
           role="tab"
-          aria-selected={statusView === "preliminary"}
+          aria-selected={statusView === "groups"}
         >
-          Preliminary
+          Groups
         </button>
         <button
           type="button"
@@ -159,80 +181,225 @@ const StatusContent = ({
         </button>
       </div>
 
-      {statusView === "preliminary" ? (
-        <>
+      {statusView === "groups" && (
+        <GroupViewSwitcher 
+           groupStandings={groupStandings}
+           fixtures={fixtures}
+           overallStandings={standings}
+           activeGroupIndex={activeGroupIndex}
+           onChangeGroup={onGroupChange}
+           showOverall={showOverall}
+           onToggleOverall={onToggleOverall}
+        />
+      )}
 
-          {groupStandings.length
-            ? groupStandings.map(({ key, label: groupLabel, rows }) => {
-                const groupFixtures = fixtures.filter((f) => String(f.group) === String(key));
-                const numTeams = rows.length;
-                const hasFixtures = groupFixtures.length > 0;
-
-                let remainingMatches;
-                let isComplete;
-
-                if (hasFixtures) {
-                  const unplayedCount = groupFixtures.filter((f) => f.outcome !== "played").length;
-                  remainingMatches = unplayedCount;
-                  isComplete = unplayedCount === 0;
-                } else if (numTeams > 1) {
-                  const totalMatches = (numTeams * (numTeams - 1)) / 2;
-                  const playedMatches =
-                    rows.reduce((sum, row) => sum + (row.matchesPlayed || 0), 0) / 2;
-                  remainingMatches = totalMatches - playedMatches;
-                  isComplete = remainingMatches <= 0;
-                } else {
-                  remainingMatches = 0;
-                  isComplete = true;
-                }
-
-                const matchesToPlay = numTeams > 1 ? numTeams - 1 : 0;
-
-                return (
-                  <div className="status-card" key={`group-standing-${key}`}>
-                    <div className="group-header">
-                      <h2 className="group-header__title">{groupLabel}</h2>
-                      {isComplete ? (
-                        <div className="group-header__status group-header__status--complete">
-                          <span role="img" aria-label="complete">
-                            ✔
-                          </span>{" "}
-                          Group Complete
-                        </div>
-                      ) : remainingMatches > 0 ? (
-                        <div className="group-header__status group-header__status--pending">
-                          {`${remainingMatches} ${
-                            remainingMatches === 1 ? "match" : "matches"
-                          } remaining`}
-                        </div>
-                      ) : null}
-                    </div>
-                    <StandingsTable
-                      rows={rows}
-                      matchesToPlay={matchesToPlay}
-                      emptyMessage="No results for this group yet."
-                    />
-                  </div>
-                );
-              })
-            : null}
-
-          { (groupStandings.length > 1) &&
-            <div className="status-card status-card--overall">
-              <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
-              <StandingsTable
-                rows={standings}
-                emptyMessage="Standings will appear once matches begin."
-              />
-            </div>
-          }
-        </>
-      ) : (
+      {statusView === "knockouts" && (
         <KnockoutList fixtures={knockoutFixtures.length ? knockoutFixtures : fixtures} />
       )}
     </section>
   );
 };
+
+// Replaces SingleGroupView to unify the UI
+const GroupViewSwitcher = ({ 
+    groupStandings, 
+    fixtures, 
+    overallStandings,
+    activeGroupIndex, 
+    onChangeGroup, 
+    showOverall, 
+    onToggleOverall 
+}) => {
+  if (!groupStandings || groupStandings.length === 0) {
+    return (
+      <div className="status-card status-card--message">
+        <h2>No Groups</h2>
+        <p>There are no group stages for this competition.</p>
+      </div>
+    );
+  }
+
+  // Calculate tabs: Groups + Overall
+  const tabs = [
+     ...groupStandings.map((g, idx) => ({ 
+        key: g.key, 
+        label: g.label.replace('Group ', ''), 
+        index: idx,
+        isOverall: false
+     })),
+     { key: 'overall', label: 'Overall', isOverall: true }
+  ];
+
+  // Determine active tab
+  // If showOverall is true, the last tab is active
+  // If not, activeGroupIndex determines which group tab is active
+  const activeTabKey = showOverall 
+     ? 'overall' 
+     : (groupStandings[activeGroupIndex] ? groupStandings[activeGroupIndex].key : null);
+
+  const handleTabClick = (tab) => {
+     if (tab.isOverall) {
+        onToggleOverall(true);
+     } else {
+        onToggleOverall(false);
+        onChangeGroup(tab.index);
+     }
+  };
+
+  return (
+    <>
+      <div className="status-card" style={{ padding: '0.5rem' }}>
+          <div className="status-toggle" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}>
+            {tabs.map((tab) => (
+               <button
+                 key={tab.key}
+                 className={`status-toggle__button ${activeTabKey === tab.key ? "is-active" : ""}`}
+                 onClick={() => handleTabClick(tab)}
+               >
+                 {tab.label}
+               </button>
+            ))}
+          </div>
+      </div>
+
+      {showOverall ? (
+         <div className="status-card status-card--overall">
+           <h2>Overall Standings</h2>
+           <StandingsTable
+             rows={overallStandings}
+             emptyMessage="Standings will appear once matches begin."
+           />
+         </div>
+      ) : (
+         <SingleGroupContent 
+            group={groupStandings[activeGroupIndex >= groupStandings.length ? 0 : activeGroupIndex]}
+            fixtures={fixtures}
+         />
+      )}
+    </>
+  );
+};
+
+const SingleGroupContent = ({ group, fixtures }) => {
+  if (!group) return null;
+  
+  const { key, label: groupLabel, rows } = group;
+
+  const groupFixtures = fixtures.filter((f) => {
+      // 1. Direct key match (most reliable)
+      const g = String(f.group || "").trim().toLowerCase();
+      const k = String(key || "").trim().toLowerCase();
+      if (g === k) return true;
+
+      // 2. Allow matching "1" with "Group 1" (and vice versa)
+      const gClean = g.replace(/^group\s?/i, '');
+      const kClean = k.replace(/^group\s?/i, '');
+      if (gClean && gClean === kClean) return true;
+
+      // 3. Check "stage" property (common fallback)
+      const stage = String(f.stage || "").trim().toLowerCase();
+      if (stage === k || stage === `group ${k}` || stage === `group ${kClean}`) return true;
+      if (stage.replace(/^group\s?/i, '') === kClean) return true;
+
+      // 4. (Expensive) Infer by team presence if no explicit group info found
+      // Only do this if we haven't matched yet and the fixture has no group info at all
+      if (!g && !stage.includes('knockout') && !stage.includes('semi') && !stage.includes('final')) {
+         const teamNames = rows.map(r => String(r.team || r.name).toLowerCase());
+         const t1 = String(f.team1).toLowerCase();
+         const t2 = String(f.team2).toLowerCase();
+         // If BOTH teams are in this group, it's a group match
+         if (teamNames.includes(t1) && teamNames.includes(t2)) return true;
+      }
+
+      return false;
+  });
+  
+  const numTeams = rows.length;
+  const hasFixtures = groupFixtures.length > 0;
+
+  let remainingMatches;
+  let isComplete;
+
+  if (hasFixtures) {
+    const unplayedCount = groupFixtures.filter((f) => f.outcome !== "played").length;
+    remainingMatches = unplayedCount;
+    isComplete = unplayedCount === 0;
+  } else if (numTeams > 1) {
+    const totalMatches = (numTeams * (numTeams - 1)) / 2;
+    const playedMatches =
+      rows.reduce((sum, row) => sum + (row.matchesPlayed || 0), 0) / 2;
+    remainingMatches = totalMatches - playedMatches;
+    isComplete = remainingMatches <= 0;
+  } else {
+    remainingMatches = 0;
+    isComplete = true;
+  }
+
+  const matchesToPlay = numTeams > 1 ? numTeams - 1 : 0;
+
+  return (
+    <>
+      <div className="status-card">
+        <div className="group-header">
+          <h2 className="group-header__title">{groupLabel}</h2>
+          {isComplete ? (
+            <div className="group-header__status group-header__status--complete">
+              <span role="img" aria-label="complete">
+                ✔
+              </span>{" "}
+              Complete
+            </div>
+          ) : remainingMatches > 0 ? (
+            <div className="group-header__status group-header__status--pending">
+              {`${remainingMatches} left`}
+            </div>
+          ) : null}
+        </div>
+        <StandingsTable
+          rows={rows}
+          matchesToPlay={matchesToPlay}
+          emptyMessage="No results for this group yet."
+        />
+      </div>
+
+      {groupFixtures.length > 0 && (
+        <div className="status-card">
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '1rem' }}>Fixtures</h2>
+          <table className="status-table">
+            <tbody>
+              {groupFixtures.map((fixture) => {
+                 const result = fixture.result;
+                 const team1Score = result && result.team1 
+                    ? `${result.team1.goals ?? 0}-${result.team1.points ?? 0} (${result.team1.total ?? 0})`
+                    : '';
+                 const team2Score = result && result.team2
+                    ? `${result.team2.goals ?? 0}-${result.team2.points ?? 0} (${result.team2.total ?? 0})`
+                    : '';
+                 
+                 const hasPlayed = fixture.outcome === 'played' || (team1Score && team2Score);
+
+                 return (
+                   <tr key={fixture.matchId} style={{ fontSize: '1.2rem' }}>
+                     <td style={{ width: '35%', textAlign: 'right', fontWeight: '600', padding: '0.5rem' }}>{fixture.team1}</td>
+                     <td style={{ width: '15%', textAlign: 'center', whiteSpace: 'nowrap', fontSize: '1.2rem', fontWeight: 'bold', padding: '0.5rem', background: '#f1f5f9' }}>
+                        {hasPlayed ? team1Score : '-'}
+                     </td>
+                     <td style={{ width: '15%', textAlign: 'center', whiteSpace: 'nowrap', fontSize: '1.2rem', fontWeight: 'bold', padding: '0.5rem', background: '#f1f5f9' }}>
+                        {hasPlayed ? team2Score : '-'}
+                     </td>
+                     <td style={{ width: '35%', textAlign: 'left', fontWeight: '600', padding: '0.5rem' }}>{fixture.team2}</td>
+                   </tr>
+                 );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+};
+
+
 
 const FixtureSummary = ({ fixture }) => {
   const when = formatTime(fixture.scheduled);
@@ -413,8 +580,8 @@ const normalizeCategory = (category) => {
   const teams = Array.isArray(category.teams?.allTeams)
     ? category.teams.allTeams
     : Array.isArray(category.teams)
-      ? category.teams
-      : [];
+    ? category.teams
+    : [];
 
   const standings = Array.isArray(category.standings?.allGroups)
     ? category.standings.allGroups
@@ -511,6 +678,14 @@ const normalizeFixturesCollection = (fixtures) => {
   const addFixture = (fixture, context) => {
     const normalized = normalizeFixture(fixture);
     if (!normalized) return;
+    
+    // Inject group from context if available and missing on fixture
+    if (!normalized.group && context && context !== "group" && context !== "knockout") {
+       if (/^Group\s?(\d+|[A-Z])$/i.test(context) || /^\d+$/.test(context) || /^[A-Z]$/.test(context)) {
+          normalized.group = context.replace(/^Group\s?/i, '');
+       }
+    }
+    
     list.push(normalized);
     const contextIsKnockout = typeof context === "string" && /knock|semi|quarter|final|cup|plate|shield/i.test(context);
     if (contextIsKnockout || isKnockoutStage(normalized.stage)) {
@@ -534,8 +709,16 @@ const normalizeFixturesCollection = (fixtures) => {
       if (Array.isArray(value)) value.forEach((fixture) => addFixture(fixture, key));
     });
   }
+  
+  // Also check if fixtures.group is an object map instead of an array
+  if (fixtures.group && !Array.isArray(fixtures.group) && typeof fixtures.group === "object") {
+      Object.entries(fixtures.group).forEach(([key, value]) => {
+          if (Array.isArray(value)) value.forEach((fixture) => addFixture(fixture, key));
+      });
+  } else if (Array.isArray(fixtures.group)) {
+      fixtures.group.forEach((fixture) => addFixture(fixture, "group"));
+  }
 
-  if (Array.isArray(fixtures.group)) fixtures.group.forEach((fixture) => addFixture(fixture, "group"));
   if (Array.isArray(fixtures.knockouts)) fixtures.knockouts.forEach((fixture) => addFixture(fixture, "knockout"));
 
   return {
@@ -555,7 +738,10 @@ const normalizeFixture = (fixture) => {
 
   const label = fixture.label || fixture.matchLabel || String(fixture.matchId || "");
   const stage = fixture.stage || planned.stage || fixture.bracket || actual.stage || "";
+  
+  // Use defaultGroup only if it looks like a group ID (digits or single letter) and not a generic "group" string
   const group = fixture.groupNumber ?? fixture.group ?? null;
+
   const scheduled = planned.scheduled || actual.scheduled || fixture.scheduled || null;
   const pitch = planned.pitch || actual.pitch || fixture.pitch || '';
   const umpire = fixture.umpire || fixture.umpireTeam || planned.umpireTeam || actual.umpireTeam || null;
