@@ -1,10 +1,11 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
+import packageJson from '../../../package.json';
 
 const Context = createContext();
 
 const versionInfo = {
-  mobile: "%%0.6.80_RC%%".replace(/%/g, ''),
+  mobile: packageJson.version,
 };
 
 export const Provider = ({ children }) => {

@@ -1,20 +1,11 @@
-import './LoginHeader.scss'; // Import the component's styles
+import './LoginHeader.scss';
 import whistleImage from '../../../interfaces/mobile/public/images/banner.png';
 
 const LoginHeader = ({ version, showBackButton, onBackClick }) => {
-  const isRC = (version.includes('_RC'));
-  const rcStyle = {
-    color: '#b43e3e',
-    whiteSpace: 'nowrap',
-    background: '#dd969645',
-    padding: '0.7rem',
-    borderRadius: '0.5rem',
-    border: '0.3rem dotted #b43e3e'
-  }
   return (
     <div className="app-header">
       <div className="logo-container">{
-        <img src={whistleImage} className='whistle' /> 
+        <img src={whistleImage} className='whistle' />
       }</div>
       <div className="title-group">
         {showBackButton && (
@@ -22,14 +13,9 @@ const LoginHeader = ({ version, showBackButton, onBackClick }) => {
             <i className="pi pi-arrow-circle-left"></i>
           </span>
         )}
-        <div className="version-line">{
-          isRC
-            ? <span style={rcStyle} className="app-version">
-              <span>RELEASE CANDIDATE &nbsp;</span>
-              <span style={{ color: 'white' }}>{version.replace('_RC', '')}</span>
-            </span>
-            : <span className="app-version">v{version || '?.?.?'}</span>
-        }</div>
+        <div className="version-line">
+          <span className="app-version">v{version || '?.?.?'}</span>
+        </div>
       </div>
     </div>
   )
