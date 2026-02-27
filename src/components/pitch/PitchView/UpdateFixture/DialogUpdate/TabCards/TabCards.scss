@@ -18,13 +18,12 @@
   }
 
   .card-form {
-    padding: 1.2rem;
+    padding: 0;
     margin: 0;
-    border-radius: 1.4rem;
     width: 100%;
-    background: #f8fafc;
-    border: 1px solid rgba(51, 65, 85, 0.14);
-    box-shadow: 0 0.6rem 1.6rem rgba(15, 23, 42, 0.08);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 
     h3 {
       margin: 0 0 1.2rem;
@@ -176,6 +175,35 @@
         &.custom {
           grid-column: span 5;
         }
+
+        &.nav-button {
+          background: #433869;
+          border-color: #433869;
+          color: white;
+          font-size: 1.2rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+
+          &:disabled {
+            background: #94a3b8;
+            border-color: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.5;
+          }
+
+          &:hover:not(:disabled) {
+            background: #574b87;
+            border-color: #574b87;
+          }
+
+          &.prev {
+            grid-column: span 2;
+          }
+
+          &.next {
+            grid-column: span 3;
+          }
+        }
       }
 
       .custom-number-input,
@@ -200,8 +228,8 @@
     .form-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
-      margin-top: 0.6rem;
+      gap: 1rem;
+      margin-top: 1rem;
 
       .save-button,
       .cancel-button {
@@ -210,11 +238,14 @@
         justify-content: center;
         gap: 0.5rem;
         border: none;
-        border-radius: 1rem;
+        border-radius: 0.4rem;
         cursor: pointer;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        padding: 1rem 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 1.8rem 1.5rem;
+        min-height: 6rem;
       }
 
       .save-button {
@@ -292,18 +323,34 @@
     }
 
     .add-card-button {
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0;
       border: 1px solid rgba(67, 56, 105, 0.2);
-      border-radius: 1rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      padding: 0.85rem 1.2rem;
+      border-radius: 0.8rem;
       background: #433869;
       color: white;
-      min-height: 4.4rem;
+      min-height: 5.5rem;
+      width: 5.5rem;
+      padding: 0.5rem;
+      line-height: 1;
+
+      .add-icon {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.1rem;
+      }
+
+      .card-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1;
+      }
     }
 
     .cards-list {
