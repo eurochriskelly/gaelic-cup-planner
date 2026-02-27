@@ -49,10 +49,6 @@ const UpdateFixture = ({
        showOnlyWhenPlanned: true,
        getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
        action: (setDrawer) => {
-         if (setMoveBarFixtureId) {
-           setMoveBarFixtureId(fixture.id);
-           return;
-         }
          if (showDetails) {
            showDetails('move');
            return;
