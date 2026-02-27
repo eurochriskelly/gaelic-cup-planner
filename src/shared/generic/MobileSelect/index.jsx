@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Children } from "react";
 import NavFooter from "../NavFooter";
 
 import "../MobileLayout/MobileLayout.scss";
@@ -9,9 +9,12 @@ const MobileSelect = ({
   active=0,
   children,
 }) => {
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = Children.toArray(children);
   const [SubHeading, ...cards] = childrenArray;
-  const cardsPadded = cards.concat(Array(10 - cards.length).fill(null));
+  
+  // Removed: const cardsPadded = cards.concat(Array(10 - cards.length).fill(null));
+  // Reason: Responsive grid handles layout without needing empty placeholders.
+
   return (
     <section className="MobileSelect mobile">
       {SubHeading ? (
@@ -19,15 +22,23 @@ const MobileSelect = ({
           {SubHeading}
         </header>
       ) : null}
-      <section id="cardArea">{
-        cardsPadded?.map((x, i) => {
+      <section id="cardArea">
+        {cards?.map((x, i) => {
+          if (!x) return null;
           return (
-            <section key={`card_${i}`} className={`card ${x ? 'card-real div-shadow' : 'card-empty div-shadow-light'}`} onClick={onSelect.bind(null, i)}>
+            <section 
+              key={`card_${i}`} 
+              className="card div-shadow" 
+              onClick={onSelect.bind(null, i)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => { if (e.key === 'Enter') onSelect(i); }}
+            >
               {x}
             </section>
           );
-        })
-      }</section>
+        })}
+      </section>
       <NavFooter /> 
     </section>
   );
