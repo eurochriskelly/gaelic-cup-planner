@@ -6,11 +6,44 @@ export default function FixtureBar({
   category, 
   stage, 
   number, 
-  competitionOffset = 1,
+  competitionOffset = null,
   competitionPrefix = '?'
 }) {
+  const normalizePrefix = (value) => {
+    const trimmed = typeof value === 'string' ? value.trim() : ''
+    if (!trimmed || trimmed.toUpperCase() === 'N/A') return ''
+    return trimmed
+  }
+
+  const derivePrefix = (value) => {
+    const text = typeof value === 'string' ? value.trim() : ''
+    if (!text) return ''
+    return text[0].toUpperCase()
+  }
+
+  const getStableIndex = (text) => {
+    if (!text) return 0
+    let hash = 0
+    for (let i = 0; i < text.length; i += 1) {
+      hash = (hash * 31 + text.charCodeAt(i)) | 0
+    }
+    return Math.abs(hash) % 11
+  }
+
+  const normalizeOffset = (value) => {
+    if (!Number.isFinite(value)) return null
+    const normalized = value % 11
+    return normalized < 0 ? normalized + 11 : normalized
+  }
+
+  const resolvedPrefix = normalizePrefix(competitionPrefix) || derivePrefix(category) || '?'
+  const hashSeed = [resolvedPrefix, category].filter(Boolean).join('|')
+  const resolvedOffset = hashSeed
+    ? getStableIndex(hashSeed)
+    : normalizeOffset(competitionOffset) ?? 0
+
   const fixtureBarClasses = `FixtureBar ${
-    competitionOffset !== undefined && competitionOffset !== null ? `competition-col-${competitionOffset}` : ''
+    Number.isFinite(resolvedOffset) ? `competition-col-${resolvedOffset}` : ''
   }`;
 
   return (
@@ -22,7 +55,7 @@ export default function FixtureBar({
         <span>{category}</span>
         <span className="text-gray-500" style={{color: '#a387ff'}}>/</span>
         <span className="text-gray-200">
-          {competitionPrefix}.{`${fixtureId}`.padStart(2, '?').slice(-2)}</span>
+          {resolvedPrefix}.{`${fixtureId}`.padStart(2, '?').slice(-2)}</span>
       </div>
       <StageDisplay stage={stage} number={number} />
     </div>
