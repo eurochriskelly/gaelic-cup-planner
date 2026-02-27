@@ -356,7 +356,7 @@ const Kanban = ({
                     />
                   ) : (
                     <div className="no-fixture-selected-banner">
-                      <span>Touch fixture to view options</span>
+                      <span>TAP FIXTURE FOR OPTIONS</span>
                     </div>
                   )}
                 </div>

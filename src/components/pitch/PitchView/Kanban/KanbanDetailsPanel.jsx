@@ -463,10 +463,15 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture, onScorePick
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEndMatchWarning, setShowEndMatchWarning] = useState(false);
   const [isScorePickerOpen, setIsScorePickerOpen] = useState(false);
+  const [showExtraOptions, setShowExtraOptions] = useState(false);
 
   useEffect(() => {
     onScorePickerVisibilityChange && onScorePickerVisibilityChange(isScorePickerOpen);
   }, [isScorePickerOpen, onScorePickerVisibilityChange]);
+
+  // Check if normal time scores are entered for both teams
+  const isScoreValueSet = (value) => value !== null && value !== undefined && value !== "";
+  const hasBothScores = isScoreValueSet(scores.team1.goals) && isScoreValueSet(scores.team1.points) && isScoreValueSet(scores.team2.goals) && isScoreValueSet(scores.team2.points);
 
   // Helper to convert score value
   const toScoreValue = (val) => {
@@ -575,32 +580,52 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture, onScorePick
         isSubmitting={isSubmitting}
         onScorePickerVisibilityChange={setIsScorePickerOpen}
       />
-      {!isScorePickerOpen && <div className="score-action-buttons">
-        <button
-          className="btn btn-secondary"
-          onClick={handleUpdateScore}
-          disabled={isSubmitting}
-        >
-          <i className="pi pi-pencil button-icon" aria-hidden="true" />
-          Update Score
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={handleFinalScore}
-          disabled={isSubmitting}
-        >
-          <i className="pi pi-check-circle button-icon" aria-hidden="true" />
-          Final Score
-        </button>
-        <button
-          className="btn btn-warning"
-          onClick={handleEndMatch}
-          disabled={isSubmitting}
-        >
-          <i className="pi pi-stop-circle button-icon" aria-hidden="true" />
-          End Match
-        </button>
-      </div>}
+      {!isScorePickerOpen && hasBothScores && (
+        <div className="score-action-buttons">
+          <button
+            className={`btn btn-primary ${!showExtraOptions ? 'btn-full-width' : ''}`}
+            onClick={handleFinalScore}
+            disabled={isSubmitting}
+          >
+            <i className="pi pi-check-circle button-icon" aria-hidden="true" />
+            Publish Final Score
+          </button>
+          
+          {showExtraOptions && (
+            <>
+              <button
+                className="btn btn-secondary"
+                onClick={handleUpdateScore}
+                disabled={isSubmitting}
+              >
+                <i className="pi pi-pencil button-icon" aria-hidden="true" />
+                Update Score
+              </button>
+              <button
+                className="btn btn-warning"
+                onClick={handleEndMatch}
+                disabled={isSubmitting}
+              >
+                <i className="pi pi-stop-circle button-icon" aria-hidden="true" />
+                End Match
+              </button>
+            </>
+          )}
+        </div>
+      )}
+      
+      {!isScorePickerOpen && hasBothScores && (
+        <div className="extra-options-toggle-container">
+          <label className="extra-options-toggle">
+            <input
+              type="checkbox"
+              checked={showExtraOptions}
+              onChange={(e) => setShowExtraOptions(e.target.checked)}
+            />
+            <span>Show extra options</span>
+          </label>
+        </div>
+      )}
       {showEndMatchWarning && (
         <div className="reschedule-message-overlay">
           <div className="reschedule-message">
