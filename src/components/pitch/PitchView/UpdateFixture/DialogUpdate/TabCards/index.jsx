@@ -21,6 +21,11 @@ const TabCards = ({
   });
   const [useCustomNumber, setUseCustomNumber] = useState(false);
   const [editingStep, setEditingStep] = useState(null);
+  const [numberPage, setNumberPage] = useState(0);
+
+  const NUMBERS_PER_PAGE = 20;
+  const MAX_NUMBER = 100;
+  const TOTAL_PAGES = MAX_NUMBER / NUMBERS_PER_PAGE;
 
   // handleSaveCards function (previously handleSaveCardsAndClose) is removed as API call moves to parent.
 
@@ -70,6 +75,7 @@ const TabCards = ({
     setEditingCard(null);
     setUseCustomNumber(false);
     setEditingStep(null);
+    setNumberPage(0);
     setFormData({ team: team1, cardColor: '', playerNumber: '', playerName: '' });
   };
 
@@ -77,7 +83,12 @@ const TabCards = ({
   const hasCardType = !!formData.cardColor;
   const hasNumber = !!selectedNumber;
   const canSave = hasCardType && hasNumber && !!formData.playerName.trim();
-  const numberChoices = Array.from({ length: 20 }, (_, idx) => idx + 1);
+  const numberChoices = Array.from(
+    { length: NUMBERS_PER_PAGE },
+    (_, idx) => numberPage * NUMBERS_PER_PAGE + idx + 1
+  );
+  const canGoPrev = numberPage > 0;
+  const canGoNext = numberPage < TOTAL_PAGES - 1;
   const cardLabel = formData.cardColor ? formData.cardColor.charAt(0).toUpperCase() : '-';
   const showCardStep = !hasCardType || editingStep === 'card';
   const showNumberStep = hasCardType && (!hasNumber || editingStep === 'number') && !showCardStep;
@@ -169,14 +180,19 @@ const TabCards = ({
               ))}
               <button
                 type="button"
-                className={`number-button custom ${useCustomNumber ? 'active' : ''}`}
-                onClick={() => {
-                  setUseCustomNumber(true);
-                  setFormData({ ...formData, playerNumber: '' });
-                  setEditingStep(null);
-                }}
+                className="number-button nav-button prev"
+                onClick={() => setNumberPage(Math.max(0, numberPage - 1))}
+                disabled={!canGoPrev}
               >
-                Other
+                ← PREV
+              </button>
+              <button
+                type="button"
+                className="number-button nav-button next"
+                onClick={() => setNumberPage(Math.min(TOTAL_PAGES - 1, numberPage + 1))}
+                disabled={!canGoNext}
+              >
+                NEXT →
               </button>
             </div>
             {useCustomNumber && (
@@ -207,10 +223,10 @@ const TabCards = ({
 
         <div className="form-actions">
           <button className="cancel-button" onClick={resetForm}>
-            <i className="pi pi-times"></i> Cancel
+            <i className="pi pi-times"></i> CANCEL
           </button>
           <button className="save-button" onClick={actions.addOrUpdateCard} disabled={!canSave}>
-            <i className="pi pi-check"></i> {editingCard ? 'Save Card' : 'Add Card'}
+            <i className="pi pi-check"></i> {editingCard ? 'SAVE CARD' : 'ADD CARD'}
           </button>
         </div>
       </div>
@@ -224,18 +240,19 @@ const TabCards = ({
              <span className="team-label">Team</span>
              <span className="team-name">{team}</span>
            </h4>
-           {!showForm && (
-             <button
-               className="add-card-button"
-               onClick={() => {
-                 if (onEditStart && !onEditStart()) return;
-                 setFormData({ ...formData, team });
-                 setShowForm(true);
-               }}
-             >
-               <i className="pi pi-plus"></i> Add Card
-             </button>
-           )}
+            {!showForm && (
+              <button
+                className="add-card-button"
+                onClick={() => {
+                  if (onEditStart && !onEditStart()) return;
+                  setFormData({ ...formData, team });
+                  setShowForm(true);
+                }}
+              >
+                <span className="add-icon">+</span>
+                <span className="card-label">CARD</span>
+              </button>
+            )}
          </div>
       {/* Ensure cards is an array before mapping */}
       {(cards || []).length > 0 ? (

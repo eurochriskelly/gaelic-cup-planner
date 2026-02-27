@@ -113,6 +113,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
           <TimeDisplay
             scheduledTime={fixture.scheduledTime}
             startedTime={fixture.startedTime}
+            started={fixture.started || fixture.actualStartedTime}
             durationPlanned={fixture.durationPlanned}
             isOngoing={isOngoing}
           />

@@ -14,10 +14,7 @@ const KanbanColumn = ({
    columnIndex,
    allTournamentPitches, // New prop for all pitches in the tournament
    allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
-   // Props for maximization
    columnKey,
-   isCurrentlyMaximized,
-   onToggleMaximize,
    showDetailsPanel,
    moveBarFixtureId,
    setMoveBarFixtureId,
@@ -142,16 +139,6 @@ const KanbanColumn = ({
     >
       <div className="column-header">
         <span>{`${title}`}<span className="text-white ml-2">({fixtureCount})</span></span>
-        {onToggleMaximize && (
-          <button
-            type="button"
-            className="column-maximize-button"
-            onClick={() => onToggleMaximize(columnKey)}
-            aria-label={isCurrentlyMaximized ? `Restore ${title} column` : `Focus ${title} column`}
-          >
-            {isCurrentlyMaximized ? 'Restore' : 'Focus'}
-          </button>
-        )}
       </div>
       <div className="column-content">
         {columnSlots}
