@@ -65,6 +65,12 @@
           border-right: 0.3rem solid #000000a8;
           padding: 0;
           > .kanban-slot:first-child { margin-top: 0; }
+
+          .slot-card-container > .kanban-card {
+            width: auto;
+            margin-left: 1rem;
+            margin-right: 0.5rem;
+          }
         }
         .column-header {
           grid-area: 3 / 1 / 4 / 2; // Row 3, Col 1
@@ -79,6 +85,12 @@
           min-height: 10rem;
           padding: 0;
           > .kanban-slot:first-child { margin-top: 0; }
+
+          .slot-card-container > .kanban-card {
+            width: auto;
+            margin-left: 0.5rem;
+            margin-right: 1rem;
+          }
         }
         .column-header {
           grid-area: 3 / 2 / 4 / 3; // Row 3, Col 2
@@ -92,6 +104,12 @@
         border-right: 0.3rem solid #000000a8;
         display: flex; // Restore normal display for planned/finished
         flex-direction: column;
+
+        .column-content .slot-card-container > .kanban-card {
+          width: auto;
+          margin-left: 1rem;
+          margin-right: 0.5rem;
+        }
       }
       
       // Finished column
@@ -100,6 +118,12 @@
         min-height: 24rem;
         display: flex; // Restore normal display for planned/finished
         flex-direction: column;
+
+        .column-content .slot-card-container > .kanban-card {
+          width: auto;
+          margin-left: 0.5rem;
+          margin-right: 1rem;
+        }
       }
     }
 
