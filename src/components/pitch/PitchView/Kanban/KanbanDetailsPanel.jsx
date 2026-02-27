@@ -5,7 +5,6 @@ import { useFixtureContext } from '../../PitchView/FixturesContext';
 import { formatTeamName, militaryTimeDiffMins } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
-import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
 import API from '../../../../shared/api/endpoints'; // Import API
 import '../../../../components/web/gaelic-score';
 import '../../../../components/web/logo-box';
@@ -47,7 +46,7 @@ const KanbanDetailsPanel = ({
           aria-label="Close panel"
           type="button"
         >
-          <CloseIcon width="32" height="32" />
+          ×
         </button>
         <FixtureBar
           fixtureId={fixture.id}
