@@ -20,7 +20,7 @@ const MobileLayout = ({
   const [SubHeading] = childrenArray;
   return <>
     <section className="MobileLayout mobile">
-      <section style={{overflowY: 'scroll'}}>{
+      <section className="MobileLayout__content">{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>
     </section>

@@ -14,7 +14,12 @@ const MobileSelect = ({
   const cardsPadded = cards.concat(Array(10 - cards.length).fill(null));
   return (
     <section className="MobileSelect mobile">
-      <section style={{overflowY: 'scroll'}} id="cardArea">{
+      {SubHeading ? (
+        <header className="mobile-select-header">
+          {SubHeading}
+        </header>
+      ) : null}
+      <section id="cardArea">{
         cardsPadded?.map((x, i) => {
           return (
             <section key={`card_${i}`} className={`card ${x ? 'card-real div-shadow' : 'card-empty div-shadow-light'}`} onClick={onSelect.bind(null, i)}>

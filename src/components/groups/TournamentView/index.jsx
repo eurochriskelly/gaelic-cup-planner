@@ -41,12 +41,13 @@ const TournamentView = () => {
     return () => clearInterval(id);
   }, [loadReport]);
 
-  const categoryReport = useMemo(() => {
-    const categories = normalizeCategories(report?.categories);
-    return categories.find((c) => c.key === category) || null;
-  }, [report, category]);
+  const categories = useMemo(() => {
+    return normalizeCategories(report?.categories);
+  }, [report?.categories]);
 
-  const tournamentMeta = report?.tournament || null;
+  const { categoryReport, isFallbackCategory } = useMemo(() => {
+    return selectCategoryReport(categories, category);
+  }, [categories, category]);
 
   const handle = {
     back: () => navigate(`/tournament/${tournamentId}/selectCategory`),
@@ -64,7 +65,8 @@ const TournamentView = () => {
         loading={loading}
         error={error}
         categoryReport={categoryReport}
-        tournament={tournamentMeta}
+        requestedCategory={category}
+        isFallbackCategory={isFallbackCategory}
         statusView={statusView}
         onChangeStatusView={setStatusView}
       />
@@ -78,25 +80,16 @@ const StatusContent = ({
   loading,
   error,
   categoryReport,
-  tournament,
+  requestedCategory,
+  isFallbackCategory,
   statusView,
   onChangeStatusView,
 }) => {
-  useEffect(() => {
-    if (categoryReport?.knockoutFixtures) {
-      // Temporary debug output to verify knockout extraction
-      console.log("Knockout fixtures", {
-        category: categoryReport.label,
-        count: categoryReport.knockoutFixtures.length,
-        sample: categoryReport.knockoutFixtures.slice(0, 3),
-      });
-    }
-  }, [categoryReport]);
   if (loading && !categoryReport) {
     return <div className="status-card status-card--message">Loading competition data...</div>;
   }
 
-  if (error) {
+  if (error && !categoryReport) {
     return (
       <div className="status-card status-card--error">
         <h2>Unable to load status</h2>
@@ -113,18 +106,9 @@ const StatusContent = ({
       </div>
     );
   }
-  const styleTitle = {
-    background: "white",
-    fontSize: "2rem",
-    color: "#005500",
-    fontWeight: "bold",
-    background: 'none',
-  }
 
   const {
     label,
-    teams = [],
-    groups = [],
     fixtures = [],
     standings = [],
     groupStandings = [],
@@ -132,10 +116,28 @@ const StatusContent = ({
     lastUpdated,
   } = categoryReport;
 
-  const points = tournament?.pointsFor || tournament?.points;
-
   return (
     <section className="status-content">
+      <div className="status-hero status-card">
+        <p className="status-hero__kicker">Live competition status</p>
+        <h1 className="status-hero__title">{label}</h1>
+        <p className="status-hero__meta">
+          {lastUpdated ? `Updated ${formatTime(lastUpdated)}` : "Waiting for first update"}
+        </p>
+      </div>
+
+      {isFallbackCategory && requestedCategory ? (
+        <div className="status-card status-card--message">
+          Showing <strong>{label}</strong> because no exact match was found for <strong>{safeDecodeURIComponent(requestedCategory)}</strong>.
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="status-card status-card--warning">
+          Live refresh failed: {error}
+        </div>
+      ) : null}
+
       <div className="status-toggle" role="tablist" aria-label="Competition phase">
         <button
           type="button"
@@ -189,7 +191,7 @@ const StatusContent = ({
                 return (
                   <div className="status-card" key={`group-standing-${key}`}>
                     <div className="group-header">
-                      <h2 className="group-header__title" style={styleTitle}>{groupLabel}</h2>
+                      <h2 className="group-header__title">{groupLabel}</h2>
                       {isComplete ? (
                         <div className="group-header__status group-header__status--complete">
                           <span role="img" aria-label="complete">
@@ -216,18 +218,14 @@ const StatusContent = ({
             : null}
 
           { (groupStandings.length > 1) &&
-            <div className="status-card" style={{background: "#ddd"}}>
-              <h2 style={styleTitle}>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
+            <div className="status-card status-card--overall">
+              <h2>{groupStandings.length ? "Groups overall" : "Standings"}</h2>
               <StandingsTable
                 rows={standings}
                 emptyMessage="Standings will appear once matches begin."
               />
             </div>
           }
-
-          <footer className="status-updated">
-            {lastUpdated ? `Last updated ${formatTime(lastUpdated)}` : null}
-          </footer>
         </>
       ) : (
         <KnockoutList fixtures={knockoutFixtures.length ? knockoutFixtures : fixtures} />
@@ -243,7 +241,7 @@ const FixtureSummary = ({ fixture }) => {
     <article className="fixture">
       <header>
         <span className="fixture-label">{fixture.label}</span>
-        <span>{when}</span>
+        <span className="fixture-time">{when}</span>
       </header>
       <div className="fixture-teams">
         <span>{fixture.team1}</span>
@@ -251,9 +249,9 @@ const FixtureSummary = ({ fixture }) => {
         <span>{fixture.team2}</span>
       </div>
       <footer>
-        <span>{stageLabel}</span>
-        <span>Pitch {fixture.pitch}</span>
-        {fixture.umpire && <span>Ump {fixture.umpire}</span>}
+        <span className="fixture-pill">{stageLabel || "Knockout"}</span>
+        <span className="fixture-pill">Pitch {fixture.pitch || "TBD"}</span>
+        {fixture.umpire && <span className="fixture-pill">Ump {fixture.umpire}</span>}
       </footer>
     </article>
   );
@@ -300,7 +298,7 @@ const FixtureResult = ({ fixture }) => {
     <article className="fixture fixture--result">
       <header>
         <span className="fixture-label">{fixture.label}</span>
-        <span>{when}</span>
+        <span className="fixture-time">{when}</span>
       </header>
       <div className="fixture-teams">
         <span>{fixture.team1}</span>
@@ -311,8 +309,8 @@ const FixtureResult = ({ fixture }) => {
         <span>{formatScore(team2)}</span>
       </div>
       <footer>
-        <span>{stageLabel}</span>
-        <span>Pitch {fixture.pitch}</span>
+        <span className="fixture-pill">{stageLabel || "Knockout"}</span>
+        <span className="fixture-pill">Pitch {fixture.pitch || "TBD"}</span>
       </footer>
     </article>
   );
@@ -357,22 +355,35 @@ const isKnockoutStage = (stage) => {
 };
 
 const normalizeCategories = (rawCategories) => {
-  if (!Array.isArray(rawCategories)) return [];
-  return rawCategories
+  const list = Array.isArray(rawCategories)
+    ? rawCategories
+    : rawCategories && typeof rawCategories === "object"
+      ? Object.entries(rawCategories).map(([key, value]) => {
+          if (value && typeof value === "object") {
+            return {
+              ...value,
+              key: value.key || value.category || value.name || key,
+            };
+          }
+          return null;
+        }).filter(Boolean)
+      : [];
+
+  return list
     .map(normalizeCategory)
     .filter(Boolean);
 };
 
 const normalizeCategory = (category) => {
   if (!category) return null;
-  if (category.key) return category;
 
   // Legacy shape
   if (category.name || Array.isArray(category.teams)) {
     const fixtures = normalizeFixturesCollection(category.fixtures).list;
+    const categoryKey = String(category.key || category.category || category.name || "");
     return {
-      key: category.name,
-      label: category.name,
+      key: categoryKey,
+      label: category.name || categoryKey,
       teams: Array.isArray(category.teams) ? category.teams : [],
       groups: Array.isArray(category.groups)
         ? category.groups.map((group, idx) => ({
@@ -417,11 +428,11 @@ const normalizeCategory = (category) => {
 
   const groupStandings = extractGroupStandings(category, groups, standings);
 
-  const key = category.category || category.name || "";
+  const key = String(category.key || category.category || category.name || "");
 
   return {
     key,
-    label: key,
+    label: String(category.label || key),
     teams,
     groups,
     fixtures: fixturesNormalized.list,
@@ -595,4 +606,54 @@ const extractScore = (teamData) => {
   }
 
   return null;
+};
+
+const safeDecodeURIComponent = (value) => {
+  if (!value) return "";
+  try {
+    return decodeURIComponent(String(value));
+  } catch (_error) {
+    return String(value);
+  }
+};
+
+const normalizeCategoryKey = (value) => {
+  return safeDecodeURIComponent(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
+const selectCategoryReport = (categories, routeCategory) => {
+  if (!categories.length) {
+    return { categoryReport: null, isFallbackCategory: false };
+  }
+
+  if (!routeCategory) {
+    return { categoryReport: categories[0], isFallbackCategory: false };
+  }
+
+  const routeDecoded = safeDecodeURIComponent(routeCategory);
+
+  const exact = categories.find((item) => {
+    const keys = [item.key, item.label].map((value) => String(value || ""));
+    return keys.includes(routeCategory) || keys.includes(routeDecoded);
+  });
+
+  if (exact) {
+    return { categoryReport: exact, isFallbackCategory: false };
+  }
+
+  const normalizedRoute = normalizeCategoryKey(routeCategory);
+  const normalized = categories.find((item) => {
+    const keys = [item.key, item.label].map((value) => normalizeCategoryKey(value));
+    return keys.includes(normalizedRoute);
+  });
+
+  if (normalized) {
+    return { categoryReport: normalized, isFallbackCategory: false };
+  }
+
+  return { categoryReport: categories[0], isFallbackCategory: true };
 };

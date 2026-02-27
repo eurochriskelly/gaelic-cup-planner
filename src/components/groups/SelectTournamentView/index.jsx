@@ -36,51 +36,48 @@ const SelectTournamentView = () => {
   };
 
   return (
-    <div>
-      <div className="sel-comp">Select competition</div>
-      <MobileSelect sections={sections} active={0}>
-        <div className="sel-comp"></div>
-        {categories?.map(
-          ({ category, latestStage, totalGames, currentGame, brackets }, i) => (
-            <MainCard
-              key={`mc-${i}`}
-              id={category}
-              heading={`${category}`}
-              onSelect={handle.select}
-            >
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Stage</td>
-                    <td>{latestStage}</td>
-                  </tr>
-                  <tr>
-                    <td>Game #</td>
-                    <td>{currentGame}</td>
-                  </tr>
-                  <tr>
-                    <td>Total matches</td>
-                    <td>{totalGames}</td>
-                  </tr>
-                  <tr>
-                    <td>Brackets</td>
-                    <td>
-                      <div className="pills">
-                        {brackets?.length > 0 ? brackets.map((b, i) => (
-                            <span key={`bracket-${i}`} className="pill">
-                              {b}
-                            </span>
-                          )) : <span className="no-brackets">—</span>}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </MainCard>
-          )
-        )}
-      </MobileSelect>
-    </div>
+    <MobileSelect sections={sections} active={0}>
+      <div>Select competition</div>
+      {categories?.map(
+        ({ category, latestStage, totalGames, currentGame, brackets }, i) => (
+          <MainCard
+            key={`mc-${i}`}
+            id={category}
+            heading={`${category}`}
+            onSelect={handle.select}
+          >
+            <table>
+              <tbody>
+                <tr>
+                  <td>Stage</td>
+                  <td>{latestStage}</td>
+                </tr>
+                <tr>
+                  <td>Game #</td>
+                  <td>{currentGame}</td>
+                </tr>
+                <tr>
+                  <td>Total matches</td>
+                  <td>{totalGames}</td>
+                </tr>
+                <tr>
+                  <td>Brackets</td>
+                  <td>
+                    <div className="pills">
+                      {brackets?.length > 0 ? brackets.map((b, i) => (
+                          <span key={`bracket-${i}`} className="pill">
+                            {b}
+                          </span>
+                        )) : <span className="no-brackets">—</span>}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </MainCard>
+        )
+      )}
+    </MobileSelect>
   );
 };
 

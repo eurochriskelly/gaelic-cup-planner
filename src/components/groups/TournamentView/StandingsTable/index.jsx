@@ -14,38 +14,30 @@ const StandingsTable = ({
   }
 
   return (
-    <table className="status-table" style={{ tableLayout: 'fixed', width: '100%' }}>
-      <colgroup>
-        <col style={{ width: "10%" }} />
-        <col style={{ width: "50%" }} />
-        <col style={{ width: "10%", textAlign:'center' }} />
-        <col style={{ width: "10%", textAlign:'center' }} />
-        <col style={{ width: "10%", textAlign:'center' }} />
-        <col style={{ width: "10%", textAlign:'center' }} />
-      </colgroup>
+    <table className="status-table">
       <thead>
         <tr>
-          <th>Pos</th>
+          <th className="is-center">Pos</th>
           <th>Team</th>
-          <th>MP</th>
-          <th>W</th>
-          <th>Pts</th>
-          <th>Diff</th>
+          <th className="is-center">MP</th>
+          <th className="is-center">W</th>
+          <th className="is-center">Pts</th>
+          <th className="is-center">Diff</th>
         </tr>
       </thead>
       <tbody>
         {rows.map((row, index) => (
-          <tr key={row.team}>
-            <td style={{ fontWeight: "bold" }}>{index + 1}</td>
+          <tr key={`${row.team || "team"}-${index}`}>
+            <td className="is-center is-pos">{index + 1}</td>
             <td>{row.team}</td>
-            <td>
+            <td className="is-center">
               {typeof matchesToPlay === "number"
                 ? `${valueOrDash(row.matchesPlayed)}/${matchesToPlay}`
                 : valueOrDash(row.matchesPlayed)}
             </td>
-            <td>{valueOrDash(row.won)}</td>
-            <td>{valueOrDash(row.points)}</td>
-            <td>{valueOrDash(row.scoreDifference)}</td>
+            <td className="is-center">{valueOrDash(row.won)}</td>
+            <td className="is-center">{valueOrDash(row.points)}</td>
+            <td className="is-center">{valueOrDash(row.scoreDifference)}</td>
           </tr>
         ))}
       </tbody>

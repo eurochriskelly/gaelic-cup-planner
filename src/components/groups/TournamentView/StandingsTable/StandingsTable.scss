@@ -2,19 +2,45 @@
 
 .status-table {
   width: 100%;
-  border-collapse: collapse;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
 
   th,
   td {
-    padding: 0.95rem;
+    padding: 0.68rem 0.5rem;
     text-align: left;
-    border-bottom: 1px solid lighten($sc, 45%);
+    border-bottom: 1px solid lighten($sc, 42%);
     font-size: 1.2rem;
   }
 
   th {
+    font-weight: 700;
+    color: darken($sc, 18%);
+    background: lighten($sc, 43%);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 1rem;
+  }
+
+  td {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a2f1f;
     font-weight: 600;
-    color: darken($sc, 20%);
+  }
+
+  tr:nth-child(even) td {
+    background: rgba(246, 251, 244, 0.96);
+  }
+
+  .is-center {
+    text-align: center;
+  }
+
+  .is-pos {
+    font-weight: 800;
   }
 
   tr:last-child td {
@@ -22,26 +48,8 @@
   }
 }
 
-.status-table--compact {
-  th,
-  td {
-    font-size: 1.35rem;
-    padding: 0.2rem;
-    background:red;
-  }
-
-  td:first-child {
-    font-weight: 600;
-  }
-
-  td:last-child {
-    text-transform: capitalize;
-  }
-}
-
 .MobileLayout .status-table td {
-  font-size: 1.6rem;
-  padding-top: 1.4rem;
-  padding-bottom: 1.4rem;
+  font-size: 1.15rem;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
 }
-
