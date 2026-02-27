@@ -21,11 +21,6 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   const [selectedPitch, setSelectedPitch] = useState('All Pitches');
   const [selectedTeam, setSelectedTeam] = useState('All Teams');
   // const [pitchColorMapping, setPitchColorMapping] = useState({}); // Removed
-  const [maximizedColumnKey, setMaximizedColumnKey] = useState(null); // null, 'planned', 'started', 'finished'
-
-  const toggleMaximizeColumn = useCallback((key) => {
-    setMaximizedColumnKey(prevKey => (prevKey === key ? null : key));
-  }, []);
 
   useEffect(() => {
     // Process fixtures for board display
@@ -156,7 +151,5 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
     handlePitchChange,
     handleTeamChange,
     showError,
-    maximizedColumnKey,
-    toggleMaximizeColumn,
   };
 };
