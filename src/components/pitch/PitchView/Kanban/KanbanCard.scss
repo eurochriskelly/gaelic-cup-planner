@@ -4,7 +4,7 @@ $bwid: 0.6rem;
 $bcol: saturate(lighten($sc, 5%), 30%);
 
 .kanban-card {
-  width: 100%;
+  width: calc(100% - 2rem);
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
   // padding: 0.75rem; // Handled by content wrapper or FixtureBar
@@ -17,10 +17,10 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   flex-direction: column;
   height: 22rem;
   background: transparent;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   border-radius: 0.8rem;
-  border: $bwid solid transparent;
+  border: none;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
   // borderLeft is on kanban-card (via inline style)
 
@@ -55,13 +55,10 @@ $bcol: saturate(lighten($sc, 5%), 30%);
 
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.08); // Light drop shadow
   &.selected {
-    border: $bwid solid transparent;
-    background: linear-gradient(white, white) padding-box,
-                conic-gradient(from 0deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
+    outline: $bwid solid #ffeb3b;
+    outline-offset: calc(-1 * #{$bwid});
+    box-shadow: none;
     animation: shimmer 2s linear infinite;
-    box-shadow: 0 0 0 0.3rem #f0f0f0;
-
-    outline-offset: 0;
 
     .kanban-card-inner {
       border-radius: calc(0.8rem - #{$bwid});
@@ -69,14 +66,13 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
 
   @keyframes shimmer {
-    from {
-      background: linear-gradient(white, white) padding-box,
-                  conic-gradient(from 0deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
-    }
-    to {
-      background: linear-gradient(white, white) padding-box,
-                  conic-gradient(from 360deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
-    }
+    from { outline-color: #fff9c4; }
+    16% { outline-color: #ffeb3b; }
+    33% { outline-color: #f57f17; }
+    50% { outline-color: #ffeb3b; }
+    66% { outline-color: #fff9c4; }
+    83% { outline-color: #ffeb3b; }
+    to { outline-color: #fff9c4; }
   }
 
   &.pending-move {
