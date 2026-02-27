@@ -17,8 +17,8 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   flex-direction: column;
   height: 22rem;
   background: transparent;
-  // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
-  // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   border-radius: 0.8rem;
   border: $bwid solid transparent;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
