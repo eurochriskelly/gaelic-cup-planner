@@ -8,10 +8,12 @@
 
   .slot-card-container {
     // Container for the KanbanCard when it's present below the header
-    padding: 0.5rem; // Add padding around the card container
+    padding: 0; // Add padding around the card container
     // This padding will be between the slot's background and the card itself.
-    // The card itself has a height of 19rem.
+    // The card itself has a height of 22rem.
     overflow: visible; // Allow toolbox to overhang
+
+
   }
 
   .empty-planned-finished-slot-placeholder {
@@ -24,9 +26,6 @@
   }
 }
 .kanban-card.selected {
-  box-shadow:
-    rgba(0, 0, 0, 0.25) 0px 5px 10px 0px,
-    rgba(0, 0, 0, 0.22) 0px 3px 3px 0px,
-    0 0 60px 5px rgba(255, 255, 255, 0.6); /* White glow shadow */
+  box-shadow: none;
   overflow: visible; 
 }

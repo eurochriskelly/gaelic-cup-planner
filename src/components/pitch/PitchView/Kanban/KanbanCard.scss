@@ -15,7 +15,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   overflow: visible; // Allow toolbox to overhang
   display: flex;
   flex-direction: column;
-  height: 19rem;
+  height: 22rem;
   background: transparent;
   // margin-left: 0.5rem; // Removed - card will fill .slot-card-container
   // margin-right: 0.5rem; // Removed - card will fill .slot-card-container
@@ -53,23 +53,29 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22); // Glow effect
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.08); // Light drop shadow
   &.selected {
-    border: 0.2rem solid transparent;
+    border: $bwid solid transparent;
     background: linear-gradient(white, white) padding-box,
-                conic-gradient(from 0deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000) border-box;
+                conic-gradient(from 0deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
     animation: shimmer 2s linear infinite;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 0.3rem #f0f0f0;
+
+    outline-offset: 0;
+
+    .kanban-card-inner {
+      border-radius: calc(0.8rem - #{$bwid});
+    }
   }
 
   @keyframes shimmer {
     from {
       background: linear-gradient(white, white) padding-box,
-                  conic-gradient(from 0deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000) border-box;
+                  conic-gradient(from 0deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
     }
     to {
       background: linear-gradient(white, white) padding-box,
-                  conic-gradient(from 360deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000) border-box;
+                  conic-gradient(from 360deg, #fff9c4, #fff59d, #fff176, #ffee58, #ffeb3b, #fdd835, #fbc02d, #f9a825, #f57f17, #f9a825, #fbc02d, #fdd835, #ffeb3b, #fff176, #fff59d, #fff9c4) border-box;
     }
   }
 
@@ -118,11 +124,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
 
   .kanban-card-inner {
-    background: #eee;
+    background: #ccc;
     border-radius: 0.4rem;
     overflow: hidden;
     flex: 1;
     margin: $bwid;
+  }
+
+  &.lane-queued .kanban-card-inner,
+  &.lane-started .kanban-card-inner {
+    background: #eee;
   }
 
   &.selected .kanban-card-inner {
@@ -140,6 +151,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       flex-direction: column;
       width: 100%;
       margin-bottom: 10px;
+      padding: 0 0.5rem 1rem 0.5rem;
     
       .team-row {
         display: flex;
@@ -270,16 +282,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
   .pitch-info {
     position: absolute;
-    bottom: -0.1rem;
-    left: 0.1rem;
-    padding: 0.2rem 0.4rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    padding: 0.3rem 0.5rem;
     font-size: 1.5rem;
     text-transform: uppercase;
     padding-left: 4rem;
     svg {
       position: absolute;
-      bottom : -0.5rem;
-      left: 0.4rem;
+      bottom : 0rem;
+      left: 0.6rem;
       path {
         fill: black;
         fill-opacity: 1;
@@ -288,10 +300,10 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
   .umpire-info{
     position: absolute;
-    bottom: 0.1rem;
-    right: 0.0rem;
-    padding: 0.2rem 0.0rem;
-    width: 100%;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    width: auto;
     svg path {
       fill: black;
       fill-opacity: 1;
@@ -302,8 +314,8 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
     &>div {
       display: grid;
-      gap: -0.8rem;
-      align-items: right;
+      gap: 0.5rem;
+      align-items: center;
       color: #555;
       justify-content: right;
       font-weight: normal;

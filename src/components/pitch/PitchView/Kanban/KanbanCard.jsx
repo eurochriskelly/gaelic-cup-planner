@@ -85,12 +85,14 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
   const isPendingMove = pendingMove && (fixture.id === moveBarFixtureId || fixture.id === pendingMove.targetFixtureId);
   const isRecentlyMoved = fixture.id === recentlyMovedFixtureId;
 
+  const laneClass = fixture?.lane?.current || 'unknown';
+
   return (
     <div
       draggable
       onDragStart={onDragStart}
       onClick={handleClick}
-      className={`kanban-card ${isSelected ? 'selected' : ''} ${isPendingMove ? 'pending-move' : ''} ${isRecentlyMoved ? 'recently-moved' : ''}`}
+      className={`kanban-card ${isSelected ? 'selected' : ''} ${isPendingMove ? 'pending-move' : ''} ${isRecentlyMoved ? 'recently-moved' : ''} lane-${laneClass}`}
     >
       <div className="kanban-card-inner">
         <FixtureBar
