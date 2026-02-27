@@ -751,8 +751,7 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
   return (
     <div className="move-entry-wrapper">
       <header className="move-entry-header">
-        <h3>Move Fixture</h3>
-        <p>Step {currentStep} of 4</p>
+        <h3>Relocate Fixture</h3>
       </header>
 
       {errorMessage && (
@@ -767,7 +766,7 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
         >
           <span className="summary-label">Pitch</span>
           <span className="summary-value">{selectedPitch || 'Select...'}</span>
-          {selectedPitch && currentStep !== 1 && <span className="edit-hint">Edit</span>}
+          <span className="edit-hint">{selectedPitch && currentStep !== 1 ? '✎' : '\u00A0'}</span>
         </button>
         
         <span className="summary-arrow">→</span>
@@ -779,7 +778,7 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
         >
           <span className="summary-label">Placement</span>
           <span className="summary-value">{selectedPlacement?.label || 'Select...'}</span>
-          {placement && currentStep !== 2 && <span className="edit-hint">Edit</span>}
+          <span className="edit-hint">{placement && currentStep !== 2 ? '✎' : '\u00A0'}</span>
         </button>
         
         <span className="summary-arrow">→</span>
@@ -791,7 +790,7 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
         >
           <span className="summary-label">Match</span>
           <span className="summary-value">{selectedFixture ? (selectedFixture.meta.scheduledTime || selectedFixture.meta.plannedStart || 'TBD') : 'Select...'}</span>
-          {targetFixtureId && currentStep !== 3 && currentStep !== 4 && <span className="edit-hint">Edit</span>}
+          <span className="edit-hint">{targetFixtureId && currentStep !== 3 ? '✎' : '\u00A0'}</span>
         </button>
       </div>
 
@@ -875,15 +874,17 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
           <div className="wizard-step-content">
             <h4 className="wizard-step-title">Review & Submit</h4>
             <div className="review-summary">
-              <div className="review-item">
-                <span className="review-label">Pitch</span>
-                <span className="review-value">{selectedPitch}</span>
+              <div className="review-row">
+                <div className="review-item">
+                  <span className="review-label">Pitch</span>
+                  <span className="review-value">{selectedPitch}</span>
+                </div>
+                <div className="review-item">
+                  <span className="review-label">Placement</span>
+                  <span className="review-value">{selectedPlacement?.icon} {selectedPlacement?.label}</span>
+                </div>
               </div>
-              <div className="review-item">
-                <span className="review-label">Placement</span>
-                <span className="review-value">{selectedPlacement?.icon} {selectedPlacement?.label}</span>
-              </div>
-              <div className="review-item">
+              <div className="review-item review-item-full">
                 <span className="review-label">Anchor Match</span>
                 <span className="review-value">
                   <span className="review-time">{selectedFixture?.meta?.scheduledTime || selectedFixture?.meta?.plannedStart || 'TBD'}</span>

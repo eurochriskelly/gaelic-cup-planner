@@ -59,12 +59,15 @@
       
       // Queued column
       &[data-column-key="queued"] {
+        .kanban-card {
+          height: 20rem;
+        }
         .column-content {
           grid-area: 2 / 1 / 3 / 2; // Row 2, Col 1
           min-height: 10rem;
           border-right: 0.3rem solid #000000a8;
-          padding: 0;
-          > .kanban-slot:first-child { margin-top: 0; }
+          padding: 0.4rem 0 0.8rem;
+          > .kanban-slot:first-child { margin-top: 0.4rem; }
         }
         .column-header {
           grid-area: 3 / 1 / 4 / 2; // Row 3, Col 1
@@ -74,11 +77,14 @@
       
       // Ongoing column  
       &[data-column-key="started"] {
+        .kanban-card {
+          height: 20rem;
+        }
         .column-content {
           grid-area: 2 / 2 / 3 / 3; // Row 2, Col 2
           min-height: 10rem;
-          padding: 0;
-          > .kanban-slot:first-child { margin-top: 0; }
+          padding: 0.4rem 0 0.8rem;
+          > .kanban-slot:first-child { margin-top: 0.4rem; }
         }
         .column-header {
           grid-area: 3 / 2 / 4 / 3; // Row 3, Col 2
@@ -87,6 +93,9 @@
       
       // Planned column
       &[data-column-key="planned"] {
+        .kanban-card {
+          height: 19.5rem;
+        }
         grid-area: 5 / 1 / 6 / 2; // Row 5, Col 1
         min-height: 24rem;
         border-right: 0.3rem solid #000000a8;
@@ -96,6 +105,9 @@
       
       // Finished column
       &[data-column-key="finished"] {
+        .kanban-card {
+          height: 19.5rem;
+        }
         grid-area: 5 / 2 / 6 / 3; // Row 5, Col 2
         min-height: 24rem;
         display: flex; // Restore normal display for planned/finished
