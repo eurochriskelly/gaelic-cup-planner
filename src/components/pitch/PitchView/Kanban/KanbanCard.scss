@@ -4,7 +4,7 @@ $bwid: 0.6rem;
 $bcol: saturate(lighten($sc, 5%), 30%);
 
 .kanban-card {
-  width: calc(100% - 2rem);
+  width: calc(100% - 1rem);
   /* Ensure the card takes full width of its container */
   box-sizing: border-box;
   // padding: 0.75rem; // Handled by content wrapper or FixtureBar
@@ -15,10 +15,10 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   overflow: visible; // Allow toolbox to overhang
   display: flex;
   flex-direction: column;
-  height: 22rem;
+  height: 18rem;
   background: transparent;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   border-radius: 0.8rem;
   border: none;
   // backgroundColor is now on kanban-card-content-wrapper (via inline style)
