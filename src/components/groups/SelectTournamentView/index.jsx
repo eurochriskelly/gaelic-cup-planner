@@ -46,10 +46,11 @@ const SelectTournamentView = () => {
             heading={`${category}`}
             onSelect={handle.select}
           >
-            <table>
-              <tbody>
-                <tr>
-                  <td>Stage</td>
+            <div className="selectTournamentView">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Stage</td>
                   <td>{latestStage}</td>
                 </tr>
                 <tr>
@@ -69,11 +70,12 @@ const SelectTournamentView = () => {
                             {b}
                           </span>
                         )) : <span className="no-brackets">—</span>}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </MainCard>
         )
       )}

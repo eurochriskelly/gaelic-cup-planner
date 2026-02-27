@@ -1,33 +1,25 @@
-// @import "../../../../../shared/css/_colors.scss"; // Old path commented out
-@import "~/src/shared/css/_colors.scss"; // Use alias
+@import "src/shared/css/_colors.scss";
+
+/* 
+ * Most styling is now handled by the generic MobileSelect component.
+ * This file adds specific tweaks for the tournament selector.
+ */
 
 .selectTournamentView {
-    > article {
-        > section {
-            background-color: desaturate(lighten($pc, 60%), 30%);
-            &:hover {
-                background-color: desaturate(lighten($pc, 50%), 30%);
-            }
-            border: 1px solid #ccc;
-            margin: 1rem;
-            h3 {
-                text-align: center;
-                margin: 0.5rem 0 1.2rem 0; // Added semicolon
-            }
-            > div {
-                > div {
-                    padding: 0.3rem 1rem;
-                    display: grid;
-                    grid-template-columns: 1fr 2fr;
-                    > span:first-child {
-                        font-size: 1.5rem;
-                        font-weight: bold;
-                    }
-                    > span:last-child {
-                        font-size: 1.2rem;
-                    }
-                }
-            }
-        }
+    /* 
+     * Most styling is now handled by the generic MobileSelect component.
+     * This file adds specific tweaks for the tournament selector.
+     */
+    
+    /* Ensure full width/height inside the card */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    /* Table tweaks specific to this view */
+    table {
+        margin-top: 0.5rem;
+        /* MobileSelect.scss handles general table styles */
     }
 }

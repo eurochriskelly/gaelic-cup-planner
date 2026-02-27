@@ -95,7 +95,6 @@ section.MobileLayout {
     height: 100%;
   }
   h1, h2 {
-    padding-left: 1rem;
     text-align: left;
     color: darken(white, 30%);
     margin: 0;
@@ -130,7 +129,7 @@ section.MobileLayout {
   }
   h2 {
     > div {
-      width: 80%;
+      width: 100%;
       text-align: center;
       margin: auto;
       &::before {
@@ -154,7 +153,6 @@ section.MobileLayout {
   }
   .circled {
     margin: auto;
-    padding-left: 1rem;
     width: auto;
     text-align: center;
     font-size: 2.9rem;
