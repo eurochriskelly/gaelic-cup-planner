@@ -1,104 +1,184 @@
 @import "../../css/_colors.scss";
 
-$round: 0.6rem;
-$cheight: 340px;
-$cwidth: 340px;
-
+$round: 0.5rem;
 $card-main: darken(desaturate($pc, 20%), 16%);
-$card-back: lighten(desaturate($pc-light-40, 45%), 10%);
+$card-back: #f8fafc;
 
 .MobileSelect {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #e5e5e5; /* Fallback */
+
+  .mobile-select-header {
+    margin: 0;
+    /* Responsive height */
+    min-height: auto;
+    padding: 4.5rem 1.5rem 3rem; /* Scaled padding */
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 3rem; /* +50% from 2rem */
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(72, 95, 37, 0.9), rgba(42, 31, 74, 0.9));
+  }
+
   > section#cardArea {
-    margin: 1rem;
+    /* Responsive Grid Layout */
+    margin: 0.5rem; /* Reduced from 1rem to use more width */
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow-y: scroll;
+    /* Reduce min-width to ensure it fits on small devices (e.g. 320px width) */
+    grid-template-columns: 1fr; 
+    gap: 0.75rem; /* Slightly tighter gap */
+    padding-bottom: 6rem; /* Space for footer */
+    overflow-y: visible; /* Let the page scroll naturally */
+
+    @media (min-width: 600px) {
+       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+       margin: 1rem;
+       gap: 1rem;
+    }
+
     > .card {
-      font-size: 1.8em;
-      table { width: 100%; }
-      table > tbody > tr > td {
-        color: #666;
-        // don't break lines;
-        padding: 0.4rem 0;
-        vertical-align: top;
+      display: flex;
+      flex-direction: column;
+      border-radius: $round;
+      overflow: hidden;
+      background: white;
+      /* Remove margin from card itself if any */
+      margin: 0; 
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      min-height: 200px; /* Reasonable minimum height */
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
-      table > tbody > tr > td:nth-child(1) {
-        white-space: nowrap;
-        font-size:0.9em;
-        &::after {
-          content:":";
-        }
-      }
-      table > tbody > tr > td:nth-child(2) {
-        text-align: left;
-        font-weight: bold;
-        color:black;
-        width: 50%;
-        .pills {
-          white-space: wrap;
-          display: grid;
-          grid-gap: 0.1rem;
-          grid-template-rows: 1fr 1fr 1fr;
-          grid-template-columns: 1fr 1fr;
-        }
-        .pill {
-          text-align: center;
-          font-weight: normal;
-          margin: 0.2rem;
-          font-size: 0.9em;
-          padding: 0.1rem 0.2rem;
-          color: white;
-          background: $sc;
-          border-radius: 0.4rem;
-        }
-      }
-      max-height: $cheight;
-      min-height: $cheight;
-      background: $card-main;
-      .category h3::before {
-        content: $utf-icon-category;
-        margin-right: 1rem;
-      }
-      .pitch h3::before {
-        content: $utf-icon-pitch; 
-        margin-right: 1rem;
-      }
+
+      /* Card Header / Main Area */
       > *:first-child {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        /* Title Section */
         > div:first-child {
-          padding: 0.4rem 0 0.4rem 0;
           background: $card-main;
+          padding: 1.1rem; /* Scaled padding */
+          
           h3 {
-            max-width: $cwidth;
-            min-width: $cwidth;
             color: white;
-            padding: 0;
+            font-size: 2.25rem; /* +50% from 1.5rem */
+            font-weight: 700;
             margin: 0;
-            flex-grow: 1;
-            font-weight: normal;
             text-transform: uppercase;
-            font-size: 1.8rem;
+            letter-spacing: 0.02em;
+            /* Ensure long titles wrap or truncate properly */
             overflow: hidden;
-            white-space: nowrap;
             text-overflow: ellipsis;
-            margin-left: 1rem;
+            white-space: nowrap;
           }
         }
+
+        /* Content Section */
         > div:nth-child(2) {
-          margin: 1rem;
-          margin-top: 0;
           background: $card-back;
-          border-top-left-radius: 0.4rem;
-          border-top-right-radius: 0.4rem;
+          padding: 0; /* Remove padding so content spans full width of card */
+          flex: 1; /* Fill remaining space */
+          border-top: 1px solid #e2e8f0;
+
+          /* Add padding back for direct children if they are not tables or special components */
+          > *:not(table):not(.SelectPitchView):not(.selectTournamentView) {
+             padding: 0.75rem;
+          }
+          
+          /* For tables, ensure consistent alignment */
+          table {
+            width: 100%;
+          }
+          table > tbody > tr > td:first-child {
+             padding-left: 0.75rem; /* Align with header padding */
+          }
+          table > tbody > tr > td:last-child {
+             padding-right: 0.75rem;
+          }
         }
       }
-      margin: 1rem;
-      border-radius: $round;
+
+      /* Specific Styles for Category/Pitch Icons */
+      .category h3::before {
+        content: $utf-icon-category;
+        margin-right: 0.75rem;
+        font-size: 1.2em; /* Em scales with the now larger font size */
+        vertical-align: middle;
+      }
+      
+      .pitch h3::before {
+        content: $utf-icon-pitch; 
+        margin-right: 0.75rem;
+        font-size: 1.2em;
+        vertical-align: middle;
+      }
+
+      /* Inner Table Styling */
+      table { 
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      table > tbody > tr > td {
+        padding: 1.2rem 1rem; /* Scaled padding */
+        vertical-align: top;
+        font-size: 1.8rem; /* +50% from 1.2rem */
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      table > tbody > tr:last-child > td {
+        border-bottom: none;
+      }
+
+      table > tbody > tr > td:nth-child(1) {
+        white-space: nowrap;
+        color: #64748b;
+        font-weight: 500;
+        width: 40%;
+        padding-right: 0.5rem;
+      }
+      
+      table > tbody > tr > td:nth-child(2) {
+        text-align: right;
+        font-weight: 600;
+        color: #1e293b;
+        
+        .pills {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          gap: 0.25rem;
+        }
+        
+        .pill {
+          font-size: 1.4rem; /* +50% from 0.95rem */
+          padding: 0.4rem 0.9rem; /* Scaled padding */
+          color: white;
+          background: $sc; /* Secondary color */
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+
+        .no-brackets {
+           color: #94a3b8;
+        }
+      }
     }
+
+    /* Remove empty card styling as we will remove the elements */
     .card-empty {
-      max-height: $cheight;
-      min-height: $cheight;
-      background: rgba(0, 0, 0, 0.05);
-      border: 2px solid rgba(0, 0, 0, 0.2);
+      display: none;
     }
   }
 }

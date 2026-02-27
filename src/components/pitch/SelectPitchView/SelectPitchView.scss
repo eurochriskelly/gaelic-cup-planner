@@ -1,87 +1,128 @@
 @import "src/shared/css/_colors.scss";
 
 .SelectPitchView {
-    display: grid;
-    grid-template-rows: 3rem 3.4rem 10rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
     .no-more-games {
-      padding: 3.5rem;
-      font-size: 2rem;
+      padding: 2rem 1.5rem; /* Scaled padding */
+      font-size: 1.9rem; /* +50% from 1.25rem */
       text-align: center;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
+
     .play {
-      text-align: center;
-      text-transform: uppercase;
-      font-size: 1.4rem;
-      padding: 0.6rem;
-      .nxt-match {
-        display:grid;
-        grid-template-columns: 70% auto;
-        width: 100%;
-        >span:nth-child(1) {
-          text-align: left;
-          b {
-            margin-left: 0.5rem;
-          }
-        }
-        >span:nth-child(2) {
-          text-align: right;
-        }
-      }
-    }
-    .in-progress {
-      background: $sc;
+      padding: 1.2rem 1.2rem; /* Scaled padding */
       color: white;
-    }
-    .next-up {
-      background: desaturate($pc-light-20, 37%);
-    }
-    .details {
-      display: grid;
-      grid-template-columns: 100px auto;
-      padding:0.5rem;
-      font-size: 1.4rem;
-      >div:first-child {
-        font-weight: bold;
-        &::before {
-          margin-right:0.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 1.75rem; /* +50% from 1.15rem */
+      letter-spacing: 0.05em;
+
+      .nxt-match {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        /* Left side (Status + Match ID) */
+        > span:first-child {
+          display: flex;
+          align-items: center;
+          gap: 1rem; /* Scaled gap */
+        }
+        
+        /* Right side (Progress) */
+        > span:nth-child(2) {
+          font-weight: 500;
+          opacity: 0.9;
+          font-size: 1.65rem; /* +50% from 1.1rem */
         }
       }
-      >div:nth-child(2) {
+    }
+
+    .in-progress {
+      background: $sc; /* Secondary color for active */
+    }
+
+    .next-up {
+      background: #94a3b8; /* Muted for next */
+    }
+
+    .details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem; /* Scaled padding */
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 1.65rem; /* +50% from 1.1rem */
+      color: #475569;
+
+      .time {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        
+        .clock-icon {
+           font-size: 1.8rem; /* +50% from 1.2rem */
+        }
+      }
+
+      .category {
+        font-weight: 600;
+        color: #1e293b;
         text-align: right;
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        
         &::after{
           content: '\1F3BD';
-          margin-left:0.5rem;
+          margin-left: 0.75rem;
+          font-size: 1.8rem; /* +50% from 1.2rem */
         }
       }
     }
+
     .teams {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.8rem; /* Scaled padding */
+      gap: 1.1rem;
       text-align: center;
-      font-size: 1.2rem;
+      
+      /* "vs" separator */
+      > div:nth-child(2) {
+         color: #94a3b8;
+         font-size: 1.6rem; /* +50% from 1.05rem */
+         font-weight: 700;
+         text-transform: uppercase;
+      }
+
       .team1, .team2 {
-        padding:0.6rem; 
-        font-size: 1.6rem;
-        font-weight: bold;
+        font-size: 2.1rem; /* +50% from 1.4rem */
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.2;
       }
     }
 }
 
+/* Remove old absolute positioning hacks */
 .container {
     position: relative;
+    /* Resetting these to avoid layout breakage */
+    > * { position: static; }
+    > h2 { margin-top: 0; }
+    > div { top: auto; }
 }
-.container > * {
-    position: absolute;
-    right: 0;
-    left:0;
-}
-.container > h2 {
-    top: 19rem;
-    margin-top: 3rem;
-}
-
-.container > div {
-    top: 14rem;
-}
-.container > div > div {
-    min-height: 15rem;
-}
-
