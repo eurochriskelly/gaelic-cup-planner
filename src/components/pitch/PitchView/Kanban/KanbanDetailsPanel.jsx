@@ -712,16 +712,19 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
 
   const handlePitchSelect = (pitch) => {
     setSelectedPitch(pitch);
-    setCurrentStep(2);
+    setTimeout(() => setCurrentStep(2), 500);
   };
 
   const handlePlacementSelect = (placementValue) => {
     setPlacement(placementValue);
-    setCurrentStep(3);
+    setTimeout(() => setCurrentStep(3), 500);
   };
 
   const handleFixtureSelect = (option) => {
     setTargetFixtureId(option?.value || null);
+    if (option?.value) {
+      setTimeout(() => setCurrentStep(4), 500);
+    }
   };
 
   const selectedPlacement = placementOptions.find(opt => opt.value === placement);
@@ -738,7 +741,7 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
     <div className="move-entry-wrapper">
       <header className="move-entry-header">
         <h3>Move Fixture</h3>
-        <p>Step {currentStep} of 3</p>
+        <p>Step {currentStep} of 4</p>
       </header>
 
       {errorMessage && (
@@ -771,13 +774,13 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
         <span className="summary-arrow">→</span>
         
         <button 
-          className={`summary-item ${currentStep === 3 ? 'editing' : targetFixtureId ? 'completed' : ''} ${!placement ? 'disabled' : ''}`}
+          className={`summary-item ${(currentStep === 3 || currentStep === 4) ? 'editing' : targetFixtureId ? 'completed' : ''} ${!placement ? 'disabled' : ''}`}
           onClick={() => placement && setCurrentStep(3)}
           disabled={!placement}
         >
           <span className="summary-label">Match</span>
-          <span className="summary-value">{selectedFixture ? 'Selected' : 'Select...'}</span>
-          {targetFixtureId && currentStep !== 3 && <span className="edit-hint">Edit</span>}
+          <span className="summary-value">{selectedFixture ? (selectedFixture.meta.scheduledTime || selectedFixture.meta.plannedStart || 'TBD') : 'Select...'}</span>
+          {targetFixtureId && currentStep !== 3 && currentStep !== 4 && <span className="edit-hint">Edit</span>}
         </button>
       </div>
 
@@ -838,40 +841,78 @@ function MoveFixtureWrapper({ fixture, closePanel }) {
                 <p>No other matches available on {selectedPitch}</p>
               </div>
             ) : (
-              <div className="fixture-list-container">
+              <div className="fixture-grid-container">
                 {selectOptions.map((option) => (
                   <button
                     key={option.value}
                     type="button"
-                    className={`fixture-list-item ${targetFixtureId === option.value ? 'selected' : ''}`}
+                    className={`fixture-grid-card ${targetFixtureId === option.value ? 'selected' : ''}`}
                     onClick={() => handleFixtureSelect(option)}
                   >
-                    <span className="fixture-check">{targetFixtureId === option.value ? '✓' : ''}</span>
-                    <div className="fixture-info">
-                      <span className="fixture-time">{option.meta.scheduledTime || option.meta.plannedStart || 'TBD'}</span>
-                      <span className="fixture-teams">{option.meta.team1} vs {option.meta.team2}</span>
-                    </div>
+                    <span className="fixture-grid-check">{targetFixtureId === option.value ? '✓' : ''}</span>
+                    <span className="fixture-grid-time">{option.meta.scheduledTime || option.meta.plannedStart || 'TBD'}</span>
+                    <span className="fixture-grid-teams">{option.meta.team1} vs {option.meta.team2}</span>
                   </button>
                 ))}
               </div>
             )}
           </div>
         )}
+
+        {/* Step 4: Review */}
+        {currentStep === 4 && (
+          <div className="wizard-step-content">
+            <h4 className="wizard-step-title">Review & Submit</h4>
+            <div className="review-summary">
+              <div className="review-item">
+                <span className="review-label">Pitch</span>
+                <span className="review-value">{selectedPitch}</span>
+              </div>
+              <div className="review-item">
+                <span className="review-label">Placement</span>
+                <span className="review-value">{selectedPlacement?.icon} {selectedPlacement?.label}</span>
+              </div>
+              <div className="review-item">
+                <span className="review-label">Anchor Match</span>
+                <span className="review-value">
+                  <span className="review-time">{selectedFixture?.meta?.scheduledTime || selectedFixture?.meta?.plannedStart || 'TBD'}</span>
+                  <span className="review-teams">{selectedFixture?.meta?.team1} vs {selectedFixture?.meta?.team2}</span>
+                </span>
+              </div>
+            </div>
+            <div className="review-actions">
+              <button type="button" className="btn btn-tertiary" onClick={closePanel}>
+                <i className="pi pi-times" /> Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={!canSubmit || isLoading || isSaving}
+                onClick={handleSubmit}
+              >
+                <i className="pi pi-check" /> {isSaving ? 'Moving…' : 'Apply Move'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="move-entry-actions">
-        <button type="button" className="btn btn-tertiary" onClick={closePanel}>
-          <i className="pi pi-times" /> Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={!canSubmit || isLoading || isSaving}
-          onClick={handleSubmit}
-        >
-          <i className="pi pi-check" /> {isSaving ? 'Moving…' : 'Apply Move'}
-        </button>
-      </div>
+      {/* Actions only show on steps 1-3 */}
+      {currentStep !== 4 && (
+        <div className="move-entry-actions">
+          <button type="button" className="btn btn-tertiary" onClick={closePanel}>
+            <i className="pi pi-times" /> Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={true}
+            onClick={handleSubmit}
+          >
+            <i className="pi pi-check" /> Apply Move
+          </button>
+        </div>
+      )}
     </div>
   );
 }
