@@ -6,6 +6,7 @@ import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./pages/LandingPage";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
+import { InstallPrompt } from "./components/InstallPrompt";
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -56,7 +57,12 @@ function AppContent() {
 }
 
 function App() {
-  return <Provider><AppContent /></Provider>;
+  return (
+    <Provider>
+      <AppContent />
+      <InstallPrompt />
+    </Provider>
+  );
 }
 
 function PitchViewWrapper() {
