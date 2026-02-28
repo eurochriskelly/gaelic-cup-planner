@@ -64,7 +64,7 @@
     border: 0.5rem solid #95a46c;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     // Removed base font-size increase, applying to individual elements instead
-
+    max-height: 16rem;
     // Apply hover effects and cursor only if the card is clickable
     &.clickable {
         cursor: pointer;
