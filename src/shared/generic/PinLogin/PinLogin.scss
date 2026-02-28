@@ -64,7 +64,7 @@
     border: 0.5rem solid #95a46c;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     // Removed base font-size increase, applying to individual elements instead
-    max-height: 16rem;
+    max-height: 18rem;
     // Apply hover effects and cursor only if the card is clickable
     &.clickable {
         cursor: pointer;
@@ -222,7 +222,7 @@
   margin-top: 0px;
   // Properties moved from the duplicate rule block:
   grid-template-columns: 1fr;
-  grid-template-rows: auto;
+  grid-template-rows: 20rem;
   width: 980px;
   margin-left: auto; // Use auto margins for centering block element
   margin-right: auto;
