@@ -12,6 +12,7 @@ import '../../../../components/web/team-name';
 import TabCancel from '../UpdateFixture/DialogUpdate/TabCancel';
 import TabScore from '../UpdateFixture/DialogUpdate/TabScore'; // Import TabScore
 import TabCards from '../UpdateFixture/DialogUpdate/TabCards'; // Import TabCards
+import EditFixtureWrapper from './EditFixtureWrapper'; // Import EditFixtureWrapper
 import Select from 'react-select';
 
 const KanbanDetailsPanel = ({
@@ -107,6 +108,12 @@ const KanbanDetailsPanel = ({
             )}
             {mode === 'move' && (
               <MoveFixtureWrapper
+                fixture={fixture}
+                closePanel={closePanel}
+              />
+            )}
+            {mode === 'edit' && (
+              <EditFixtureWrapper
                 fixture={fixture}
                 closePanel={closePanel}
               />

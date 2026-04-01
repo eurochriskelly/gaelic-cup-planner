@@ -8,6 +8,7 @@ import API from "../../../../shared/api/endpoints";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import EditIcon from "../../../../shared/icons/icon-edit.svg?react";
 import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 import CardIcon from "../../../../shared/icons/icon-card.svg?react";
 import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
@@ -133,19 +134,28 @@ const UpdateFixture = ({
         // await fetchFixtures(true);
       }
     },
-     {
-       id: 'reschedule',
-       Icon: MoveIcon,
-       showOnlyWhenPlanned: true,
-       getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
-       action: (setDrawer) => {
-         if (showDetails) {
-           showDetails('move');
-           return;
-         }
-         setDrawer("postpone");
-       }
-     },
+    {
+      id: 'edit',
+      Icon: EditIcon,
+      showOnlyWhenPlanned: true,
+      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      action: (setDrawer) => {
+        showDetails && showDetails('edit');
+      }
+    },
+    {
+      id: 'reschedule',
+      Icon: MoveIcon,
+      showOnlyWhenPlanned: true,
+      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      action: (setDrawer) => {
+        if (showDetails) {
+          showDetails('move');
+          return;
+        }
+        setDrawer("postpone");
+      }
+    },
     {
       id: 'start',
       Icon: StartIcon,

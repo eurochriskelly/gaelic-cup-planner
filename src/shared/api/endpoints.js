@@ -77,6 +77,10 @@ export default {
   checkTournamentCode: (tournamentId, code, role) =>
     fetchRootApi(`/tournaments/${tournamentId}/code-check/${code}?role=${role}`),
 
+  // Update fixture teams (for editing planned fixtures)
+  updateFixtureTeams: (tournamentId, fixtureId, teamData) =>
+    fetchApi(tournamentId, `${fixtureId}/teams`, 'PUT', teamData),
+
   // Fetch available filters for a tournament
   fetchFilters: (tournamentId, role, categories = []) => {
     const categoryParam = categories.length ? `&category=${categories.join(',')}` : '';
