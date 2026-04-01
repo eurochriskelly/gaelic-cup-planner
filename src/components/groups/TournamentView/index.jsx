@@ -402,24 +402,30 @@ const SingleGroupContent = ({ group, fixtures }) => {
 
 
 const FixtureSummary = ({ fixture }) => {
-  const when = formatTime(fixture.scheduled);
   const stageLabel = formatStageLabel(fixture.stage);
   return (
     <article className="fixture">
       <header>
         <span className="fixture-label">{fixture.label}</span>
-        <span className="fixture-time">{when}</span>
       </header>
       <div className="fixture-teams">
         <span>{fixture.team1}</span>
         <span>vs</span>
         <span>{fixture.team2}</span>
       </div>
-      <footer>
-        <span className="fixture-pill">{stageLabel || "Knockout"}</span>
-        <span className="fixture-pill">Pitch {fixture.pitch || "TBD"}</span>
-        {fixture.umpire && <span className="fixture-pill">Ump {fixture.umpire}</span>}
-      </footer>
+      <div className="fixture-support">
+        <div className="fixture-support__row">
+          <span className="fixture-support__item">{stageLabel || "Knockout"}</span>
+          <span className="fixture-support__item">Pitch {fixture.pitch || "TBD"}</span>
+        </div>
+        {fixture.umpire && (
+          <div className="fixture-support__row fixture-support__row--umpire">
+            <span className="fixture-support__item fixture-support__item--umpire">
+              Umpire {fixture.umpire}
+            </span>
+          </div>
+        )}
+      </div>
     </article>
   );
 };
@@ -456,7 +462,6 @@ const KnockoutList = ({ fixtures = [] }) => {
 };
 
 const FixtureResult = ({ fixture }) => {
-  const when = formatTime(fixture.scheduled);
   const result = fixture.result || {};
   const team1 = result.team1 || {};
   const team2 = result.team2 || {};
@@ -465,7 +470,6 @@ const FixtureResult = ({ fixture }) => {
     <article className="fixture fixture--result">
       <header>
         <span className="fixture-label">{fixture.label}</span>
-        <span className="fixture-time">{when}</span>
       </header>
       <div className="fixture-teams">
         <span>{fixture.team1}</span>
@@ -475,10 +479,12 @@ const FixtureResult = ({ fixture }) => {
         <span>{fixture.team2}</span>
         <span>{formatScore(team2)}</span>
       </div>
-      <footer>
-        <span className="fixture-pill">{stageLabel || "Knockout"}</span>
-        <span className="fixture-pill">Pitch {fixture.pitch || "TBD"}</span>
-      </footer>
+      <div className="fixture-support">
+        <div className="fixture-support__row">
+          <span className="fixture-support__item">{stageLabel || "Knockout"}</span>
+          <span className="fixture-support__item">Pitch {fixture.pitch || "TBD"}</span>
+        </div>
+      </div>
     </article>
   );
 };

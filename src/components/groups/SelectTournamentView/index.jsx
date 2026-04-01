@@ -35,8 +35,15 @@ const SelectTournamentView = () => {
     back: () => {},
   };
 
+  const minimumCardCount = 4;
+  const targetCardCount = Math.max(
+    minimumCardCount,
+    Math.ceil((categories.length || 0) / 2) * 2
+  );
+  const placeholderCount = Math.max(0, targetCardCount - categories.length);
+
   return (
-    <MobileSelect sections={sections} active={0}>
+    <MobileSelect sections={sections} active={0} className="select-tournament-page">
       <div>Select competition</div>
       {categories?.map(
         ({ category, latestStage, totalGames, currentGame, brackets }, i) => (
@@ -79,6 +86,13 @@ const SelectTournamentView = () => {
           </MainCard>
         )
       )}
+      {Array.from({ length: placeholderCount }).map((_, i) => (
+        <div
+          key={`competition-placeholder-${i}`}
+          data-placeholder
+          className="competition-placeholder-tile"
+        />
+      ))}
     </MobileSelect>
   );
 };
