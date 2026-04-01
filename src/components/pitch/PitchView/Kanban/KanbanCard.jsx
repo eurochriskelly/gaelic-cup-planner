@@ -193,9 +193,9 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
                 <team-name
                   style={teamStyle}
                   name={fixture.umpireTeam|| 'TBD'}
-                  direction="r2l"
                   showLogo="true"
                   height="35px" // Increased from 22px to 26px (20% larger)
+                  width="100%"
                   maxchars="28"
                   title-margin-below={vspace}
                   logo-margin-right="0.5rem"

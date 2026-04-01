@@ -246,24 +246,32 @@ const UpdateFixture = ({
   };
 
   const visibleButtons = getVisibleButtons();
-  
-  // Reorder buttons so cards always comes before score (finish)
-  const reorderButtons = (buttons) => {
-    const cardIndex = buttons.findIndex(b => b.id === 'cards');
-    const finishIndex = buttons.findIndex(b => b.id === 'finish');
-    
-    if (cardIndex !== -1 && finishIndex !== -1 && cardIndex > finishIndex) {
-      // Cards is after finish, swap them
-      const reordered = [...buttons];
-      const [cardButton] = reordered.splice(cardIndex, 1);
-      reordered.splice(finishIndex, 0, cardButton);
-      return reordered;
+
+  const prioritizeButtons = (buttons) => {
+    const lane = nextFixture.lane?.current;
+    const buttonOrderByLane = {
+      planned: ['cancel', 'edit', 'reschedule', 'start', 'cards'],
+      queued: ['cancel', 'reschedule', 'start', 'edit', 'cards'],
+      started: ['cancel', 'cards', 'finish'],
+      finished: ['cancel', 'cards']
+    };
+    const preferredOrder = buttonOrderByLane[lane];
+
+    if (!preferredOrder) {
+      return buttons;
     }
-    
-    return buttons;
+
+    return [...buttons].sort((a, b) => {
+      const indexA = preferredOrder.indexOf(a.id);
+      const indexB = preferredOrder.indexOf(b.id);
+      const fallbackIndexA = indexA === -1 ? preferredOrder.length : indexA;
+      const fallbackIndexB = indexB === -1 ? preferredOrder.length : indexB;
+
+      return fallbackIndexA - fallbackIndexB;
+    });
   };
-  
-  const mainButtons = reorderButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3); // Limit to max 3 buttons
+
+  const mainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3);
   const infoButton = visibleButtons.find(b => b.isInfoButton);
   const isLocked = needsSlideToUnlock && !isUnlocked;
 

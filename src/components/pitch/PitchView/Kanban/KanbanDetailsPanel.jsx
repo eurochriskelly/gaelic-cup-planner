@@ -406,7 +406,7 @@ function ShowFixtureDetails({
       {fixture.umpireTeam && (
         <div className="umpires">
           <UmpiresIcon width="82" height="82" />
-          <team-name name={fixture.umpireTeam} show-logo="true" direction="r2l" height="35px"></team-name>
+          <team-name name={fixture.umpireTeam} show-logo="true" height="35px" width="100%"></team-name>
         </div>
       )}
     </>
@@ -590,7 +590,7 @@ function ScoreEntryWrapper({ fixture, closePanel, moveToNextFixture, onScorePick
       {!isScorePickerOpen && hasBothScores && (
         <div className="score-action-buttons">
           <button
-            className={`btn btn-primary ${!showExtraOptions ? 'btn-full-width' : ''}`}
+            className={`btn btn-primary publish-score-button ${!showExtraOptions ? 'btn-full-width' : ''}`}
             onClick={handleFinalScore}
             disabled={isSubmitting}
           >
