@@ -7,16 +7,14 @@ import "./MobileSelect.scss";
 const MobileSelect = ({
   onSelect = () => {},
   active=0,
+  className = '',
   children,
 }) => {
   const childrenArray = Children.toArray(children);
   const [SubHeading, ...cards] = childrenArray;
-  
-  // Removed: const cardsPadded = cards.concat(Array(10 - cards.length).fill(null));
-  // Reason: Responsive grid handles layout without needing empty placeholders.
 
   return (
-    <section className="MobileSelect mobile">
+    <section className={`MobileSelect mobile ${className}`.trim()}>
       {SubHeading ? (
         <header className="mobile-select-header">
           {SubHeading}
@@ -25,6 +23,21 @@ const MobileSelect = ({
       <section id="cardArea">
         {cards?.map((x, i) => {
           if (!x) return null;
+
+          const isPlaceholder = !!x.props?.['data-placeholder'];
+
+          if (isPlaceholder) {
+            return (
+              <section
+                key={`card_${i}`}
+                className="card card-empty div-shadow"
+                aria-hidden="true"
+              >
+                {x}
+              </section>
+            );
+          }
+
           return (
             <section 
               key={`card_${i}`} 

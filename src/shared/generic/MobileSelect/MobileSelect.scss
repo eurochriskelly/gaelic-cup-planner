@@ -176,9 +176,14 @@ $card-back: #f8fafc;
       }
     }
 
-    /* Remove empty card styling as we will remove the elements */
     .card-empty {
-      display: none;
+      cursor: default;
+      pointer-events: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
     }
   }
 }
