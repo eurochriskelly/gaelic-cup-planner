@@ -186,6 +186,12 @@ const LandingPage = () => {
     setShowNamePrompt(false);
   };
 
+  const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
+  const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
+  const now = new Date();
+  const today = `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(2, '0')}-${`${now.getDate()}`.padStart(2, '0')}`;
+  const canResetTournament = tournamentStatus === 'in-design' && tournamentDate > today;
+
   return (
     <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
       {showNamePrompt && (
@@ -254,7 +260,7 @@ const LandingPage = () => {
               </>
             )}
           </button>
-          {+tournamentId === 1 && (
+          {canResetTournament && (
             <button className='icon-button reset-tournament sudo' onClick={handleResetClick}>
               <ResetIcon className="icon" />
               <span className="label">Reset Tournament</span>
