@@ -222,6 +222,8 @@
   margin-top: 0px;
   // Properties moved from the duplicate rule block:
   grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  align-content: start;
   width: 980px;
   margin-left: auto; // Use auto margins for centering block element
   margin-right: auto;
