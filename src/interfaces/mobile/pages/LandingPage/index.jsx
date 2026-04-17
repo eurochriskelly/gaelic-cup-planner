@@ -268,7 +268,7 @@ const LandingPage = () => {
           )}
           <button className='icon-button logout' onClick={handle.disconnect}>
             <LogoutIcon className="icon" />
-            <span className="label">Log Out</span>
+            <span className="label">LEAVE</span>
           </button>
         </div>
 
