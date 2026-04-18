@@ -133,7 +133,7 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
           aria-valuenow={Math.round((dragPosition / (trackWidthRef.current - 101)) * 100)}
           tabIndex={0}
         >
-          <span className="handle-icon">👉</span>
+          <span className="handle-icon pi pi-arrow-right"></span>
         </div>
       </div>
     </div>

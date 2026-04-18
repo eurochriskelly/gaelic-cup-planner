@@ -23,12 +23,14 @@ const LandingPage = () => {
     filterSelections,
     updateFilterSelections,
     userName,
+    userRole,
     setUserNameAndCookie,
     resetUserContext,
   } = useAppContext();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const nameInputRef = useRef(null);
+  const landingPageRef = useRef(null);
 
   const persistedFilters = filterSelections && typeof filterSelections === "object"
     ? filterSelections
@@ -142,12 +144,14 @@ const LandingPage = () => {
 
   // New: Add scroll listener to toggle shrink class
   useEffect(() => {
+    const element = landingPageRef.current;
+    if (!element) return;
+
     const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      setIsScrolled(scrollTop > 50); // Shrink after scrolling 50px
+      setIsScrolled(element.scrollTop > 50); // Shrink after scrolling 50px
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    element.addEventListener('scroll', handleScroll);
+    return () => element.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handle = {
@@ -193,7 +197,7 @@ const LandingPage = () => {
   const canResetTournament = tournamentStatus === 'in-design' && tournamentDate > today;
 
   return (
-    <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`}>
+    <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`} ref={landingPageRef}>
       {showNamePrompt && (
         <div className="name-prompt-overlay" role="dialog" aria-modal="true" aria-labelledby="namePromptTitle">
           <div className="name-prompt-modal">
@@ -251,7 +255,10 @@ const LandingPage = () => {
             {userName ? (
               <>
                 <i className="pi pi-pencil edit-icon" aria-hidden="true" />
-                <span className="label user-name-label">{userName}</span>
+                <div className="user-info">
+                  <span className="label user-name-label">{userName}</span>
+                  {userRole && <span className="user-role-label">{userRole}</span>}
+                </div>
               </>
             ) : (
               <>

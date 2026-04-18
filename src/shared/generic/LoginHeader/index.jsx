@@ -13,9 +13,7 @@ const LoginHeader = ({ version, showBackButton, onBackClick }) => {
             <i className="pi pi-arrow-circle-left"></i>
           </span>
         )}
-        <div className="version-line">
-          <span className="app-version">v{version || '?.?.?'}</span>
-        </div>
+
       </div>
     </div>
   )
