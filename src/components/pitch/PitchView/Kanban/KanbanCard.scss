@@ -214,16 +214,34 @@ $bcol: saturate(lighten($sc, 5%), 30%);
              }
          }
 
-         .aet-label {
-           font-size: 1.2rem;
-           font-weight: bold;
-           margin-left: 0.2rem;
-           color: #333;
-           font-family: sans-serif;
-           background: rgba(255,255,255,0.8);
-           padding: 0.1rem 0.3rem;
-           border-radius: 4px;
-         }
+          .aet-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-left: 0.2rem;
+            color: #333;
+            font-family: sans-serif;
+            background: rgba(255,255,255,0.8);
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+          }
+
+          .pen-label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-left: 0.2rem;
+            font-family: sans-serif;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: white;
+
+            &.pen-won {
+              background: #4CAF50;
+            }
+
+            &.pen-lost {
+              background: #f44336;
+            }
+          }
        }
 
       // Team-1 score: lower right of first team-row

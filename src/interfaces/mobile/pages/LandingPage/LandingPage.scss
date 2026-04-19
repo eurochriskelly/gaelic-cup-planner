@@ -6,8 +6,8 @@ $rcol: #d4e79b;
 .LandingPage {
   font-family: Arial, sans-serif;
   background: radial-gradient(circle at top center, $rcol, $radial2 50%);
-  margin-top: 500px; /* Push entire main below initial banner */
-  height: calc(100vh - 500px); /* Set fixed height for scrolling */
+  margin-top: 400px; /* Push entire main below initial banner */
+  height: calc(100vh - 400px); /* Set fixed height for scrolling */
   overflow-y: auto; /* Allow vertical scrolling */
   scrollbar-width: none; /* Firefox: hide scrollbar */
   -ms-overflow-style: none; /* IE/Edge: hide scrollbar */
@@ -19,8 +19,8 @@ $rcol: #d4e79b;
   }
 
   &.shrink {
-    margin-top: 120px; /* Adjust for shrunk banner */
-    height: calc(100vh - 120px);
+    margin-top: 100px; /* Adjust for shrunk banner */
+    height: calc(100vh - 100px);
   }
 
   /* Modified: Adjust margin for content below banner */
@@ -37,7 +37,7 @@ $rcol: #d4e79b;
     margin: 0; /* Remove any inherited margin */
     padding: 0; /* Remove padding */
     z-index: 10;
-    height: 500px;
+    height: 400px;
     transition: height 0.3s ease;
     overflow: hidden;
   }
@@ -87,28 +87,6 @@ $rcol: #d4e79b;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     transition: font-size 0.3s ease;
-  }
-
-  .banner-version {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.8rem;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: font-size 0.3s ease;
-  }
-
-  &.shrink .banner-footer-bar {
-    padding: 8px 16px;
-    bottom: 10px;
-  }
-
-  &.shrink .banner-title {
-    font-size: 1.8rem;
-  }
-
-  &.shrink .banner-version {
-    font-size: 1rem;
   }
 
   header {
@@ -238,9 +216,18 @@ $rcol: #d4e79b;
       }
 
       .icon-button.reset-user,
-      .icon-button.reset-tournament,
-      .icon-button.logout {
+      .icon-button.reset-tournament {
         background: rgba(255, 255, 255, 0.9);
+      }
+
+      .icon-button.logout {
+        background: #2d2d2d;
+        color: #fff;
+        max-height: 100px;
+
+        .label {
+          color: #fff;
+        }
       }
     }
   }

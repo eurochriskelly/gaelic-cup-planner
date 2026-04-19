@@ -52,11 +52,21 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
 
     const total1 = goals1Total * 3 + points1Total;
     const total2 = goals2Total * 3 + points2Total;
+
+    // Check if penalties exist
+    const hasPenalties = hasExtraTime && (
+        (fixture.goals1Penalties !== null && fixture.goals1Penalties !== undefined) ||
+        (fixture.goals2Penalties !== null && fixture.goals2Penalties !== undefined)
+    );
+    const pen1 = getNumber(fixture.goals1Penalties);
+    const pen2 = getNumber(fixture.goals2Penalties);
+
     const isFinished = fixture.outcome === 'played';
     const isOngoingWithScore = !isFinished && hasScore;
-    const team1Won = isFinished && total1 > total2;
-    const team2Won = isFinished && total2 > total1;
-    const isDraw = isFinished && total1 === total2;
+    // Winner determined by penalties if they exist, otherwise by score totals
+    const team1Won = isFinished && (hasPenalties ? pen1 > pen2 : total1 > total2);
+    const team2Won = isFinished && (hasPenalties ? pen2 > pen1 : total2 > total1);
+    const isDraw = isFinished && !hasPenalties && total1 === total2;
     const isOngoing = fixture?.lane?.current === 'started' && fixture.startedTime;
 
   useEffect(() => {
@@ -145,9 +155,10 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
                        played={fixture.outcome === 'played'}
                      ></gaelic-score>
                    </div>
-                   {hasExtraTime && <span className="aet-label">AET</span>}
-                 </div>
-               )}
+                    {hasExtraTime && <span className="aet-label">AET</span>}
+                    {hasPenalties && <span className={`pen-label ${team1Won ? 'pen-won' : 'pen-lost'}`}>PEN({pen1})</span>}
+                  </div>
+                )}
           </div>
 
           <div className="vs-row">vs</div>
@@ -176,6 +187,7 @@ const KanbanCard = ({ fixture, onDragStart, onClick, isSelected, showDetailsPane
                     ></gaelic-score>
                   </div>
                   {hasExtraTime && <span className="aet-label">AET</span>}
+                  {hasPenalties && <span className={`pen-label ${team2Won ? 'pen-won' : 'pen-lost'}`}>PEN({pen2})</span>}
                 </div>
               )}
           </div>

@@ -225,7 +225,6 @@ const LandingPage = () => {
           <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
           <div className="banner-footer-bar">
             <div className="banner-title">{t('landingPage_heading', 'Pitch Perfect')}</div>
-            <div className="banner-version">V{versionInfo.mobile.replace(/%/g, '')}</div>
           </div>
         </div>
         <header>
