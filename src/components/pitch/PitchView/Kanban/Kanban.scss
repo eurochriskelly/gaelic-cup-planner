@@ -52,6 +52,76 @@
         z-index: 10;
     }
 
+    .pitch-complete-banner {
+      grid-area: 2 / 1 / 3 / 3;
+      z-index: 6;
+      margin: 0.8rem 0.9rem 0.8rem;
+      padding: 1.5rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      border: 0.24rem solid rgba(240, 247, 219, 0.75);
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.16), transparent 42%),
+        linear-gradient(135deg, rgba(122, 150, 27, 0.96), rgba(85, 113, 18, 0.98));
+      box-shadow:
+        inset 0 0 0 0.18rem rgba(41, 61, 11, 0.28),
+        0 0.45rem 1rem rgba(0, 0, 0, 0.18);
+      text-align: center;
+      color: #f5f6e9;
+      overflow: hidden;
+      position: relative;
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        width: 11rem;
+        height: 11rem;
+        border-radius: 999px;
+        background: rgba(246, 249, 231, 0.08);
+      }
+
+      &::before {
+        top: -5rem;
+        left: -2rem;
+      }
+
+      &::after {
+        right: -2rem;
+        bottom: -5rem;
+      }
+
+      &__eyebrow,
+      &__headline,
+      &__subtext {
+        position: relative;
+        z-index: 1;
+      }
+
+      &__eyebrow {
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(245, 246, 233, 0.82);
+      }
+
+      &__headline {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      &__subtext {
+        font-size: 1rem;
+        font-weight: 600;
+        color: rgba(245, 246, 233, 0.86);
+      }
+    }
+
     // Queued/Ongoing columns - position content in row 2, headers in row 3
     .kanban-column {
       overflow: visible;
@@ -203,6 +273,37 @@
   &.fixture-selected {
     .kanban-board-area {
       // Adjust padding or heights when fixture is selected
+    }
+  }
+
+  &.inline-move-mode {
+    .kanban-board-area {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .kanban-pitch-selector-area {
+      grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .kanban-action-panel {
+      grid-area: 2 / 1 / 3 / 2;
+      min-height: 0;
+    }
+
+    .kanban-column[data-column-key="planned"] {
+      grid-area: 3 / 1 / 4 / 2;
+      border-right: none;
+      min-height: 0;
+
+      .kanban-card {
+        height: 15.36rem;
+      }
+
+      .column-content .slot-card-container > .kanban-card {
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
+      }
     }
   }
 } // Correctly closes .kanban-view

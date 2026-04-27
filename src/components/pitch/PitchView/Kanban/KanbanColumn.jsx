@@ -15,14 +15,17 @@ const KanbanColumn = ({
    allTournamentPitches, // New prop for all pitches in the tournament
    allPlannedFixtures, // New prop: all planned fixtures for warning logic in ongoing column
    columnKey,
-   showDetailsPanel,
-   moveBarFixtureId,
    setMoveBarFixtureId,
-   pendingMove,
-   setPendingMove,
    recentlyMovedFixtureId,
-   findAdjacentFixture,
-   fetchFixtures,
+   isInlineMoveMode,
+   inlineMoveFixtureId,
+   inlineMoveTargetPitch,
+   inlineMoveSwapFixtureId,
+   onInlineMoveUp,
+   onInlineMoveDown,
+   onInlineSwap,
+   canInlineMoveUp,
+   canInlineMoveDown,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -73,14 +76,17 @@ const KanbanColumn = ({
                onDragStart={(e) => onDragStart(e, fixtureForPitchSlot.id)}
                onClick={() => handleFixtureClick(fixtureForPitchSlot)}
                isSelected={selectedFixture && selectedFixture.id === fixtureForPitchSlot.id}
-               showDetailsPanel={showDetailsPanel}
-               moveBarFixtureId={moveBarFixtureId}
                setMoveBarFixtureId={setMoveBarFixtureId}
-               pendingMove={pendingMove}
-               setPendingMove={setPendingMove}
                recentlyMovedFixtureId={recentlyMovedFixtureId}
-               findAdjacentFixture={findAdjacentFixture}
-               fetchFixtures={fetchFixtures}
+               isInlineMoveMode={isInlineMoveMode}
+               inlineMoveFixtureId={inlineMoveFixtureId}
+               inlineMoveTargetPitch={inlineMoveTargetPitch}
+               inlineMoveSwapFixtureId={inlineMoveSwapFixtureId}
+               onInlineMoveUp={onInlineMoveUp}
+               onInlineMoveDown={onInlineMoveDown}
+               onInlineSwap={onInlineSwap}
+               canInlineMoveUp={canInlineMoveUp}
+               canInlineMoveDown={canInlineMoveDown}
              />
            )}
         </KanbanSlot>
@@ -113,14 +119,17 @@ const KanbanColumn = ({
                onDragStart={(e) => onDragStart(e, fixtureForSlot.id)}
                onClick={() => handleFixtureClick(fixtureForSlot)}
                isSelected={selectedFixture && selectedFixture.id === fixtureForSlot.id}
-               showDetailsPanel={showDetailsPanel}
-               moveBarFixtureId={moveBarFixtureId}
                setMoveBarFixtureId={setMoveBarFixtureId}
-               pendingMove={pendingMove}
-               setPendingMove={setPendingMove}
                recentlyMovedFixtureId={recentlyMovedFixtureId}
-               findAdjacentFixture={findAdjacentFixture}
-               fetchFixtures={fetchFixtures}
+               isInlineMoveMode={isInlineMoveMode}
+               inlineMoveFixtureId={inlineMoveFixtureId}
+               inlineMoveTargetPitch={inlineMoveTargetPitch}
+               inlineMoveSwapFixtureId={inlineMoveSwapFixtureId}
+               onInlineMoveUp={onInlineMoveUp}
+               onInlineMoveDown={onInlineMoveDown}
+               onInlineSwap={onInlineSwap}
+               canInlineMoveUp={canInlineMoveUp}
+               canInlineMoveDown={canInlineMoveDown}
              />
            )}
         </KanbanSlot>

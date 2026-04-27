@@ -13,6 +13,11 @@ import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
 import CardIcon from "../../../../shared/icons/icon-card.svg?react";
 import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
 import CloseIcon from "../../../../shared/icons/icon-close.svg?react";
+import OkIcon from "../../../../shared/icons/icon-ok.svg?react";
+import ConfirmCancelIcon from "../../../../shared/icons/icon-cancel.svg?react";
+import SetLocationIcon from "../../../../shared/icons/icon-setlocation.svg?react";
+import EarlierIcon from "../../../../shared/icons/icon-earlier.svg?react";
+import LaterIcon from "../../../../shared/icons/icon-later.svg?react";
 import './UpdateFixture.scss';
 
 const UpdateFixture = ({
@@ -21,7 +26,21 @@ const UpdateFixture = ({
    showDetails,
    closeDetails,
    isDetailsMode = false,
-   setMoveBarFixtureId
+   isInlineMoveMode = false,
+   inlineMoveTargetPitch = '',
+   inlineMoveSummary = '',
+   onStartInlineMove,
+   onCancelInlineMove,
+   onSetInlineMovePitch,
+   onMoveInlineEarlier,
+   onMoveInlineLater,
+   onConfirmInlineMove,
+   canConfirmInlineMove = false,
+   canSetInlineMovePitch = false,
+   canMoveInlineEarlier = false,
+   canMoveInlineLater = false,
+   canStartInlineMove = false,
+   isInlineMoveSaving = false,
  }) => {
   const { fetchFixtures, startMatch } = useFixtureContext();
   let nextFixture = fixture;
@@ -31,6 +50,7 @@ const UpdateFixture = ({
   const [activeDrawer, setActiveDrawer] = useState(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [hasDoubleTapped, setHasDoubleTapped] = useState(false);
+  const [isMoveConfirming, setIsMoveConfirming] = useState(false);
   const lastTapRef = useRef(0);
 
   const hasStarted = !!nextFixture.startedTime;
@@ -92,6 +112,10 @@ const UpdateFixture = ({
     lockPanel();
   }, [fixture?.id, lockPanel]);
 
+  useEffect(() => {
+    setIsMoveConfirming(false);
+  }, [fixture?.id, isInlineMoveMode]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -147,8 +171,15 @@ const UpdateFixture = ({
       id: 'reschedule',
       Icon: MoveIcon,
       showOnlyWhenPlanned: true,
-      getState: (hasStarted, hasResult) => !hasStarted && !hasResult ? "enabled" : "disabled",
+      getState: (hasStarted, hasResult) =>
+        !hasStarted && !hasResult && (!onStartInlineMove || canStartInlineMove)
+          ? "enabled"
+          : "disabled",
       action: (setDrawer) => {
+        if (onStartInlineMove) {
+          onStartInlineMove();
+          return;
+        }
         if (showDetails) {
           showDetails('move');
           return;
@@ -273,34 +304,114 @@ const UpdateFixture = ({
 
   const mainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3);
   const infoButton = visibleButtons.find(b => b.isInfoButton);
-  const isLocked = needsSlideToUnlock && !isUnlocked;
+  const isLocked = !isInlineMoveMode && needsSlideToUnlock && !isUnlocked;
 
-  // Debug logging
-  console.log('UpdateFixture Debug:', {
-    lane: nextFixture.lane?.current,
-    isPlannedLane,
-    isQueuedLane,
-    isFinished,
-    needsSlideToUnlock,
-    isLocked,
-    isUnlocked
-  });
+  const renderMoveModeButtons = () => {
+    if (isMoveConfirming) {
+      return (
+        <>
+          <div className="space-button empty" />
+          <button
+            className={`space-button move-mode-button move-mode-icon-button move-mode-confirm-button ${
+              canConfirmInlineMove && !isInlineMoveSaving ? 'enabled' : 'disabled'
+            }`}
+            disabled={!canConfirmInlineMove || isInlineMoveSaving}
+            onClick={onConfirmInlineMove}
+            aria-label="Confirm move"
+          >
+            <OkIcon className="icon" />
+          </button>
+          <button
+            className="space-button enabled move-mode-button move-mode-icon-button move-mode-confirm-button"
+            onClick={onCancelInlineMove}
+            aria-label="Discard move"
+          >
+            <ConfirmCancelIcon className="icon" />
+          </button>
+          <div className="space-button empty" />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <button
+          className={`space-button move-mode-button move-mode-icon-button ${
+            canSetInlineMovePitch ? 'enabled' : 'disabled'
+          }`}
+          disabled={!canSetInlineMovePitch}
+          onClick={() => {
+            setIsMoveConfirming(false);
+            onSetInlineMovePitch?.();
+          }}
+          aria-label={`Move fixture to ${inlineMoveTargetPitch}`}
+        >
+          <SetLocationIcon className="icon" />
+        </button>
+        <button
+          className={`space-button move-mode-button move-mode-icon-button move-mode-pitch-button ${
+            canMoveInlineEarlier ? 'enabled' : 'disabled'
+          }`}
+          disabled={!canMoveInlineEarlier}
+          onClick={() => {
+            setIsMoveConfirming(false);
+            onMoveInlineEarlier?.();
+          }}
+          aria-label="Move fixture earlier"
+        >
+          <EarlierIcon className="icon" />
+        </button>
+        <button
+          className={`space-button move-mode-button move-mode-icon-button move-mode-pitch-button ${
+            canMoveInlineLater ? 'enabled' : 'disabled'
+          }`}
+          disabled={!canMoveInlineLater}
+          onClick={() => {
+            setIsMoveConfirming(false);
+            onMoveInlineLater?.();
+          }}
+          aria-label="Move fixture later"
+        >
+          <LaterIcon className="icon" />
+        </button>
+        <button
+          className={`space-button move-mode-button move-mode-icon-button move-mode-confirm-button ${
+            canConfirmInlineMove && !isInlineMoveSaving ? 'enabled' : 'disabled'
+          }`}
+          disabled={!canConfirmInlineMove || isInlineMoveSaving}
+          onClick={() => setIsMoveConfirming(true)}
+          aria-label="Review move"
+        >
+          <OkIcon className="icon" />
+        </button>
+      </>
+    );
+  };
 
   return (
-    <div className="updateFixture select-none">
-      <div className="button-grid">
-        {/* View button on the left */}
-        {infoButton && (
-          <button
-            className={`space-button info-button ${infoButton.getState()}`}
-            onClick={() => handleButtonClick(infoButton)}
-          >
-            <infoButton.Icon className="icon" />
-          </button>
+    <div className={`updateFixture select-none ${isInlineMoveMode ? 'has-move-mode' : ''}`}>
+      {isInlineMoveMode && (
+        <div className="move-mode-banner">
+          <span className="move-mode-banner__title">
+            Move on {inlineMoveTargetPitch || nextFixture.pitch}
+          </span>
+          {inlineMoveSummary && (
+            <span className="move-mode-banner__summary">{inlineMoveSummary}</span>
+          )}
+        </div>
+      )}
+      <div className={`button-grid ${isInlineMoveMode ? 'move-mode-grid' : ''}`}>
+        {!isInlineMoveMode && infoButton && (
+          <>
+            <button
+              className={`space-button info-button ${infoButton.getState()}`}
+              onClick={() => handleButtonClick(infoButton)}
+            >
+              <infoButton.Icon className="icon" />
+            </button>
+            <div className="button-divider" />
+          </>
         )}
-
-        {/* Divider */}
-        <div className="button-divider" />
 
         {/* Main action buttons on the right */}
         {isLocked ? (
@@ -327,7 +438,9 @@ const UpdateFixture = ({
         ) : (
           // Show main action buttons
           <>
-            {mainButtons.map((button) => {
+            {isInlineMoveMode
+              ? renderMoveModeButtons()
+              : mainButtons.map((button) => {
               const state = button.getState(hasStarted, hasResult, nextFixture);
               const isDisabled = state === 'disabled';
 
@@ -344,7 +457,7 @@ const UpdateFixture = ({
             })}
 
             {/* Generate placeholders only if we have fewer than 3 buttons */}
-            {mainButtons.length < 3 &&
+            {!isInlineMoveMode && mainButtons.length < 3 &&
               [...Array(3 - mainButtons.length)].map((_, i) => (
                 <div key={`empty-${i}`} className="space-button empty" />
               ))
@@ -357,8 +470,14 @@ const UpdateFixture = ({
         {activeDrawer === "postpone" && (
           <DrawerPostpone
             onClose={() => setActiveDrawer(null)}
-            onSubmit={async (fixtureId, targetPitch, placement) => {
-              await API.rescheduleMatch(nextFixture.tournamentId, targetPitch, nextFixture.id, fixtureId, placement);
+            onSubmit={async (targetFixtureId, targetPitch, placement) => {
+              await API.rescheduleMatch(
+                nextFixture.tournamentId,
+                targetPitch,
+                nextFixture.id,
+                targetFixtureId,
+                placement
+              );
               await fetchFixtures();
               setActiveDrawer(null);
             }}

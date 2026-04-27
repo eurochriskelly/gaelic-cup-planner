@@ -12,6 +12,35 @@
   // .bg fill is inherited from the SVG to show button backgrounds
   border-radius: 0.5rem;
   padding: 0;
+
+  &.has-move-mode {
+    height: 12.4rem;
+  }
+
+  .move-mode-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding-top: 0.6rem;
+    color: rgba(255, 255, 255, 0.94);
+    text-align: center;
+
+    &__title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    &__summary {
+      font-size: 1.15rem;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+  }
+
   .drawer {
     box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.5);
     min-height: 54rem;
@@ -164,6 +193,22 @@
     }
 }
 
+.updateFixture.has-move-mode {
+  .button-grid {
+    margin-top: 0.2rem;
+  }
+}
+
+.button-grid.move-mode-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 0;
+
+  .button-divider {
+    display: none;
+  }
+}
+
 .space-button {
   display: flex;
   align-items: center;
@@ -189,12 +234,44 @@
     width: 90%;
     height: 90%;
   }
-/* disabled state */
-&:disabled,
-&.disabled {
-  cursor: not-allowed;
-  opacity: 0.3;
+  /* disabled state */
+  &:disabled,
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
+  &.move-mode-button {
+    position: relative;
+  }
+
+  &.move-mode-icon-button {
+    &:disabled,
+    &.disabled {
+      background: transparent;
+      opacity: 0.45;
+    }
+  }
 }
+
+.move-mode-confirm-pair {
+  display: flex;
+  width: 100%;
+  max-width: 12rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+
+  .space-button {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0.1rem;
+
+    .icon {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .info-button {

@@ -29,12 +29,16 @@ const PitchSelector = ({
       {pitches.map((pitch) => {
         const status = pitchStatuses[pitch] || {};
         const isLive = !!status.hasLiveMatch;
+        const isComplete = !!status.isComplete;
         const liveMinutes = getLiveMinutes(status);
+        const lightStatus = isLive ? 'in-progress' : isComplete ? 'ready' : 'offline';
+        const statusText = isLive ? 'IN PLAY' : isComplete ? 'ALL DONE' : 'NO MATCH';
+        const minutesText = isLive && typeof liveMinutes === 'number' ? `${liveMinutes}m` : isComplete ? 'FT' : '--';
 
         return (
           <button
             key={pitch}
-            className={`pitch-tab ${selectedPitch === pitch ? 'active' : ''}`}
+            className={`pitch-tab ${selectedPitch === pitch ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
             onClick={() => onSelectPitch(pitch)}
           >
             <div className="pitch-icon-wrapper">
@@ -44,13 +48,13 @@ const PitchSelector = ({
 
             <div className="pitch-status-line">
               <span className="on-air-group">
-                <OnAirLight status={isLive ? 'in-progress' : 'offline'} />
-                <span className={`on-air-text ${isLive ? 'live' : 'idle'}`}>
-                  {isLive ? 'IN PLAY' : 'NO MATCH'}
+                <OnAirLight status={lightStatus} />
+                <span className={`on-air-text ${isLive ? 'live' : isComplete ? 'complete' : 'idle'}`}>
+                  {statusText}
                 </span>
               </span>
-              <span className="live-minutes">
-                {isLive && typeof liveMinutes === 'number' ? `${liveMinutes}m` : '--'}
+              <span className={`live-minutes ${isComplete ? 'complete' : ''}`}>
+                {minutesText}
               </span>
             </div>
           </button>

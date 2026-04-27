@@ -44,9 +44,9 @@ export default {
     }),
 
   // Reschedule a match
-  rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, newFixtureId, placement) =>
+  rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, targetFixtureId, placement) =>
     fetchApi(tournamentId, `${currentFixtureId}/reschedule`, 'POST', {
-      fixtureId: newFixtureId,
+      targetFixtureId,
       targetPitch,
       placement
     }),

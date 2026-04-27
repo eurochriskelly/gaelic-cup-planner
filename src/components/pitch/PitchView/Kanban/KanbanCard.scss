@@ -83,6 +83,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     outline: 3px solid red;
   }
 
+  &.inline-move-active {
+    outline: 3px solid rgba($pc, 0.9);
+    outline-offset: -3px;
+  }
+
+  &.inline-swap-target {
+    outline: 3px solid rgba($pc, 0.5);
+    outline-offset: -3px;
+  }
+
   .FixtureBar {
     margin-bottom: 0;
     position: relative;
@@ -125,6 +135,22 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     overflow: hidden;
     flex: 1;
     margin: $bwid;
+    position: relative;
+  }
+
+  .kanban-card-frame {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+
+    &.has-action-rail {
+      gap: 0.6rem;
+
+      .kanban-card-inner {
+        min-width: 0;
+        margin-right: 0;
+      }
+    }
   }
 
   &.lane-queued .kanban-card-inner,
@@ -139,8 +165,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   .kanban-card-content-wrapper {
     padding: 0.75rem;
     flex-grow: 1; // If the card content needs to expand
+    position: relative;
   }
-    
+
+  &.inline-move-active .kanban-card-content-wrapper,
+  &.inline-move-context .kanban-card-content-wrapper {
+    padding: 0.4rem 0.65rem;
+    display: flex;
+    align-items: center;
+  }
+
   // Styles for elements within .kanban-card-content-wrapper
   .teams-container {
     display: flex;
@@ -148,6 +182,39 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       width: 100%;
       margin-bottom: 10px;
       padding: 0 0.5rem 1rem 0.5rem;
+
+      &.teams-container-move-mode {
+        padding: 0 0.15rem 0 0.1rem;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        align-self: stretch;
+        justify-content: center;
+      }
+
+      .teams-stack-row {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        width: 100%;
+
+        .team-row-inline-move {
+          margin-bottom: 0;
+        }
+
+        .inline-move-vs-row {
+          top: 50%;
+          left: 0.55rem;
+          transform: translateY(-50%);
+          margin-left: 0;
+          width: 2.1rem;
+          height: 2.1rem;
+          font-size: 1rem;
+          padding-top: 0.2rem;
+          border-width: 0.16rem;
+          pointer-events: none;
+        }
+      }
     
       .team-row {
         display: flex;
@@ -345,6 +412,67 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
   }
 
+  .inline-move-action-rail {
+    width: 8rem;
+    margin: $bwid $bwid $bwid 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0.6rem 0.5rem;
+    background: rgba(48, 56, 26, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 1.35rem;
+    box-shadow: 0 0.45rem 1.2rem rgba(0, 0, 0, 0.26);
+  }
+
+  .inline-move-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .inline-move-button,
+  .inline-swap-button {
+    border: 0;
+    border-radius: 1.1rem;
+    background: rgba(255, 255, 255, 0.96);
+    color: #2f3142;
+    box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.14);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .inline-move-button {
+    width: 100%;
+    height: 5.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.05rem;
+
+    &:disabled {
+      opacity: 0.35;
+    }
+  }
+
+  .inline-swap-button {
+    width: 100%;
+    min-height: 5.15rem;
+    padding: 0.9rem 0.85rem;
+    font-size: 1.35rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+
+    &.selected {
+      background: rgba($pc, 0.14);
+      color: $pc-dark-30;
+      box-shadow: 0 0 0 0.2rem rgba($pc, 0.14);
+    }
+  }
+
   /* Responsive adjustments for mobile */
   @media (max-width: 576px) {
     width: 100%;
@@ -355,6 +483,36 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       /* Ensure team-name components render properly on small screens */
       max-width: 100%;
       overflow-x: hidden;
+    }
+  }
+
+  &.inline-move-active,
+  &.inline-move-context {
+    .FixtureBar {
+      padding: 0.28rem 0.6rem;
+
+      .fixture-id,
+      .category,
+      .stage {
+        font-size: 1.35rem;
+      }
+    }
+
+    .scheduled-time-indicator {
+      margin: 0.18rem 0 0 0.55rem;
+      font-size: 1.08rem;
+
+      .clock-icon {
+        transform: scale(0.86);
+        transform-origin: left center;
+      }
+    }
+
+    .teams-container-move-mode {
+      .team-row team-name {
+        max-width: 100%;
+        overflow: hidden;
+      }
     }
   }
 }
