@@ -375,6 +375,7 @@ const PinLogin = () => {
           </button>
         )}
       </div>
+      <div className="bottom-gradient-bg"></div>
       <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
     </>
   );
