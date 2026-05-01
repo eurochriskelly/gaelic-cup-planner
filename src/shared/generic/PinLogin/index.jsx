@@ -37,16 +37,29 @@ const PinLogin = () => {
   const tournamentHeading = tournamentHeadingByRole[currentRole] || tournamentHeadingByRole.spectator;
 
   useEffect(() => {
-    const requestedRole = new URLSearchParams(location.search).get('role')?.toLowerCase();
+    const params = new URLSearchParams(location.search);
+    const requestedRole = params.get('role')?.toLowerCase();
     const validRoles = ['spectator', ...pinProtectedRoles];
 
-    if (requestedRole && validRoles.includes(requestedRole) && requestedRole !== currentRole) {
-      setUserRoleAndCookie(requestedRole);
-      setSelectedTournament(null);
-      setPin(["", "", "", ""]);
-      setMessage("");
+    if (requestedRole && validRoles.includes(requestedRole)) {
+      if (requestedRole !== currentRole) {
+        setUserRoleAndCookie(requestedRole);
+        setSelectedTournament(null);
+        setPin(["", "", "", ""]);
+        setMessage("");
+      }
+
+      params.delete('role');
+      const nextSearch = params.toString();
+      navigate(
+        {
+          pathname: location.pathname,
+          search: nextSearch ? `?${nextSearch}` : '',
+        },
+        { replace: true },
+      );
     }
-  }, [location.search, currentRole, setUserRoleAndCookie]);
+  }, [location.pathname, location.search, currentRole, navigate, setUserRoleAndCookie]);
 
   useEffect(() => {
     // Check for auth bypass in development
@@ -135,6 +148,19 @@ const PinLogin = () => {
     setSelectedTournament(null); // Ensure we are on tournament list view
     setPin(["", "", "", ""]);    // Clear any stale PIN
     setMessage("");             // Clear any stale message
+
+    if (new URLSearchParams(location.search).has('role')) {
+      const params = new URLSearchParams(location.search);
+      params.delete('role');
+      const nextSearch = params.toString();
+      navigate(
+        {
+          pathname: location.pathname,
+          search: nextSearch ? `?${nextSearch}` : '',
+        },
+        { replace: true },
+      );
+    }
   };
 
   const directNavigateToTournament = (tournamentId) => {
