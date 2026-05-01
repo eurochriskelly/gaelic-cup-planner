@@ -12,7 +12,7 @@ export const Provider = ({ children }) => {
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
   const [sections, setSections] = useState([]);
-  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'coordinator');
+  const [userRole, setUserRole] = useState(() => Cookies.get("ppUserRole") || 'spectator');
   const [userName, setUserName] = useState(() => Cookies.get("ppUserName") || "");
   
   // Add state for filter selections
@@ -48,7 +48,7 @@ export const Provider = ({ children }) => {
   };
 
   const resetUserContext = () => {
-    setUserRole('coordinator');
+    setUserRole('spectator');
     Cookies.remove("ppUserRole");
     clearFilterSelections();
     setUserNameAndCookie("");

@@ -50,6 +50,14 @@ export function InstallPrompt() {
     setIsVisible(false)
   }
 
+  useEffect(() => {
+    document.body.classList.toggle("install-prompt-visible", isVisible)
+
+    return () => {
+      document.body.classList.remove("install-prompt-visible")
+    }
+  }, [isVisible])
+
   if (!isVisible) return null
 
   return (

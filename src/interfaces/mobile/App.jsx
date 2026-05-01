@@ -49,6 +49,10 @@ function AppContent() {
                  element={<PinLogin />} />
           <Route path="/tournament/:tournamentId"
                  element={<SelectTournamentView />} />
+          <Route path="/tournament/:tournamentId/selectCategory"
+                 element={<SelectTournamentView />} />
+          <Route path="/tournament/:tournamentId/category/:category"
+                 element={<TournamentView role />} />
           <Route path="*"
                  element={<Navigate to="/" replace />} />
         </Routes>
