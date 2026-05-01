@@ -40,6 +40,7 @@ const UpdateFixture = ({
    canMoveInlineEarlier = false,
    canMoveInlineLater = false,
    canStartInlineMove = false,
+   isInlineMoveUnchanged = false,
    isInlineMoveSaving = false,
  }) => {
   const { fetchFixtures, startMatch } = useFixtureContext();
@@ -379,10 +380,20 @@ const UpdateFixture = ({
             canConfirmInlineMove && !isInlineMoveSaving ? 'enabled' : 'disabled'
           }`}
           disabled={!canConfirmInlineMove || isInlineMoveSaving}
-          onClick={() => setIsMoveConfirming(true)}
-          aria-label="Review move"
+          onClick={() => {
+            if (isInlineMoveUnchanged) {
+              onCancelInlineMove?.();
+              return;
+            }
+            setIsMoveConfirming(true);
+          }}
+          aria-label={isInlineMoveUnchanged ? 'Close move mode' : 'Review move'}
         >
-          <OkIcon className="icon" />
+          {isInlineMoveUnchanged ? (
+            <CloseIcon className="icon" />
+          ) : (
+            <OkIcon className="icon" />
+          )}
         </button>
       </>
     );

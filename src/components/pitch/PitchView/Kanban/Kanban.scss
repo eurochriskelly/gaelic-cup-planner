@@ -247,6 +247,26 @@
             opacity: 0.8;
           }
         }
+
+        .not-coordinating-pitch-banner {
+          width: 100%;
+          min-height: 9rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #62665d;
+          color: rgba(255, 255, 255, 0.78);
+          font-size: 2rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          text-align: center;
+          padding: 0 1.2rem;
+
+          span {
+            opacity: 0.9;
+          }
+        }
     }
   }
 

@@ -7,17 +7,56 @@ const FixtureContext = createContext();
 
 export const useFixtureContext = () => useContext(FixtureContext);
 
+const normalizePitchId = (value) => {
+  if (value === null || value === undefined) return null;
+  return `${value}`.trim() || null;
+};
+
+const getCoordinatedPitches = (filterSelections = {}) => {
+  const primary = normalizePitchId(filterSelections.pitches?.primary);
+  const additional = Array.isArray(filterSelections.pitches?.additional)
+    ? filterSelections.pitches.additional.map(normalizePitchId)
+    : [];
+  const legacy = Array.isArray(filterSelections.Pitches)
+    ? filterSelections.Pitches.map(normalizePitchId)
+    : [];
+
+  return Array.from(new Set([primary, ...additional, ...legacy].filter(Boolean)));
+};
+
+const withoutPitchFilter = (filterSelections = {}) => {
+  const { pitches, Pitches, ...remainingFilters } = filterSelections;
+  return remainingFilters;
+};
+
+const normalizePitchList = (response) => {
+  const pitchList = Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(response)
+      ? response
+      : [];
+
+  return Array.from(new Set(
+    pitchList
+      .map((pitch, index) => normalizePitchId(pitch?.pitch || pitch?.id || pitch?.name || `Pitch ${index + 1}`))
+      .filter(Boolean)
+  ));
+};
+
 export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
   const [fixture, setFixture] = useState(null);
   const [fixtures, setFixtures] = useState([]);
   const [nextFixture, setNextFixture] = useState(null);
+  const [allPitches, setAllPitches] = useState([]);
   const { 
     userRole, 
     filterSelections, 
   } = useAppContext();
+  const coordinatedPitches = getCoordinatedPitches(filterSelections);
+  const fixtureFilter = withoutPitchFilter(filterSelections);
 
   const fetchFixtures = async (progress = false) => {
-    const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections);
+    const { data } = await API.fetchFilteredFixtures(tournamentId, fixtureFilter);
     const fixturesData = data || [];
     setFixtures(fixturesData);
     if (progress) {
@@ -47,14 +86,22 @@ export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
 
   useEffect(() => {
     const initialFetch = async () => {
-      const { data } = await API.fetchFilteredFixtures(tournamentId, filterSelections)
+      const { data } = await API.fetchFilteredFixtures(tournamentId, fixtureFilter)
       const fixturesData = data || [];
       setFixtures(fixturesData);
       const nextFixture = fixturesData.find((f) => !f.played);
       setNextFixture(nextFixture);
     };
     initialFetch();
-  }, [tournamentId, pitchId]);
+  }, [tournamentId, pitchId, filterSelections]);
+
+  useEffect(() => {
+    if (!tournamentId) return;
+
+    API.fetchPitches(tournamentId)
+      .then((response) => setAllPitches(normalizePitchList(response)))
+      .catch(() => setAllPitches([]));
+  }, [tournamentId]);
 
   return (
     <FixtureContext.Provider value={{ 
@@ -63,7 +110,11 @@ export const FixtureProvider = ({ tournamentId, pitchId, children }) => {
         nextFixture, 
         fetchFixture, 
         fetchFixtures, 
-        startMatch 
+        startMatch,
+        tournamentId,
+        pitchId,
+        allPitches,
+        coordinatedPitches
       }}>
       {children}
     </FixtureContext.Provider>

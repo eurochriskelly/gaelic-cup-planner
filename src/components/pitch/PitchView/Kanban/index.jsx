@@ -123,7 +123,14 @@ const getKanbanColumnLogic = (fixture) => {
 const Kanban = ({
   moveToNextFixture,
 }) => {
-  const { fixtures: initialFixtures, fetchFixtures, tournamentId, pitchId } = useFixtureContext();
+  const {
+    fixtures: initialFixtures,
+    fetchFixtures,
+    tournamentId,
+    pitchId,
+    allPitches,
+    coordinatedPitches,
+  } = useFixtureContext();
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
    // New state to track if details panel should be shown
@@ -155,8 +162,16 @@ const Kanban = ({
 
   // Derive available pitches for the selector (exclude 'All Pitches')
   const availablePitches = useMemo(() => {
-    return pitches.filter(p => p !== 'All Pitches').sort();
-  }, [pitches]);
+    const pitchOptions = allPitches?.length
+      ? allPitches
+      : pitches.filter(p => p !== 'All Pitches');
+
+    return Array.from(new Set(pitchOptions.filter(Boolean))).sort();
+  }, [allPitches, pitches]);
+  const coordinatedPitchSet = useMemo(
+    () => new Set(coordinatedPitches || []),
+    [coordinatedPitches]
+  );
 
   // State for the focused pitch in the top section
   const [focusedPitch, setFocusedPitch] = useState(null);
@@ -226,14 +241,27 @@ const Kanban = ({
   const inlineMoveCurrentIndex = selectedFixture
     ? inlineMove?.previewOrderIds?.indexOf(selectedFixture.id) ?? -1
     : -1;
+  const inlineMoveSlackMinutes = inlineMove?.slackMinutes || 0;
+  const hasInlineMoveSlack = inlineMoveSlackMinutes !== 0;
   const inlineMoveSwapFixture = inlineMove?.swapFixtureId
     ? inlineMoveFixturesById.get(inlineMove.swapFixtureId) || null
     : null;
   const inlineMoveHasReferenceFixture = inlineMovePreviewFixtures.length > 1;
+  const inlineMoveHasPositionChange =
+    isInlineMoveActive &&
+    selectedFixture &&
+    (activeMovePitch !== selectedFixture.pitch ||
+      !!inlineMove?.swapFixtureId ||
+      !areMoveOrdersEqual(
+        inlineMove.previewOrderIds || [],
+        initialInlineMoveOrderIds
+      ));
+  const canAdjustInlineSlack = isInlineMoveActive && !inlineMoveHasPositionChange;
   const inlineMoveIsUnchanged =
     isInlineMoveActive &&
     activeMovePitch === selectedFixture.pitch &&
     !inlineMove?.swapFixtureId &&
+    inlineMoveSlackMinutes === 0 &&
     areMoveOrdersEqual(
       inlineMove.previewOrderIds || [],
       initialInlineMoveOrderIds
@@ -279,7 +307,9 @@ const Kanban = ({
   const canConfirmInlineMove = isInlineMoveActive
     ? inlineMoveIsUnchanged
       ? true
-      : Boolean(
+      : hasInlineMoveSlack
+        ? !isInlineMoveSaving
+        : Boolean(
           activeMovePitch &&
             resolvedInlineMove.placement &&
             resolvedInlineMove.targetFixture?.id &&
@@ -288,6 +318,8 @@ const Kanban = ({
     : false;
 
   const boardPitch = focusedPitch;
+  const hasManagedPitchSelection = coordinatedPitchSet.size > 0;
+  const isCoordinatingBoardPitch = !hasManagedPitchSelection || coordinatedPitchSet.has(boardPitch);
   const isViewingInlineMoveTarget =
     isInlineMoveActive && boardPitch === activeMovePitch;
   const boardFixtureSource = useMemo(() => {
@@ -453,6 +485,7 @@ const Kanban = ({
          initialFixtures || []
        ),
        swapFixtureId: null,
+       slackMinutes: 0,
      });
      setFocusedPitch(targetPitch);
    };
@@ -463,7 +496,7 @@ const Kanban = ({
    };
 
    const setInlineMovePitch = (nextPitch) => {
-     if (!selectedFixture || !nextPitch) return;
+     if (!selectedFixture || !nextPitch || hasInlineMoveSlack) return;
 
      setInlineMove({
        targetPitch: nextPitch,
@@ -473,6 +506,29 @@ const Kanban = ({
          initialFixtures || []
        ),
        swapFixtureId: null,
+       slackMinutes: 0,
+     });
+   };
+
+   const adjustInlineMoveSlack = (deltaMinutes) => {
+     if (!selectedFixture || !deltaMinutes) return;
+
+     setInlineMove((previousMove) => {
+       if (!previousMove) return previousMove;
+       const hasPositionChange =
+         previousMove.targetPitch !== selectedFixture.pitch ||
+         !!previousMove.swapFixtureId ||
+         !areMoveOrdersEqual(
+           previousMove.previewOrderIds || [],
+           initialInlineMoveOrderIds
+         );
+
+       if (hasPositionChange) return previousMove;
+
+       return {
+         ...previousMove,
+         slackMinutes: (previousMove.slackMinutes || 0) + deltaMinutes,
+       };
      });
    };
 
@@ -482,7 +538,7 @@ const Kanban = ({
    };
 
    const moveInlineFixture = (offset) => {
-     if (!selectedFixture) return;
+     if (!selectedFixture || hasInlineMoveSlack) return;
 
      setInlineMove((previousMove) => {
        if (!previousMove) return previousMove;
@@ -508,12 +564,13 @@ const Kanban = ({
          ...previousMove,
          previewOrderIds: nextOrder,
          swapFixtureId: null,
+         slackMinutes: 0,
        };
      });
    };
 
    const swapInlineFixture = (fixtureId) => {
-     if (!selectedFixture || !fixtureId) return;
+     if (!selectedFixture || !fixtureId || hasInlineMoveSlack) return;
 
      setInlineMove((previousMove) => {
        if (!previousMove || fixtureId === selectedFixture.id) return previousMove;
@@ -534,8 +591,9 @@ const Kanban = ({
        return {
          ...previousMove,
          previewOrderIds: nextOrder,
-         swapFixtureId:
+          swapFixtureId:
            previousMove.swapFixtureId === fixtureId ? null : fixtureId,
+         slackMinutes: 0,
        };
      });
    };
@@ -550,13 +608,21 @@ const Kanban = ({
 
      try {
        setIsInlineMoveSaving(true);
-       await API.rescheduleMatch(
-         selectedFixture.tournamentId,
-         activeMovePitch,
-         selectedFixture.id,
-         resolvedInlineMove.targetFixture.id,
-         resolvedInlineMove.placement
-       );
+       if (hasInlineMoveSlack) {
+         await API.slackMatch(
+           selectedFixture.tournamentId,
+           selectedFixture.id,
+           inlineMoveSlackMinutes
+         );
+       } else {
+         await API.rescheduleMatch(
+           selectedFixture.tournamentId,
+           activeMovePitch,
+           selectedFixture.id,
+           resolvedInlineMove.targetFixture.id,
+           resolvedInlineMove.placement
+         );
+       }
        await fetchFixtures(true);
        setRecentlyMovedFixtureId(selectedFixture.id);
        setTimeout(() => setRecentlyMovedFixtureId(null), 2000);
@@ -572,7 +638,20 @@ const Kanban = ({
    const handleFocusedPitchSelect = (nextPitch) => {
      if (!nextPitch) return;
      setFocusedPitch(nextPitch);
+     setSelectedFixture(null);
+     setShowingDetails(false);
+     if (inlineMove) {
+       cancelInlineMoveMode();
+     }
    };
+
+  useEffect(() => {
+    if (isCoordinatingBoardPitch) return;
+    setShowingDetails(false);
+    if (inlineMove) {
+      cancelInlineMoveMode();
+    }
+  }, [isCoordinatingBoardPitch]);
 
   const sortFixturesForDisplay = (fixtures) => {
     if (!isInlineMoveActive) return fixtures;
@@ -614,6 +693,8 @@ const Kanban = ({
 
   const inlineMoveSummary = inlineMoveIsUnchanged
     ? 'Choose a pitch or move the fixture earlier/later'
+    : hasInlineMoveSlack
+      ? `Apply ${inlineMoveSlackMinutes > 0 ? '+' : ''}${inlineMoveSlackMinutes}m slack`
     : inlineMoveSwapFixture
       ? `Swap with ${formatInlineMoveFixtureLabel(inlineMoveSwapFixture)}`
       : resolvedInlineMove.targetFixture
@@ -663,6 +744,7 @@ const Kanban = ({
                   selectedPitch={boardPitch}
                   onSelectPitch={handleFocusedPitchSelect}
                   pitchStatuses={pitchStatuses}
+                  coordinatedPitches={coordinatedPitches}
                 />
               </div>
 
@@ -675,9 +757,9 @@ const Kanban = ({
                     title="Queued"
                     columnIndex={0} // Logical index for 'queued'
                     fixtures={queuedFixtures}
-                    onDrop={(e) => onDrop(e, 'queued')}
+                    onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'queued')}
                     onDragOver={onDragOver}
-                    onDragStart={onDragStart}
+                    onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
                     handleFixtureClick={handleFixtureClick}
                     selectedFixture={selectedFixture}
                     getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
@@ -696,6 +778,9 @@ const Kanban = ({
                       inlineMoveCurrentIndex > -1 &&
                       inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
                     }
+                    inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+                    onAdjustInlineSlack={adjustInlineMoveSlack}
+                    canAdjustInlineSlack={canAdjustInlineSlack}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -705,9 +790,9 @@ const Kanban = ({
                     columnIndex={2} // Logical index for 'started'
                     fixtures={startedFixtures}
                     allPlannedFixtures={globalPlannedFixtures}
-                    onDrop={(e) => onDrop(e, 'started')}
+                    onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'started')}
                     onDragOver={onDragOver}
-                    onDragStart={onDragStart}
+                    onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
                     handleFixtureClick={handleFixtureClick}
                     selectedFixture={selectedFixture}
                     getPitchColor={getPitchColor}
@@ -726,6 +811,9 @@ const Kanban = ({
                       inlineMoveCurrentIndex > -1 &&
                       inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
                     }
+                    inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+                    onAdjustInlineSlack={adjustInlineMoveSlack}
+                    canAdjustInlineSlack={canAdjustInlineSlack}
                   />
 
                   {showPitchCompleteBanner && (
@@ -748,9 +836,9 @@ const Kanban = ({
                 title={isInlineMoveActive ? 'Queued / Planned' : 'Planned'}
                 columnIndex={1} // Logical index for 'planned'
                 fixtures={plannedFixtures}
-                onDrop={(e) => onDrop(e, 'planned')}
+                onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'planned')}
                 onDragOver={onDragOver}
-                onDragStart={onDragStart}
+                onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
                 handleFixtureClick={handleFixtureClick}
                 selectedFixture={selectedFixture}
                 getPitchColor={getPitchColor}
@@ -769,6 +857,9 @@ const Kanban = ({
                   inlineMoveCurrentIndex > -1 &&
                   inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
                 }
+                inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+                onAdjustInlineSlack={adjustInlineMoveSlack}
+                canAdjustInlineSlack={canAdjustInlineSlack}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -777,9 +868,9 @@ const Kanban = ({
                   title="Finished"
                   columnIndex={3} // Logical index for 'finished'
                   fixtures={finishedFixtures}
-                  onDrop={(e) => onDrop(e, 'finished')}
+                  onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'finished')}
                   onDragOver={onDragOver}
-                  onDragStart={onDragStart}
+                  onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
                   handleFixtureClick={handleFixtureClick}
                   selectedFixture={selectedFixture}
                   getPitchColor={getPitchColor}
@@ -798,12 +889,19 @@ const Kanban = ({
                     inlineMoveCurrentIndex > -1 &&
                     inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
                   }
+                  inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+                  onAdjustInlineSlack={adjustInlineMoveSlack}
+                  canAdjustInlineSlack={canAdjustInlineSlack}
                 />
               )}
                
                 {/* Action panel with buttons - positioned at row 4 */}
                 <div className="kanban-action-panel">
-                  {selectedFixture ? (
+                  {!isCoordinatingBoardPitch ? (
+                    <div className="not-coordinating-pitch-banner">
+                      <span>You are not coordinating this pitch</span>
+                    </div>
+                  ) : selectedFixture ? (
                     <UpdateFixture
                       moveToNextFixture={moveToNextFixture}
                       fixture={selectedFixture}
@@ -820,13 +918,23 @@ const Kanban = ({
                       onMoveInlineLater={() => moveInlineFixture(1)}
                       onConfirmInlineMove={confirmInlineMove}
                       canConfirmInlineMove={canConfirmInlineMove}
-                      canSetInlineMovePitch={Boolean(focusedPitch) && !isViewingInlineMoveTarget}
-                      canMoveInlineEarlier={isViewingInlineMoveTarget && inlineMoveCurrentIndex > 0}
+                      canSetInlineMovePitch={
+                        !hasInlineMoveSlack &&
+                        Boolean(focusedPitch) &&
+                        !isViewingInlineMoveTarget
+                      }
+                      canMoveInlineEarlier={
+                        !hasInlineMoveSlack &&
+                        isViewingInlineMoveTarget &&
+                        inlineMoveCurrentIndex > 0
+                      }
                       canMoveInlineLater={
+                        !hasInlineMoveSlack &&
                         isViewingInlineMoveTarget &&
                         inlineMoveCurrentIndex > -1 &&
                         inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
                       }
+                      isInlineMoveUnchanged={inlineMoveIsUnchanged}
                       canStartInlineMove={Boolean(
                         selectedFixture &&
                           !showingDetails &&

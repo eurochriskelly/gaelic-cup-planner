@@ -26,6 +26,9 @@ const KanbanColumn = ({
    onInlineSwap,
    canInlineMoveUp,
    canInlineMoveDown,
+   inlineMoveSlackMinutes,
+   onAdjustInlineSlack,
+   canAdjustInlineSlack,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -87,6 +90,9 @@ const KanbanColumn = ({
                onInlineSwap={onInlineSwap}
                canInlineMoveUp={canInlineMoveUp}
                canInlineMoveDown={canInlineMoveDown}
+               inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+               onAdjustInlineSlack={onAdjustInlineSlack}
+               canAdjustInlineSlack={canAdjustInlineSlack}
              />
            )}
         </KanbanSlot>
@@ -130,6 +136,9 @@ const KanbanColumn = ({
                onInlineSwap={onInlineSwap}
                canInlineMoveUp={canInlineMoveUp}
                canInlineMoveDown={canInlineMoveDown}
+               inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+               onAdjustInlineSlack={onAdjustInlineSlack}
+               canAdjustInlineSlack={canAdjustInlineSlack}
              />
            )}
         </KanbanSlot>

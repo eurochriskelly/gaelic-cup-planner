@@ -7,7 +7,10 @@ const TimeDisplay = ({
   startedTime = null,
   started = null,
   durationPlanned = null,
-  isOngoing = false
+  isOngoing = false,
+  showSlackControls = false,
+  slackMinutes = 0,
+  onAdjustSlack,
 }) => {
   // Calculate countdown time remaining
   const getTimeRemaining = useCallback(() => {
@@ -123,14 +126,47 @@ const TimeDisplay = ({
   const plannedDuration = durationPlanned ? formatDuration(durationPlanned) : null;
 
   return (
-    <div className="time-display">
-      <svg className="clock-icon" viewBox="0 0 24 24" width="35" height="35" fill="currentColor">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
-        <polyline points="12,6 12,12 16,14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
+    <div className={`time-display ${showSlackControls ? 'with-slack-controls' : ''}`}>
+      <div className="clock-stack">
+        {showSlackControls && (
+          <button
+            type="button"
+            className="slack-button slack-button-plus"
+            onClick={(event) => {
+              event.stopPropagation();
+              onAdjustSlack?.(5);
+            }}
+            aria-label="Add 5 minutes slack"
+          >
+            + 5m
+          </button>
+        )}
+        <svg className="clock-icon" viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+          <polyline points="12,6 12,12 16,14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        {showSlackControls && (
+          <button
+            type="button"
+            className="slack-button slack-button-minus"
+            onClick={(event) => {
+              event.stopPropagation();
+              onAdjustSlack?.(-5);
+            }}
+            aria-label="Reduce slack by 5 minutes"
+          >
+            - 5m
+          </button>
+        )}
+      </div>
       <div className="time-text">
         <span className="scheduled-time">{scheduledTime}</span>
         <span className="match-duration">[{plannedDuration || '?m'}]</span>
+        {showSlackControls && slackMinutes !== 0 && (
+          <span className={`slack-delta ${slackMinutes > 0 ? 'positive' : 'negative'}`}>
+            {slackMinutes > 0 ? '+' : ''}{slackMinutes}m
+          </span>
+        )}
         {isOngoing && countdown && (
           <span className={`countdown ${countdown.isOver ? 'overtime' : 'remaining'}`}>
             ({countdown.text})
@@ -151,7 +187,10 @@ TimeDisplay.propTypes = {
   startedTime: PropTypes.string,
   started: PropTypes.string,
   durationPlanned: PropTypes.number,
-  isOngoing: PropTypes.bool
+  isOngoing: PropTypes.bool,
+  showSlackControls: PropTypes.bool,
+  slackMinutes: PropTypes.number,
+  onAdjustSlack: PropTypes.func
 };
 
 

@@ -147,5 +147,29 @@
       background: linear-gradient(135deg, #e3f0c7, #d2e2a8);
       box-shadow: 0 0 0 2px rgba(73, 103, 18, 0.28), 0 2px 6px rgba(30, 41, 27, 0.18);
     }
+
+    &.unmanaged {
+      border-color: #a8ada0;
+      background: repeating-linear-gradient(
+        45deg,
+        #d7d9d1,
+        #d7d9d1 12px,
+        #e3e5dd 12px,
+        #e3e5dd 24px
+      );
+      color: #7b8175;
+      filter: grayscale(1);
+      opacity: 0.66;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.active {
+        border-color: #6f756a;
+        box-shadow: 0 0 0 2px rgba(80, 86, 76, 0.18), 0 2px 6px rgba(30, 41, 27, 0.12);
+        color: #5f655b;
+      }
+    }
   }
 }

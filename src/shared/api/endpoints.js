@@ -48,7 +48,12 @@ export default {
     fetchApi(tournamentId, `${currentFixtureId}/reschedule`, 'POST', {
       targetFixtureId,
       targetPitch,
-      placement
+      placement,
+    }),
+
+  slackMatch: (tournamentId, fixtureId, minutes) =>
+    fetchApi(tournamentId, `${fixtureId}/slack`, 'POST', {
+      minutes,
     }),
 
   // Fetch all fixtures for the tournament (used in DrawerPostpone)

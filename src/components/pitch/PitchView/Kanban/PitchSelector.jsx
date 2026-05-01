@@ -8,8 +8,11 @@ const PitchSelector = ({
   selectedPitch,
   onSelectPitch,
   pitchStatuses = {},
+  coordinatedPitches = [],
 }) => {
   const [nowMs, setNowMs] = useState(Date.now());
+  const coordinatedPitchSet = new Set(coordinatedPitches);
+  const hasManagedPitchSelection = coordinatedPitchSet.size > 0;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,6 +31,7 @@ const PitchSelector = ({
     <div className="pitch-selector">
       {pitches.map((pitch) => {
         const status = pitchStatuses[pitch] || {};
+        const isCoordinated = !hasManagedPitchSelection || coordinatedPitchSet.has(pitch);
         const isLive = !!status.hasLiveMatch;
         const isComplete = !!status.isComplete;
         const liveMinutes = getLiveMinutes(status);
@@ -38,8 +42,9 @@ const PitchSelector = ({
         return (
           <button
             key={pitch}
-            className={`pitch-tab ${selectedPitch === pitch ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
+            className={`pitch-tab ${selectedPitch === pitch ? 'active' : ''} ${isComplete ? 'complete' : ''} ${!isCoordinated ? 'unmanaged' : ''}`}
             onClick={() => onSelectPitch(pitch)}
+            aria-label={`${pitch}${isCoordinated ? '' : ', not coordinated by you'}`}
           >
             <div className="pitch-icon-wrapper">
               <PitchIcon width={80} height={60} />

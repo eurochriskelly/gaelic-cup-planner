@@ -24,6 +24,9 @@ const KanbanCard = ({
   onInlineSwap,
   canInlineMoveUp,
   canInlineMoveDown,
+  inlineMoveSlackMinutes = 0,
+  onAdjustInlineSlack,
+  canAdjustInlineSlack = true,
 }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
   const displayStage = fixture.stage
@@ -106,10 +109,28 @@ const KanbanCard = ({
   const team1Name = fixture.team1 || 'TBD'
   const team2Name = fixture.team2 || 'TBD'
   const moveModeTeamStyle = isInlineMoveListCard
-    ? { ...teamStyle, fontSize: '1.36em', marginLeft: '-0.15rem' }
+    ? { ...teamStyle, fontSize: '1.63em', marginLeft: '-0.15rem' }
     : teamStyle
   const teamHeight = isInlineMoveListCard ? '42px' : '50px'
+  const moveModeLogoSize = '5.1rem'
   const teamMaxChars = isInlineMoveListCard ? '24' : '28'
+  const addMinutesToTime = (time, minutesToAdd) => {
+    if (!time || !minutesToAdd) return time
+
+    const match = `${time}`.match(/^(\d{1,2}):(\d{2})$/)
+    if (!match) return time
+
+    const [, hours, minutes] = match
+    const totalMinutes = Number(hours) * 60 + Number(minutes) + minutesToAdd
+    const normalizedMinutes = ((totalMinutes % 1440) + 1440) % 1440
+    const nextHours = Math.floor(normalizedMinutes / 60)
+    const nextMinutes = normalizedMinutes % 60
+
+    return `${String(nextHours).padStart(2, '0')}:${String(nextMinutes).padStart(2, '0')}`
+  }
+  const displayedScheduledTime = isInlineMoveCard
+    ? addMinutesToTime(fixture.scheduledTime, inlineMoveSlackMinutes)
+    : fixture.scheduledTime
 
   return (
     <div
@@ -119,6 +140,8 @@ const KanbanCard = ({
       className={`kanban-card ${isSelected ? 'selected' : ''} ${
         isRecentlyMoved ? 'recently-moved' : ''
       } ${isInlineMoveCard ? 'inline-move-active' : ''} ${
+        isInlineMoveListCard ? 'inline-move-list' : ''
+      } ${
         showInlineSwapAction ? 'inline-move-context' : ''
       } ${isInlineSwapTarget ? 'inline-swap-target' : ''} lane-${laneClass}`}
     >
@@ -142,11 +165,14 @@ const KanbanCard = ({
           )}
           {fixture.scheduledTime ? (
             <TimeDisplay
-              scheduledTime={fixture.scheduledTime}
+              scheduledTime={displayedScheduledTime}
               startedTime={fixture.startedTime}
               started={fixture.started || fixture.actualStartedTime}
               durationPlanned={fixture.durationPlanned}
               isOngoing={isOngoing}
+              showSlackControls={isInlineMoveCard && canAdjustInlineSlack}
+              slackMinutes={inlineMoveSlackMinutes}
+              onAdjustSlack={onAdjustInlineSlack}
             />
           ) : (
             <div style={{ height: '2.4rem' }}>&nbsp;</div>
@@ -155,25 +181,25 @@ const KanbanCard = ({
             <div className={`teams-container ${isInlineMoveListCard ? 'teams-container-move-mode' : ''}`}>
               {isInlineMoveListCard ? (
                 <div className="teams-stack-row">
+                  <span className="inline-move-vs-row">vs</span>
                   <div className="team-row team-row-inline-move">
+                    <logo-box size={moveModeLogoSize} title={team1Name}></logo-box>
                     <team-name
                       style={moveModeTeamStyle}
                       name={team1Name}
-                      showLogo="true"
+                      showLogo="false"
                       height={teamHeight}
                       maxchars={teamMaxChars}
-                      logo-margin-right="0.45rem"
                     ></team-name>
                   </div>
-                  <div className="vs-row inline-move-vs-row">vs</div>
                   <div className="team-row team-row-inline-move">
+                    <logo-box size={moveModeLogoSize} title={team2Name}></logo-box>
                     <team-name
                       style={moveModeTeamStyle}
                       name={team2Name}
-                      showLogo="true"
+                      showLogo="false"
                       height={teamHeight}
                       maxchars={teamMaxChars}
-                      logo-margin-right="0.45rem"
                     ></team-name>
                   </div>
                 </div>
