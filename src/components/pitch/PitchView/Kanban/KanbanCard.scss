@@ -229,6 +229,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       width: 100%;
       margin-bottom: 10px;
       padding: 0 0.5rem 1rem 0.5rem;
+      position: relative;
 
       &.teams-container-move-mode {
         padding: 0 0.15rem 0 0.1rem;
@@ -386,14 +387,15 @@ $bcol: saturate(lighten($sc, 5%), 30%);
         background: white;
         border: 0.2rem solid #aaa;
         border-radius: 100rem;
-        margin-left: 0.64rem;
         text-align: center;
         padding: 0;
         padding-top: 0.3rem;
         z-index: 20;
         display: block;
         position: absolute;
-        top: 10rem;
+        top: 4.2rem;
+        left: 2.35rem;
+        transform: translate(-50%, -50%);
         color: black; 
         width: 2.5rem;
         height: 2.5rem;

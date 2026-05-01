@@ -58,14 +58,10 @@ const KanbanCard = ({
 
   const hasExtraTime =
     hasScore &&
-    (fixture.goals1Extra !== null ||
-      fixture.goals1Extra !== undefined ||
-      fixture.points1Extra !== null ||
-      fixture.points1Extra !== undefined ||
-      fixture.goals2Extra !== null ||
-      fixture.goals2Extra !== undefined ||
-      fixture.points2Extra !== null ||
-      fixture.points2Extra !== undefined)
+    ((fixture.goals1Extra !== null && fixture.goals1Extra !== undefined) ||
+      (fixture.points1Extra !== null && fixture.points1Extra !== undefined) ||
+      (fixture.goals2Extra !== null && fixture.goals2Extra !== undefined) ||
+      (fixture.points2Extra !== null && fixture.points2Extra !== undefined))
 
   const vspace = hasScore ? '2.1rem' : 0
 
