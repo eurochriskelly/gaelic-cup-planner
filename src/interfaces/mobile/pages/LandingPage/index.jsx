@@ -131,9 +131,12 @@ const LandingPage = () => {
       flattened,
     });
 
+    const currentActivePitch = normaliseId(existingPitchSelectionRaw.active || persistedFilters.activePitch);
+    const active = flattened.includes(currentActivePitch) ? currentActivePitch : primary;
+
     updateFilterSelections({
       ...persistedFilters,
-      pitches: { primary, additional },
+      pitches: { primary, additional, active },
       Pitches: flattened,
     });
 

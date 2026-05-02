@@ -70,9 +70,9 @@ function App() {
 }
 
 function PitchViewWrapper() {
-  const { tournamentId } = useParams();
+  const { tournamentId, pitchId } = useParams();
   return (
-    <FixtureProvider tournamentId={tournamentId} >
+    <FixtureProvider tournamentId={tournamentId} pitchId={pitchId} >
       <PitchView />
     </FixtureProvider>
   );

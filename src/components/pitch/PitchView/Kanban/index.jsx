@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useFixtureContext } from '../FixturesContext';
+import { useAppContext } from '../../../../shared/js/Provider';
+import { choosePreferredPitch, normalizePitchId } from '../../../../shared/js/pitchSelection';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
 import KanbanColumn from './KanbanColumn';
@@ -131,6 +133,7 @@ const Kanban = ({
     allPitches,
     coordinatedPitches,
   } = useFixtureContext();
+  const { filterSelections, updateFilterSelections } = useAppContext();
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
    // New state to track if details panel should be shown
@@ -176,14 +179,41 @@ const Kanban = ({
   // State for the focused pitch in the top section
   const [focusedPitch, setFocusedPitch] = useState(null);
 
-  // Initialize focusedPitch
+  const routePitch = normalizePitchId(pitchId);
+  const routePitchIsSelectable = routePitch && routePitch !== '*' && availablePitches.includes(routePitch);
+
+  const preferredFocusedPitch = useMemo(() => {
+    if (routePitchIsSelectable) return routePitch;
+
+    return choosePreferredPitch({
+      filterSelections,
+      availablePitches,
+      coordinatedPitches,
+    });
+  }, [availablePitches, coordinatedPitches, filterSelections, routePitch, routePitchIsSelectable]);
+
+  const persistActivePitch = (nextPitch) => {
+    if (!nextPitch) return;
+    const currentActivePitch = normalizePitchId(filterSelections?.pitches?.active || filterSelections?.activePitch);
+    if (currentActivePitch === nextPitch) return;
+
+    updateFilterSelections({
+      ...filterSelections,
+      pitches: {
+        ...(filterSelections?.pitches || {}),
+        active: nextPitch,
+      },
+    });
+  };
+
+  // Initialize focusedPitch from the active coordinated pitch, then fall back to the first coordinated pitch.
   useEffect(() => {
-    if (!focusedPitch && availablePitches.length > 0) {
-      setFocusedPitch(availablePitches[0]);
-    } else if (focusedPitch && !availablePitches.includes(focusedPitch) && availablePitches.length > 0) {
-       setFocusedPitch(availablePitches[0]);
+    if (!availablePitches.length || !preferredFocusedPitch) return;
+
+    if (!focusedPitch || !availablePitches.includes(focusedPitch)) {
+      setFocusedPitch(preferredFocusedPitch);
     }
-  }, [availablePitches, focusedPitch]);
+  }, [availablePitches, focusedPitch, preferredFocusedPitch]);
 
   const isInlineMoveActive = Boolean(inlineMove && selectedFixture);
   const activeMovePitch = isInlineMoveActive ? inlineMove.targetPitch : null;
@@ -638,6 +668,7 @@ const Kanban = ({
    const handleFocusedPitchSelect = (nextPitch) => {
      if (!nextPitch) return;
      setFocusedPitch(nextPitch);
+     persistActivePitch(nextPitch);
      setSelectedFixture(null);
      setShowingDetails(false);
      if (inlineMove) {
@@ -754,7 +785,7 @@ const Kanban = ({
                   <KanbanColumn
                     key="queued"
                     columnKey="queued"
-                    title="Queued"
+                    title="Up next"
                     columnIndex={0} // Logical index for 'queued'
                     fixtures={queuedFixtures}
                     onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'queued')}

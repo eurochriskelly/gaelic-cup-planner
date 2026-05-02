@@ -3,12 +3,15 @@ import HomeIcon from './../../icons/icon-home.svg?react';
 import ScheduleIcon from './../../icons/icon-schedule.svg?react';
 import StatusIcon from './../../icons/icon-status.svg?react';
 import { useFixtureContext } from "./../../../components/pitch/PitchView/FixturesContext";
+import { choosePreferredPitch } from "../../js/pitchSelection";
+import { useAppContext } from "../../js/Provider";
 import './NavFooter.scss';
 
 export default NavFooter;
 
 function NavFooter({ currentPath }) {
   const { pitchId, category, tournamentId } = useParams();
+  const { filterSelections } = useAppContext();
   let fetchFixtures = () => {};
   const FC = useFixtureContext();
   if (FC) {
@@ -29,7 +32,8 @@ function NavFooter({ currentPath }) {
           ])}
         onClick={async () => {
           await fetchFixtures();
-          navigate(`/tournament/${tournamentId}/pitch/*`)
+          const preferredPitch = choosePreferredPitch({ filterSelections });
+          navigate(`/tournament/${tournamentId}/pitch/${preferredPitch || '*'}`)
         }}
         />
         <HomeIcon 

@@ -2,27 +2,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import API from "../../../shared/api/endpoints.js";
 import { useAppContext } from "../../../shared/js/Provider";
+import { getCoordinatedPitches, normalizePitchId } from "../../../shared/js/pitchSelection";
 
 const FixtureContext = createContext();
 
 export const useFixtureContext = () => useContext(FixtureContext);
-
-const normalizePitchId = (value) => {
-  if (value === null || value === undefined) return null;
-  return `${value}`.trim() || null;
-};
-
-const getCoordinatedPitches = (filterSelections = {}) => {
-  const primary = normalizePitchId(filterSelections.pitches?.primary);
-  const additional = Array.isArray(filterSelections.pitches?.additional)
-    ? filterSelections.pitches.additional.map(normalizePitchId)
-    : [];
-  const legacy = Array.isArray(filterSelections.Pitches)
-    ? filterSelections.Pitches.map(normalizePitchId)
-    : [];
-
-  return Array.from(new Set([primary, ...additional, ...legacy].filter(Boolean)));
-};
 
 const withoutPitchFilter = (filterSelections = {}) => {
   const { pitches, Pitches, ...remainingFilters } = filterSelections;
