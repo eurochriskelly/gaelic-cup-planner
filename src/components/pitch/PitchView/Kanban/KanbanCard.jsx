@@ -285,14 +285,18 @@ const KanbanCard = ({
               )}
             </div>
 
-            {fixture?.lane?.current === 'planned' && !isInlineMoveListCard && (
+            {fixture?.lane?.current === 'planned' && !largeMode && !isInlineMoveListCard && (
               <div className="card-detail pitch-info">
                 <PitchIcon width={48} height={48} />
                 <b>{fixture.pitch}</b>
               </div>
             )}
 
-            {!isInlineMoveListCard && (fixture?.lane?.current === 'queued' || fixture?.lane?.current === 'started') && (
+            {!isInlineMoveListCard && (
+              fixture?.lane?.current === 'planned' ||
+              fixture?.lane?.current === 'queued' ||
+              fixture?.lane?.current === 'started'
+            ) && (
               <div className="card-detail umpire-info">
                 <div>
                   <team-name
