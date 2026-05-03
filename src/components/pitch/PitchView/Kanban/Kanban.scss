@@ -439,8 +439,8 @@
       grid-area: 3 / 1 / 4 / 4;
       display: flex;
       --large-pane-drag-offset: 0px;
-      --large-gutter-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='38,-1 -2,18 38,37' fill='%23ffffff' opacity='.19'/%3E%3C/svg%3E");
-      --large-gutter-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='-2,-1 38,18 -2,37' fill='%23ffffff' opacity='.19'/%3E%3C/svg%3E");
+      --large-gutter-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='38,-1 -2,18 38,37' fill='%23ffffff' opacity='.05'/%3E%3C/svg%3E");
+      --large-gutter-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='-2,-1 38,18 -2,37' fill='%23ffffff' opacity='.05'/%3E%3C/svg%3E");
       width: 100%;
       max-width: 100%;
       min-height: 0;
@@ -491,7 +491,7 @@
         grid-row: 1 / -1;
         width: 100%;
         min-width: 0;
-        background-color: rgba(24, 24, 24, 0.62);
+        background-color: rgba(255, 255, 255, 0.1);
         background-repeat: repeat-y;
         background-position: center top;
         background-size: 100% 4.4rem;
@@ -950,7 +950,7 @@
       border: 0;
       border-radius: 0;
       background: transparent;
-      color: #fff;
+      color: #adadad;
       box-shadow: none;
       font-size: 2.6rem;
       font-weight: 500;
