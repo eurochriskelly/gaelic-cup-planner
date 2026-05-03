@@ -50,9 +50,7 @@ const UpdateFixture = ({
 
   const [activeDrawer, setActiveDrawer] = useState(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [hasDoubleTapped, setHasDoubleTapped] = useState(false);
   const [isMoveConfirming, setIsMoveConfirming] = useState(false);
-  const lastTapRef = useRef(0);
 
   const hasStarted = !!nextFixture.startedTime;
   const hasResult = !!nextFixture.isResult;
@@ -81,7 +79,6 @@ const UpdateFixture = ({
   // Reset lock state
   const lockPanel = useCallback(() => {
     setIsUnlocked(false);
-    setHasDoubleTapped(false);
     clearAllTimeouts();
   }, [clearAllTimeouts]);
 
@@ -250,19 +247,6 @@ const UpdateFixture = ({
     ])
   ];
 
-  // Handle double-tap to reveal slider
-  const handleProtectedDoubleTap = useCallback(() => {
-    const now = Date.now();
-    const timeSinceLastTap = now - lastTapRef.current;
-    
-    if (timeSinceLastTap < 300) {
-      // Double tap detected
-      setHasDoubleTapped(true);
-    }
-    
-    lastTapRef.current = now;
-  }, []);
-
   const handleButtonClick = (button) => {
     const deps = { startMatch, nextFixture, moveToNextFixture, API, fetchFixtures };
     button.action(setActiveDrawer, deps);
@@ -426,25 +410,13 @@ const UpdateFixture = ({
 
         {/* Main action buttons on the right */}
         {isLocked ? (
-          // Show protected message or slide to unlock
           <div className="slide-to-unlock-container">
-            {!hasDoubleTapped ? (
-              // Protected fixture - needs double tap
-              <div 
-                className="protected-fixture-overlay"
-                onClick={handleProtectedDoubleTap}
-              >
-                <div className="protected-text-line1">PROTECTED FIXTURE</div>
-                <div className="protected-text-line2">DOUBLE TAP TO UNPROTECT</div>
-              </div>
-            ) : (
-              // Revealed slider
-              <SlideToUnlock 
-                onUnlock={handleUnlock} 
-                onLock={lockPanel} 
-                isLocked={isLocked}
-              />
-            )}
+            <SlideToUnlock
+              onUnlock={handleUnlock}
+              onLock={lockPanel}
+              isLocked={isLocked}
+              lockedText="Unlock to update"
+            />
           </div>
         ) : (
           // Show main action buttons

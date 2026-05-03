@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import './SlideToUnlock.scss';
 
-const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
+const SlideToUnlock = ({ onUnlock, onLock, isLocked, lockedText = 'Slide to unlock' }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState(0);
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -113,7 +113,7 @@ const SlideToUnlock = ({ onUnlock, onLock, isLocked }) => {
     >
       <div className="slide-track">
         <div className="slide-text">
-          {isUnlocked ? 'Unlocked' : 'Slide to unlock'}
+          {isUnlocked ? 'Unlocked' : lockedText}
         </div>
         <div 
           className="slide-fill"
