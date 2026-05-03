@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useAppContext } from '../../../../shared/js/Provider';
 import { choosePreferredPitch, normalizePitchId } from '../../../../shared/js/pitchSelection';
@@ -124,6 +124,7 @@ const getKanbanColumnLogic = (fixture) => {
 
 const Kanban = ({
   moveToNextFixture,
+  largeMode = false,
 }) => {
   const {
     fixtures: initialFixtures,
@@ -733,6 +734,358 @@ const Kanban = ({
             resolvedInlineMove.placement === 'before' ? 'Before' : 'After'
           } ${formatInlineMoveFixtureLabel(resolvedInlineMove.targetFixture)}`
         : `Move on ${activeMovePitch || selectedFixture?.pitch}`;
+
+  const [largePane, setLargePane] = useState('live');
+  const [largePaneDragOffset, setLargePaneDragOffset] = useState(0);
+  const largePaneTouchRef = useRef({
+    startX: 0,
+    startY: 0,
+    currentX: 0,
+    isSwiping: false,
+  });
+  const largePaneOrder = ['planning', 'live', 'finished'];
+
+  const largePaneMeta = {
+    planning: { label: 'planned', next: 'live' },
+    live: { label: 'next', previous: 'planning', next: 'finished' },
+    finished: { label: 'finished', previous: 'live' },
+  };
+
+  const navigateLargePane = (nextPane) => {
+    if (!nextPane || nextPane === largePane) return;
+
+    setSelectedFixture(null);
+    setShowingDetails(false);
+    setDetailsMode('info');
+    setInlineMove(null);
+    setLargePane(nextPane);
+  };
+
+  const handleLargePaneTouchStart = (event) => {
+    if (event.touches.length !== 1) return;
+
+    const touch = event.touches[0];
+    largePaneTouchRef.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      currentX: touch.clientX,
+      isSwiping: false,
+    };
+    setLargePaneDragOffset(0);
+  };
+
+  const handleLargePaneTouchMove = (event) => {
+    if (event.touches.length !== 1) return;
+
+    const touch = event.touches[0];
+    const gesture = largePaneTouchRef.current;
+    const deltaX = touch.clientX - gesture.startX;
+    const deltaY = touch.clientY - gesture.startY;
+    const absoluteX = Math.abs(deltaX);
+    const absoluteY = Math.abs(deltaY);
+
+    if (!gesture.isSwiping) {
+      if (absoluteX < 12) return;
+      if (absoluteY > absoluteX) return;
+      gesture.isSwiping = true;
+    }
+
+    event.preventDefault();
+    gesture.currentX = touch.clientX;
+
+    const paneIndex = largePaneOrder.indexOf(largePane);
+    const isDraggingPastStart = paneIndex === 0 && deltaX > 0;
+    const isDraggingPastEnd = paneIndex === largePaneOrder.length - 1 && deltaX < 0;
+    const constrainedDelta = isDraggingPastStart || isDraggingPastEnd ? deltaX * 0.28 : deltaX;
+
+    setLargePaneDragOffset(constrainedDelta);
+  };
+
+  const handleLargePaneTouchEnd = () => {
+    const gesture = largePaneTouchRef.current;
+    const deltaX = gesture.currentX - gesture.startX;
+    const paneIndex = largePaneOrder.indexOf(largePane);
+    const swipeThreshold = Math.min(110, window.innerWidth * 0.22);
+
+    if (gesture.isSwiping && Math.abs(deltaX) >= swipeThreshold) {
+      if (deltaX < 0 && paneIndex < largePaneOrder.length - 1) {
+        navigateLargePane(largePaneOrder[paneIndex + 1]);
+      } else if (deltaX > 0 && paneIndex > 0) {
+        navigateLargePane(largePaneOrder[paneIndex - 1]);
+      }
+    }
+
+    largePaneTouchRef.current = {
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      isSwiping: false,
+    };
+    setLargePaneDragOffset(0);
+  };
+
+  const renderActionPanel = () => (
+    <div className="kanban-action-panel">
+      {!isCoordinatingBoardPitch ? (
+        <div className="not-coordinating-pitch-banner">
+          <span>You are not coordinating this pitch</span>
+        </div>
+      ) : selectedFixture ? (
+        <UpdateFixture
+          moveToNextFixture={moveToNextFixture}
+          fixture={selectedFixture}
+          showDetails={showDetailsPanel}
+          closeDetails={closeDetailsPanel}
+          isDetailsMode={showingDetails}
+          isInlineMoveMode={isInlineMoveActive}
+          inlineMoveTargetPitch={boardPitch}
+          inlineMoveSummary={inlineMoveSummary}
+          onStartInlineMove={startInlineMoveMode}
+          onCancelInlineMove={cancelInlineMoveMode}
+          onSetInlineMovePitch={setInlineMoveToFocusedPitch}
+          onMoveInlineEarlier={() => moveInlineFixture(-1)}
+          onMoveInlineLater={() => moveInlineFixture(1)}
+          onConfirmInlineMove={confirmInlineMove}
+          canConfirmInlineMove={canConfirmInlineMove}
+          canSetInlineMovePitch={
+            !hasInlineMoveSlack &&
+            Boolean(focusedPitch) &&
+            !isViewingInlineMoveTarget
+          }
+          canMoveInlineEarlier={
+            !hasInlineMoveSlack &&
+            isViewingInlineMoveTarget &&
+            inlineMoveCurrentIndex > 0
+          }
+          canMoveInlineLater={
+            !hasInlineMoveSlack &&
+            isViewingInlineMoveTarget &&
+            inlineMoveCurrentIndex > -1 &&
+            inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
+          }
+          isInlineMoveUnchanged={inlineMoveIsUnchanged}
+          canStartInlineMove={Boolean(
+            selectedFixture &&
+              !showingDetails &&
+              (selectedFixture?.lane?.current === 'planned' ||
+                selectedFixture?.lane?.current === 'queued')
+          )}
+          isInlineMoveSaving={isInlineMoveSaving}
+        />
+      ) : (
+        <div className="no-fixture-selected-banner">
+          <span>TAP FIXTURE FOR OPTIONS</span>
+        </div>
+      )}
+    </div>
+  );
+
+  const queuedFixturesForView = prioritizeSelectedFixture(
+    pitchFilteredFixtures.filter(f => f?.lane?.current === 'queued')
+  );
+  const plannedFixturesForView = sortFixturesForDisplay(
+    pitchFilteredFixtures.filter((fixture) =>
+      (isInlineMoveActive
+        ? isMoveListFixture(fixture, selectedFixture?.id) &&
+          isCompatibleMoveFixture(selectedFixture, fixture)
+        : getFixtureLane(fixture) === 'planned') &&
+      (!isInlineMoveActive ||
+        !isViewingInlineMoveTarget ||
+        inlineMovePreviewIdSet.has(fixture.id))
+    )
+  );
+  const startedFixturesForView = prioritizeSelectedFixture(
+    pitchFilteredFixtures.filter(f => f?.lane?.current === 'started')
+  );
+  const finishedFixturesForView = sortFixturesForDisplay(
+    pitchFilteredFixtures
+      .filter(f => f?.lane?.current === 'finished')
+      .sort((a, b) => {
+        const dateA = a.ended ? new Date(a.ended) : 0;
+        const dateB = b.ended ? new Date(b.ended) : 0;
+        return dateB - dateA;
+      })
+  );
+  const soonFixturesForView = plannedFixturesForView.slice(0, 2);
+
+  const renderColumn = (columnKey, fixtures, overrides = {}) => (
+    <KanbanColumn
+      key={columnKey}
+      columnKey={columnKey}
+      title={overrides.title || columnKey}
+      columnIndex={overrides.columnIndex || 0}
+      fixtures={fixtures}
+      allPlannedFixtures={overrides.allPlannedFixtures}
+      onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, columnKey)}
+      onDragOver={onDragOver}
+      onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
+      handleFixtureClick={handleFixtureClick}
+      selectedFixture={selectedFixture}
+      getPitchColor={getPitchColor}
+      allTournamentPitches={overrides.allTournamentPitches || null}
+      setMoveBarFixtureId={null}
+      recentlyMovedFixtureId={recentlyMovedFixtureId}
+      isInlineMoveMode={isInlineMoveActive}
+      inlineMoveFixtureId={selectedFixture?.id || null}
+      inlineMoveTargetPitch={activeMovePitch}
+      inlineMoveSwapFixtureId={inlineMove?.swapFixtureId || null}
+      onInlineMoveUp={() => moveInlineFixture(-1)}
+      onInlineMoveDown={() => moveInlineFixture(1)}
+      onInlineSwap={swapInlineFixture}
+      canInlineMoveUp={inlineMoveCurrentIndex > 0}
+      canInlineMoveDown={
+        inlineMoveCurrentIndex > -1 &&
+        inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
+      }
+      inlineMoveSlackMinutes={inlineMoveSlackMinutes}
+      onAdjustInlineSlack={adjustInlineMoveSlack}
+      canAdjustInlineSlack={canAdjustInlineSlack}
+      largeMode={largeMode}
+    />
+  );
+
+  const renderCompactFixtureSummary = (fixture) => {
+    if (!fixture) return null;
+
+    const teams = `${fixture.team1 || 'TBD'} vs ${fixture.team2 || 'TBD'}`;
+    return (
+      <div className="kanban-compact-fixture">
+        <span className="kanban-compact-fixture__time">{fixture.scheduledTime || '--:--'}</span>
+        <span className="kanban-compact-fixture__id">{fixture.id}</span>
+        <span className="kanban-compact-fixture__teams">{teams}</span>
+      </div>
+    );
+  };
+
+  const renderSoonFixtures = () => (
+    <div className="kanban-soon-fixtures">
+      <div className="kanban-soon-fixtures__header">
+        soon <span>({soonFixturesForView.length})</span>
+      </div>
+      {soonFixturesForView.map((fixture) => (
+        <button
+          type="button"
+          key={fixture.id}
+          className="kanban-soon-fixtures__row"
+          onClick={() => handleFixtureClick(fixture)}
+        >
+          {renderCompactFixtureSummary(fixture)}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (largeMode && !isInlineMoveActive) {
+    const activePane = largePaneMeta[largePane];
+
+    return (
+      <div className={`kanban-view kanban-view-large ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''}`}>
+        <KanbanErrorMessage message={errorMessage} />
+        <div className="kanban-board-area">
+          <div className="kanban-pitch-selector-area">
+            <PitchSelector
+              pitches={availablePitches}
+              selectedPitch={boardPitch}
+              onSelectPitch={handleFocusedPitchSelect}
+              pitchStatuses={pitchStatuses}
+              coordinatedPitches={coordinatedPitches}
+            />
+          </div>
+          {renderActionPanel()}
+          <div
+            className={`kanban-large-panes active-${largePane} ${
+              largePaneDragOffset ? 'is-dragging' : ''
+            }`}
+            style={{ '--large-pane-drag-offset': `${largePaneDragOffset}px` }}
+            onTouchStart={handleLargePaneTouchStart}
+            onTouchMove={handleLargePaneTouchMove}
+            onTouchEnd={handleLargePaneTouchEnd}
+            onTouchCancel={handleLargePaneTouchEnd}
+          >
+            <section className="kanban-large-pane kanban-large-pane-planning">
+              {renderColumn('planned', plannedFixturesForView, {
+                title: 'Planned',
+                columnIndex: 1,
+              })}
+            </section>
+            <section className="kanban-large-pane kanban-large-pane-live">
+              {showPitchCompleteBanner && (
+                <div className="pitch-complete-banner">
+                  <div className="pitch-complete-banner__eyebrow">{boardPitch} complete</div>
+                  <div className="pitch-complete-banner__headline">
+                    This pitch has played its final match.
+                  </div>
+                  <div className="pitch-complete-banner__subtext">
+                    Nothing left to queue or start.
+                  </div>
+                </div>
+              )}
+              {renderColumn('started', startedFixturesForView, {
+                title: 'Ongoing',
+                columnIndex: 2,
+                allTournamentPitches: boardPitch ? [boardPitch] : [],
+                allPlannedFixtures: globalPlannedFixtures,
+              })}
+              {renderColumn('queued', queuedFixturesForView, {
+                title: 'Up next',
+                columnIndex: 0,
+                allTournamentPitches: boardPitch ? [boardPitch] : [],
+              })}
+              {renderSoonFixtures()}
+            </section>
+            <section className="kanban-large-pane kanban-large-pane-finished">
+              {renderColumn('finished', finishedFixturesForView, {
+                title: 'Finished',
+                columnIndex: 3,
+              })}
+            </section>
+          </div>
+          <div
+            className="kanban-large-nav"
+            aria-label="Large schedule navigation"
+            onTouchStart={handleLargePaneTouchStart}
+            onTouchMove={handleLargePaneTouchMove}
+            onTouchEnd={handleLargePaneTouchEnd}
+            onTouchCancel={handleLargePaneTouchEnd}
+          >
+            <div className="kanban-large-nav__slot kanban-large-nav__slot--previous">
+              {activePane?.previous && (
+              <button
+                type="button"
+                className="kanban-large-nav__button kanban-large-nav__button--previous"
+                onClick={() => navigateLargePane(activePane.previous)}
+              >
+                <span aria-hidden="true">{'<'}</span>
+                <strong>{largePaneMeta[activePane.previous].label}</strong>
+              </button>
+              )}
+            </div>
+            <div className="kanban-large-nav__slot kanban-large-nav__slot--next">
+              {activePane?.next && (
+              <button
+                type="button"
+                className="kanban-large-nav__button kanban-large-nav__button--next"
+                onClick={() => navigateLargePane(activePane.next)}
+              >
+                <span aria-hidden="true">{'>'}</span>
+                <strong>{largePaneMeta[activePane.next].label}</strong>
+              </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {selectedFixture && showingDetails && (
+          <KanbanDetailsPanel
+            fixture={selectedFixture}
+            mode={detailsMode}
+            closePanel={closeDetailsPanel}
+            moveToNextFixture={moveToNextFixture}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`kanban-view ${selectedFixture ? 'fixture-selected' : ''} ${showingDetails ? 'details-visible' : ''} ${isInlineMoveActive ? 'inline-move-mode' : ''}`}>

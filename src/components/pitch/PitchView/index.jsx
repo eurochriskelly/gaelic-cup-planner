@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import { useFixtureContext } from "./FixturesContext";
 import MobileLayout from "../../../shared/generic/MobileLayout";
@@ -10,11 +10,19 @@ import './PitchView.scss';
 const PitchView = () => {
   const { fixtures, fetchFixtures, nextFixture, pitchId, tournamentId } = useFixtureContext(); // Ensure pitchId, tournamentId from context if needed by KanbanView directly, or it uses useParams
   const { sections } = useAppContext();
+  const location = useLocation();
   let tabNames = ["Kanban", "Next", "Finished" ] // , "Unplayed"]; // Added Kanban
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
   const [currentFocusFixtureId, setCurrentFocusFixtureId] = useState(null);
+  const [viewMode] = useState(() => {
+    if (location.state?.viewMode === 'large') return 'large';
+    if (typeof window === 'undefined') return 'normal';
+    return window.localStorage.getItem('pp-coord-schedule-view-mode') === 'large'
+      ? 'large'
+      : 'normal';
+  });
 
   // Set the initial focus when the component loads and finds the first nextFixture
   useEffect(() => {
@@ -118,7 +126,7 @@ const PitchView = () => {
         }</span>
         <KanbanFiters />
       </span>
-      <Kanban moveToNextFixture={moveToNextFixture} />
+      <Kanban moveToNextFixture={moveToNextFixture} largeMode={viewMode === 'large'} />
     </MobileLayout>
   );
 };

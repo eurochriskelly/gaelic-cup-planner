@@ -27,6 +27,7 @@ const KanbanCard = ({
   inlineMoveSlackMinutes = 0,
   onAdjustInlineSlack,
   canAdjustInlineSlack = true,
+  largeMode = false,
 }) => {
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
   const displayStage = fixture.stage
@@ -38,7 +39,11 @@ const KanbanCard = ({
         .replace('_', '/')
     : ''
   const displayNumber = fixture?.groupNumber || '0'
-  const teamStyle = { fontSize: '1.6em', fontWeight: 'bold', marginLeft: '-0.3rem' }
+  const teamStyle = {
+    fontSize: largeMode ? '2.4em' : '1.6em',
+    fontWeight: 'bold',
+    marginLeft: largeMode ? '0' : '-0.3rem',
+  }
 
   const getNumber = (val) => {
     if (val === null || val === undefined || val === '') return 0
@@ -105,10 +110,16 @@ const KanbanCard = ({
   const team1Name = fixture.team1 || 'TBD'
   const team2Name = fixture.team2 || 'TBD'
   const moveModeTeamStyle = isInlineMoveListCard
-    ? { ...teamStyle, fontSize: '1.63em', marginLeft: '-0.15rem' }
+    ? {
+        ...teamStyle,
+        fontSize: largeMode ? '2.45em' : '1.63em',
+        marginLeft: largeMode ? '0' : '-0.15rem',
+      }
     : teamStyle
-  const teamHeight = isInlineMoveListCard ? '42px' : '50px'
-  const moveModeLogoSize = '5.1rem'
+  const teamHeight = isInlineMoveListCard
+    ? largeMode ? '63px' : '42px'
+    : largeMode ? '75px' : '50px'
+  const moveModeLogoSize = largeMode ? '7.65rem' : '5.1rem'
   const teamMaxChars = isInlineMoveListCard ? '24' : '28'
   const addMinutesToTime = (time, minutesToAdd) => {
     if (!time || !minutesToAdd) return time
