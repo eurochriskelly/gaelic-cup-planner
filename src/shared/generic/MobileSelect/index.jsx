@@ -25,6 +25,7 @@ const MobileSelect = ({
           if (!x) return null;
 
           const isPlaceholder = !!x.props?.['data-placeholder'];
+          const isControl = !!x.props?.['data-control'];
 
           if (isPlaceholder) {
             return (
@@ -32,6 +33,17 @@ const MobileSelect = ({
                 key={`card_${i}`}
                 className="card card-empty div-shadow"
                 aria-hidden="true"
+              >
+                {x}
+              </section>
+            );
+          }
+
+          if (isControl) {
+            return (
+              <section
+                key={`card_${i}`}
+                className="mobile-select-control"
               >
                 {x}
               </section>
