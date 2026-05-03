@@ -230,6 +230,58 @@ $rcol: #d4e79b;
         }
       }
     }
+
+    .filter-schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .schedule-view-mode {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 1.2rem;
+      border: 2px solid rgba(121, 156, 35, 0.45);
+      border-radius: 1rem;
+      background: rgba(237, 252, 184, 0.86);
+      color: $pc-dark-30;
+      font-size: 1.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+
+      &__buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        min-width: 16rem;
+        padding: 0.4rem;
+        border-radius: 0.7rem;
+        background: rgba(196, 216, 133, 0.8);
+      }
+
+      button {
+        border: 0;
+        border-radius: 0.5rem;
+        padding: 1rem 1.1rem;
+        background: transparent;
+        color: $pc-dark-20;
+        font-size: 1.35rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        cursor: pointer;
+
+        &.active {
+          background: $pc-dark-20;
+          color: #fff;
+          box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.18);
+        }
+      }
+    }
   }
 
 .name-prompt-overlay {

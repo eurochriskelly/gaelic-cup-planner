@@ -12,6 +12,8 @@ import ResetUserIcon from '../../../../shared/icons/icon-team.svg?react';
 import API from "../../../../shared/api/endpoints";
 import './LandingPage.scss';
 
+const SCHEDULE_VIEW_MODE_KEY = 'pp-coord-schedule-view-mode';
+
 const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
@@ -38,6 +40,12 @@ const LandingPage = () => {
 
   const [nameInput, setNameInput] = useState(() => userName || "");
   const [showNamePrompt, setShowNamePrompt] = useState(() => !userName);
+  const [scheduleViewMode, setScheduleViewMode] = useState(() => {
+    if (typeof window === 'undefined') return 'normal';
+    return window.localStorage.getItem(SCHEDULE_VIEW_MODE_KEY) === 'large'
+      ? 'large'
+      : 'normal';
+  });
 
   useEffect(() => {
     setNameInput(userName || "");
@@ -193,6 +201,11 @@ const LandingPage = () => {
     setShowNamePrompt(false);
   };
 
+  const handleScheduleViewModeChange = (nextMode) => {
+    setScheduleViewMode(nextMode);
+    window.localStorage.setItem(SCHEDULE_VIEW_MODE_KEY, nextMode);
+  };
+
   const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
   const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
   const now = new Date();
@@ -289,6 +302,25 @@ const LandingPage = () => {
               initialSelection={existingPitchSelection}
               onSelectionChange={handlePitchSelectionChange}
             />
+            <div className="schedule-view-mode" aria-label="Schedule size">
+              <span>Schedule size</span>
+              <div className="schedule-view-mode__buttons" role="group">
+                <button
+                  type="button"
+                  className={scheduleViewMode === 'normal' ? 'active' : ''}
+                  onClick={() => handleScheduleViewModeChange('normal')}
+                >
+                  Normal
+                </button>
+                <button
+                  type="button"
+                  className={scheduleViewMode === 'large' ? 'active' : ''}
+                  onClick={() => handleScheduleViewModeChange('large')}
+                >
+                  Large
+                </button>
+              </div>
+            </div>
           </div>
         </section>
         <NavFooter /> 

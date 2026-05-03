@@ -7,12 +7,20 @@ import MainCard from "../../../shared/generic/MainCard";
 import TeamNameDisplay from "../../../shared/generic/TeamNameDisplay/";
 import './SelectPitchView.scss';
 
+const SCHEDULE_VIEW_MODE_KEY = 'pp-coord-schedule-view-mode';
+
 const SelectPitchView = () => {
   const navigate = useNavigate();
   const { tournamentId } = useParams();
   const { sections } = useAppContext();
   const [pitchData, setPitchData] = useState([]);
   const [pitchFixtures, setPitchFixtures] = useState({});
+  const [viewMode, setViewMode] = useState(() => {
+    if (typeof window === 'undefined') return 'normal';
+    return window.localStorage.getItem(SCHEDULE_VIEW_MODE_KEY) === 'large'
+      ? 'large'
+      : 'normal';
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,8 +53,12 @@ const SelectPitchView = () => {
     select: (pitchId) => {
       const pitch = pitchData.find((t) => t.pitch === pitchId);
       navigate(`/tournament/${tournamentId}/pitch/${pitchId}`, {
-        state: { pitch },
+        state: { pitch, viewMode },
       });
+    },
+    setViewMode: (nextViewMode) => {
+      setViewMode(nextViewMode);
+      window.localStorage.setItem(SCHEDULE_VIEW_MODE_KEY, nextViewMode);
     },
   };
 
@@ -60,6 +72,25 @@ const SelectPitchView = () => {
   return (
     <MobileSelect sections={sections} active={1}>
       <div>Select pitch</div>
+      <div className="schedule-view-mode" data-control>
+        <span>Schedule size</span>
+        <div className="schedule-view-mode__buttons" role="group" aria-label="Schedule size">
+          <button
+            type="button"
+            className={viewMode === 'normal' ? 'active' : ''}
+            onClick={() => handle.setViewMode('normal')}
+          >
+            Normal
+          </button>
+          <button
+            type="button"
+            className={viewMode === 'large' ? 'active' : ''}
+            onClick={() => handle.setViewMode('large')}
+          >
+            Large
+          </button>
+        </div>
+      </div>
       {pitchData?.map((pitchInfo, id) => {
         const {
           matchId,
