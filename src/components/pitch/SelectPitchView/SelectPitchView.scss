@@ -1,49 +1,5 @@
 @import "src/shared/css/_colors.scss";
 
-.schedule-view-mode {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background: #f8fafc;
-    border: 1px solid #d7dfc7;
-    color: #1f2937;
-    font-size: 1.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-
-    &__buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.35rem;
-      padding: 0.35rem;
-      border-radius: 0.45rem;
-      background: #dfe8d0;
-      min-width: 15rem;
-    }
-
-    button {
-      border: 0;
-      border-radius: 0.3rem;
-      padding: 0.9rem 1rem;
-      background: transparent;
-      color: #4b5563;
-      font-size: 1.45rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      cursor: pointer;
-
-      &.active {
-        background: $pc;
-        color: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
-      }
-    }
-}
-
 .SelectPitchView {
     display: flex;
     flex-direction: column;

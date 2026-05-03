@@ -12,8 +12,6 @@ import ResetUserIcon from '../../../../shared/icons/icon-team.svg?react';
 import API from "../../../../shared/api/endpoints";
 import './LandingPage.scss';
 
-const SCHEDULE_VIEW_MODE_KEY = 'pp-coord-schedule-view-mode';
-
 const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
@@ -40,12 +38,6 @@ const LandingPage = () => {
 
   const [nameInput, setNameInput] = useState(() => userName || "");
   const [showNamePrompt, setShowNamePrompt] = useState(() => !userName);
-  const [scheduleViewMode, setScheduleViewMode] = useState(() => {
-    if (typeof window === 'undefined') return 'normal';
-    return window.localStorage.getItem(SCHEDULE_VIEW_MODE_KEY) === 'large'
-      ? 'large'
-      : 'normal';
-  });
 
   useEffect(() => {
     setNameInput(userName || "");
@@ -201,9 +193,13 @@ const LandingPage = () => {
     setShowNamePrompt(false);
   };
 
+  const scheduleViewMode = persistedFilters.scheduleViewMode === 'normal' ? 'normal' : 'large';
+
   const handleScheduleViewModeChange = (nextMode) => {
-    setScheduleViewMode(nextMode);
-    window.localStorage.setItem(SCHEDULE_VIEW_MODE_KEY, nextMode);
+    updateFilterSelections({
+      ...persistedFilters,
+      scheduleViewMode: nextMode === 'normal' ? 'normal' : 'large',
+    });
   };
 
   const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
@@ -307,17 +303,17 @@ const LandingPage = () => {
               <div className="schedule-view-mode__buttons" role="group">
                 <button
                   type="button"
-                  className={scheduleViewMode === 'normal' ? 'active' : ''}
-                  onClick={() => handleScheduleViewModeChange('normal')}
-                >
-                  Normal
-                </button>
-                <button
-                  type="button"
                   className={scheduleViewMode === 'large' ? 'active' : ''}
                   onClick={() => handleScheduleViewModeChange('large')}
                 >
                   Large
+                </button>
+                <button
+                  type="button"
+                  className={scheduleViewMode === 'normal' ? 'active' : ''}
+                  onClick={() => handleScheduleViewModeChange('normal')}
+                >
+                  Normal
                 </button>
               </div>
             </div>
