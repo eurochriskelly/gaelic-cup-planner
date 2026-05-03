@@ -103,6 +103,7 @@ const KanbanCard = ({
   const isMoveCandidateLane =
     fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'queued'
   const isInlineMoveListCard = isInlineMoveMode && isMoveCandidateLane
+  const useLargeCardSizing = largeMode && !isInlineMoveListCard
   const showInlineSwapAction = false
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
   const hasInlineActionRail = false
@@ -112,14 +113,14 @@ const KanbanCard = ({
   const moveModeTeamStyle = isInlineMoveListCard
     ? {
         ...teamStyle,
-        fontSize: largeMode ? '2.45em' : '1.63em',
-        marginLeft: largeMode ? '0' : '-0.15rem',
+        fontSize: '1.63em',
+        marginLeft: '-0.15rem',
       }
     : teamStyle
   const teamHeight = isInlineMoveListCard
-    ? largeMode ? '63px' : '42px'
-    : largeMode ? '75px' : '50px'
-  const moveModeLogoSize = largeMode ? '7.65rem' : '5.1rem'
+    ? '42px'
+    : useLargeCardSizing ? '75px' : '50px'
+  const moveModeLogoSize = '5.1rem'
   const teamMaxChars = isInlineMoveListCard ? '24' : '28'
   const addMinutesToTime = (time, minutesToAdd) => {
     if (!time || !minutesToAdd) return time

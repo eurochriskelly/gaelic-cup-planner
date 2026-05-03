@@ -297,13 +297,26 @@
   }
 
   &.inline-move-mode {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+
     .kanban-board-area {
       grid-template-columns: 1fr;
       grid-template-rows: auto auto minmax(0, 1fr);
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .kanban-pitch-selector-area {
       grid-area: 1 / 1 / 2 / 2;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
     }
 
     .kanban-action-panel {
@@ -315,14 +328,54 @@
       grid-area: 3 / 1 / 4 / 2;
       border-right: none;
       min-height: 0;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      padding: 0;
 
       .kanban-card {
         height: 15.36rem;
       }
 
+      .column-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+
+      .kanban-slot,
+      .slot-card-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
       .column-content .slot-card-container > .kanban-card {
+        width: calc(100% - 1.6rem);
+        max-width: calc(100% - 1.6rem);
+        min-width: 0;
         margin-left: 0.8rem;
         margin-right: 0.8rem;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .kanban-card.selected,
+      .kanban-card-frame,
+      .kanban-card-inner,
+      .kanban-card-content-wrapper,
+      .teams-container,
+      .teams-stack-row,
+      .team-row-inline-move {
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
       }
     }
   }
@@ -386,6 +439,15 @@
       grid-area: 3 / 1 / 4 / 4;
       display: flex;
       --large-pane-drag-offset: 0px;
+      --large-gutter-background:
+        repeating-linear-gradient(
+          135deg,
+          rgba(54, 54, 54, 0.96) 0,
+          rgba(54, 54, 54, 0.96) 2.2rem,
+          rgba(116, 116, 116, 0.78) 2.2rem,
+          rgba(116, 116, 116, 0.78) 4.4rem
+        ),
+        #171717;
       width: 100%;
       max-width: 100%;
       min-height: 0;
@@ -397,6 +459,11 @@
 
       &.is-dragging {
         transition: none;
+      }
+
+      &.is-dragging + .kanban-large-nav {
+        opacity: 0;
+        pointer-events: none;
       }
 
       &.active-planning {
@@ -424,6 +491,31 @@
       padding-left: 0;
       padding-right: 0;
       box-sizing: border-box;
+
+      &::before,
+      &::after {
+        content: '';
+        grid-row: 1 / -1;
+        width: 100%;
+        min-width: 0;
+        background: var(--large-gutter-background);
+        box-shadow: inset 0.35rem 0 0 rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      &::before {
+        background-position: calc(-1 * var(--large-side-gutter)) 0, 0 0;
+      }
+
+      &::after {
+        background-position: 0 0, 0 0;
+      }
+
+      > * {
+        position: relative;
+        z-index: 1;
+      }
     }
 
     .kanban-large-pane-planning,
@@ -435,6 +527,34 @@
       grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto;
       height: 100%;
       min-height: 0;
+
+      &::before {
+        grid-column: 1;
+      }
+
+      &::after {
+        grid-column: 3;
+      }
+    }
+
+    .kanban-large-pane-planning {
+      &::before {
+        display: none;
+      }
+
+      &::after {
+        grid-column: 3;
+      }
+    }
+
+    .kanban-large-pane-finished {
+      &::before {
+        grid-column: 1;
+      }
+
+      &::after {
+        display: none;
+      }
     }
 
     .kanban-large-pane-planning > .kanban-column {
@@ -795,6 +915,7 @@
       min-height: 0;
       overflow: hidden;
       touch-action: pan-y;
+      transition: opacity 0.08s linear;
     }
 
     .kanban-large-nav__slot {
@@ -803,21 +924,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background:
-        repeating-linear-gradient(
-          135deg,
-          rgba(54, 54, 54, 0.96) 0,
-          rgba(54, 54, 54, 0.96) 2.2rem,
-          rgba(116, 116, 116, 0.78) 2.2rem,
-          rgba(116, 116, 116, 0.78) 4.4rem
-        ),
-        #171717;
-      box-shadow: inset 0.35rem 0 0 rgba(255, 255, 255, 0.08);
+      background: transparent;
+      box-shadow: none;
 
       &:empty {
         pointer-events: none;
-        background: transparent;
-        box-shadow: none;
       }
 
       &--previous {
@@ -841,10 +952,10 @@
       border: 0;
       border-radius: 0;
       background: transparent;
-      color: rgba(255, 255, 255, 0.45);
+      color: #fff;
       box-shadow: none;
       font-size: 2.6rem;
-      font-weight: 300;
+      font-weight: 500;
       line-height: 1.05;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -868,6 +979,7 @@
         display: inline-block;
         margin: 1.35rem 0;
         writing-mode: vertical-rl;
+
       }
     }
 

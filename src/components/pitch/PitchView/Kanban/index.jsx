@@ -975,6 +975,21 @@ const Kanban = ({
     </div>
   );
 
+  const renderLargePaneNavLabel = (paneKey) => {
+    const count = paneKey === 'planning'
+      ? plannedFixturesForView.length
+      : paneKey === 'finished'
+        ? finishedFixturesForView.length
+        : null;
+
+    return (
+      <strong>
+        {largePaneMeta[paneKey].label}
+        {count !== null && ` (${count})`}
+      </strong>
+    );
+  };
+
   if (largeMode && !isInlineMoveActive) {
     const activePane = largePaneMeta[largePane];
 
@@ -1056,7 +1071,7 @@ const Kanban = ({
                 onClick={() => navigateLargePane(activePane.previous)}
               >
                 <span aria-hidden="true">{'<'}</span>
-                <strong>{largePaneMeta[activePane.previous].label}</strong>
+                {renderLargePaneNavLabel(activePane.previous)}
               </button>
               )}
             </div>
@@ -1068,7 +1083,7 @@ const Kanban = ({
                 onClick={() => navigateLargePane(activePane.next)}
               >
                 <span aria-hidden="true">{'>'}</span>
-                <strong>{largePaneMeta[activePane.next].label}</strong>
+                {renderLargePaneNavLabel(activePane.next)}
               </button>
               )}
             </div>
