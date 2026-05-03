@@ -439,15 +439,8 @@
       grid-area: 3 / 1 / 4 / 4;
       display: flex;
       --large-pane-drag-offset: 0px;
-      --large-gutter-background:
-        repeating-linear-gradient(
-          135deg,
-          rgba(54, 54, 54, 0.96) 0,
-          rgba(54, 54, 54, 0.96) 2.2rem,
-          rgba(116, 116, 116, 0.78) 2.2rem,
-          rgba(116, 116, 116, 0.78) 4.4rem
-        ),
-        #171717;
+      --large-gutter-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='38,-1 -2,18 38,37' fill='%23ffffff' opacity='.19'/%3E%3C/svg%3E");
+      --large-gutter-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='-2,-1 38,18 -2,37' fill='%23ffffff' opacity='.19'/%3E%3C/svg%3E");
       width: 100%;
       max-width: 100%;
       min-height: 0;
@@ -498,18 +491,23 @@
         grid-row: 1 / -1;
         width: 100%;
         min-width: 0;
-        background: var(--large-gutter-background);
+        background-color: rgba(24, 24, 24, 0.62);
+        background-repeat: repeat-y;
+        background-position: center top;
+        background-size: 100% 4.4rem;
         box-shadow: inset 0.35rem 0 0 rgba(255, 255, 255, 0.08);
         pointer-events: none;
         z-index: 0;
       }
 
       &::before {
-        background-position: calc(-1 * var(--large-side-gutter)) 0, 0 0;
+        background-image: var(--large-gutter-arrow-left);
+        background-position: right top;
       }
 
       &::after {
-        background-position: 0 0, 0 0;
+        background-image: var(--large-gutter-arrow-right);
+        background-position: left top;
       }
 
       > * {
@@ -962,11 +960,7 @@
 
       &::before,
       &::after {
-        content: '';
-        display: block;
-        width: 0;
-        height: 0;
-        flex: 0 0 auto;
+        content: none;
       }
 
       span {
@@ -984,24 +978,8 @@
     }
 
     .kanban-large-nav__button--previous {
-      &::before,
-      &::after {
-        border-top: 0.75rem solid transparent;
-        border-bottom: 0.75rem solid transparent;
-        border-right: 1.2rem solid rgba(255, 255, 255, 0.62);
-      }
-
       strong {
         transform: rotate(180deg);
-      }
-    }
-
-    .kanban-large-nav__button--next {
-      &::before,
-      &::after {
-        border-top: 0.75rem solid transparent;
-        border-bottom: 0.75rem solid transparent;
-        border-left: 1.2rem solid rgba(255, 255, 255, 0.62);
       }
     }
   }
