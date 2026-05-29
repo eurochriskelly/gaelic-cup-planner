@@ -823,6 +823,26 @@
           flex-direction: column;
         }
       }
+
+      .kanban-column-empty-state {
+        min-height: 0;
+        height: 100%;
+        padding: 2.2rem 2.8rem;
+        gap: 0.95rem;
+        font-size: 1.95rem;
+
+        &__title {
+          font-size: 2.65rem;
+        }
+
+        &__line {
+          max-width: 42rem;
+        }
+
+        &__line--hint {
+          font-size: 1.72rem;
+        }
+      }
     }
 
     .kanban-column[data-column-key="queued"] {

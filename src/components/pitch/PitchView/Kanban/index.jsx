@@ -13,6 +13,18 @@ import UpdateFixture from '../UpdateFixture';
 import API from '../../../../shared/api/endpoints';
 import './Kanban.scss';
 
+const ACTIVE_MATCH_EMPTY_MESSAGE = (
+  <>
+    <span className="kanban-column-empty-state__title">No active match</span>
+    <span className="kanban-column-empty-state__line">
+      Press <strong>start</strong> when next match starts.
+    </span>
+    <span className="kanban-column-empty-state__line kanban-column-empty-state__line--hint">
+      Slide left and right to view planned and finished fixtures.
+    </span>
+  </>
+);
+
 const parseFixtureTime = (value) => {
   if (!value) return null;
 
@@ -941,6 +953,7 @@ const Kanban = ({
       onAdjustInlineSlack={adjustInlineMoveSlack}
       canAdjustInlineSlack={canAdjustInlineSlack}
       largeMode={largeMode}
+      emptyMessage={overrides.emptyMessage}
     />
   );
 
@@ -1040,6 +1053,7 @@ const Kanban = ({
                 columnIndex: 2,
                 allTournamentPitches: boardPitch ? [boardPitch] : [],
                 allPlannedFixtures: globalPlannedFixtures,
+                emptyMessage: ACTIVE_MATCH_EMPTY_MESSAGE,
               })}
               {renderColumn('queued', queuedFixturesForView, {
                 title: 'Up next',
@@ -1189,6 +1203,7 @@ const Kanban = ({
                     columnIndex={2} // Logical index for 'started'
                     fixtures={startedFixtures}
                     allPlannedFixtures={globalPlannedFixtures}
+                    emptyMessage={ACTIVE_MATCH_EMPTY_MESSAGE}
                     onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'started')}
                     onDragOver={onDragOver}
                     onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}

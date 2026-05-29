@@ -30,6 +30,7 @@ const KanbanColumn = ({
    onAdjustInlineSlack,
    canAdjustInlineSlack,
    largeMode = false,
+   emptyMessage,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -56,6 +57,7 @@ const KanbanColumn = ({
     // Iterate over all unique pitches defined for the tournament for this column
     columnSlots = actualPitches.map((pitch, index) => {
       const fixtureForPitchSlot = fixtures.find(f => f.pitch === pitch);
+      const showEmptyState = emptyMessage && fixtures.length === 0 && index === 0;
       let showWarning = false;
       // Warning logic primarily for 'started' (Ongoing) column if slot is empty but matches are planned for that pitch.
       // For 'queued' (Next) column, an empty slot means nothing is queued for that pitch.
@@ -97,10 +99,28 @@ const KanbanColumn = ({
                largeMode={largeMode}
              />
            )}
+           {!fixtureForPitchSlot && showEmptyState && (
+             <div className="kanban-column-empty-state" role="status">
+               {emptyMessage}
+             </div>
+           )}
         </KanbanSlot>
       );
     });
-     // If actualPitches is empty, columnSlots will be empty. This is intended.
+    if (!columnSlots.length && emptyMessage) {
+      columnSlots = [
+        <KanbanSlot
+          key={`empty-state-${columnKey}`}
+          slotIndex={0}
+          columnIndex={columnIndex}
+          columnKey={columnKey}
+        >
+          <div className="kanban-column-empty-state" role="status">
+            {emptyMessage}
+          </div>
+        </KanbanSlot>
+      ];
+    }
      // For "Next" to have a minimum of 4 slots even if empty, further logic would be needed here
      // or `allTournamentPitches` for "Next" would need to guarantee 4 pitch names.
      // Current implementation matches "Ongoing" behavior.

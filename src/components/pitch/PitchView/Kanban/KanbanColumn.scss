@@ -46,6 +46,52 @@
     // .slots-background and .cards-foreground are removed.
     // KanbanSlot components are now direct children of .column-content.
   }
+
+  .kanban-column-empty-state {
+    flex: 1;
+    min-height: 12rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 1.4rem;
+    box-sizing: border-box;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.42rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-transform: none;
+
+    &__title {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    &__line {
+      display: block;
+      max-width: 25rem;
+    }
+
+    &__line--hint {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 1.22rem;
+      font-weight: 600;
+    }
+
+    strong {
+      color: #ffffff;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+  }
 }
 
 // Hide scrollbars but keep scrolling on all devices
@@ -56,4 +102,3 @@
 .kanban-column .column-content::-webkit-scrollbar {
   display: none;               // Chrome, Safari, Opera
 }
-
