@@ -391,6 +391,14 @@ const UpdateFixture = ({
         <>
           <div className="space-button empty" />
           <button
+            className="space-button enabled move-mode-button move-mode-icon-button move-mode-confirm-button"
+            onClick={onCancelInlineMove}
+            aria-label="Discard move"
+          >
+            <ConfirmCancelIcon className="icon" />
+          </button>
+          <div className="space-button empty" />
+          <button
             className={`space-button move-mode-button move-mode-icon-button move-mode-confirm-button ${
               canConfirmInlineMove && !isInlineMoveSaving ? 'enabled' : 'disabled'
             }`}
@@ -400,33 +408,12 @@ const UpdateFixture = ({
           >
             <OkIcon className="icon" />
           </button>
-          <button
-            className="space-button enabled move-mode-button move-mode-icon-button move-mode-confirm-button"
-            onClick={onCancelInlineMove}
-            aria-label="Discard move"
-          >
-            <ConfirmCancelIcon className="icon" />
-          </button>
-          <div className="space-button empty" />
         </>
       );
     }
 
     return (
       <>
-        <button
-          className={`space-button move-mode-button move-mode-icon-button ${
-            canSetInlineMovePitch ? 'enabled' : 'disabled'
-          }`}
-          disabled={!canSetInlineMovePitch}
-          onClick={() => {
-            setIsMoveConfirming(false);
-            onSetInlineMovePitch?.();
-          }}
-          aria-label={`Move fixture to ${inlineMoveTargetPitch}`}
-        >
-          <SetLocationIcon className="icon" />
-        </button>
         <button
           className={`space-button move-mode-button move-mode-icon-button move-mode-pitch-button ${
             canMoveInlineEarlier ? 'enabled' : 'disabled'
@@ -439,6 +426,19 @@ const UpdateFixture = ({
           aria-label="Move fixture earlier"
         >
           <EarlierIcon className="icon" />
+        </button>
+        <button
+          className={`space-button move-mode-button move-mode-icon-button ${
+            canSetInlineMovePitch ? 'enabled' : 'disabled'
+          }`}
+          disabled={!canSetInlineMovePitch}
+          onClick={() => {
+            setIsMoveConfirming(false);
+            onSetInlineMovePitch?.();
+          }}
+          aria-label={`Move fixture to ${inlineMoveTargetPitch}`}
+        >
+          <SetLocationIcon className="icon" />
         </button>
         <button
           className={`space-button move-mode-button move-mode-icon-button move-mode-pitch-button ${
