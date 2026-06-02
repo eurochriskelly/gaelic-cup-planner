@@ -162,9 +162,12 @@ const LandingPage = () => {
   const handle = {
     resetTournament: async () => {
       const button = document.querySelector('.sudo');
-      button.classList.add('active');
-      await API.resetTournament(tournamentId);
-      button.classList.remove('active');
+      button?.classList.add('active');
+      try {
+        await API.resetTournament(tournamentId);
+      } finally {
+        button?.classList.remove('active');
+      }
     },
     resetUser: () => {
       resetUserContext?.();
