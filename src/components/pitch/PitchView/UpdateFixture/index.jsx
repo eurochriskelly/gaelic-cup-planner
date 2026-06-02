@@ -42,6 +42,7 @@ const UpdateFixture = ({
    canStartInlineMove = false,
    isInlineMoveUnchanged = false,
    isInlineMoveSaving = false,
+   variant = 'panel',
  }) => {
   const { fetchFixtures, startMatch } = useFixtureContext();
   let nextFixture = fixture;
@@ -290,6 +291,9 @@ const UpdateFixture = ({
   const mainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3);
   const infoButton = visibleButtons.find(b => b.isInfoButton);
   const isLocked = !isInlineMoveMode && needsSlideToUnlock && !isUnlocked;
+  const isRail = variant === 'rail';
+  const shouldScrollRailButtons =
+    isRail && !isInlineMoveMode && !isLocked && (isPlannedLane || isFinished);
 
   const renderMoveModeButtons = () => {
     if (isMoveConfirming) {
@@ -383,8 +387,45 @@ const UpdateFixture = ({
     );
   };
 
+  const renderActionButton = (button) => {
+    const state = button.getState(hasStarted, hasResult, nextFixture);
+    const isDisabled = state === 'disabled';
+
+    return (
+      <button
+        key={button.id}
+        className={`space-button ${button.isInfoButton ? 'info-button' : ''} ${state}`}
+        disabled={isDisabled}
+        onClick={() => handleButtonClick(button)}
+      >
+        <button.Icon className="icon" />
+      </button>
+    );
+  };
+
+  const renderRailButtonScroller = () => {
+    const railButtons = [
+      ...(infoButton ? [infoButton] : []),
+      ...mainButtons,
+    ];
+
+    return (
+      <div className="rail-button-scroll" role="group" aria-label="Fixture actions">
+        {railButtons.map(renderActionButton)}
+      </div>
+    );
+  };
+
   return (
-    <div className={`updateFixture select-none ${isInlineMoveMode ? 'has-move-mode' : ''}`}>
+    <div
+      className={`updateFixture select-none updateFixture--${variant} ${
+        isInlineMoveMode ? 'has-move-mode' : ''
+      }`}
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+      onTouchStart={(event) => event.stopPropagation()}
+      draggable="false"
+    >
       {isInlineMoveMode && (
         <div className="move-mode-banner">
           <span className="move-mode-banner__title">
@@ -395,56 +436,53 @@ const UpdateFixture = ({
           )}
         </div>
       )}
-      <div className={`button-grid ${isInlineMoveMode ? 'move-mode-grid' : ''}`}>
-        {!isInlineMoveMode && infoButton && (
-          <>
-            <button
-              className={`space-button info-button ${infoButton.getState()}`}
-              onClick={() => handleButtonClick(infoButton)}
-            >
-              <infoButton.Icon className="icon" />
-            </button>
-            <div className="button-divider" />
-          </>
-        )}
-
-        {/* Main action buttons on the right */}
-        {isLocked ? (
-          <div className="slide-to-unlock-container">
-            <SlideToUnlock
-              onUnlock={handleUnlock}
-              onLock={lockPanel}
-              isLocked={isLocked}
-              lockedText="Unlock to update"
-            />
-          </div>
+      <div className={`button-grid ${isInlineMoveMode ? 'move-mode-grid' : ''} ${
+        isLocked ? 'is-locked' : ''
+      } ${
+        shouldScrollRailButtons ? 'is-rail-scroll' : ''
+      }`}>
+        {shouldScrollRailButtons ? (
+          renderRailButtonScroller()
         ) : (
-          // Show main action buttons
           <>
-            {isInlineMoveMode
-              ? renderMoveModeButtons()
-              : mainButtons.map((button) => {
-              const state = button.getState(hasStarted, hasResult, nextFixture);
-              const isDisabled = state === 'disabled';
-
-              return (
+            {!isInlineMoveMode && infoButton && (
+              <>
                 <button
-                  key={button.id}
-                  className={`space-button ${state}`}
-                  disabled={isDisabled}
-                  onClick={() => handleButtonClick(button)}
+                  className={`space-button info-button ${infoButton.getState()}`}
+                  onClick={() => handleButtonClick(infoButton)}
                 >
-                  <button.Icon className="icon" />
+                  <infoButton.Icon className="icon" />
                 </button>
-              );
-            })}
+                <div className="button-divider" />
+              </>
+            )}
 
-            {/* Generate placeholders only if we have fewer than 3 buttons */}
-            {!isInlineMoveMode && mainButtons.length < 3 &&
-              [...Array(3 - mainButtons.length)].map((_, i) => (
-                <div key={`empty-${i}`} className="space-button empty" />
-              ))
-            }
+            {/* Main action buttons on the right */}
+            {isLocked ? (
+              <div className="slide-to-unlock-container">
+                <SlideToUnlock
+                  onUnlock={handleUnlock}
+                  onLock={lockPanel}
+                  isLocked={isLocked}
+                  lockedText={isRail ? 'Unlock to modify' : 'Unlock to update'}
+                  orientation={isRail ? 'vertical' : 'horizontal'}
+                />
+              </div>
+            ) : (
+              // Show main action buttons
+              <>
+                {isInlineMoveMode
+                  ? renderMoveModeButtons()
+                  : mainButtons.map(renderActionButton)}
+
+                {/* Generate placeholders only if we have fewer than 3 buttons */}
+                {!isInlineMoveMode && !isRail && mainButtons.length < 3 &&
+                  [...Array(3 - mainButtons.length)].map((_, i) => (
+                    <div key={`empty-${i}`} className="space-button empty" />
+                  ))
+                }
+              </>
+            )}
           </>
         )}
       </div>

@@ -116,6 +116,119 @@
   }
 }
 
+.updateFixture--rail {
+  position: static;
+  top: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-width: none;
+  z-index: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  background: transparent;
+
+  &.has-move-mode {
+    height: 100%;
+  }
+
+  .move-mode-banner {
+    display: none;
+  }
+
+  .button-grid {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(0, 1fr);
+    align-content: stretch;
+    justify-items: stretch;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+
+    &.is-locked {
+      grid-template-rows: minmax(0, 1fr) minmax(0, 3fr);
+    }
+
+    &.is-rail-scroll {
+      display: block;
+      overflow: hidden;
+    }
+
+    &.move-mode-grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: minmax(0, 1fr);
+    }
+
+    .button-divider {
+      display: none;
+    }
+
+    .slide-to-unlock-container {
+      grid-column: 1;
+      grid-row: auto / span 1;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  }
+
+  .rail-button-scroll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .space-button {
+      flex: 0 0 calc(100% / 3);
+      scroll-snap-align: start;
+    }
+  }
+
+  .space-button {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+
+    .icon {
+      width: 7.15rem;
+      height: 7.15rem;
+      max-width: 96%;
+      max-height: 96%;
+    }
+
+    &:focus-visible {
+      outline: 0.2rem solid #ffeb3b;
+      outline-offset: -0.2rem;
+    }
+  }
+
+  > div.drawers {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .button-grid {
   display: grid;
   grid-template-columns: 1fr 0.2rem 1fr 1fr 1fr;
