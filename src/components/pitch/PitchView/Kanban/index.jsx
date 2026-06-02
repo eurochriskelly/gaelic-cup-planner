@@ -29,11 +29,6 @@ const getActiveMatchEmptyMessage = (isCoordinatingPitch) => (
   </>
 );
 
-const BOARD_INFO_MESSAGES = [
-  'Slide left/right to view planned and finished fixtures',
-  'Tap on a fixture to view options',
-];
-
 const LARGE_LIVE_CARD_MIN_HEIGHT_REM = 37;
 const LARGE_LIVE_ROW_CHROME_REM = 9.2;
 const LARGE_SOON_HEADER_HEIGHT_REM = 4.6;
@@ -169,7 +164,6 @@ const Kanban = ({
    const [recentlyMovedFixtureId, setRecentlyMovedFixtureId] = useState(null);
    const [inlineMove, setInlineMove] = useState(null);
    const [isInlineMoveSaving, setIsInlineMoveSaving] = useState(false);
-   const [boardInfoMessageIndex, setBoardInfoMessageIndex] = useState(0);
    const [visibleSoonRows, setVisibleSoonRows] = useState(0);
    const largeLivePaneRef = useRef(null);
 
@@ -484,23 +478,24 @@ const Kanban = ({
   const showPitchCompleteBanner = !!focusedPitchStatus?.isComplete;
   const activeMatchEmptyMessage = getActiveMatchEmptyMessage(isCoordinatingBoardPitch);
 
-  useEffect(() => {
-    if (!largeMode || !isCoordinatingBoardPitch) {
-      setBoardInfoMessageIndex(0);
-      return undefined;
-    }
-
-    const intervalId = window.setInterval(() => {
-      setBoardInfoMessageIndex((currentIndex) =>
-        (currentIndex + 1) % BOARD_INFO_MESSAGES.length
-      );
-    }, 30000);
-
-    return () => window.clearInterval(intervalId);
-  }, [isCoordinatingBoardPitch, largeMode]);
-
   const renderBoardInfoBar = () => {
     const isReadOnly = !isCoordinatingBoardPitch;
+
+    const getGuidanceMessage = () => {
+      if (!selectedFixture) {
+        return 'TAP ON FIXTURE TO VIEW OPTIONS';
+      }
+      if (largePane === 'planning') {
+        return 'SLIDE RIGHT TO VIEW ACTIVE MATCHES';
+      }
+      if (largePane === 'live') {
+        return 'SLIDE LEFT/RIGHT FOR PLANNED/FINISHED FIXTURES';
+      }
+      if (largePane === 'finished') {
+        return 'SLIDE LEFT TO VIEW ACTIVE MATCHES';
+      }
+      return '';
+    };
 
     return (
       <div className={`kanban-board-info-bar ${isReadOnly ? 'is-read-only' : 'is-guidance'}`}>
@@ -517,7 +512,7 @@ const Kanban = ({
                 <strong>Read-only:</strong> You are not coordinating this pitch
               </>
             )
-            : BOARD_INFO_MESSAGES[boardInfoMessageIndex]}
+            : getGuidanceMessage()}
         </span>
       </div>
     );
@@ -1085,7 +1080,7 @@ const Kanban = ({
       largeMode={largeMode}
       emptyMessage={overrides.emptyMessage}
       renderFixtureActionRail={renderFixtureActionRail}
-      hideActionRail={!isCoordinatingBoardPitch}
+      hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
     />
   );
 
@@ -1393,7 +1388,7 @@ const Kanban = ({
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
                     renderFixtureActionRail={renderFixtureActionRail}
-                    hideActionRail={!isCoordinatingBoardPitch}
+                    hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -1429,7 +1424,7 @@ const Kanban = ({
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
                     renderFixtureActionRail={renderFixtureActionRail}
-                    hideActionRail={!isCoordinatingBoardPitch}
+                    hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                   />
 
                   {showPitchCompleteBanner && (
@@ -1477,7 +1472,7 @@ const Kanban = ({
                 onAdjustInlineSlack={adjustInlineMoveSlack}
                 canAdjustInlineSlack={canAdjustInlineSlack}
                 renderFixtureActionRail={renderFixtureActionRail}
-                hideActionRail={!isCoordinatingBoardPitch}
+                hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -1510,7 +1505,7 @@ const Kanban = ({
                   inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                   onAdjustInlineSlack={adjustInlineMoveSlack}
                   canAdjustInlineSlack={canAdjustInlineSlack}
-                  hideActionRail={!isCoordinatingBoardPitch}
+                  hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                   renderFixtureActionRail={renderFixtureActionRail}
                 />
               )}

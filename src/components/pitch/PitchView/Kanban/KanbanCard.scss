@@ -99,6 +99,12 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   &.inline-move-active {
     outline: 3px solid rgba($pc, 0.9);
     outline-offset: -3px;
+
+    .kanban-card-action-rail {
+      flex-basis: 21.24rem;
+      width: 21.24rem;
+      min-width: 21.24rem;
+    }
   }
 
   &.inline-swap-target {
@@ -329,9 +335,20 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
 
   &.inline-move-list {
+    .kanban-card-action-rail {
+      flex-basis: 21.24rem;
+      width: 21.24rem;
+      min-width: 21.24rem;
+
+      &::before {
+        inset: 0.18rem;
+        border-radius: 0.35rem;
+      }
+    }
+
     .kanban-card-inner {
       display: grid;
-      grid-template-columns: 15rem minmax(0, 1fr);
+      grid-template-columns: 10.6rem minmax(0, 1fr);
       grid-template-rows: auto 1fr;
       align-items: stretch;
     }
@@ -357,7 +374,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       height: 100%;
       display: flex;
       align-items: center;
-      padding: 0.35rem 0.75rem;
+      padding: 0.05rem 0.45rem;
     }
 
     .teams-container-move-mode {
@@ -368,9 +385,79 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
   }
 
+  &.inline-move-list:not(.inline-move-active) {
+    .kanban-card-frame {
+      width: 100%;
+    }
+
+    .kanban-card-inner {
+      grid-template-columns: 9.7rem minmax(0, 1fr);
+    }
+
+    .kanban-card-content-wrapper {
+      padding: 0.12rem 1.15rem 0.12rem 0.35rem;
+    }
+
+    .teams-container-move-mode {
+      justify-content: center;
+    }
+
+    .teams-stack-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 1.2rem;
+      min-height: auto;
+    }
+
+    .inline-move-vs-row {
+      display: none;
+    }
+
+    .team-row-inline-move {
+      display: grid;
+      grid-template-columns: 4.6rem minmax(0, 1fr);
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .team-row-inline-move:last-child {
+      grid-template-columns: minmax(0, 1fr) 4.6rem;
+      text-align: right;
+
+      logo-box {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      team-name {
+        grid-column: 1;
+        grid-row: 1;
+      }
+    }
+  }
+
   &.inline-move-active {
     .time-display.with-slack-controls {
       margin: 0;
+
+      .slack-button {
+        width: 4.6rem;
+        min-width: 4.6rem;
+        height: 2.6rem;
+        font-size: 1rem;
+        border-radius: 0.22rem;
+      }
+
+      .clock-icon {
+        transform: scale(0.78);
+        transform-origin: center;
+      }
+
+      .time-text {
+        margin-left: 0.15rem;
+      }
     }
   }
 
@@ -396,16 +483,16 @@ $bcol: saturate(lighten($sc, 5%), 30%);
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 0.55rem;
+        gap: 0.22rem;
         width: 100%;
         min-height: 100%;
 
         .team-row-inline-move {
           margin-bottom: 0;
           display: grid;
-          grid-template-columns: 6.8rem minmax(0, 1fr);
+          grid-template-columns: 4.4rem minmax(0, 1fr);
           align-items: center;
-          gap: 1.1rem;
+          gap: 0.45rem;
         }
 
         .inline-move-vs-row {
@@ -500,7 +587,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
 
       .team-row-inline-move.has-readiness {
         display: grid;
-        grid-template-columns: 6.8rem minmax(0, 1fr) 4.4rem;
+        grid-template-columns: 4.4rem minmax(0, 1fr) 3.6rem;
         width: 100%;
 
         logo-box {

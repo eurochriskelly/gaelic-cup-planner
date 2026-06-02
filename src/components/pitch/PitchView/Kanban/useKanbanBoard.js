@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import API from '../../../../shared/api/endpoints.js'; // Assuming API calls will be needed
+import API from '../../../../shared/api/endpoints.js';
+import { useInactivityTimeout } from '../../../../shared/hooks/useInactivityTimeout';
 
 // Helper to determine Kanban column based on fixture status
 const getKanbanColumn = (fixture) => {
@@ -20,7 +21,13 @@ export const useKanbanBoard = (initialFixtures, fetchFixturesCallback, startMatc
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedPitch, setSelectedPitch] = useState('All Pitches');
   const [selectedTeam, setSelectedTeam] = useState('All Teams');
-  // const [pitchColorMapping, setPitchColorMapping] = useState({}); // Removed
+
+  // Deselect fixture after 30s of inactivity
+  useInactivityTimeout({
+    timeoutMs: 30000,
+    isActive: Boolean(selectedFixture),
+    onTimeout: () => setSelectedFixture(null),
+  });
 
   useEffect(() => {
     // Process fixtures for board display
