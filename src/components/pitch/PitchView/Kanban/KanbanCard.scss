@@ -66,6 +66,17 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
   }
 
+  &.selected.has-action-rail-card {
+    outline: none;
+    animation: none;
+
+    .kanban-card-inner {
+      outline: $bwid solid #ffeb3b;
+      outline-offset: calc(-1 * #{$bwid});
+      animation: shimmer 2s linear infinite;
+    }
+  }
+
   @keyframes shimmer {
     from { outline-color: #fff9c4; }
     16% { outline-color: #ffeb3b; }
@@ -137,6 +148,9 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     flex: 1;
     margin: $bwid;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .kanban-card-frame {
@@ -145,11 +159,67 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     height: 100%;
 
     &.has-action-rail {
-      gap: 0.6rem;
+      gap: 0;
 
       .kanban-card-inner {
         min-width: 0;
-        margin-right: 0;
+      }
+    }
+  }
+
+  .kanban-card-action-rail {
+    flex: 0 0 9.65rem;
+    width: 9.65rem;
+    min-width: 9.65rem;
+    margin: $bwid $bwid $bwid 0;
+    overflow: hidden;
+    background: transparent;
+    cursor: default;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0.45rem 0.85rem;
+      border-radius: 0.45rem;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 0 0 0.12rem rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    &--inactive {
+      display: grid;
+      grid-auto-rows: minmax(0, 1fr);
+      place-items: center;
+      pointer-events: none;
+    }
+
+    &--blank {
+      pointer-events: none;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &__placeholder-button {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      opacity: 0.28;
+      filter: grayscale(1);
+
+      .icon {
+        width: 7.15rem;
+        height: 7.15rem;
+        max-width: 96%;
+        max-height: 96%;
       }
     }
   }
@@ -165,8 +235,8 @@ $bcol: saturate(lighten($sc, 5%), 30%);
 
   .kanban-card-content-wrapper {
     padding: 0.75rem;
-    flex-grow: 1; // If the card content needs to expand
-    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   &.inline-move-list .kanban-card-content-wrapper,

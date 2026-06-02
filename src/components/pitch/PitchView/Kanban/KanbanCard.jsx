@@ -6,6 +6,12 @@ import TimeDisplay from './TimeDisplay'
 import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react'
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react'
 import CancelIcon from '../../../../shared/icons/icon-cancel.svg?react'
+import StartIcon from '../../../../shared/icons/icon-start.svg?react'
+import ScoreIcon from '../../../../shared/icons/icon-score.svg?react'
+import MoveIcon from '../../../../shared/icons/icon-move.svg?react'
+import NotPlayedIcon from '../../../../shared/icons/icon-notplayed.svg?react'
+import CardIcon from '../../../../shared/icons/icon-card.svg?react'
+import ViewIcon from '../../../../shared/icons/icon-details.svg?react'
 import '../../../../components/web/logo-box.js'
 import '../../../../components/web/team-name.js'
 import '../../../../components/web/gaelic-score.js'
@@ -30,6 +36,7 @@ const KanbanCard = ({
   onAdjustInlineSlack,
   canAdjustInlineSlack = true,
   largeMode = false,
+  actionRail = null,
 }) => {
   const [teamReadinessDialog, setTeamReadinessDialog] = useState(null)
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
@@ -97,6 +104,8 @@ const KanbanCard = ({
   const isOngoing = fixture?.lane?.current === 'started' && fixture.startedTime
 
   const handleClick = () => {
+    if (isInlineMoveMode) return
+
     setMoveBarFixtureId?.(null)
     onClick()
   }
@@ -118,8 +127,17 @@ const KanbanCard = ({
   const useLargeCardSizing = largeMode && !isInlineMoveListCard
   const showInlineSwapAction = false
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
-  const hasInlineActionRail = false
+  const hasInlineActionRail = Boolean(actionRail)
+  const showActionRail = hasInlineActionRail || !isInlineMoveListCard
+  const reserveActionRail = showActionRail || isInlineMoveListCard
   const laneClass = fixture?.lane?.current || 'unknown'
+  const inactiveRailIconsByLane = {
+    planned: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
+    queued: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
+    started: [ViewIcon, NotPlayedIcon, CardIcon, ScoreIcon],
+    finished: [ViewIcon, NotPlayedIcon, CardIcon],
+  }
+  const inactiveRailIcons = inactiveRailIconsByLane[laneClass] || [ViewIcon, NotPlayedIcon]
   const team1Name = fixture.team1 || 'TBD'
   const team2Name = fixture.team2 || 'TBD'
   const moveModeTeamStyle = isInlineMoveListCard
@@ -303,9 +321,11 @@ const KanbanCard = ({
         isInlineMoveListCard ? 'inline-move-list' : ''
       } ${
         showInlineSwapAction ? 'inline-move-context' : ''
-      } ${isInlineSwapTarget ? 'inline-swap-target' : ''} lane-${laneClass}`}
+      } ${isInlineSwapTarget ? 'inline-swap-target' : ''} ${
+        reserveActionRail ? 'has-action-rail-card' : ''
+      } lane-${laneClass}`}
     >
-      <div className={`kanban-card-frame ${hasInlineActionRail ? 'has-action-rail' : ''}`}>
+      <div className={`kanban-card-frame ${reserveActionRail ? 'has-action-rail' : ''}`}>
         <div className="kanban-card-inner">
           <FixtureBar
             fixtureId={fixture.id}
@@ -472,6 +492,34 @@ const KanbanCard = ({
             )}
           </div>
         </div>
+        {reserveActionRail && (
+          hasInlineActionRail ? (
+            <div className="kanban-card-action-rail" draggable="false">
+              {actionRail}
+            </div>
+          ) : isInlineMoveListCard ? (
+            <div
+              className="kanban-card-action-rail kanban-card-action-rail--blank"
+              draggable="false"
+              aria-hidden="true"
+            />
+          ) : (
+            <div
+              className="kanban-card-action-rail kanban-card-action-rail--inactive"
+              draggable="false"
+              aria-hidden="true"
+            >
+              {inactiveRailIcons.map((Icon, index) => (
+                <span
+                  key={`inactive-action-${index}`}
+                  className="kanban-card-action-rail__placeholder-button"
+                >
+                  <Icon className="icon" />
+                </span>
+              ))}
+            </div>
+          )
+        )}
       </div>
       {renderTeamReadinessDialog()}
     </div>

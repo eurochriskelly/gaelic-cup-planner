@@ -31,6 +31,7 @@ const KanbanColumn = ({
    canAdjustInlineSlack,
    largeMode = false,
    emptyMessage,
+   renderFixtureActionRail,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -97,6 +98,7 @@ const KanbanColumn = ({
                onAdjustInlineSlack={onAdjustInlineSlack}
                canAdjustInlineSlack={canAdjustInlineSlack}
                largeMode={largeMode}
+               actionRail={renderFixtureActionRail?.(fixtureForPitchSlot)}
              />
            )}
            {!fixtureForPitchSlot && showEmptyState && (
@@ -162,6 +164,7 @@ const KanbanColumn = ({
                onAdjustInlineSlack={onAdjustInlineSlack}
                canAdjustInlineSlack={canAdjustInlineSlack}
                largeMode={largeMode}
+               actionRail={renderFixtureActionRail?.(fixtureForSlot)}
              />
            )}
         </KanbanSlot>

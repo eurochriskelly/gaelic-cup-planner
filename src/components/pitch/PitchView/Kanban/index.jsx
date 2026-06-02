@@ -836,61 +836,61 @@ const Kanban = ({
     setLargePaneDragOffset(0);
   };
 
-  const renderActionPanel = () => (
-    <div className="kanban-action-panel">
-      {!isCoordinatingBoardPitch ? (
-        <div className="not-coordinating-pitch-banner">
-          <span>You are not coordinating this pitch</span>
-        </div>
-      ) : selectedFixture ? (
-        <UpdateFixture
-          moveToNextFixture={moveToNextFixture}
-          fixture={selectedFixture}
-          showDetails={showDetailsPanel}
-          closeDetails={closeDetailsPanel}
-          isDetailsMode={showingDetails}
-          isInlineMoveMode={isInlineMoveActive}
-          inlineMoveTargetPitch={boardPitch}
-          inlineMoveSummary={inlineMoveSummary}
-          onStartInlineMove={startInlineMoveMode}
-          onCancelInlineMove={cancelInlineMoveMode}
-          onSetInlineMovePitch={setInlineMoveToFocusedPitch}
-          onMoveInlineEarlier={() => moveInlineFixture(-1)}
-          onMoveInlineLater={() => moveInlineFixture(1)}
-          onConfirmInlineMove={confirmInlineMove}
-          canConfirmInlineMove={canConfirmInlineMove}
-          canSetInlineMovePitch={
-            !hasInlineMoveSlack &&
-            Boolean(focusedPitch) &&
-            !isViewingInlineMoveTarget
-          }
-          canMoveInlineEarlier={
-            !hasInlineMoveSlack &&
-            isViewingInlineMoveTarget &&
-            inlineMoveCurrentIndex > 0
-          }
-          canMoveInlineLater={
-            !hasInlineMoveSlack &&
-            isViewingInlineMoveTarget &&
-            inlineMoveCurrentIndex > -1 &&
-            inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
-          }
-          isInlineMoveUnchanged={inlineMoveIsUnchanged}
-          canStartInlineMove={Boolean(
-            selectedFixture &&
-              !showingDetails &&
-              (selectedFixture?.lane?.current === 'planned' ||
-                selectedFixture?.lane?.current === 'queued')
-          )}
-          isInlineMoveSaving={isInlineMoveSaving}
-        />
-      ) : (
-        <div className="no-fixture-selected-banner">
-          <span>TAP FIXTURE FOR OPTIONS</span>
-        </div>
-      )}
-    </div>
-  );
+  const renderFixtureActionRail = (fixture) => {
+    if (
+      !isCoordinatingBoardPitch ||
+      !selectedFixture ||
+      !fixture ||
+      fixture.id !== selectedFixture.id
+    ) {
+      return null;
+    }
+
+    return (
+      <UpdateFixture
+        moveToNextFixture={moveToNextFixture}
+        fixture={selectedFixture}
+        showDetails={showDetailsPanel}
+        closeDetails={closeDetailsPanel}
+        isDetailsMode={showingDetails}
+        isInlineMoveMode={isInlineMoveActive}
+        inlineMoveTargetPitch={boardPitch}
+        inlineMoveSummary={inlineMoveSummary}
+        onStartInlineMove={startInlineMoveMode}
+        onCancelInlineMove={cancelInlineMoveMode}
+        onSetInlineMovePitch={setInlineMoveToFocusedPitch}
+        onMoveInlineEarlier={() => moveInlineFixture(-1)}
+        onMoveInlineLater={() => moveInlineFixture(1)}
+        onConfirmInlineMove={confirmInlineMove}
+        canConfirmInlineMove={canConfirmInlineMove}
+        canSetInlineMovePitch={
+          !hasInlineMoveSlack &&
+          Boolean(focusedPitch) &&
+          !isViewingInlineMoveTarget
+        }
+        canMoveInlineEarlier={
+          !hasInlineMoveSlack &&
+          isViewingInlineMoveTarget &&
+          inlineMoveCurrentIndex > 0
+        }
+        canMoveInlineLater={
+          !hasInlineMoveSlack &&
+          isViewingInlineMoveTarget &&
+          inlineMoveCurrentIndex > -1 &&
+          inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
+        }
+        isInlineMoveUnchanged={inlineMoveIsUnchanged}
+        canStartInlineMove={Boolean(
+          selectedFixture &&
+            !showingDetails &&
+            (selectedFixture?.lane?.current === 'planned' ||
+              selectedFixture?.lane?.current === 'queued')
+        )}
+        isInlineMoveSaving={isInlineMoveSaving}
+        variant="rail"
+      />
+    );
+  };
 
   const queuedFixturesForView = prioritizeSelectedFixture(
     pitchFilteredFixtures.filter(f => f?.lane?.current === 'queued')
@@ -954,6 +954,7 @@ const Kanban = ({
       canAdjustInlineSlack={canAdjustInlineSlack}
       largeMode={largeMode}
       emptyMessage={overrides.emptyMessage}
+      renderFixtureActionRail={renderFixtureActionRail}
     />
   );
 
@@ -1019,7 +1020,6 @@ const Kanban = ({
               coordinatedPitches={coordinatedPitches}
             />
           </div>
-          {renderActionPanel()}
           <div
             className={`kanban-large-panes active-${largePane} ${
               largePaneDragOffset ? 'is-dragging' : ''
@@ -1194,6 +1194,7 @@ const Kanban = ({
                     inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
+                    renderFixtureActionRail={renderFixtureActionRail}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -1228,6 +1229,7 @@ const Kanban = ({
                     inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
+                    renderFixtureActionRail={renderFixtureActionRail}
                   />
 
                   {showPitchCompleteBanner && (
@@ -1274,6 +1276,7 @@ const Kanban = ({
                 inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                 onAdjustInlineSlack={adjustInlineMoveSlack}
                 canAdjustInlineSlack={canAdjustInlineSlack}
+                renderFixtureActionRail={renderFixtureActionRail}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -1306,63 +1309,9 @@ const Kanban = ({
                   inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                   onAdjustInlineSlack={adjustInlineMoveSlack}
                   canAdjustInlineSlack={canAdjustInlineSlack}
+                  renderFixtureActionRail={renderFixtureActionRail}
                 />
               )}
-               
-                {/* Action panel with buttons - positioned at row 4 */}
-                <div className="kanban-action-panel">
-                  {!isCoordinatingBoardPitch ? (
-                    <div className="not-coordinating-pitch-banner">
-                      <span>You are not coordinating this pitch</span>
-                    </div>
-                  ) : selectedFixture ? (
-                    <UpdateFixture
-                      moveToNextFixture={moveToNextFixture}
-                      fixture={selectedFixture}
-                      showDetails={showDetailsPanel}
-                      closeDetails={closeDetailsPanel}
-                      isDetailsMode={showingDetails}
-                      isInlineMoveMode={isInlineMoveActive}
-                      inlineMoveTargetPitch={boardPitch}
-                      inlineMoveSummary={inlineMoveSummary}
-                      onStartInlineMove={startInlineMoveMode}
-                      onCancelInlineMove={cancelInlineMoveMode}
-                      onSetInlineMovePitch={setInlineMoveToFocusedPitch}
-                      onMoveInlineEarlier={() => moveInlineFixture(-1)}
-                      onMoveInlineLater={() => moveInlineFixture(1)}
-                      onConfirmInlineMove={confirmInlineMove}
-                      canConfirmInlineMove={canConfirmInlineMove}
-                      canSetInlineMovePitch={
-                        !hasInlineMoveSlack &&
-                        Boolean(focusedPitch) &&
-                        !isViewingInlineMoveTarget
-                      }
-                      canMoveInlineEarlier={
-                        !hasInlineMoveSlack &&
-                        isViewingInlineMoveTarget &&
-                        inlineMoveCurrentIndex > 0
-                      }
-                      canMoveInlineLater={
-                        !hasInlineMoveSlack &&
-                        isViewingInlineMoveTarget &&
-                        inlineMoveCurrentIndex > -1 &&
-                        inlineMoveCurrentIndex < (inlineMove?.previewOrderIds?.length || 0) - 1
-                      }
-                      isInlineMoveUnchanged={inlineMoveIsUnchanged}
-                      canStartInlineMove={Boolean(
-                        selectedFixture &&
-                          !showingDetails &&
-                          (selectedFixture?.lane?.current === 'planned' ||
-                            selectedFixture?.lane?.current === 'queued')
-                      )}
-                      isInlineMoveSaving={isInlineMoveSaving}
-                    />
-                  ) : (
-                    <div className="no-fixture-selected-banner">
-                      <span>TAP FIXTURE FOR OPTIONS</span>
-                    </div>
-                  )}
-                </div>
             </>
           );
         })()}
