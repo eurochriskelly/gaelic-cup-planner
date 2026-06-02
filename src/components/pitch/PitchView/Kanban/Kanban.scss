@@ -646,9 +646,36 @@
       &__teams {
         min-width: 0;
         overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
         font-size: 2rem;
+        display: flex;
+        align-items: center;
+
+        &-inner {
+          display: inline-flex;
+          align-items: center;
+          white-space: nowrap;
+        }
+
+        &.is-overflowing &-inner {
+          animation: ticker-scroll 10s ease-in-out infinite alternate;
+          padding-right: 2rem;
+        }
+      }
+
+      &__vs {
+        margin: 0 0.3rem;
+        color: #888;
+        flex-shrink: 0;
+      }
+
+      @keyframes ticker-scroll {
+        0%, 15% {
+          transform: translateX(0);
+        }
+        85%, 100% {
+          transform: translateX(var(--ticker-distance, -200px));
+        }
       }
     }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useAppContext } from '../../../../shared/js/Provider';
 import { choosePreferredPitch, normalizePitchId } from '../../../../shared/js/pitchSelection';
@@ -12,6 +12,7 @@ import PitchSelector from './PitchSelector'; // Import PitchSelector
 import UpdateFixture from '../UpdateFixture';
 import API from '../../../../shared/api/endpoints';
 import './Kanban.scss';
+import '../../../../components/web/team-name.js';
 
 const ACTIVE_MATCH_EMPTY_MESSAGE = (
   <>
@@ -974,15 +975,78 @@ const Kanban = ({
     />
   );
 
+  const CompactFixtureTeams = ({ team1, team2 }) => {
+    const wrapRef = useRef(null)
+    const contentRef = useRef(null)
+    const [isOverflowing, setIsOverflowing] = useState(false)
+
+    useEffect(() => {
+      const wrap = wrapRef.current
+      const content = contentRef.current
+      if (!wrap || !content) return
+
+      const checkOverflow = () => {
+        const overflowing = content.scrollWidth > wrap.clientWidth
+        setIsOverflowing(overflowing)
+        if (overflowing) {
+          const distance = content.scrollWidth - wrap.clientWidth + 16 // extra padding
+          wrap.style.setProperty('--ticker-distance', `-${distance}px`)
+        }
+      }
+
+      checkOverflow()
+      const ro = new ResizeObserver(checkOverflow)
+      ro.observe(wrap)
+      ro.observe(content)
+      return () => ro.disconnect()
+    }, [team1, team2])
+
+    return (
+      <span ref={wrapRef} className={`kanban-compact-fixture__teams ${isOverflowing ? 'is-overflowing' : ''}`}>
+        <span ref={contentRef} className="kanban-compact-fixture__teams-inner">
+          <team-name
+            name={team1 || 'TBD'}
+            showLogo="false"
+            height="16px"
+            maxchars="20"
+          />
+          <span className="kanban-compact-fixture__vs">vs</span>
+          <team-name
+            name={team2 || 'TBD'}
+            showLogo="false"
+            height="16px"
+            maxchars="20"
+          />
+        </span>
+      </span>
+    )
+  }
+
   const renderCompactFixtureSummary = (fixture) => {
     if (!fixture) return null;
 
-    const teams = `${fixture.team1 || 'TBD'} vs ${fixture.team2 || 'TBD'}`;
+    const normalizePrefix = (value) => {
+      const trimmed = typeof value === 'string' ? value.trim() : ''
+      if (!trimmed || trimmed.toUpperCase() === 'N/A') return ''
+      return trimmed
+    }
+
+    const derivePrefix = (value) => {
+      const text = typeof value === 'string' ? value.trim() : ''
+      if (!text) return ''
+      return text[0].toUpperCase()
+    }
+
+    const category = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
+    const competitionPrefix = fixture?.competition?.initials
+    const resolvedPrefix = normalizePrefix(competitionPrefix) || derivePrefix(category) || '?'
+    const formattedId = `${resolvedPrefix}.${`${fixture.id}`.padStart(2, '?').slice(-2)}`
+
     return (
       <div className="kanban-compact-fixture">
         <span className="kanban-compact-fixture__time">{fixture.scheduledTime || '--:--'}</span>
-        <span className="kanban-compact-fixture__id">{fixture.id}</span>
-        <span className="kanban-compact-fixture__teams">{teams}</span>
+        <span className="kanban-compact-fixture__id">{formattedId}</span>
+        <CompactFixtureTeams team1={fixture.team1} team2={fixture.team2} />
       </div>
     );
   };
