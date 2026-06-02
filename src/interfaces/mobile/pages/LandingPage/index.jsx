@@ -17,6 +17,7 @@ const LandingPage = () => {
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
   const { tournInfo } = useFetchTournament(tournamentId);
   const { pitches, isLoading: isLoadingPitches, error: pitchesError } = useFetchPitches(tournamentId);
   const { fixtures: tournamentFixtures } = useFetchTournamentFixtures(tournamentId);
@@ -62,6 +63,14 @@ const LandingPage = () => {
     }
     return undefined;
   }, [showNamePrompt, showResetConfirm]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 30000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const normaliseId = (id) => (id === null || id === undefined ? null : `${id}`);
 
@@ -183,7 +192,7 @@ const LandingPage = () => {
 
   const handleResetClick = () => {
     console.log('Reset Tournament clicked');
-    if (!canResetTournament) return;
+    if (!canResetAt(userRoleKey, tournamentStatus, firstMatchStart, new Date())) return;
     setShowResetConfirm(true);
   };
 
@@ -192,16 +201,19 @@ const LandingPage = () => {
   };
 
   const handleResetConfirm = async () => {
-    if (!canResetTournament) {
+    if (!canResetAt(userRoleKey, tournamentStatus, firstMatchStart, new Date())) {
       setShowResetConfirm(false);
       return;
     }
     setIsResetClicked(true);
-    await handle.resetTournament();
-    setShowResetConfirm(false);
-    setTimeout(() => {
-      setIsResetClicked(false);
-    }, 200);
+    try {
+      await handle.resetTournament();
+      setShowResetConfirm(false);
+    } finally {
+      setTimeout(() => {
+        setIsResetClicked(false);
+      }, 200);
+    }
   };
 
   const handleNameSubmit = (event) => {
@@ -223,16 +235,11 @@ const LandingPage = () => {
 
   const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
   const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
-  const now = new Date();
   const firstMatchStart = getFirstMatchStart(tournamentFixtures, tournamentDate);
-  const resetMillisecondsRemaining = firstMatchStart ? firstMatchStart.getTime() - now.getTime() : 0;
+  const resetMillisecondsRemaining = firstMatchStart ? firstMatchStart.getTime() - currentTime.getTime() : 0;
   const resetHoursRemaining = formatHoursRemaining(resetMillisecondsRemaining);
   const userRoleKey = (userRole || '').trim().toLowerCase();
-  const canResetTournament = (
-    userRoleKey === 'organizer' &&
-    tournamentStatus === 'in-design' &&
-    resetMillisecondsRemaining > 0
-  );
+  const canResetTournament = canResetAt(userRoleKey, tournamentStatus, firstMatchStart, currentTime);
   const roleModeLabel = `${(userRole || 'spectator').toUpperCase()} MODE`;
 
   return (
@@ -411,6 +418,12 @@ const getFixtureStart = (fixture = {}, tournamentDate = '') => {
 
   return new Date(year, month - 1, day, hours, minutes);
 };
+
+const canResetAt = (userRoleKey, tournamentStatus, firstMatchStart, comparisonTime) => (
+  userRoleKey === 'organizer' &&
+  tournamentStatus === 'in-design' &&
+  firstMatchStart?.getTime() > comparisonTime.getTime()
+);
 
 const parseDate = (value) => {
   if (!value) return null;

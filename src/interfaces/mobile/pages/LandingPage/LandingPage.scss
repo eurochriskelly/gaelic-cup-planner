@@ -187,10 +187,9 @@ $rcol: #d4e79b;
     flex-grow: 1;
 
     .main-actions {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 11.5rem;
       align-items: stretch;
-      justify-content: center;
       gap: 1.6rem;
       margin: 0 1rem;
       background: transparent;
@@ -198,14 +197,14 @@ $rcol: #d4e79b;
       padding: 1.2rem;
 
       .icon-button {
-        flex: 1 1 32%;
+        min-height: 11rem;
         min-width: 14rem;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 1.2rem;
         border: none;
-        border-radius: 1.8rem;
+        border-radius: 2rem;
         padding: 1.8rem 1.4rem;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -235,43 +234,73 @@ $rcol: #d4e79b;
         }
 
         .edit-icon {
-          font-size: 3rem;
+          font-size: 4.2rem;
+          flex: 0 0 auto;
         }
 
         .user-info {
           display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.2rem;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+          min-width: 0;
+          width: 100%;
         }
 
         .user-name-label {
           font-weight: 700;
-          font-size: 1.9rem;
+          font-size: 2rem;
           text-transform: capitalize;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .user-role-label {
-          font-size: 1.2rem;
+          font-size: 2.6rem;
           font-weight: 500;
           text-transform: uppercase;
-          color: rgba(0, 0, 0, 0.45);
-          letter-spacing: 0.05em;
+          color: rgba(0, 0, 0, 0.78);
+          letter-spacing: 0.02em;
+          white-space: nowrap;
         }
       }
 
-      .icon-button.reset-user,
+      .icon-button.reset-user {
+        grid-column: 1;
+        background: rgba(255, 255, 255, 0.9);
+        justify-content: flex-start;
+        padding: 2rem 3.2rem;
+      }
+
       .icon-button.reset-tournament {
+        grid-column: 1 / -1;
+        min-height: 8.4rem;
         background: rgba(255, 255, 255, 0.9);
       }
 
       .icon-button.logout {
+        grid-column: 2;
+        width: 11.5rem;
+        min-width: 11.5rem;
+        min-height: 11.5rem;
+        align-self: center;
+        justify-self: center;
+        flex-direction: column;
+        gap: 0.4rem;
+        border-radius: 50%;
+        padding: 1.6rem;
         background: #2d2d2d;
         color: #fff;
-        max-height: 100px;
+
+        .icon {
+          width: 4.2rem;
+          height: 4.2rem;
+        }
 
         .label {
           color: #fff;
+          font-size: 1.6rem;
         }
       }
     }
