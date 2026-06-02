@@ -52,6 +52,7 @@ const UpdateFixture = ({
   const [activeDrawer, setActiveDrawer] = useState(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isMoveConfirming, setIsMoveConfirming] = useState(false);
+  const [railScrollIndex, setRailScrollIndex] = useState(0);
 
   const hasStarted = !!nextFixture.startedTime;
   const hasResult = !!nextFixture.isResult;
@@ -64,6 +65,7 @@ const UpdateFixture = ({
   // Timeout refs
   const inactivityTimeoutRef = useRef(null);
   const unlockTimeoutRef = useRef(null);
+  const updateFixtureRef = useRef(null);
 
   // Clear all timeouts
   const clearAllTimeouts = useCallback(() => {
@@ -267,7 +269,7 @@ const UpdateFixture = ({
   const prioritizeButtons = (buttons) => {
     const lane = nextFixture.lane?.current;
     const buttonOrderByLane = {
-      planned: ['cancel', 'edit', 'reschedule', 'start', 'cards'],
+      planned: ['cancel', 'reschedule', 'edit', 'start', 'cards'],
       queued: ['cancel', 'reschedule', 'start', 'edit', 'cards'],
       started: ['cancel', 'cards', 'finish'],
       finished: ['cancel', 'cards']
@@ -288,12 +290,99 @@ const UpdateFixture = ({
     });
   };
 
-  const mainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton)).slice(0, 3);
+  const prioritizedMainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton));
+  const mainButtons = prioritizedMainButtons.slice(0, 3);
   const infoButton = visibleButtons.find(b => b.isInfoButton);
   const isLocked = !isInlineMoveMode && needsSlideToUnlock && !isUnlocked;
   const isRail = variant === 'rail';
-  const shouldScrollRailButtons =
-    isRail && !isInlineMoveMode && !isLocked && (isPlannedLane || isFinished);
+  const railButtonWindowSize = isPlannedLane || isFinished ? 3 : 4;
+  const railButtonIdsByLane = {
+    planned: [infoButton?.id, 'cancel', 'reschedule', 'edit'].filter(Boolean),
+  };
+  const orderedRailButtonIds = railButtonIdsByLane[nextFixture.lane?.current];
+  const buttonsById = new Map(visibleButtons.map(button => [button.id, button]));
+  const railButtons = orderedRailButtonIds
+    ? orderedRailButtonIds.map(id => buttonsById.get(id)).filter(Boolean)
+    : [
+      ...(infoButton ? [infoButton] : []),
+      ...prioritizedMainButtons,
+    ];
+  const shouldUseRailButtonWindow =
+    isRail &&
+    !isInlineMoveMode &&
+    !isLocked &&
+    ((isPlannedLane || isFinished) || railButtons.length > railButtonWindowSize);
+  const shouldHideInfoButton = isRail && isLocked;
+  const maxRailScrollIndex = Math.max(0, railButtons.length - railButtonWindowSize);
+
+  useEffect(() => {
+    setRailScrollIndex(0);
+  }, [fixture?.id, nextFixture.lane?.current, isLocked]);
+
+  useEffect(() => {
+    setRailScrollIndex((currentIndex) => Math.min(currentIndex, maxRailScrollIndex));
+  }, [maxRailScrollIndex]);
+
+  const centerRailCardIfControlsClip = useCallback(() => {
+    if (!shouldUseRailButtonWindow || maxRailScrollIndex <= 0 || !updateFixtureRef.current) return;
+
+    const railRoot = updateFixtureRef.current;
+    const card = railRoot.closest('.kanban-card');
+    const scrollContainer = railRoot.closest('.column-content');
+    const scrollControls = Array.from(railRoot.querySelectorAll('.rail-scroll-control'));
+
+    if (!card || !scrollContainer || !scrollControls.length) return;
+
+    const containerRect = scrollContainer.getBoundingClientRect();
+    const controlsClip = scrollControls.some((control) => {
+      const controlRect = control.getBoundingClientRect();
+      return controlRect.top < containerRect.top || controlRect.bottom > containerRect.bottom;
+    });
+
+    if (!controlsClip || scrollContainer.scrollHeight <= scrollContainer.clientHeight) return;
+
+    let cardOffsetTop = 0;
+    let offsetNode = card;
+
+    while (offsetNode && offsetNode !== scrollContainer) {
+      cardOffsetTop += offsetNode.offsetTop || 0;
+      offsetNode = offsetNode.offsetParent;
+    }
+
+    if (offsetNode !== scrollContainer) {
+      const cardRect = card.getBoundingClientRect();
+      cardOffsetTop = scrollContainer.scrollTop + cardRect.top - containerRect.top;
+    }
+
+    const maxScrollTop = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
+    const targetScrollTop = Math.max(
+      0,
+      Math.min(
+        maxScrollTop,
+        cardOffsetTop - ((scrollContainer.clientHeight - card.offsetHeight) / 2)
+      )
+    );
+
+    if (Math.abs(scrollContainer.scrollTop - targetScrollTop) < 1) return;
+
+    scrollContainer.scrollTo({
+      top: targetScrollTop,
+      behavior: 'smooth',
+    });
+  }, [maxRailScrollIndex, shouldUseRailButtonWindow]);
+
+  useEffect(() => {
+    if (!shouldUseRailButtonWindow || maxRailScrollIndex <= 0) return undefined;
+
+    const animationFrameId = window.requestAnimationFrame(centerRailCardIfControlsClip);
+    return () => window.cancelAnimationFrame(animationFrameId);
+  }, [
+    centerRailCardIfControlsClip,
+    maxRailScrollIndex,
+    nextFixture.id,
+    railScrollIndex,
+    shouldUseRailButtonWindow,
+  ]);
 
   const renderMoveModeButtons = () => {
     if (isMoveConfirming) {
@@ -404,20 +493,60 @@ const UpdateFixture = ({
   };
 
   const renderRailButtonScroller = () => {
-    const railButtons = [
-      ...(infoButton ? [infoButton] : []),
-      ...mainButtons,
-    ];
+    const currentRailScrollIndex = Math.min(railScrollIndex, maxRailScrollIndex);
+    const visibleRailButtons = railButtons.slice(
+      currentRailScrollIndex,
+      currentRailScrollIndex + railButtonWindowSize
+    );
+    const canScrollUp = currentRailScrollIndex > 0;
+    const canScrollDown = currentRailScrollIndex < maxRailScrollIndex;
+    const scrollRail = (direction) => {
+      setRailScrollIndex((currentIndex) => {
+        const nextIndex = currentIndex + direction;
+        return Math.max(0, Math.min(nextIndex, maxRailScrollIndex));
+      });
+    };
 
     return (
-      <div className="rail-button-scroll" role="group" aria-label="Fixture actions">
-        {railButtons.map(renderActionButton)}
+      <div
+        className={`rail-button-window rail-button-window--${railButtonWindowSize} ${
+          canScrollUp ? 'has-scroll-up' : ''
+        } ${
+          canScrollDown ? 'has-scroll-down' : ''
+        }`}
+        role="group"
+        aria-label="Fixture actions"
+      >
+        {canScrollUp && (
+          <button
+            type="button"
+            className="rail-scroll-control rail-scroll-control--up"
+            onClick={() => scrollRail(-1)}
+            aria-label="Show previous fixture actions"
+          >
+            <span className="rail-scroll-control__triangle" />
+          </button>
+        )}
+        <div className="rail-button-list">
+          {visibleRailButtons.map(renderActionButton)}
+        </div>
+        {canScrollDown && (
+          <button
+            type="button"
+            className="rail-scroll-control rail-scroll-control--down"
+            onClick={() => scrollRail(1)}
+            aria-label="Show more fixture actions"
+          >
+            <span className="rail-scroll-control__triangle" />
+          </button>
+        )}
       </div>
     );
   };
 
   return (
     <div
+      ref={updateFixtureRef}
       className={`updateFixture select-none updateFixture--${variant} ${
         isInlineMoveMode ? 'has-move-mode' : ''
       }`}
@@ -439,13 +568,13 @@ const UpdateFixture = ({
       <div className={`button-grid ${isInlineMoveMode ? 'move-mode-grid' : ''} ${
         isLocked ? 'is-locked' : ''
       } ${
-        shouldScrollRailButtons ? 'is-rail-scroll' : ''
+        shouldUseRailButtonWindow ? 'is-rail-scroll' : ''
       }`}>
-        {shouldScrollRailButtons ? (
+        {shouldUseRailButtonWindow ? (
           renderRailButtonScroller()
         ) : (
           <>
-            {!isInlineMoveMode && infoButton && (
+            {!isInlineMoveMode && infoButton && !shouldHideInfoButton && (
               <>
                 <button
                   className={`space-button info-button ${infoButton.getState()}`}
@@ -464,7 +593,7 @@ const UpdateFixture = ({
                   onUnlock={handleUnlock}
                   onLock={lockPanel}
                   isLocked={isLocked}
-                  lockedText={isRail ? 'Unlock to modify' : 'Unlock to update'}
+                  lockedText={isRail ? 'Slide to unlock' : 'Unlock to update'}
                   orientation={isRail ? 'vertical' : 'horizontal'}
                 />
               </div>

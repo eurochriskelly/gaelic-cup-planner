@@ -15,6 +15,7 @@ const SlideToUnlock = ({
   const handleRef = useRef(null);
   const startPositionRef = useRef(0);
   const maxDragRef = useRef(1);
+  const isDraggingRef = useRef(false);
   const isVertical = orientation === 'vertical';
   const lockedTextParts = lockedText.trim().split(/\s+/);
   const verticalLockedText = lockedTextParts.length > 2
@@ -42,29 +43,32 @@ const SlideToUnlock = ({
       setIsUnlocked(false);
       setDragPosition(0);
       setIsDragging(false);
+      isDraggingRef.current = false;
     }
   }, [isLocked]);
 
   const handleStart = useCallback((pointerPosition) => {
     if (isUnlocked) return;
     
+    isDraggingRef.current = true;
     setIsDragging(true);
     startPositionRef.current = pointerPosition;
     maxDragRef.current = getMaxDrag();
   }, [getMaxDrag, isUnlocked]);
 
   const handleMove = useCallback((pointerPosition) => {
-    if (!isDragging || isUnlocked) return;
+    if (!isDraggingRef.current || isUnlocked) return;
 
     const delta = pointerPosition - startPositionRef.current;
     const newPosition = Math.max(0, Math.min(delta, maxDragRef.current));
     
     setDragPosition(newPosition);
-  }, [isDragging, isUnlocked, isVertical]);
+  }, [isUnlocked]);
 
   const handleEnd = useCallback(() => {
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
 
+    isDraggingRef.current = false;
     setIsDragging(false);
     
     const maxDrag = maxDragRef.current;
@@ -79,11 +83,12 @@ const SlideToUnlock = ({
       // Snap back
       setDragPosition(0);
     }
-  }, [isDragging, dragPosition, onUnlock]);
+  }, [dragPosition, onUnlock]);
 
   // Mouse events
   const onMouseDown = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     handleStart(isVertical ? e.clientY : e.clientX);
   };
 
@@ -102,15 +107,33 @@ const SlideToUnlock = ({
   };
 
   // Touch events
+  const captureSliderTouch = (e) => {
+    e.stopPropagation();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+  };
+
   const onTouchStart = (e) => {
+    captureSliderTouch(e);
     handleStart(isVertical ? e.touches[0].clientY : e.touches[0].clientX);
   };
 
   const onTouchMove = (e) => {
+    if (isDraggingRef.current) {
+      captureSliderTouch(e);
+    } else {
+      e.stopPropagation();
+    }
     handleMove(isVertical ? e.touches[0].clientY : e.touches[0].clientX);
   };
 
-  const onTouchEnd = () => {
+  const onTouchEnd = (e) => {
+    if (isDraggingRef.current) {
+      captureSliderTouch(e);
+    } else {
+      e.stopPropagation();
+    }
     handleEnd();
   };
 
@@ -132,6 +155,7 @@ const SlideToUnlock = ({
       onMouseLeave={onMouseLeave}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
     >
       <div className="slide-track">
         <div className="slide-text">
