@@ -12,6 +12,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   transition: all 0.9s cubic-bezier(.25, .8, .25, 1);
   cursor: grab; // Indicates draggable
   position: relative; // For potential pseudo-elements or absolutely positioned children
+  z-index: 2;
   overflow: visible; // Allow toolbox to overhang
   display: flex;
   flex-direction: column;
@@ -277,6 +278,60 @@ $bcol: saturate(lighten($sc, 5%), 30%);
         width: 100%;
         margin-bottom: 2px;
         position: relative; // ensure each row is a positioning context
+
+        &.has-readiness {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 4.4rem;
+          column-gap: 0.5rem;
+          align-items: center;
+          width: 100%;
+          max-width: 100%;
+          padding-right: 0;
+          box-sizing: border-box;
+
+          team-name {
+            grid-column: 1;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+          }
+        }
+
+        .team-readiness-button {
+          position: static;
+          transform: none;
+          z-index: 25;
+          grid-column: 2;
+          width: 3.8rem;
+          height: 3.8rem;
+          justify-self: end;
+          align-self: center;
+          display: inline-grid;
+          place-items: center;
+          border: 0.18rem solid currentColor;
+          border-radius: 999px;
+          background: #fff;
+          font-family: Arial, sans-serif;
+          font-size: 2.55rem;
+          font-weight: 900;
+          line-height: 1;
+          cursor: pointer;
+          box-shadow: 0 0.12rem 0.35rem rgba(0, 0, 0, 0.2);
+
+          &.is-ready {
+            color: #2e7d32;
+            font-size: 2rem;
+          }
+
+          &.is-not-ready {
+            color: #c62828;
+          }
+
+          &:focus-visible {
+            outline: 0.22rem solid #ffeb3b;
+            outline-offset: 0.18rem;
+          }
+        }
     
         team-name {
           width: 100%;
@@ -289,6 +344,24 @@ $bcol: saturate(lighten($sc, 5%), 30%);
             margin: 0;
             background-color: red;
           }
+        }
+      }
+
+      .team-row-inline-move.has-readiness {
+        display: grid;
+        grid-template-columns: 6.8rem minmax(0, 1fr) 4.4rem;
+        width: 100%;
+
+        logo-box {
+          grid-column: 1;
+        }
+
+        team-name {
+          grid-column: 2;
+        }
+
+        .team-readiness-button {
+          grid-column: 3;
         }
       }
     

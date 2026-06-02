@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import './KanbanCard.scss'
 import FixtureBar from './FixtureBar'
 import TimeDisplay from './TimeDisplay'
@@ -29,6 +31,7 @@ const KanbanCard = ({
   canAdjustInlineSlack = true,
   largeMode = false,
 }) => {
+  const [teamReadinessDialog, setTeamReadinessDialog] = useState(null)
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
   const displayStage = fixture.stage
     ? fixture.stage
@@ -98,6 +101,15 @@ const KanbanCard = ({
     onClick()
   }
 
+  const handleDragStart = (event) => {
+    if (event.target?.closest?.('.team-readiness-button')) {
+      event.preventDefault()
+      return
+    }
+
+    onDragStart(event)
+  }
+
   const isRecentlyMoved = fixture.id === recentlyMovedFixtureId
   const isInlineMoveCard = isInlineMoveMode && fixture.id === inlineMoveFixtureId
   const isMoveCandidateLane =
@@ -140,10 +152,150 @@ const KanbanCard = ({
     ? addMinutesToTime(fixture.scheduledTime, inlineMoveSlackMinutes)
     : fixture.scheduledTime
 
+  const normalizeReadyValue = (value) => {
+    if (value === true || value === false) return value
+    if (value === 1 || value === 0) return Boolean(value)
+    if (typeof value !== 'string') return undefined
+
+    const normalizedValue = value.trim().toLowerCase()
+    if (normalizedValue === 'true') return true
+    if (normalizedValue === 'false') return false
+    return undefined
+  }
+
+  const getTeamReadiness = (teamKey, teamName) => {
+    const directReadyKey = `${teamKey}Ready`
+
+    if (Object.prototype.hasOwnProperty.call(fixture, directReadyKey)) {
+      return normalizeReadyValue(fixture[directReadyKey])
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(fixture, 'teamReady')) {
+      return undefined
+    }
+
+    if (fixture.teamReady && typeof fixture.teamReady === 'object') {
+      const candidateKeys = [
+        teamKey,
+        directReadyKey,
+        fixture[`${teamKey}Id`],
+        teamName,
+      ].filter(Boolean)
+
+      const matchingKey = candidateKeys.find((key) =>
+        Object.prototype.hasOwnProperty.call(fixture.teamReady, key)
+      )
+
+      return matchingKey
+        ? normalizeReadyValue(fixture.teamReady[matchingKey])
+        : undefined
+    }
+
+    return normalizeReadyValue(fixture.teamReady)
+  }
+
+  const renderTeamReadinessButton = (teamKey, teamName) => {
+    const ready = getTeamReadiness(teamKey, teamName)
+
+    if (ready === undefined) return null
+
+    const readinessLabel = ready
+      ? `${teamName} approved`
+      : `${teamName} not ready`
+
+    const openReadinessDialog = () => {
+      setTeamReadinessDialog({
+        fixtureId: fixture?.id,
+        teamKey,
+        teamName,
+        ready,
+      })
+    }
+
+    const stopReadinessPress = (event) => {
+      event.stopPropagation()
+    }
+
+    const handleReadinessClick = (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      openReadinessDialog()
+    }
+
+    return (
+      <button
+        type="button"
+        className={`team-readiness-button ${ready ? 'is-ready' : 'is-not-ready'}`}
+        aria-label={readinessLabel}
+        title={readinessLabel}
+        draggable="false"
+        onPointerDown={stopReadinessPress}
+        onMouseDown={stopReadinessPress}
+        onTouchStart={stopReadinessPress}
+        onClick={handleReadinessClick}
+      >
+        {ready ? <i className="pi pi-check" aria-hidden="true" /> : '!'}
+      </button>
+    )
+  }
+
+  const getTeamRowClassName = (baseClassName, teamKey, teamName) => {
+    const ready = getTeamReadiness(teamKey, teamName)
+    return `${baseClassName}${ready === undefined ? '' : ' has-readiness'}`
+  }
+
+  const closeTeamReadinessDialog = () => {
+    setTeamReadinessDialog(null)
+  }
+
+  const saveTeamReadinessDialog = () => {
+    setTeamReadinessDialog(null)
+  }
+
+  const renderTeamReadinessDialog = () => {
+    if (!teamReadinessDialog) return null
+
+    const dialog = (
+      <div
+        className="team-readiness-dialog-overlay"
+        role="presentation"
+        onClick={closeTeamReadinessDialog}
+      >
+        <div
+          className="team-readiness-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Team readiness"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="team-readiness-dialog__body" />
+          <div className="team-readiness-dialog__actions">
+            <button
+              type="button"
+              className="team-readiness-dialog__button team-readiness-dialog__button--cancel"
+              onClick={closeTeamReadinessDialog}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="team-readiness-dialog__button team-readiness-dialog__button--save"
+              onClick={saveTeamReadinessDialog}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+
+    return createPortal(dialog, document.body)
+  }
+
   return (
     <div
       draggable
-      onDragStart={onDragStart}
+      onDragStart={handleDragStart}
       onClick={handleClick}
       className={`kanban-card ${isSelected ? 'selected' : ''} ${
         isRecentlyMoved ? 'recently-moved' : ''
@@ -190,7 +342,7 @@ const KanbanCard = ({
               {isInlineMoveListCard ? (
                 <div className="teams-stack-row">
                   <span className="inline-move-vs-row">vs</span>
-                  <div className="team-row team-row-inline-move">
+                  <div className={getTeamRowClassName('team-row team-row-inline-move', 'team1', team1Name)}>
                     <logo-box size={moveModeLogoSize} title={team1Name}></logo-box>
                     <team-name
                       style={moveModeTeamStyle}
@@ -199,8 +351,9 @@ const KanbanCard = ({
                       height={teamHeight}
                       maxchars={teamMaxChars}
                     ></team-name>
+                    {renderTeamReadinessButton('team1', team1Name)}
                   </div>
-                  <div className="team-row team-row-inline-move">
+                  <div className={getTeamRowClassName('team-row team-row-inline-move', 'team2', team2Name)}>
                     <logo-box size={moveModeLogoSize} title={team2Name}></logo-box>
                     <team-name
                       style={moveModeTeamStyle}
@@ -209,11 +362,12 @@ const KanbanCard = ({
                       height={teamHeight}
                       maxchars={teamMaxChars}
                     ></team-name>
+                    {renderTeamReadinessButton('team2', team2Name)}
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="team-row pb-1">
+                  <div className={getTeamRowClassName('team-row pb-1', 'team1', team1Name)}>
                     <team-name
                       style={teamStyle}
                       name={fixture.team1 || 'TBD'}
@@ -223,6 +377,7 @@ const KanbanCard = ({
                       title-margin-below={vspace}
                       logo-margin-right="0.5rem"
                     ></team-name>
+                    {renderTeamReadinessButton('team1', team1Name)}
                     {hasScore && (
                       <div className="score-container">
                         <div
@@ -249,7 +404,7 @@ const KanbanCard = ({
 
                   <div className="vs-row">vs</div>
 
-                  <div className="team-row">
+                  <div className={getTeamRowClassName('team-row', 'team2', team2Name)}>
                     <team-name
                       style={teamStyle}
                       name={fixture.team2 || 'TBD'}
@@ -259,6 +414,7 @@ const KanbanCard = ({
                       title-margin-below={vspace}
                       logo-margin-right="0.5rem"
                     ></team-name>
+                    {renderTeamReadinessButton('team2', team2Name)}
                     {hasScore && (
                       <div className="score-container">
                         <div
@@ -317,6 +473,7 @@ const KanbanCard = ({
           </div>
         </div>
       </div>
+      {renderTeamReadinessDialog()}
     </div>
   )
 }

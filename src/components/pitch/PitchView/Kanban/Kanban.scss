@@ -283,6 +283,61 @@
     z-index: 1050; // High z-index to be on top
   }
 
+  .team-readiness-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.6rem;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .team-readiness-dialog {
+    width: min(92vw, 42rem);
+    min-height: 22rem;
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f0;
+    border: 0.2rem solid rgba(36, 42, 24, 0.25);
+    border-radius: 0.8rem;
+    box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.32);
+  }
+
+  .team-readiness-dialog__body {
+    flex: 1;
+  }
+
+  .team-readiness-dialog__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.2rem;
+    border-top: 0.1rem solid rgba(36, 42, 24, 0.18);
+  }
+
+  .team-readiness-dialog__button {
+    min-width: 9rem;
+    min-height: 4.2rem;
+    border: 0;
+    border-radius: 0.6rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  .team-readiness-dialog__button--cancel {
+    background: #d8dbd3;
+    color: #26301a;
+  }
+
+  .team-readiness-dialog__button--save {
+    background: #5e7f0d;
+    color: #fff;
+  }
+
   // Adjust panel positioning when both quick actions and details are shown
   &.details-visible {
     .kanban-board-area {
