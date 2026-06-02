@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useParams, useLocation, useNavigate } from "react-router-dom";
 import { Provider, useAppContext } from "../../shared/js/Provider";
 import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContext";
 import SelectTournamentView from "../../components/groups/SelectTournamentView";
@@ -7,6 +7,8 @@ import LandingPage from "./pages/LandingPage";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { useInactivityTimeout } from "../../shared/hooks/useInactivityTimeout";
+import { choosePreferredPitch } from "../../shared/js/pitchSelection";
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -18,7 +20,24 @@ import "./i18n";
 
 // New component to contain the routes and context-dependent logic
 function AppContent() {
-  const { userRole } = useAppContext(); // Now called within Provider's scope
+  const { userRole, filterSelections } = useAppContext(); // Now called within Provider's scope
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { tournamentId } = useParams();
+
+  // Auto-navigate back to pitch view after 60s of inactivity when not on pitch view
+  const isOnPitchView = location.pathname.includes('/pitch/');
+
+  useInactivityTimeout({
+    timeoutMs: 60000,
+    isActive: !isOnPitchView && Boolean(tournamentId),
+    onTimeout: () => {
+      const preferredPitch = choosePreferredPitch({ filterSelections });
+      if (preferredPitch) {
+        navigate(`/tournament/${tournamentId}/pitch/${preferredPitch}`);
+      }
+    },
+  });
 
   switch (userRole.toLowerCase()) {
     case 'organizer':
