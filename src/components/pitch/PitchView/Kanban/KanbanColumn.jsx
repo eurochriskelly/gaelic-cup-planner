@@ -99,6 +99,9 @@ const KanbanColumn = ({
                canAdjustInlineSlack={canAdjustInlineSlack}
                largeMode={largeMode}
                actionRail={renderFixtureActionRail?.(fixtureForPitchSlot)}
+               hideInactiveActionRail={
+                 selectedFixture && selectedFixture.id !== fixtureForPitchSlot.id
+               }
              />
            )}
            {!fixtureForPitchSlot && showEmptyState && (
@@ -165,6 +168,9 @@ const KanbanColumn = ({
                canAdjustInlineSlack={canAdjustInlineSlack}
                largeMode={largeMode}
                actionRail={renderFixtureActionRail?.(fixtureForSlot)}
+               hideInactiveActionRail={
+                 selectedFixture && selectedFixture.id !== fixtureForSlot.id
+               }
              />
            )}
         </KanbanSlot>

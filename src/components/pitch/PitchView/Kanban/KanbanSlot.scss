@@ -29,3 +29,13 @@
   box-shadow: none;
   overflow: visible; 
 }
+
+.kanban-slot:has(.kanban-card.selected) {
+  position: relative;
+  z-index: 2000;
+  overflow: visible;
+
+  .slot-card-container {
+    overflow: visible;
+  }
+}

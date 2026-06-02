@@ -37,6 +37,7 @@ const KanbanCard = ({
   canAdjustInlineSlack = true,
   largeMode = false,
   actionRail = null,
+  hideInactiveActionRail = false,
 }) => {
   const [teamReadinessDialog, setTeamReadinessDialog] = useState(null)
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
@@ -128,9 +129,9 @@ const KanbanCard = ({
   const showInlineSwapAction = false
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
   const hasInlineActionRail = Boolean(actionRail)
-  const showActionRail = hasInlineActionRail || !isInlineMoveListCard
-  const reserveActionRail = showActionRail || isInlineMoveListCard
+  const reserveActionRail = true
   const laneClass = fixture?.lane?.current || 'unknown'
+  const showInactiveLockedRail = laneClass === 'planned' || laneClass === 'finished'
   const inactiveRailIconsByLane = {
     planned: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
     queued: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
@@ -213,6 +214,8 @@ const KanbanCard = ({
   }
 
   const renderTeamReadinessButton = (teamKey, teamName) => {
+    if (!isSelected) return null
+
     const ready = getTeamReadiness(teamKey, teamName)
 
     if (ready === undefined) return null
@@ -259,7 +262,7 @@ const KanbanCard = ({
 
   const getTeamRowClassName = (baseClassName, teamKey, teamName) => {
     const ready = getTeamReadiness(teamKey, teamName)
-    return `${baseClassName}${ready === undefined ? '' : ' has-readiness'}`
+    return `${baseClassName}${isSelected && ready !== undefined ? ' has-readiness' : ''}`
   }
 
   const closeTeamReadinessDialog = () => {
@@ -494,15 +497,38 @@ const KanbanCard = ({
         </div>
         {reserveActionRail && (
           hasInlineActionRail ? (
-            <div className="kanban-card-action-rail" draggable="false">
+            <div
+              className="kanban-card-action-rail kanban-card-action-rail--active"
+              draggable="false"
+            >
               {actionRail}
             </div>
-          ) : isInlineMoveListCard ? (
+          ) : hideInactiveActionRail || isInlineMoveListCard ? (
             <div
               className="kanban-card-action-rail kanban-card-action-rail--blank"
               draggable="false"
               aria-hidden="true"
             />
+          ) : showInactiveLockedRail ? (
+            <div
+              className="kanban-card-action-rail kanban-card-action-rail--inactive kanban-card-action-rail--locked-placeholder"
+              draggable="false"
+              aria-hidden="true"
+            >
+              <span className="kanban-card-action-rail__locked-slider">
+                <span className="inactive-slide-to-unlock">
+                  <span className="inactive-slide-track">
+                    <span className="inactive-slide-text">
+                      <span>Slide to</span>
+                      <span>unlock</span>
+                    </span>
+                    <span className="inactive-slide-handle">
+                      <span className="inactive-handle-icon pi pi-arrow-down" />
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </div>
           ) : (
             <div
               className="kanban-card-action-rail kanban-card-action-rail--inactive"

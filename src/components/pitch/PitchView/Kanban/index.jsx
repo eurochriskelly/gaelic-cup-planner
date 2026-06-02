@@ -753,8 +753,12 @@ const Kanban = ({
     startX: 0,
     startY: 0,
     currentX: 0,
+    intent: null,
     isSwiping: false,
   });
+  const largePaneSwipeStartThreshold = 18;
+  // A 1:1 axis ratio is 45 degrees; vertical intent locks out lane switching.
+  const largePaneSwipeAxisRatio = 1;
   const largePaneOrder = ['planning', 'live', 'finished'];
 
   const largePaneMeta = {
@@ -781,6 +785,7 @@ const Kanban = ({
       startX: touch.clientX,
       startY: touch.clientY,
       currentX: touch.clientX,
+      intent: null,
       isSwiping: false,
     };
     setLargePaneDragOffset(0);
@@ -796,11 +801,21 @@ const Kanban = ({
     const absoluteX = Math.abs(deltaX);
     const absoluteY = Math.abs(deltaY);
 
-    if (!gesture.isSwiping) {
-      if (absoluteX < 12) return;
-      if (absoluteY > absoluteX) return;
+    if (!gesture.intent) {
+      if (Math.max(absoluteX, absoluteY) < largePaneSwipeStartThreshold) return;
+
+      if (absoluteY / Math.max(absoluteX, 1) >= largePaneSwipeAxisRatio) {
+        gesture.intent = 'vertical';
+        return;
+      }
+
+      if (absoluteX / Math.max(absoluteY, 1) <= largePaneSwipeAxisRatio) return;
+
+      gesture.intent = 'horizontal';
       gesture.isSwiping = true;
     }
+
+    if (gesture.intent !== 'horizontal') return;
 
     event.preventDefault();
     gesture.currentX = touch.clientX;
@@ -831,6 +846,7 @@ const Kanban = ({
       startX: 0,
       startY: 0,
       currentX: 0,
+      intent: null,
       isSwiping: false,
     };
     setLargePaneDragOffset(0);

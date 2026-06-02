@@ -1033,4 +1033,13 @@
       }
     }
   }
+
+  .kanban-slot:has(.kanban-card.selected),
+  .kanban-slot:has(.kanban-card.selected) > .slot-card-container,
+  .kanban-slot:has(.kanban-card.selected) > .slot-card-container > .kanban-card.selected {
+    overflow: visible !important;
+    position: relative;
+    z-index: 2000;
+  }
+
 } // Correctly closes .kanban-view
