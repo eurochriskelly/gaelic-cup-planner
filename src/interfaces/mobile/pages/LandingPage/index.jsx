@@ -402,7 +402,7 @@ const getFixtureStart = (fixture = {}, tournamentDate = '') => {
   const parsedTimestamp = parseDate(timestamp);
   if (parsedTimestamp) return parsedTimestamp;
 
-  const time = fixture.scheduledTime || fixture.plannedStartTime || fixture.time || fixture.Time;
+  const time = fixture.scheduledTime || fixture.plannedStartTime || fixture.plannedStart || fixture.startTime || fixture.StartTime || fixture.time || fixture.Time;
   if (!tournamentDate || !time) return null;
 
   const [year, month, day] = tournamentDate.split('-').map(Number);
