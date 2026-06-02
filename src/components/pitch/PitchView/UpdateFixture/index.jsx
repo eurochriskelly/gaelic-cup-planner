@@ -270,7 +270,7 @@ const UpdateFixture = ({
     const lane = nextFixture.lane?.current;
     const buttonOrderByLane = {
       planned: ['cancel', 'reschedule', 'edit', 'start', 'cards'],
-      queued: ['cancel', 'reschedule', 'start', 'edit', 'cards'],
+      queued: ['start', 'cancel', 'reschedule'],
       started: ['cancel', 'cards', 'finish'],
       finished: ['cancel', 'cards']
     };
@@ -298,6 +298,7 @@ const UpdateFixture = ({
   const railButtonWindowSize = isPlannedLane || isFinished ? 3 : 4;
   const railButtonIdsByLane = {
     planned: [infoButton?.id, 'cancel', 'reschedule', 'edit'].filter(Boolean),
+    queued: [infoButton?.id, 'start', 'cancel', 'reschedule'].filter(Boolean),
   };
   const orderedRailButtonIds = railButtonIdsByLane[nextFixture.lane?.current];
   const buttonsById = new Map(visibleButtons.map(button => [button.id, button]));
