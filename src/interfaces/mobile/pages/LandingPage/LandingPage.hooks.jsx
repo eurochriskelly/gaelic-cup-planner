@@ -64,3 +64,30 @@ export const useFetchPitches = (tid) => {
 
   return { pitches, isLoading, error };
 };
+
+export const useFetchTournamentFixtures = (tid) => {
+  const [fixtures, setFixtures] = useState([]);
+
+  useEffect(() => {
+    if (!tid) return;
+
+    let isMounted = true;
+
+    API.fetchAllFixtures(tid)
+      .then(({ data }) => {
+        if (!isMounted) return;
+        setFixtures(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        if (!isMounted) return;
+        console.error(`Error fetching tournament fixtures for [${tid}]`, error);
+        setFixtures([]);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [tid]);
+
+  return { fixtures };
+};

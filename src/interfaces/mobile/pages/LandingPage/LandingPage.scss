@@ -64,12 +64,13 @@ $rcol: #d4e79b;
 
   .banner-footer-bar {
     position: absolute;
-    bottom: 30px;
+    bottom: 8rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 2rem;
     width: 90%;
     max-width: 800px;
     background: rgba(51, 51, 51, 0.95);
@@ -81,12 +82,56 @@ $rcol: #d4e79b;
   }
 
   .banner-title {
+    min-width: 0;
     color: white;
     font-size: 3.2rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     transition: font-size 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .banner-version {
+    flex: 0 0 auto;
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 2.5rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    line-height: 1;
+  }
+
+  .role-mode-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 6.8rem;
+    display: grid;
+    grid-template-columns: 8.4rem minmax(0, 1fr) 8.4rem;
+    align-items: center;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    background: rgba(223, 230, 255, 0.94);
+    color: #4f55ff;
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    z-index: 11;
+
+    span {
+      justify-self: center;
+      min-width: 0;
+      white-space: nowrap;
+    }
+  }
+
+  .role-mode-icon {
+    justify-self: start;
+    font-size: 3.2rem;
   }
 
   header {

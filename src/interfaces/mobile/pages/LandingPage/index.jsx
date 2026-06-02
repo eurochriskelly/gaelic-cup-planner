@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
-import { useFetchTournament, useFetchPitches } from './LandingPage.hooks';
+import { useFetchTournament, useFetchPitches, useFetchTournamentFixtures } from './LandingPage.hooks';
 import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
@@ -15,9 +15,11 @@ import './LandingPage.scss';
 const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { tournInfo } = useFetchTournament(tournamentId);
   const { pitches, isLoading: isLoadingPitches, error: pitchesError } = useFetchPitches(tournamentId);
+  const { fixtures: tournamentFixtures } = useFetchTournamentFixtures(tournamentId);
   const {
     versionInfo,
     filterSelections,
@@ -51,7 +53,7 @@ const LandingPage = () => {
   }, [showNamePrompt]);
 
   useEffect(() => {
-    if (showNamePrompt) {
+    if (showNamePrompt || showResetConfirm) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
@@ -59,7 +61,7 @@ const LandingPage = () => {
       };
     }
     return undefined;
-  }, [showNamePrompt]);
+  }, [showNamePrompt, showResetConfirm]);
 
   const normaliseId = (id) => (id === null || id === undefined ? null : `${id}`);
 
@@ -176,10 +178,24 @@ const LandingPage = () => {
     }
   };
 
-  const handleResetClick = async () => {
+  const handleResetClick = () => {
     console.log('Reset Tournament clicked');
+    if (!canResetTournament) return;
+    setShowResetConfirm(true);
+  };
+
+  const handleResetCancel = () => {
+    setShowResetConfirm(false);
+  };
+
+  const handleResetConfirm = async () => {
+    if (!canResetTournament) {
+      setShowResetConfirm(false);
+      return;
+    }
     setIsResetClicked(true);
     await handle.resetTournament();
+    setShowResetConfirm(false);
     setTimeout(() => {
       setIsResetClicked(false);
     }, 200);
@@ -205,8 +221,16 @@ const LandingPage = () => {
   const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
   const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
   const now = new Date();
-  const today = `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(2, '0')}-${`${now.getDate()}`.padStart(2, '0')}`;
-  const canResetTournament = tournamentStatus === 'in-design' && tournamentDate > today;
+  const firstMatchStart = getFirstMatchStart(tournamentFixtures, tournamentDate);
+  const resetMillisecondsRemaining = firstMatchStart ? firstMatchStart.getTime() - now.getTime() : 0;
+  const resetHoursRemaining = formatHoursRemaining(resetMillisecondsRemaining);
+  const userRoleKey = (userRole || '').trim().toLowerCase();
+  const canResetTournament = (
+    userRoleKey === 'organizer' &&
+    tournamentStatus === 'in-design' &&
+    resetMillisecondsRemaining > 0
+  );
+  const roleModeLabel = `${(userRole || 'spectator').toUpperCase()} MODE`;
 
   return (
     <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`} ref={landingPageRef}>
@@ -231,12 +255,37 @@ const LandingPage = () => {
           </div>
         </div>
       )}
-      <div className="LandingPage__content" aria-hidden={showNamePrompt}>
+      {showResetConfirm && (
+        <div className="reset-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="resetConfirmTitle">
+          <div className="reset-confirm-modal">
+            <h2 id="resetConfirmTitle">Reset tournament?</h2>
+            <p>
+              This will clear all progress. Progress can be cleared for {resetHoursRemaining} more {resetHoursRemaining === '1' ? 'hour' : 'hours'} but not after tournament starts!
+            </p>
+            <div className="reset-confirm-actions">
+              <button type="button" className="cancel" onClick={handleResetCancel}>
+                Cancel
+              </button>
+              <button type="button" className="confirm" onClick={handleResetConfirm} disabled={isResetClicked}>
+                Confirm Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="LandingPage__content" aria-hidden={showNamePrompt || showResetConfirm}>
         {/* New: Add banner container */}
         <div className="banner-container">
           <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
           <div className="banner-footer-bar">
             <div className="banner-title">{t('landingPage_heading', 'Pitch Perfect')}</div>
+            {versionInfo?.mobile && (
+              <div className="banner-version">{`v${versionInfo.mobile}`}</div>
+            )}
+          </div>
+          <div className="role-mode-banner">
+            <i className="pi pi-users role-mode-icon" aria-hidden="true" />
+            <span>{roleModeLabel}</span>
           </div>
         </div>
         <header>
@@ -335,3 +384,41 @@ function Row({ label, children }) {
 }
 
 export default LandingPage;
+
+const getFirstMatchStart = (fixtures = [], tournamentDate = '') => {
+  const starts = fixtures
+    .map((fixture) => getFixtureStart(fixture, tournamentDate))
+    .filter(Boolean)
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  return starts[0] || null;
+};
+
+const getFixtureStart = (fixture = {}, tournamentDate = '') => {
+  const timestamp = fixture.scheduled || fixture.plannedStart || fixture.startTime || fixture.StartTime;
+  const parsedTimestamp = parseDate(timestamp);
+  if (parsedTimestamp) return parsedTimestamp;
+
+  const time = fixture.scheduledTime || fixture.plannedStartTime || fixture.time || fixture.Time;
+  if (!tournamentDate || !time) return null;
+
+  const [year, month, day] = tournamentDate.split('-').map(Number);
+  const [hours, minutes] = `${time}`.split(':').map(Number);
+  if (![year, month, day, hours, minutes].every(Number.isFinite)) return null;
+
+  return new Date(year, month - 1, day, hours, minutes);
+};
+
+const parseDate = (value) => {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const formatHoursRemaining = (milliseconds) => {
+  const hours = Math.max(0, milliseconds / (60 * 60 * 1000));
+  const flooredToTenth = Math.floor(hours * 10) / 10;
+  const safeHours = Math.max(0.1, flooredToTenth);
+
+  return Number.isInteger(safeHours) ? `${safeHours}` : safeHours.toFixed(1);
+};
