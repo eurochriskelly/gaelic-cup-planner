@@ -14,17 +14,30 @@ import API from '../../../../shared/api/endpoints';
 import './Kanban.scss';
 import '../../../../components/web/team-name.js';
 
-const ACTIVE_MATCH_EMPTY_MESSAGE = (
+const getActiveMatchEmptyMessage = (isCoordinatingPitch) => (
   <>
     <span className="kanban-column-empty-state__title">No active match</span>
     <span className="kanban-column-empty-state__line">
-      Press <strong>start</strong> when next match starts.
-    </span>
-    <span className="kanban-column-empty-state__line kanban-column-empty-state__line--hint">
-      Slide left and right to view planned and finished fixtures.
+      {isCoordinatingPitch ? (
+        <>
+          Press <strong>start</strong> when next match starts.
+        </>
+      ) : (
+        'Match will be listed here when it starts'
+      )}
     </span>
   </>
 );
+
+const BOARD_INFO_MESSAGES = [
+  'Slide left/right to view planned and finished fixtures',
+  'Tap on a fixture to view options',
+];
+
+const LARGE_LIVE_CARD_MIN_HEIGHT_REM = 37;
+const LARGE_LIVE_ROW_CHROME_REM = 9.2;
+const LARGE_SOON_HEADER_HEIGHT_REM = 4.6;
+const LARGE_SOON_ROW_HEIGHT_REM = 5.4;
 
 const parseFixtureTime = (value) => {
   if (!value) return null;
@@ -156,6 +169,9 @@ const Kanban = ({
    const [recentlyMovedFixtureId, setRecentlyMovedFixtureId] = useState(null);
    const [inlineMove, setInlineMove] = useState(null);
    const [isInlineMoveSaving, setIsInlineMoveSaving] = useState(false);
+   const [boardInfoMessageIndex, setBoardInfoMessageIndex] = useState(0);
+   const [visibleSoonRows, setVisibleSoonRows] = useState(0);
+   const largeLivePaneRef = useRef(null);
 
   const {
     filteredFixtures,
@@ -466,6 +482,46 @@ const Kanban = ({
 
   const focusedPitchStatus = boardPitch ? pitchStatuses[boardPitch] || null : null;
   const showPitchCompleteBanner = !!focusedPitchStatus?.isComplete;
+  const activeMatchEmptyMessage = getActiveMatchEmptyMessage(isCoordinatingBoardPitch);
+
+  useEffect(() => {
+    if (!largeMode || !isCoordinatingBoardPitch) {
+      setBoardInfoMessageIndex(0);
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setBoardInfoMessageIndex((currentIndex) =>
+        (currentIndex + 1) % BOARD_INFO_MESSAGES.length
+      );
+    }, 30000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isCoordinatingBoardPitch, largeMode]);
+
+  const renderBoardInfoBar = () => {
+    const isReadOnly = !isCoordinatingBoardPitch;
+
+    return (
+      <div className={`kanban-board-info-bar ${isReadOnly ? 'is-read-only' : 'is-guidance'}`}>
+        <i
+          className={`kanban-board-info-bar__icon pi ${
+            isReadOnly ? 'pi-exclamation-triangle' : 'pi-info-circle'
+          }`}
+          aria-hidden="true"
+        />
+        <span className="kanban-board-info-bar__message">
+          {isReadOnly
+            ? (
+              <>
+                <strong>Read-only:</strong> You are not coordinating this pitch
+              </>
+            )
+            : BOARD_INFO_MESSAGES[boardInfoMessageIndex]}
+        </span>
+      </div>
+    );
+  };
 
   // Effect to update selectedFixture when initialFixtures (from context) changes
   useEffect(() => {
@@ -936,6 +992,63 @@ const Kanban = ({
       })
   );
   const soonFixturesForView = plannedFixturesForView.slice(0, 2);
+  const visibleSoonFixtures = soonFixturesForView.slice(0, visibleSoonRows);
+
+  useEffect(() => {
+    if (!largeMode || isInlineMoveActive) {
+      setVisibleSoonRows(0);
+      return undefined;
+    }
+
+    const pane = largeLivePaneRef.current;
+    if (!pane) return undefined;
+
+    const getRemSize = () => {
+      const parsedRem = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+      return Number.isFinite(parsedRem) && parsedRem > 0 ? parsedRem : 10;
+    };
+
+    const updateVisibleSoonRows = () => {
+      const maxFixtureRows = Math.min(2, plannedFixturesForView.length);
+      if (maxFixtureRows <= 0) {
+        setVisibleSoonRows(0);
+        return;
+      }
+
+      const remSize = getRemSize();
+      const minimumLiveRowsHeight =
+        2 * (LARGE_LIVE_CARD_MIN_HEIGHT_REM + LARGE_LIVE_ROW_CHROME_REM) * remSize;
+      const availableSoonHeight = pane.clientHeight - minimumLiveRowsHeight;
+      let nextVisibleRows = 0;
+
+      for (let rowCount = maxFixtureRows; rowCount > 0; rowCount -= 1) {
+        const requiredSoonHeight =
+          (LARGE_SOON_HEADER_HEIGHT_REM + (rowCount * LARGE_SOON_ROW_HEIGHT_REM)) * remSize;
+
+        if (availableSoonHeight >= requiredSoonHeight) {
+          nextVisibleRows = rowCount;
+          break;
+        }
+      }
+
+      setVisibleSoonRows(nextVisibleRows);
+    };
+
+    updateVisibleSoonRows();
+
+    const resizeObserver = new ResizeObserver(updateVisibleSoonRows);
+    resizeObserver.observe(pane);
+    window.addEventListener('resize', updateVisibleSoonRows);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateVisibleSoonRows);
+    };
+  }, [
+    isInlineMoveActive,
+    largeMode,
+    plannedFixturesForView.length,
+  ]);
 
   const renderColumn = (columnKey, fixtures, overrides = {}) => (
     <KanbanColumn
@@ -972,6 +1085,7 @@ const Kanban = ({
       largeMode={largeMode}
       emptyMessage={overrides.emptyMessage}
       renderFixtureActionRail={renderFixtureActionRail}
+      hideActionRail={!isCoordinatingBoardPitch}
     />
   );
 
@@ -1054,9 +1168,9 @@ const Kanban = ({
   const renderSoonFixtures = () => (
     <div className="kanban-soon-fixtures">
       <div className="kanban-soon-fixtures__header">
-        soon <span>({soonFixturesForView.length})</span>
+        soon <span>({visibleSoonFixtures.length})</span>
       </div>
-      {soonFixturesForView.map((fixture) => (
+      {visibleSoonFixtures.map((fixture) => (
         <button
           type="button"
           key={fixture.id}
@@ -1100,6 +1214,7 @@ const Kanban = ({
               coordinatedPitches={coordinatedPitches}
             />
           </div>
+          {renderBoardInfoBar()}
           <div
             className={`kanban-large-panes active-${largePane} ${
               largePaneDragOffset ? 'is-dragging' : ''
@@ -1116,7 +1231,10 @@ const Kanban = ({
                 columnIndex: 1,
               })}
             </section>
-            <section className="kanban-large-pane kanban-large-pane-live">
+            <section
+              ref={largeLivePaneRef}
+              className="kanban-large-pane kanban-large-pane-live"
+            >
               {showPitchCompleteBanner && (
                 <div className="pitch-complete-banner">
                   <div className="pitch-complete-banner__eyebrow">{boardPitch} complete</div>
@@ -1133,14 +1251,14 @@ const Kanban = ({
                 columnIndex: 2,
                 allTournamentPitches: boardPitch ? [boardPitch] : [],
                 allPlannedFixtures: globalPlannedFixtures,
-                emptyMessage: ACTIVE_MATCH_EMPTY_MESSAGE,
+                emptyMessage: activeMatchEmptyMessage,
               })}
               {renderColumn('queued', queuedFixturesForView, {
                 title: 'Up next',
                 columnIndex: 0,
                 allTournamentPitches: boardPitch ? [boardPitch] : [],
               })}
-              {renderSoonFixtures()}
+              {visibleSoonFixtures.length > 0 && renderSoonFixtures()}
             </section>
             <section className="kanban-large-pane kanban-large-pane-finished">
               {renderColumn('finished', finishedFixturesForView, {
@@ -1275,6 +1393,7 @@ const Kanban = ({
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
                     renderFixtureActionRail={renderFixtureActionRail}
+                    hideActionRail={!isCoordinatingBoardPitch}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -1284,7 +1403,7 @@ const Kanban = ({
                     columnIndex={2} // Logical index for 'started'
                     fixtures={startedFixtures}
                     allPlannedFixtures={globalPlannedFixtures}
-                    emptyMessage={ACTIVE_MATCH_EMPTY_MESSAGE}
+                    emptyMessage={activeMatchEmptyMessage}
                     onDrop={(e) => isCoordinatingBoardPitch && onDrop(e, 'started')}
                     onDragOver={onDragOver}
                     onDragStart={isCoordinatingBoardPitch ? onDragStart : () => {}}
@@ -1310,6 +1429,7 @@ const Kanban = ({
                     onAdjustInlineSlack={adjustInlineMoveSlack}
                     canAdjustInlineSlack={canAdjustInlineSlack}
                     renderFixtureActionRail={renderFixtureActionRail}
+                    hideActionRail={!isCoordinatingBoardPitch}
                   />
 
                   {showPitchCompleteBanner && (
@@ -1357,6 +1477,7 @@ const Kanban = ({
                 onAdjustInlineSlack={adjustInlineMoveSlack}
                 canAdjustInlineSlack={canAdjustInlineSlack}
                 renderFixtureActionRail={renderFixtureActionRail}
+                hideActionRail={!isCoordinatingBoardPitch}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -1389,6 +1510,7 @@ const Kanban = ({
                   inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                   onAdjustInlineSlack={adjustInlineMoveSlack}
                   canAdjustInlineSlack={canAdjustInlineSlack}
+                  hideActionRail={!isCoordinatingBoardPitch}
                   renderFixtureActionRail={renderFixtureActionRail}
                 />
               )}

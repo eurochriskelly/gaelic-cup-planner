@@ -215,8 +215,8 @@
   .rail-scroll-control {
     position: absolute;
     left: 50%;
-    width: 7.15rem;
-    height: 7.15rem;
+    width: 8.15rem;
+    height: 8.15rem;
     z-index: 10000;
     border: 0;
     border-radius: 1.05rem;
@@ -233,7 +233,7 @@
     }
 
     &--up {
-      top: -8.05rem;
+      top: -9.05rem;
 
       .rail-scroll-control__triangle {
         border-bottom: 1.75rem solid #666;
@@ -241,7 +241,7 @@
     }
 
     &--down {
-      bottom: -8.05rem;
+      bottom: -9.05rem;
 
       .rail-scroll-control__triangle {
         border-top: 1.75rem solid #666;
@@ -266,8 +266,8 @@
     background: transparent;
 
     .icon {
-      width: 7.15rem;
-      height: 7.15rem;
+      width: 8.15rem;
+      height: 8.15rem;
       max-width: 96%;
       max-height: 96%;
     }

@@ -271,7 +271,7 @@ const UpdateFixture = ({
     const buttonOrderByLane = {
       planned: ['cancel', 'reschedule', 'edit', 'start', 'cards'],
       queued: ['start', 'cancel', 'reschedule'],
-      started: ['cancel', 'cards', 'finish'],
+      started: ['finish', 'cards', 'cancel'],
       finished: ['cancel', 'cards']
     };
     const preferredOrder = buttonOrderByLane[lane];
