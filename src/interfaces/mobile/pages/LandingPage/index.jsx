@@ -173,7 +173,10 @@ const LandingPage = () => {
       const button = document.querySelector('.sudo');
       button?.classList.add('active');
       try {
-        await API.resetTournament(tournamentId);
+        const response = await API.resetTournament(tournamentId);
+        if (response && response.ok === false) {
+          throw new Error(`Reset tournament failed with status ${response.status}`);
+        }
       } finally {
         button?.classList.remove('active');
       }
@@ -192,7 +195,6 @@ const LandingPage = () => {
 
   const handleResetClick = () => {
     console.log('Reset Tournament clicked');
-    if (!canResetAt(userRoleKey, tournamentStatus, firstMatchStart, new Date())) return;
     setShowResetConfirm(true);
   };
 
@@ -201,7 +203,7 @@ const LandingPage = () => {
   };
 
   const handleResetConfirm = async () => {
-    if (!canResetAt(userRoleKey, tournamentStatus, firstMatchStart, new Date())) {
+    if (hasTournamentStarted(firstMatchStart, new Date())) {
       setShowResetConfirm(false);
       return;
     }
@@ -233,14 +235,17 @@ const LandingPage = () => {
     });
   };
 
-  const tournamentStatus = (tournInfo?.Status || tournInfo?.status || '').trim().toLowerCase();
   const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
   const firstMatchStart = getFirstMatchStart(tournamentFixtures, tournamentDate);
   const resetMillisecondsRemaining = firstMatchStart ? firstMatchStart.getTime() - currentTime.getTime() : 0;
   const resetHoursRemaining = formatHoursRemaining(resetMillisecondsRemaining);
   const userRoleKey = (userRole || '').trim().toLowerCase();
-  const canResetTournament = canResetAt(userRoleKey, tournamentStatus, firstMatchStart, currentTime);
+  const isOrganizer = userRoleKey.includes('organizer');
+  const canResetTournament = isOrganizer && !hasTournamentStarted(firstMatchStart, currentTime);
   const roleModeLabel = `${(userRole || 'spectator').toUpperCase()} MODE`;
+  const resetTimeLimitText = firstMatchStart
+    ? `Progress can be cleared for ${resetHoursRemaining} more ${resetHoursRemaining === '1' ? 'hour' : 'hours'} but not after tournament starts!`
+    : 'Progress can be cleared until tournament starts!';
 
   return (
     <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`} ref={landingPageRef}>
@@ -270,7 +275,7 @@ const LandingPage = () => {
           <div className="reset-confirm-modal">
             <h2 id="resetConfirmTitle">Reset tournament?</h2>
             <p>
-              This will clear all progress. Progress can be cleared for {resetHoursRemaining} more {resetHoursRemaining === '1' ? 'hour' : 'hours'} but not after tournament starts!
+              This will clear all progress. {resetTimeLimitText}
             </p>
             <div className="reset-confirm-actions">
               <button type="button" className="cancel" onClick={handleResetCancel}>
@@ -321,7 +326,7 @@ const LandingPage = () => {
           </div>
         }
         <div className="main-actions">
-          <button className='icon-button reset-user' onClick={handle.resetUser}>
+          <button type="button" className='icon-button reset-user' onClick={handle.resetUser}>
             {userName ? (
               <>
                 <i className="pi pi-pencil edit-icon" aria-hidden="true" />
@@ -338,12 +343,12 @@ const LandingPage = () => {
             )}
           </button>
           {canResetTournament && (
-            <button className='icon-button reset-tournament sudo' onClick={handleResetClick}>
+            <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
               <ResetIcon className="icon" />
               <span className="label">Reset Tournament</span>
             </button>
           )}
-          <button className='icon-button logout' onClick={handle.disconnect}>
+          <button type="button" className='icon-button logout' onClick={handle.disconnect}>
             <LogoutIcon className="icon" />
             <span className="label">LEAVE</span>
           </button>
@@ -419,10 +424,13 @@ const getFixtureStart = (fixture = {}, tournamentDate = '') => {
   return new Date(year, month - 1, day, hours, minutes);
 };
 
-const canResetAt = (userRoleKey, tournamentStatus, firstMatchStart, comparisonTime) => (
-  userRoleKey === 'organizer' &&
-  tournamentStatus === 'in-design' &&
-  firstMatchStart?.getTime() > comparisonTime.getTime()
+const canResetAt = (userRoleKey, firstMatchStart, comparisonTime) => (
+  userRoleKey.includes('organizer') &&
+  !hasTournamentStarted(firstMatchStart, comparisonTime)
+);
+
+const hasTournamentStarted = (firstMatchStart, comparisonTime) => (
+  Boolean(firstMatchStart) && firstMatchStart.getTime() <= comparisonTime.getTime()
 );
 
 const parseDate = (value) => {

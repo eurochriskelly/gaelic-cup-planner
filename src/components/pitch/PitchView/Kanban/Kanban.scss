@@ -426,7 +426,11 @@
       padding: 0;
 
       .kanban-card {
-        height: 12rem;
+        height: 6rem;
+      }
+
+      .kanban-card.has-action-rail-card {
+        height: 10rem;
       }
 
       .column-content {

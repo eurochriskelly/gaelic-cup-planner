@@ -74,8 +74,9 @@ export const useFetchTournamentFixtures = (tid) => {
     let isMounted = true;
 
     API.fetchAllFixtures(tid)
-      .then(({ data }) => {
+      .then((response) => {
         if (!isMounted) return;
+        const data = Array.isArray(response) ? response : response?.data;
         setFixtures(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
