@@ -7,6 +7,15 @@ const app = express()
 const port = Number(process.env.PORT) || 4002
 const apiUrl = process.env.API_URL || 'http://localhost:4001'
 const distPath = path.resolve(__dirname, 'dist', 'mobile')
+const liveResultsHost = 'live.pitchperfect.eu.com'
+const resultsHost = 'results.pitchperfect.eu.com'
+
+app.set('trust proxy', true)
+
+const getRequestHost = (req) => {
+  const forwardedHost = req.headers['x-forwarded-host']?.split(',')[0]?.trim()
+  return (forwardedHost || req.hostname || req.headers.host || '').split(':')[0]
+}
 
 // fixed headers (e.g. Host) for routing through kamal-proxy
 // e.g. curl -H 'Host: tst-api.lan' http://kamal-proxy/health
@@ -15,6 +24,17 @@ console.log(`v3: Running server. API on ${apiUrl}`)
 app.get('/health', (req, res) => {
   console.log(process.env)
   res.type('text').send('ok')
+})
+
+app.use((req, res, next) => {
+  const host = getRequestHost(req)
+
+  if (host === liveResultsHost && req.path.startsWith('/events/')) {
+    const redirectUrl = new URL(req.originalUrl, `https://${resultsHost}`)
+    return res.redirect(302, redirectUrl.toString())
+  }
+
+  next()
 })
 
 app.use('/api', (req, res) => {
