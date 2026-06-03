@@ -110,9 +110,10 @@ $rcol: #d4e79b;
     width: 100%;
     min-height: 6.8rem;
     display: grid;
-    grid-template-columns: 8.4rem minmax(0, 1fr) 8.4rem;
+    grid-template-columns: max-content minmax(0, 1fr);
     align-items: center;
-    padding: 0 2rem;
+    gap: 1.6rem;
+    padding: 0.8rem 2rem;
     box-sizing: border-box;
     background: rgba(223, 230, 255, 0.94);
     color: #4f55ff;
@@ -121,20 +122,73 @@ $rcol: #d4e79b;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     z-index: 11;
+  }
 
-    span {
-      justify-self: center;
-      min-width: 0;
-      white-space: nowrap;
-    }
+  .role-mode-label {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .banner-user-button {
+    min-width: 0;
+    min-height: 5.2rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    border: 0;
+    padding: 0 0 0 1.2rem;
+    background: rgba(199, 210, 250, 0.9);
+    color: #111;
+    cursor: pointer;
   }
 
   .role-mode-icon {
-    justify-self: start;
     font-size: 3.2rem;
+    color: #4f55ff;
+  }
+
+  .banner-user-name {
+    min-width: 0;
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .banner-user-edit-icon {
+    width: 5.2rem;
+    height: 5.2rem;
+    display: grid;
+    place-items: center;
+    margin-right: 0.4rem;
+    border: 2px solid rgba(79, 85, 255, 0.24);
+    border-radius: 0.8rem;
+    background: rgba(223, 230, 255, 0.98);
+    color: #111;
+    font-size: 3rem;
+    box-shadow: 0 0.35rem 0.8rem rgba(79, 85, 255, 0.16);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .banner-user-button:hover .banner-user-edit-icon {
+    background: rgba(211, 220, 255, 1);
+    box-shadow: 0 0.55rem 1rem rgba(79, 85, 255, 0.22);
+    transform: translateY(-1px);
   }
 
   header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.2rem;
+    align-items: center;
+    gap: 1.6rem;
     margin-bottom: 0;
     font-size:1.6rem;
     text-transform: uppercase;
@@ -162,6 +216,32 @@ $rcol: #d4e79b;
       }
     }
   }
+
+  .tournament-logout {
+    width: 7.2rem;
+    min-width: 7.2rem;
+    height: 7.2rem;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    padding: 1.1rem;
+    background: #2d2d2d;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 2rem 3.2rem rgba(0, 0, 0, 0.25);
+    }
+
+    .logout-icon {
+      font-size: 3.7rem;
+      line-height: 1;
+    }
+  }
+
   footer {
     user-select: none;
     position: fixed;
@@ -187,10 +267,7 @@ $rcol: #d4e79b;
     flex-grow: 1;
 
     .main-actions {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 11.5rem;
-      align-items: stretch;
-      gap: 1.6rem;
+      display: flex;
       margin: 0 1rem;
       background: transparent;
       border-radius: 2rem;
@@ -266,42 +343,10 @@ $rcol: #d4e79b;
         }
       }
 
-      .icon-button.reset-user {
-        grid-column: 1;
-        background: rgba(255, 255, 255, 0.9);
-        justify-content: flex-start;
-        padding: 2rem 3.2rem;
-      }
-
       .icon-button.reset-tournament {
-        grid-column: 1 / -1;
+        width: 100%;
         min-height: 8.4rem;
         background: rgba(255, 255, 255, 0.9);
-      }
-
-      .icon-button.logout {
-        grid-column: 2;
-        width: 11.5rem;
-        min-width: 11.5rem;
-        min-height: 11.5rem;
-        align-self: center;
-        justify-self: center;
-        flex-direction: column;
-        gap: 0.4rem;
-        border-radius: 50%;
-        padding: 1.6rem;
-        background: #2d2d2d;
-        color: #fff;
-
-        .icon {
-          width: 4.2rem;
-          height: 4.2rem;
-        }
-
-        .label {
-          color: #fff;
-          font-size: 1.6rem;
-        }
       }
     }
 
@@ -441,6 +486,7 @@ $rcol: #d4e79b;
         cursor: not-allowed;
         transform: none;
       }
+    }
   }
 }
 
@@ -522,7 +568,6 @@ $rcol: #d4e79b;
     background: #c84646;
     color: #fff;
   }
-}
 }
 
 @media (max-width: 480px) {

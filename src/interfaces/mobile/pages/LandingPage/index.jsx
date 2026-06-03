@@ -7,8 +7,6 @@ import { useFetchTournament, useFetchPitches, useFetchTournamentFixtures } from 
 import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
-import LogoutIcon from '../../../../shared/icons/icon-logout.svg?react';
-import ResetUserIcon from '../../../../shared/icons/icon-team.svg?react';
 import API from "../../../../shared/api/endpoints";
 import './LandingPage.scss';
 
@@ -203,7 +201,8 @@ const LandingPage = () => {
   };
 
   const handleResetConfirm = async () => {
-    if (hasTournamentStarted(firstMatchStart, new Date())) {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (tournamentDate <= todayStr) {
       setShowResetConfirm(false);
       return;
     }
@@ -241,8 +240,9 @@ const LandingPage = () => {
   const resetHoursRemaining = formatHoursRemaining(resetMillisecondsRemaining);
   const userRoleKey = (userRole || '').trim().toLowerCase();
   const isOrganizer = userRoleKey.includes('organizer');
-  const canResetTournament = isOrganizer && !hasTournamentStarted(firstMatchStart, currentTime);
-  const roleModeLabel = `${(userRole || 'spectator').toUpperCase()} MODE`;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const canResetTournament = isOrganizer && tournamentDate > todayStr;
+  const roleLabel = (userRole || 'spectator').toUpperCase();
   const resetTimeLimitText = firstMatchStart
     ? `Progress can be cleared for ${resetHoursRemaining} more ${resetHoursRemaining === '1' ? 'hour' : 'hours'} but not after tournament starts!`
     : 'Progress can be cleared until tournament starts!';
@@ -299,11 +299,15 @@ const LandingPage = () => {
             )}
           </div>
           <div className="role-mode-banner">
-            <i className="pi pi-users role-mode-icon" aria-hidden="true" />
-            <span>{roleModeLabel}</span>
+            <span className="role-mode-label">{roleLabel}</span>
+            <button type="button" className="banner-user-button" onClick={handle.resetUser}>
+              <i className="pi pi-users role-mode-icon" aria-hidden="true" />
+              <span className="banner-user-name">{userName || 'Set name'}</span>
+              <i className="pi pi-pencil banner-user-edit-icon" aria-hidden="true" />
+            </button>
           </div>
         </div>
-        <header>
+        <header className="tournament-summary">
           <table>
             <tbody>
               <Row label="date">{tournInfo.Date?.substring(0, 10)}</Row>
@@ -311,6 +315,14 @@ const LandingPage = () => {
               <Row label="location">{tournInfo.Location}</Row>
             </tbody>
           </table>
+          <button
+            type="button"
+            className="icon-button logout tournament-logout"
+            onClick={handle.disconnect}
+            aria-label="Leave tournament"
+          >
+            <i className="pi pi-sign-out logout-icon" aria-hidden="true" />
+          </button>
         </header>
         <section className="icon-grid">
           { false && // This is a placeholder for the actual condition
@@ -325,34 +337,14 @@ const LandingPage = () => {
             </div>
           </div>
         }
-        <div className="main-actions">
-          <button type="button" className='icon-button reset-user' onClick={handle.resetUser}>
-            {userName ? (
-              <>
-                <i className="pi pi-pencil edit-icon" aria-hidden="true" />
-                <div className="user-info">
-                  <span className="label user-name-label">{userName}</span>
-                  {userRole && <span className="user-role-label">{userRole}</span>}
-                </div>
-              </>
-            ) : (
-              <>
-                <ResetUserIcon className="icon" />
-                <span className="label">Reset User</span>
-              </>
-            )}
-          </button>
-          {canResetTournament && (
+        {canResetTournament && (
+          <div className="main-actions">
             <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
               <ResetIcon className="icon" />
               <span className="label">Reset Tournament</span>
             </button>
-          )}
-          <button type="button" className='icon-button logout' onClick={handle.disconnect}>
-            <LogoutIcon className="icon" />
-            <span className="label">LEAVE</span>
-          </button>
-        </div>
+          </div>
+        )}
 
           <div className="filter-schedule">
             <FilterWidget
