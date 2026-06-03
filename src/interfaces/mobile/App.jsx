@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Routes, Route, Navigate, useParams, useLocation, useNavigate } from "react-router-dom";
 import { Provider, useAppContext } from "../../shared/js/Provider";
 import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContext";
@@ -17,6 +18,7 @@ import "../../shared/css/site-common.scss";
 import "../../shared/css/site-mobile.scss";
 import "./App.scss";
 import "./i18n";
+import config from "./config";
 
 // New component to contain the routes and context-dependent logic
 function AppContent() {
@@ -24,6 +26,17 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
   const { tournamentId } = useParams();
+
+  useEffect(() => {
+    const requestedRole = config.roleRedirectsByHost[window.location.hostname];
+    if (!requestedRole) {
+      return;
+    }
+
+    const redirectUrl = new URL(config.liveAppUrl);
+    redirectUrl.searchParams.set('role', requestedRole);
+    window.location.replace(redirectUrl.toString());
+  }, []);
 
   // Auto-navigate back to pitch view after 60s of inactivity when not on pitch view
   const isOnPitchView = location.pathname.includes('/pitch/');

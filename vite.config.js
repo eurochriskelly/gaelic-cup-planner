@@ -55,7 +55,9 @@ export default defineConfig({
     },
     allowedHosts: [
       'gge-blitz-tournament.duckdns.org',
+      'live.pitchperfect.eu.com',
       'coordinate.pitchperfect.eu.com',
+      'organizer.pitchperfect.eu.com',
       'app.pitchperfect.eu.com',
       'test-coordinate.pitchperfect.eu.com'
     ]

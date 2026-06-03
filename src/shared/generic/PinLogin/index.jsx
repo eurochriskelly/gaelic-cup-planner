@@ -6,6 +6,7 @@ import TournamentCard from "./TournamentCard"; // Import the new component
 import LoginHeader from "../LoginHeader"; // Import the new LoginHeader component
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
+import config from "../../../interfaces/mobile/config";
 
 // Removed AppHeader definition from here
 
@@ -38,7 +39,10 @@ const PinLogin = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const requestedRole = params.get('role')?.toLowerCase();
+    const requestedRoleParam = params.get('role')?.toLowerCase();
+    const requestedRole = requestedRoleParam === 'organiser'
+      ? 'organizer'
+      : requestedRoleParam;
     const validRoles = ['spectator', ...pinProtectedRoles];
 
     if (requestedRole && validRoles.includes(requestedRole)) {
@@ -180,16 +184,14 @@ const PinLogin = () => {
       return;
     }
 
-    setUserRoleAndCookie('spectator');
-    Cookies.set("tournamentId", tournament.Id, { expires: 1 / 24, path: "/" });
-    setIsThinking(true);
-
-    if (tournament.eventUuid) {
-      window.location.href = `https://planner.pitchperfect.eu.com/event/${tournament.eventUuid}`;
+    if (!tournament.eventUuid) {
+      setMessage('Live results are not available for this tournament yet.');
       return;
     }
 
-    window.location.href = `/tournament/${tournament.Id}/selectCategory`;
+    setUserRoleAndCookie('spectator');
+    setIsThinking(true);
+    window.location.href = `${config.resultsAppUrl}/events/${tournament.eventUuid}`;
   };
   
   const handleTournamentCardClick = (tournament) => {
