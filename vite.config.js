@@ -18,6 +18,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'pp-whistle.png'],
+      workbox: {
+        navigateFallbackDenylist: [/^\/events\//],
+      },
       manifest: {
         name: 'Pitch Perfect Coordination',
         short_name: 'PitchPerfect',

@@ -38,6 +38,12 @@ function AppContent() {
     window.location.replace(redirectUrl.toString());
   }, []);
 
+  // Redirect old results links on live.pitchperfect.eu.com
+  if (window.location.hostname === 'live.pitchperfect.eu.com' && location.pathname.startsWith('/events/')) {
+    window.location.replace(`${config.resultsAppUrl}${location.pathname}${location.search}`);
+    return null;
+  }
+
   // Auto-navigate back to pitch view after 60s of inactivity when not on pitch view
   const isOnPitchView = location.pathname.includes('/pitch/');
 
