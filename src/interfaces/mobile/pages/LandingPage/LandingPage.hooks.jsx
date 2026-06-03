@@ -2,7 +2,13 @@ import { useState, useEffect } from 'react';
 import API from "../../../../shared/api/endpoints";
 
 const defaultDate = {
-  Date: '2028-01-01T00:00:00Z'
+  Date: '2028-01-01T00:00:00Z',
+  Title: '',
+  Location: '',
+  codeCoordinator: '',
+  winPoints: 2,
+  drawPoints: 1,
+  lossPoints: 0,
 }
 
 export const useFetchTournament = (tid) => {
@@ -18,7 +24,7 @@ export const useFetchTournament = (tid) => {
       });
   }, [tid]);
 
-  return { tournInfo }
+  return { tournInfo, setTournInfo }
 }
 
 export const useFetchPitches = (tid) => {

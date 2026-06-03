@@ -43,6 +43,9 @@ export default {
       method: 'POST',
     }),
 
+  updateTournament: (tournamentId, fields) =>
+    fetchRootApi(`/tournaments/${tournamentId}`, 'PUT', fields),
+
   // Reschedule a match
   rescheduleMatch: (tournamentId, targetPitch, currentFixtureId, targetFixtureId, placement) =>
     fetchApi(tournamentId, `${currentFixtureId}/reschedule`, 'POST', {
