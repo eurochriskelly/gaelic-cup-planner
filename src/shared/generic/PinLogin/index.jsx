@@ -1,16 +1,22 @@
-import { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
-import TournamentCard from "./TournamentCard"; // Import the new component
-import LoginHeader from "../LoginHeader"; // Import the new LoginHeader component
+import TournamentCard from "./TournamentCard";
+import LoginHeader from "../LoginHeader";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 import config from "../../../interfaces/mobile/config";
 
-// Removed AppHeader definition from here
+const pinProtectedRoles = ['organizer', 'coordinator', 'coach', 'referee'];
+const allCompetitionsOption = {
+  value: '*',
+  label: 'All competitions',
+  isAllCompetitions: true,
+};
 
 const PinLogin = () => {
+  const { tournamentId: routeTournamentId } = useParams();
   const { setupTournament, versionInfo, userRole, setUserRoleAndCookie } = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,19 +29,30 @@ const PinLogin = () => {
   const [fetchError, setFetchError] = useState(null);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const [pinEntryRole, setPinEntryRole] = useState('coordinator');
+  const [pinEntryRole, setPinEntryRole] = useState(() => (
+    pinProtectedRoles.includes((userRole || '').toLowerCase())
+      ? userRole.toLowerCase()
+      : 'organizer'
+  ));
+  const [showRoleLogin, setShowRoleLogin] = useState(false);
+  const [roleLoginStep, setRoleLoginStep] = useState('select');
+  const [competitions, setCompetitions] = useState([]);
+  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
+  const [competitionFetchFailed, setCompetitionFetchFailed] = useState(false);
 
-  const [showRoleSelectorView, setShowRoleSelectorView] = useState(false); // Default to not showing role selector
   const currentRole = (userRole || 'spectator').toLowerCase();
-  const pinProtectedRoles = ['organizer', 'coordinator', 'coach', 'referee'];
-  const tournamentHeadingByRole = {
-    spectator: 'Select to follow live scores',
-    coordinator: 'Coordinate tournament',
-    organizer: 'Organize tournament',
-    referee: 'Ref tournament',
-    coach: 'Manage team for event',
-  };
-  const tournamentHeading = tournamentHeadingByRole[currentRole] || tournamentHeadingByRole.spectator;
+
+  const tournamentHeading = routeTournamentId
+    ? 'Latest results'
+    : 'Upcoming tournaments';
+
+  const competitionOptions = useMemo(() => {
+    if (competitions.length > 0) return competitions;
+    if (!isLoadingCompetitions && (selectedTournament || competitionFetchFailed)) {
+      return [allCompetitionsOption];
+    }
+    return [];
+  }, [competitions, isLoadingCompetitions, selectedTournament, competitionFetchFailed]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -46,11 +63,14 @@ const PinLogin = () => {
     const validRoles = ['spectator', ...pinProtectedRoles];
 
     if (requestedRole && validRoles.includes(requestedRole)) {
-      if (requestedRole !== currentRole) {
+      if (pinProtectedRoles.includes(requestedRole)) {
+        setPinEntryRole(requestedRole);
+        setRoleLoginStep('pin');
+        setShowRoleLogin(Boolean(selectedTournament || routeTournamentId));
+      }
+
+      if (requestedRole === 'spectator' && requestedRole !== currentRole) {
         setUserRoleAndCookie(requestedRole);
-        setSelectedTournament(null);
-        setPin(["", "", "", ""]);
-        setMessage("");
       }
 
       params.delete('role');
@@ -63,24 +83,27 @@ const PinLogin = () => {
         { replace: true },
       );
     }
-  }, [location.pathname, location.search, currentRole, navigate, setUserRoleAndCookie]);
+  }, [
+    location.pathname,
+    location.search,
+    currentRole,
+    navigate,
+    routeTournamentId,
+    selectedTournament,
+    setUserRoleAndCookie,
+  ]);
 
   useEffect(() => {
-    // Check for auth bypass in development
     if (import.meta.env.VITE_BYPASS_AUTH === '1') {
-      const bypassTournamentId = import.meta.env.VITE_TOURNAMENT_ID
+      const bypassTournamentId = import.meta.env.VITE_TOURNAMENT_ID;
       if (bypassTournamentId) {
-        setupTournament(bypassTournamentId)
-        Cookies.set('tournamentId', bypassTournamentId, { expires: 1 / 24, path: '/' })
-        navigate(`/tournament/${bypassTournamentId}`, { replace: true })
-        return
+        setupTournament(bypassTournamentId);
+        Cookies.set('tournamentId', bypassTournamentId, { expires: 1 / 24, path: '/' });
+        navigate(`/tournament/${bypassTournamentId}/home`, { replace: true });
+        return;
       }
     }
 
-    // userRole is now managed by AppContext/Provider, which initializes from cookie.
-    // PinLogin consumes this userRole directly from useAppContext.
-
-    // Fetch tournaments when component mounts
     setIsLoadingTournaments(true);
     setFetchError(null);
     API.fetchActiveTournaments()
@@ -95,76 +118,152 @@ const PinLogin = () => {
       .finally(() => {
         setIsLoadingTournaments(false);
       });
+  }, [navigate, setupTournament]);
 
-    // Check for existing tournament cookie if not showing role selector
-    // and navigate if a tournamentId is already set (e.g. user refreshes page)
-    if (!showRoleSelectorView) {
-        const tid = Cookies.get("tournamentId");
-        if (tid && tid !== "undefined" && !selectedTournament) { // also check selectedTournament to avoid loop if already on pin screen
-            // Potentially verify if this tournament is still valid for the role or if PIN is needed
-            // For now, directly navigate if tid exists.
-            // This part might need refinement if role changes should invalidate existing tid immediately.
-            // navigate(`/tournament/${tid}`, { replace: true }); // This might be too aggressive if user just changed role
-        }
-    }
-  }, [navigate]); // Removed showRoleSelectorView from deps to avoid re-triggering navigation from cookie check
-
-  // focus first PIN input when a tournament is selected
   useEffect(() => {
-    if (selectedTournament) {
+    if (!routeTournamentId) return;
+
+    const listedTournament = availableTournaments.find((tournament) => (
+      `${tournament.Id}` === `${routeTournamentId}`
+    ));
+
+    if (listedTournament) {
+      setupTournament(listedTournament.Id);
+      Cookies.set("tournamentId", listedTournament.Id, { expires: 1 / 24, path: "/" });
+      setSelectedTournament(listedTournament);
+      return;
+    }
+
+    let isMounted = true;
+    fetch(`/api/tournaments/${routeTournamentId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!isMounted) return;
+        const tournament = data?.data || data;
+        const nextTournament = {
+          Id: tournament?.Id || tournament?.id || routeTournamentId,
+          Title: tournament?.Title || tournament?.title || 'Selected tournament',
+          Location: tournament?.Location || tournament?.location || '',
+          Date: tournament?.Date || tournament?.date || '',
+          eventUuid: tournament?.eventUuid,
+          code: tournament?.code,
+        };
+        setupTournament(nextTournament.Id);
+        Cookies.set("tournamentId", nextTournament.Id, { expires: 1 / 24, path: "/" });
+        setSelectedTournament(nextTournament);
+      })
+      .catch((error) => {
+        if (!isMounted) return;
+        console.error("Error fetching selected tournament:", error);
+        const fallbackTournament = {
+          Id: routeTournamentId,
+          Title: 'Selected tournament',
+          Location: '',
+          Date: '',
+        };
+        setupTournament(fallbackTournament.Id);
+        Cookies.set("tournamentId", fallbackTournament.Id, { expires: 1 / 24, path: "/" });
+        setSelectedTournament(fallbackTournament);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [routeTournamentId, availableTournaments, setupTournament]);
+
+  useEffect(() => {
+    if (!selectedTournament?.Id) {
+      setCompetitions([]);
+      setCompetitionFetchFailed(false);
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoadingCompetitions(true);
+    setCompetitionFetchFailed(false);
+
+    fetch(`/api/tournaments/${selectedTournament.Id}/categories`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!isMounted) return;
+        const payload = Array.isArray(data) ? data : data?.data?.categories || data?.data;
+        setCompetitions(normaliseCompetitions(payload));
+      })
+      .catch((error) => {
+        if (!isMounted) return;
+        console.error("Error fetching competitions:", error);
+        setCompetitions([]);
+        setCompetitionFetchFailed(true);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingCompetitions(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedTournament?.Id]);
+
+  useEffect(() => {
+    if (showRoleLogin && roleLoginStep === 'pin') {
       inputsRef.current[0]?.focus();
     }
-  }, [selectedTournament]);
+  }, [showRoleLogin, roleLoginStep, pinEntryRole]);
 
-  const handleChange = (e, index) => {
-    const value = e.target.value.slice(0, 1);
+  const resetPinEntry = () => {
+    setPin(["", "", "", ""]);
+    setMessage("");
+    setFailedAttempts(0);
+  };
 
-    // Check if entering into a later input while previous ones are empty
-    if (index > 0 && value) {
-      const previousInputs = pin.slice(0, index);
-      if (previousInputs.some(p => p === '')) {
-        // Reset pin and focus first input if any previous input is empty
-        setPin(["", "", "", ""]);
-        inputsRef.current[0]?.focus();
-        return; // Stop further processing for this input
-      }
+  const handleBackClick = () => {
+    if (showRoleLogin) {
+      setShowRoleLogin(false);
+      setRoleLoginStep('select');
+      resetPinEntry();
+      return;
     }
 
-    const newPin = [...pin];
-    newPin[index] = value;
-    setPin(newPin);
-
-    // Move focus to the next input if a value was entered and it's not the last input
-    if (value && index < 3) {
-      inputsRef.current[index + 1]?.focus();
-    }
-
-    // Check if the PIN is complete
-    if (newPin.every((num) => num !== "")) {
-      const joined = newPin.join("");
-      onPinEntered(joined);
+    setSelectedTournament(null);
+    setShowRoleLogin(false);
+    setRoleLoginStep('select');
+    resetPinEntry();
+    if (routeTournamentId) {
+      navigate("/", { replace: true });
     }
   };
 
-  const handleRoleSelect = (role) => {
-    setUserRoleAndCookie(role); // Use context function
-    setShowRoleSelectorView(false);
-    setSelectedTournament(null); // Ensure we are on tournament list view
-    setPin(["", "", "", ""]);    // Clear any stale PIN
-    setMessage("");             // Clear any stale message
+  const handleTournamentCardClick = (tournament) => {
+    setMessage("");
+    setSelectedTournament(tournament);
+    setShowRoleLogin(false);
+    setRoleLoginStep('select');
+    setupTournament(tournament.Id);
+    Cookies.set("tournamentId", tournament.Id, { expires: 1 / 24, path: "/" });
+    navigate(`/tournament/${tournament.Id}`, { replace: false });
+  };
 
-    if (new URLSearchParams(location.search).has('role')) {
-      const params = new URLSearchParams(location.search);
-      params.delete('role');
-      const nextSearch = params.toString();
-      navigate(
-        {
-          pathname: location.pathname,
-          search: nextSearch ? `?${nextSearch}` : '',
-        },
-        { replace: true },
-      );
-    }
+  const handleCompetitionSelect = (competition) => {
+    redirectToLiveScores(selectedTournament, competition);
+  };
+
+  const handleChangeRoleClick = () => {
+    setPinEntryRole(pinProtectedRoles.includes(currentRole) ? currentRole : 'organizer');
+    setRoleLoginStep('select');
+    resetPinEntry();
+    setShowRoleLogin(true);
+  };
+
+  const handleRoleSelect = (role) => {
+    setPinEntryRole(role);
+    setRoleLoginStep('pin');
+    resetPinEntry();
+    setTimeout(() => inputsRef.current[0]?.focus(), 0);
   };
 
   const directNavigateToTournament = (tournamentId) => {
@@ -172,66 +271,53 @@ const PinLogin = () => {
     Cookies.set("tournamentId", tournamentId, { expires: 1 / 24, path: "/" });
     setIsThinking(true);
     setTimeout(() => {
-      navigate(`/tournament/${tournamentId}`, { replace: true });
+      navigate(`/tournament/${tournamentId}/home`, { replace: true });
       setIsThinking(false);
     }, 500);
   };
 
-  const redirectToLiveScores = (tournament) => {
+  const redirectToLiveScores = (tournament, competition) => {
     if (!tournament) {
       setIsThinking(true);
       window.location.href = `/`;
       return;
     }
 
-    if (!tournament.eventUuid) {
-      setMessage('Live results are not available for this tournament yet.');
-      return;
-    }
-
     setUserRoleAndCookie('spectator');
-    setIsThinking(true);
-    window.location.href = `${config.resultsAppUrl}/events/${tournament.eventUuid}`;
-  };
-  
-  const handleTournamentCardClick = (tournament) => {
-    setMessage(""); // Clear previous messages
-    if (currentRole === 'spectator') {
-      redirectToLiveScores(tournament);
+    setupTournament(tournament.Id);
+    Cookies.set("tournamentId", tournament.Id, { expires: 1 / 24, path: "/" });
+
+    if (tournament.eventUuid) {
+      const targetUrl = new URL(`/events/${tournament.eventUuid}`, config.resultsAppUrl);
+      if (competition?.value && !competition.isAllCompetitions) {
+        targetUrl.searchParams.set('category', competition.value);
+      }
+      setIsThinking(true);
+      window.location.href = targetUrl.toString();
       return;
     }
 
-    // If tournament.code exists, it's PIN protected, show PIN screen.
-    // Otherwise, allow direct navigation (spectator-like access).
-    if (tournament.code) {
-      setSelectedTournament(tournament);
-      // Default pinEntryRole based on current global userRole, or 'coach'
-      if (pinProtectedRoles.includes(currentRole)) {
-        setPinEntryRole(currentRole);
-      } else {
-        setPinEntryRole('coach');
-      }
-      setPin(["", "", "", ""]); // Clear previous PIN
-    } else {
-      directNavigateToTournament(tournament.Id);
-    }
-  };
-
-  const handleContinueAsSpectator = () => {
-    redirectToLiveScores(selectedTournament);
+    const encodedCompetition = competition?.value && !competition.isAllCompetitions
+      ? encodeURIComponent(competition.value)
+      : null;
+    navigate(
+      encodedCompetition
+        ? `/tournament/${tournament.Id}/category/${encodedCompetition}`
+        : `/tournament/${tournament.Id}/selectCategory`,
+      { replace: false },
+    );
   };
 
   const onPinEntered = async (enteredPin) => {
     if (selectedTournament) {
       setIsThinking(true);
-      setMessage(""); // Clear previous messages
+      setMessage("");
       try {
         await API.checkTournamentCode(selectedTournament.Id, enteredPin, pinEntryRole);
-        // PIN is valid for the role
-        setUserRoleAndCookie(pinEntryRole); // Set the global role
-        directNavigateToTournament(selectedTournament.Id); // Navigate (handles its own setIsThinking)
+        setUserRoleAndCookie(pinEntryRole);
+        directNavigateToTournament(selectedTournament.Id);
       } catch (error) {
-        setIsThinking(false); // Reset thinking state on error
+        setIsThinking(false);
         console.error("PIN check failed:", error);
 
         const attempts = failedAttempts + 1;
@@ -239,32 +325,52 @@ const PinLogin = () => {
         if (attempts >= 3) {
           setMessage("Too many invalid attempts");
           setTimeout(() => {
-            setPin(["", "", "", ""]);
-            setMessage("");
-            setFailedAttempts(0);
-            setSelectedTournament(null); // Go back to tournament selection
+            resetPinEntry();
+            setShowRoleLogin(false);
           }, 2000);
         } else {
           setMessage("Invalid pin for selected role!");
           setTimeout(() => {
             setPin(["", "", "", ""]);
-            if (inputsRef.current[0]) {
-              inputsRef.current[0].focus();
-            }
+            inputsRef.current[0]?.focus();
             setMessage("");
           }, 2000);
         }
       }
     } else {
-      // Handle case where tournament is not selected (should not normally happen if flow is correct)
       console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
       inputsRef.current[0]?.focus();
       setTimeout(() => {
-        setSelectedTournament(null); // Go back to selection
+        setShowRoleLogin(false);
         setMessage("");
       }, 2500);
+    }
+  };
+
+  const handleChange = (e, index) => {
+    const value = e.target.value.slice(0, 1);
+
+    if (index > 0 && value) {
+      const previousInputs = pin.slice(0, index);
+      if (previousInputs.some(p => p === '')) {
+        setPin(["", "", "", ""]);
+        inputsRef.current[0]?.focus();
+        return;
+      }
+    }
+
+    const newPin = [...pin];
+    newPin[index] = value;
+    setPin(newPin);
+
+    if (value && index < 3) {
+      inputsRef.current[index + 1]?.focus();
+    }
+
+    if (newPin.every((num) => num !== "")) {
+      onPinEntered(newPin.join(""));
     }
   };
 
@@ -283,7 +389,6 @@ const PinLogin = () => {
     }
   };
 
-  // step 1: choose tournament
   if (!selectedTournament) {
     if (isLoadingTournaments) {
       return <div className="pinLogin thinking">Loading tournaments...</div>;
@@ -292,134 +397,182 @@ const PinLogin = () => {
       return <div className="pinLogin error">{fetchError}</div>;
     }
     if (availableTournaments.length === 0) {
-       // Handle empty state - Render header and message
-       return (
-         <>
-           {/* Pass showBackButton={false} */}
-           <LoginHeader version={versionInfo?.mobile} showBackButton={false} />
-           <div className="pinLogin">No active tournaments found.</div>
-           <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
-         </>
-       );
+      return (
+        <>
+          <LoginHeader version={versionInfo?.mobile} showBackButton={false} />
+          <div className="pinLogin">No active tournaments found.</div>
+          <div className="version-info">{`PitchPerfect v${versionInfo?.mobile}`}</div>
+        </>
+      );
     }
-  } // End of loading/error/empty checks
+  }
 
-  // Main return statement for the component
   return (
     <>
       <LoginHeader
         version={versionInfo?.mobile}
-        showBackButton={showRoleSelectorView || (!!selectedTournament && !showRoleSelectorView)}
-        onBackClick={() => {
-          if (showRoleSelectorView) {
-            setShowRoleSelectorView(false);
-          } else {
-            setSelectedTournament(null);
-            setPin(["", "", "", ""]);
-            setMessage("");
-          }
-        }}
+        showBackButton={Boolean(selectedTournament)}
+        onBackClick={handleBackClick}
+        tournament={selectedTournament}
       />
-      <div className={`pinLogin ${showRoleSelectorView ? 'role-selector-active-parent' : ''}`}>
-        {showRoleSelectorView ? (
-          <div className="role-selector-container">
-            <h2>Select Your Role</h2>
-            {/* Back button is now handled by LoginHeader */}
-            <div className="role-grid">
-              {pinProtectedRoles.map(role => (
-                <button
-                  key={role}
-                  onClick={() => handleRoleSelect(role)}
-                  className={`role-button ${currentRole === role ? 'active-role' : ''}`}
-                >
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                  {currentRole === role ? ' *' : ''}
-                </button>
+      <div className={`pinLogin ${showRoleLogin ? 'role-selector-active-parent' : ''}`}>
+        {!selectedTournament ? (
+          <div className="tournament-selection-view">
+            <h2>{tournamentHeading}</h2>
+            {message && <div className="general-message">{message}</div>}
+            {isLoadingTournaments && <div className="thinking">Loading tournaments...</div>}
+            {fetchError && <div className="error">{fetchError}</div>}
+            {!isLoadingTournaments && !fetchError && availableTournaments.length === 0 && !message && (
+              <div>No active tournaments found.</div>
+            )}
+            <div className="tournamentList">
+              {availableTournaments.map((t) => (
+                <TournamentCard
+                  key={t.Id}
+                  title={t.Title}
+                  location={t.Location}
+                  date={t.Date}
+                  href={`/tournament/${t.Id}`}
+                  onClick={() => handleTournamentCardClick(t)}
+                />
               ))}
             </div>
-            <div className="role-live-choice">
-              <div className="role-grid-separator">OR</div>
-              <button
-                onClick={() => handleRoleSelect('spectator')}
-                className={`role-button role-button-live ${currentRole === 'spectator' ? 'active-role' : ''}`}
-              >
-                Live Scores Only
-                {currentRole === 'spectator' ? ' *' : ''}
-              </button>
+          </div>
+        ) : showRoleLogin ? (
+          <div className="pin-entry-view gateway-panel">
+            <div className={`role-login-card ${roleLoginStep === 'pin' ? 'role-pin-card' : 'role-select-card'}`}>
+              <div className="role-login-content">
+                {roleLoginStep === 'select' ? (
+                  <>
+                    <h2>Select role</h2>
+                    <div className="role-grid">
+                      {pinProtectedRoles.map(role => (
+                        <button
+                          type="button"
+                          key={role}
+                          onClick={() => handleRoleSelect(role)}
+                          className={`role-button ${pinEntryRole === role ? 'active-role' : ''}`}
+                        >
+                          {role.charAt(0).toUpperCase() + role.slice(1)}
+                          {pinEntryRole === role ? ' *' : ''}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2>Enter PIN</h2>
+                    <div className="pin-entry-row">
+                      <div className="pinContainer">
+                        {pin.map((num, index) => (
+                          <input
+                            className={isThinking ? "thinking" : ""}
+                            key={index}
+                            ref={(el) => (inputsRef.current[index] = el)}
+                            value={num}
+                            onChange={(e) => handleChange(e, index)}
+                            onKeyDown={(e) => handleKeyDown(e, index)}
+                            maxLength="1"
+                          />
+                        ))}
+                      </div>
+                      <button type="button" className="pin-visibility-button" aria-label="PIN visibility">
+                        <i className="pi pi-eye" aria-hidden="true" />
+                      </button>
+                    </div>
+                    <div className="pin-role-context">To log in as</div>
+                    <button
+                      type="button"
+                      className="selected-role-button"
+                      onClick={() => {
+                        setRoleLoginStep('select');
+                        resetPinEntry();
+                      }}
+                    >
+                      <span className="selected-role-back" aria-hidden="true">
+                        <i className="pi pi-arrow-left" />
+                      </span>
+                      <span>{pinEntryRole}</span>
+                    </button>
+                    <div className="pin-message">&nbsp;{message}&nbsp;</div>
+                  </>
+                )}
+                <button
+                  type="button"
+                  className="back-to-results-button"
+                  onClick={() => {
+                    setShowRoleLogin(false);
+                    setRoleLoginStep('select');
+                    resetPinEntry();
+                  }}
+                >
+                  <i className="pi pi-arrow-left" aria-hidden="true" />
+                  Back to results
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          <>
-            {!selectedTournament ? (
-              // Tournament Selection View
-              <div className="tournament-selection-view"> {/* Removed pinLogin class from here */}
-                <h2>{tournamentHeading}</h2>
-                {message && <div className="general-message">{message}</div>}
-                {isLoadingTournaments && <div className="thinking">Loading tournaments...</div>}
-                {fetchError && <div className="error">{fetchError}</div>}
-                {!isLoadingTournaments && !fetchError && availableTournaments.length === 0 && !message && (
-                  <div>No active tournaments found.</div>
+          <div className="competition-selection-view gateway-panel">
+            <div className="latest-results-card">
+              <div className="latest-results-content">
+                <h2>Latest results</h2>
+                <div className="competition-prompt">Select competition</div>
+                {isLoadingCompetitions ? (
+                  <div className="thinking">Loading competitions...</div>
+                ) : (
+                  <div className="competition-list">
+                    {competitionOptions.map((competition) => (
+                      <button
+                        type="button"
+                        key={competition.value}
+                        className="competition-button"
+                        onClick={() => handleCompetitionSelect(competition)}
+                      >
+                        <span>{competition.label}</span>
+                        <i className="pi pi-arrow-left" aria-hidden="true" />
+                      </button>
+                    ))}
+                  </div>
                 )}
-                <div className="tournamentList">
-                  {availableTournaments.map((t) => (
-                    <TournamentCard
-                      key={t.Id}
-                      title={t.Title}
-                      location={t.Location}
-                      date={t.Date}
-                      onClick={() => handleTournamentCardClick(t)}
-                    />
-                  ))}
-                </div>
               </div>
-            ) : (
-              // PIN Entry View
-              <div className="pin-entry-view"> {/* Removed pinLogin class from here */}
-                <div className="selected-tournament-display">
-                  <TournamentCard
-                    title={selectedTournament?.Title}
-                    location={selectedTournament?.Location}
-                    date={selectedTournament?.Date}
-                  />
-                </div>
-                <div className="pin-entry-prompt">Enter {pinEntryRole.toUpperCase()} code</div>
-                <div className="pinContainer">
-                  {pin.map((num, index) => (
-                    <input
-                      className={isThinking ? "thinking" : ""}
-                      key={index}
-                      ref={(el) => (inputsRef.current[index] = el)}
-                      value={num}
-                      onChange={(e) => handleChange(e, index)}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                      maxLength="1"
-                    />
-                  ))}
-                </div>
-                  <div className="pin-message">&nbsp;{message}&nbsp;</div>
-              </div>
-            )}
-          </>
-        )}
-        {!showRoleSelectorView && !selectedTournament && (
-          <button
-            className="hat-icon-button pi pi-user"
-            onClick={() => {
-              setShowRoleSelectorView(true);
-              setSelectedTournament(null);
-              setPin(["", "", "", ""]);
-              setMessage("");
-            }}
-            title="Change Role"
-          >
-            {/* CSS will style the icon */}
-          </button>
+            </div>
+            <button
+              type="button"
+              className="change-role-button"
+              onClick={handleChangeRoleClick}
+            >
+              <span>... or change role</span>
+              <i className="pi pi-users" aria-hidden="true" />
+            </button>
+          </div>
         )}
       </div>
       <div className="bottom-gradient-bg"></div>
-      <div className="version-info">{`Pitch Perfect v${versionInfo?.mobile}`}</div>
+      <div className="version-info">{`PitchPerfect v${versionInfo?.mobile}`}</div>
     </>
   );
+};
+
+const normaliseCompetitions = (payload) => {
+  if (!Array.isArray(payload)) return [];
+
+  const seen = new Set();
+  return payload
+    .map((competition) => {
+      if (typeof competition === 'string') {
+        return { value: competition, label: competition };
+      }
+
+      const value = competition?.category || competition?.name || competition?.key || competition?.id;
+      const label = competition?.label || competition?.category || competition?.name || value;
+      return value ? { value: `${value}`, label: `${label}` } : null;
+    })
+    .filter((competition) => {
+      if (!competition || seen.has(competition.value)) return false;
+      seen.add(competition.value);
+      return true;
+    });
 };
 
 export default PinLogin;

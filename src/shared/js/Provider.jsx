@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { createContext, useCallback, useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import packageJson from '../../../package.json';
 
@@ -54,12 +54,12 @@ export const Provider = ({ children }) => {
     setUserNameAndCookie("");
   };
 
-  const setupTournament = (id) => {
-    setTournamentId(id);
+  const setupTournament = useCallback((id) => {
+    setTournamentId((currentId) => (`${currentId || ''}` === `${id || ''}` ? currentId : id));
     if (id) {
       Cookies.set("tournamentId", id, { expires: 1 / 24, path: "/" });
     }
-    setSections([
+    const nextSections = [
       {
         title: "live competition status",
         name: "competitions",
@@ -73,10 +73,15 @@ export const Provider = ({ children }) => {
       {
         title: "login",
         name: "reset",
-        path: `/`,
+        path: `/tournament/${id}/home`,
       },
-    ]);
-  };
+    ];
+    setSections((currentSections) => (
+      JSON.stringify(currentSections) === JSON.stringify(nextSections)
+        ? currentSections
+        : nextSections
+    ));
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 1024px)");

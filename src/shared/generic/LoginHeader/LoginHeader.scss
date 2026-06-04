@@ -1,91 +1,164 @@
-// Styles for App Header (Moved from PinLogin.scss)
 .app-header {
-  position: sticky; // Make header stick to top
-  top: 0; // Stick to the very top
-  z-index: 10; // Ensure it's above other content
-  padding-top: 13.472px; // Increased by 50%
-  padding-bottom: 3.472px; // Increased by 50%
-  padding-left: 55.296px; // Increased
-  padding-right: 55.296px; // Increased
-  width: 100%;
-  text-align: center;
-  /* margin-bottom: 2rem; // Removed margin, padding handles spacing */
-  display: flex; // Added
-  flex-direction: column; // Added
-  align-items: center; // Added
-  gap: 1rem; // Added gap
   background-color: #94a06e;
-  opacity: 0.8;
-  background-image:  linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177);
-  background-size: 80px 140px;
+  background-image: linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(30deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(150deg, #788451 12%, transparent 12.5%, transparent 87%, #788451 87.5%, #788451), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177), linear-gradient(60deg, #78845177 25%, transparent 25.5%, transparent 75%, #78845177 75%, #78845177);
   background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
-  background-color: #94a06e;
-  // background-image:  url('images/banner.png'); //repeating-radial-gradient( circle at 0 0, transparent 0, #585c4b 60px ), repeating-linear-gradient( #656d4b55, #656d4b );
-  // Styles for the back icon span (mo:ed from PinLogin.scss)
-  display: block;
+  background-size: 80px 140px;
+  display: flex;
+  flex-direction: column;
   height: 25rem;
-  //object-fit: cover;
-  //background-position: center top;
+  position: sticky;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 
   .logo-container {
-    margin-top: 3rem;
-      margin-bottom: 2rem;
-    .whistle {
-      height: 220px;
-      width: auto;
-      object-fit: contain;
-    }
-  }
-
-  .title-group {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    flex: 1;
+    justify-content: center;
+    min-height: 0;
     position: relative;
-    padding-top: 0;
   }
 
-  .version-line {
-    width: 100%;
-  }
-
-  .app-version {
-    font-size: 60px;
-    color: rgba(0, 0, 0, 0.3);
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding-top: 0;
+  .whistle {
+    height: 16rem;
+    max-width: 78%;
+    object-fit: contain;
   }
 
   .back-icon-span {
-    position: fixed;
-    top:1rem;
-    left: 1rem;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 0.35rem solid rgba(255, 255, 255, 0.82);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.88);
     cursor: pointer;
-    z-index: 15;
+    display: flex;
+    height: 7.2rem;
+    justify-content: center;
+    left: 1.4rem;
+    padding: 0;
+    position: absolute;
+    top: 1.4rem;
+    width: 7.2rem;
+    z-index: 2;
 
-    i.pi-arrow-circle-left {
-      font-size: 6rem;
-      color: rgba(255, 255, 255, 0.8);
-      padding: 0rem;
-      transition: color 0.2s ease;
-    }
-
-    &:hover i {
-      color: rgba(174, 214, 36, 0.7); /* 70% opacity on hover */
+    i {
+      font-size: 4.6rem;
     }
   }
 }
 
-.app-header::before {
-  content: ''; /* Required for pseudo-elements */
-  position: absolute; /* Position relative to the header */
-  top: 0; /* Cover the top edge of the header */
-  left: 0; /* Cover the left edge of the header */
-  width: 100%; /* Make it the full width of the header */
-  height: 100%; /* Make it the full height of the header */
-  background: linear-gradient(180deg, transparent 0%, rgba(144, 159, 102, 0.867) 100%); /* Gradient from transparent at top to green at bottom */
-  z-index: -1; /* Place the pseudo-element behind the header's content */
-  pointer-events: none; /* Allows interaction with elements below the gradient */
+.app-header-with-tournament {
+  .logo-container {
+    flex: 0 0 14.2rem;
+  }
+
+  .whistle {
+    height: 13rem;
+  }
 }
 
+.header-tournament {
+  display: grid;
+  flex: 0 0 10.8rem;
+  grid-template-columns: 12.6rem 9rem minmax(0, 1fr);
+  text-align: left;
+}
+
+.header-date {
+  align-items: center;
+  background: rgba(112, 130, 70, 0.76);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  justify-content: center;
+  min-width: 0;
+  text-transform: uppercase;
+
+  i {
+    font-size: 5rem;
+    line-height: 1;
+    margin: 0.15rem 0 0.35rem;
+  }
+}
+
+.header-weekday {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.header-day-month {
+  font-size: 1.95rem;
+  line-height: 1;
+}
+
+.header-event-main {
+  align-items: center;
+  background: rgba(79, 97, 42, 0.9);
+  display: flex;
+  justify-content: center;
+}
+
+.header-event-marker {
+  height: 7rem;
+  position: relative;
+  width: 5.4rem;
+}
+
+.header-event-marker-circle {
+  border: 0.35rem solid #fff;
+  border-radius: 50%;
+  display: block;
+  height: 4.7rem;
+  width: 4.7rem;
+}
+
+.header-event-marker-leg {
+  background: #fff;
+  bottom: 0;
+  display: block;
+  height: 3.3rem;
+  position: absolute;
+  transform-origin: top center;
+  width: 0.22rem;
+}
+
+.header-event-marker-leg-left {
+  left: 2.15rem;
+  transform: rotate(14deg);
+}
+
+.header-event-marker-leg-right {
+  left: 3.2rem;
+  transform: rotate(-14deg);
+}
+
+.header-event-copy {
+  background: rgba(79, 97, 42, 0.9);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 1.25rem 2rem 1.45rem 0;
+}
+
+.header-event-title {
+  font-size: 2.7rem;
+  font-weight: 800;
+  line-height: 1.18;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  text-transform: uppercase;
+}
+
+.header-event-location {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 1.85rem;
+}

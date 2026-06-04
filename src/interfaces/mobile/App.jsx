@@ -58,44 +58,24 @@ function AppContent() {
     },
   });
 
-  switch (userRole.toLowerCase()) {
-    case 'organizer':
-    case 'coordinator':
-    case 'coach':
-    case 'referee':
-      return (
-        <Routes>
-          <Route path="/"
-                 element={<PinLogin />} />
-          <Route path="/tournament/:tournamentId" 
-                 element={<LandingPage role={userRole} />} />
-          <Route path="/tournament/:tournamentId/selectCategory"
-                 element={<SelectTournamentView role={userRole} />} />
-          <Route path="/tournament/:tournamentId/category/:category"
-                 element={<TournamentView role />} />
-          <Route path="/tournament/:tournamentId/pitch/:pitchId"
-                 element={<PitchViewWrapper role={userRole} />} />
-          <Route path="*" 
-                 element={<Navigate to="/" replace />} />
-        </Routes>
-      );
-    case 'spectator':
-    default:
-      return (
-        <Routes>
-          <Route path="/"
-                 element={<PinLogin />} />
-          <Route path="/tournament/:tournamentId"
-                 element={<SelectTournamentView />} />
-          <Route path="/tournament/:tournamentId/selectCategory"
-                 element={<SelectTournamentView />} />
-          <Route path="/tournament/:tournamentId/category/:category"
-                 element={<TournamentView role />} />
-          <Route path="*"
-                 element={<Navigate to="/" replace />} />
-        </Routes>
-      );
-  }
+  return (
+    <Routes>
+      <Route path="/"
+             element={<PinLogin />} />
+      <Route path="/tournament/:tournamentId"
+             element={<PinLogin />} />
+      <Route path="/tournament/:tournamentId/home"
+             element={<LandingPage role={userRole} />} />
+      <Route path="/tournament/:tournamentId/selectCategory"
+             element={<SelectTournamentView role={userRole} />} />
+      <Route path="/tournament/:tournamentId/category/:category"
+             element={<TournamentView role={userRole} />} />
+      <Route path="/tournament/:tournamentId/pitch/:pitchId"
+             element={<PitchViewWrapper role={userRole} />} />
+      <Route path="*"
+             element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 function App() {

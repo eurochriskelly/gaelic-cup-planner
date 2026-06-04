@@ -38,9 +38,9 @@ function NavFooter({ currentPath }) {
         />
         <HomeIcon 
           className={getIconClass('LandingPage', [
-            `/tournament/${tournamentId}` 
+            `/tournament/${tournamentId}/home`
           ])}
-          onClick={() => navigate(`/tournament/${tournamentId}`)}
+          onClick={() => navigate(`/tournament/${tournamentId}/home`)}
         />
         <StatusIcon 
           className={getIconClass('selectCategory', [

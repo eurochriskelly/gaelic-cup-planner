@@ -1,4 +1,5 @@
 import 'primeicons/primeicons.css'; // if not already imported
+import { Link } from 'react-router-dom';
 
 // Helper function to format date parts
 const formatDateParts = (dateString) => {
@@ -23,15 +24,15 @@ const formatDateParts = (dateString) => {
 };
 
 // Reusable component for displaying tournament information in a card
-const TournamentCard = ({ title, location, date, onClick }) => {
+const TournamentCard = ({ title, location, date, href, onClick }) => {
   // Determine if the card should be clickable based on whether onClick is provided
   const isClickable = typeof onClick === 'function';
   const cardClass = `tournamentCard ${isClickable ? 'clickable' : ''}`;
 
   const { weekday, dayMonth } = formatDateParts(date);
 
-  return (
-    <div className={cardClass} onClick={isClickable ? onClick : undefined}>
+  const content = (
+    <>
       <div className="date-column">
         <div className="calendar-icon">
           <i className="pi pi-calendar"></i>
@@ -43,6 +44,28 @@ const TournamentCard = ({ title, location, date, onClick }) => {
         <h3 className="title">{title || 'Tournament Title'}</h3>
         {location && <p className="location">{location}</p>}
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link className={cardClass} to={href} onClick={isClickable ? onClick : undefined}>
+        {content}
+      </Link>
+    );
+  }
+
+  if (isClickable) {
+    return (
+      <button type="button" className={cardClass} onClick={onClick}>
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className={cardClass}>
+      {content}
     </div>
   );
 };
