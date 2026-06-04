@@ -145,12 +145,12 @@
 .tournament-selection-view {
     flex: 0 1 auto;
     width: 100%;
-    height: calc(100vh - 25rem);
+    height: calc(100vh - 19rem);
     min-height: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-top: 1rem;
+    padding-top: 0;
     padding-bottom: 4.2rem;
     box-sizing: border-box;
 }
@@ -173,20 +173,26 @@
 
 
 .tournament-selection-view h2 {
-  font-size: 2.3rem;
+  align-items: center;
+  background: #53672f;
+  border-bottom: 0.35rem solid #1db5e8;
+  color: #fff;
+  display: flex;
+  font-size: 2.15rem;
+  font-weight: 400;
+  justify-content: center;
+  letter-spacing: 0.44em;
+  line-height: 1;
+  min-height: 7rem;
+  padding: 0 1rem 0 1.44em;
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.3rem;
   margin-top: 0;
-  padding: 0 1rem;
-  color: #445513;
-  color: rgb(68, 85, 19);
-  /* Original color, as requested */
-  font-weight: 800;
-  /* Increased boldness */
-  text-shadow: rgba(255, 255, 255, 0.3) 0.3rem 0.3rem 0.5rem;
-  /* Light text shadow */
   flex-shrink: 0;
   text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 0.12rem;
+  text-underline-offset: 0.45rem;
 }
 
 // Prevent status messages from shrinking in tournament selection view
@@ -236,7 +242,7 @@
   margin-left: auto; // Use auto margins for centering block element
   margin-right: auto;
   font-size: 32px; // Note: This sets base font size for list items
-  padding: 0 2rem 3rem 2rem; // Adjust padding for scroll area
+  padding: 0.6rem 2rem 3rem 2rem; // Adjust padding for scroll area
   -webkit-overflow-scrolling: touch;
 }
 

@@ -27,7 +27,7 @@ const LoginHeader = ({ version, showBackButton, onBackClick, tournament }) => {
   const hasTournament = Boolean(tournament);
 
   return (
-    <div className={`app-header ${hasTournament ? 'app-header-with-tournament' : ''}`}>
+    <div className={`app-header ${hasTournament ? 'app-header-with-tournament' : 'app-header-home'}`}>
       <div className="logo-container">
         <img src={whistleImage} className="whistle" alt="Pitch Perfect" />
         {showBackButton && (

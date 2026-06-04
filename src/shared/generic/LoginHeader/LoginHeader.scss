@@ -60,6 +60,16 @@
   }
 }
 
+.app-header-home {
+  border-bottom: 0.35rem solid #1db5e8;
+  height: 19rem;
+
+  .whistle {
+    height: 15.5rem;
+    max-width: 86%;
+  }
+}
+
 .header-tournament {
   display: grid;
   flex: 0 0 10.8rem;
