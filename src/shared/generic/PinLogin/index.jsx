@@ -71,6 +71,18 @@ const PinLogin = () => {
   };
 
   useEffect(() => {
+    if (!showRoleLogin || roleLoginStep !== 'pin') return undefined;
+
+    const animationFrame = requestAnimationFrame(() => {
+      focusPinInput();
+    });
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [showRoleLogin, roleLoginStep, pinEntryRole]);
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const requestedRoleParam = params.get('role')?.toLowerCase();
     const requestedRole = requestedRoleParam === 'organiser'
@@ -445,6 +457,21 @@ const PinLogin = () => {
                   </>
                 ) : (
                   <>
+                    <button
+                      type="button"
+                      className="selected-role-button"
+                      onClick={() => {
+                        setRoleLoginStep('select');
+                        resetPinEntry();
+                      }}
+                    >
+                      <span className="selected-role-back" aria-hidden="true">
+                        <i className="pi pi-arrow-left" />
+                      </span>
+                      <span className="selected-role-copy">
+                        Logging in as <strong>{pinEntryRole}</strong>
+                      </span>
+                    </button>
                     <h2>Enter PIN</h2>
                     <div className="pin-entry-row">
                       <div
@@ -478,24 +505,7 @@ const PinLogin = () => {
                           </div>
                         ))}
                       </div>
-                      <button type="button" className="pin-visibility-button" aria-label="PIN visibility">
-                        <i className="pi pi-eye" aria-hidden="true" />
-                      </button>
                     </div>
-                    <div className="pin-role-context">To log in as</div>
-                    <button
-                      type="button"
-                      className="selected-role-button"
-                      onClick={() => {
-                        setRoleLoginStep('select');
-                        resetPinEntry();
-                      }}
-                    >
-                      <span className="selected-role-back" aria-hidden="true">
-                        <i className="pi pi-arrow-left" />
-                      </span>
-                      <span>{pinEntryRole}</span>
-                    </button>
                     <div className="pin-message">&nbsp;{message}&nbsp;</div>
                   </>
                 )}
