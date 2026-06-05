@@ -11,6 +11,7 @@
   top: 0;
   width: 100%;
   z-index: 10;
+  overflow: hidden;
 
   .logo-container {
     align-items: center;
@@ -19,12 +20,30 @@
     justify-content: center;
     min-height: 0;
     position: relative;
+    z-index: 1;
+
+    &::before {
+      background: linear-gradient(
+        to bottom,
+        rgba(148, 160, 110, 0) 0%,
+        rgba(148, 160, 110, 0.22) 42%,
+        rgba(148, 160, 110, 0.7) 82%,
+        #94a06e 100%
+      );
+      content: '';
+      inset: 0;
+      pointer-events: none;
+      position: absolute;
+      z-index: 0;
+    }
   }
 
   .whistle {
     height: 16rem;
     max-width: 78%;
     object-fit: contain;
+    position: relative;
+    z-index: 1;
   }
 
   .back-icon-span {
@@ -73,8 +92,10 @@
 .header-tournament {
   display: grid;
   flex: 0 0 10.8rem;
-  grid-template-columns: 12.6rem 9rem minmax(0, 1fr);
+  grid-template-columns: 12.6rem minmax(0, 1fr);
+  position: relative;
   text-align: left;
+  z-index: 2;
 }
 
 .header-date {
@@ -105,47 +126,6 @@
   line-height: 1;
 }
 
-.header-event-main {
-  align-items: center;
-  background: rgba(79, 97, 42, 0.9);
-  display: flex;
-  justify-content: center;
-}
-
-.header-event-marker {
-  height: 7rem;
-  position: relative;
-  width: 5.4rem;
-}
-
-.header-event-marker-circle {
-  border: 0.35rem solid #fff;
-  border-radius: 50%;
-  display: block;
-  height: 4.7rem;
-  width: 4.7rem;
-}
-
-.header-event-marker-leg {
-  background: #fff;
-  bottom: 0;
-  display: block;
-  height: 3.3rem;
-  position: absolute;
-  transform-origin: top center;
-  width: 0.22rem;
-}
-
-.header-event-marker-leg-left {
-  left: 2.15rem;
-  transform: rotate(14deg);
-}
-
-.header-event-marker-leg-right {
-  left: 3.2rem;
-  transform: rotate(-14deg);
-}
-
 .header-event-copy {
   background: rgba(79, 97, 42, 0.9);
   color: #fff;
@@ -153,7 +133,7 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  padding: 1.25rem 2rem 1.45rem 0;
+  padding: 1.25rem 2rem 1.45rem 3.6rem;
 }
 
 .header-event-title {

@@ -44,13 +44,6 @@ const LoginHeader = ({ version, showBackButton, onBackClick, tournament }) => {
             <i className="pi pi-calendar" aria-hidden="true"></i>
             <div className="header-day-month">{dayMonth}</div>
           </div>
-          <div className="header-event-main" aria-hidden="true">
-            <span className="header-event-marker">
-              <span className="header-event-marker-circle"></span>
-              <span className="header-event-marker-leg header-event-marker-leg-left"></span>
-              <span className="header-event-marker-leg header-event-marker-leg-right"></span>
-            </span>
-          </div>
           <div className="header-event-copy">
             <div className="header-event-title">{tournament?.Title || 'Selected tournament'}</div>
             {tournament?.Location && (

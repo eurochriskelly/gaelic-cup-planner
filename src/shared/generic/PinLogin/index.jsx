@@ -23,7 +23,7 @@ const PinLogin = () => {
   const [pin, setPin] = useState(["", "", "", ""]);
   const [isThinking, setIsThinking] = useState(false);
   const [message, setMessage] = useState("");
-  const inputsRef = useRef([]);
+  const pinInputRef = useRef(null);
   const [availableTournaments, setAvailableTournaments] = useState([]);
   const [isLoadingTournaments, setIsLoadingTournaments] = useState(true);
   const [fetchError, setFetchError] = useState(null);
@@ -53,6 +53,14 @@ const PinLogin = () => {
     }
     return [];
   }, [competitions, isLoadingCompetitions, selectedTournament, competitionFetchFailed]);
+
+  useEffect(() => {
+    document.body.classList.add('pin-login-screen');
+
+    return () => {
+      document.body.classList.remove('pin-login-screen');
+    };
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -211,7 +219,7 @@ const PinLogin = () => {
 
   useEffect(() => {
     if (showRoleLogin && roleLoginStep === 'pin') {
-      inputsRef.current[0]?.focus();
+      pinInputRef.current?.focus();
     }
   }, [showRoleLogin, roleLoginStep, pinEntryRole]);
 
@@ -263,7 +271,7 @@ const PinLogin = () => {
     setPinEntryRole(role);
     setRoleLoginStep('pin');
     resetPinEntry();
-    setTimeout(() => inputsRef.current[0]?.focus(), 0);
+    setTimeout(() => pinInputRef.current?.focus(), 0);
   };
 
   const directNavigateToTournament = (tournamentId) => {
@@ -332,7 +340,7 @@ const PinLogin = () => {
           setMessage("Invalid pin for selected role!");
           setTimeout(() => {
             setPin(["", "", "", ""]);
-            inputsRef.current[0]?.focus();
+            pinInputRef.current?.focus();
             setMessage("");
           }, 2000);
         }
@@ -341,7 +349,7 @@ const PinLogin = () => {
       console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
-      inputsRef.current[0]?.focus();
+      pinInputRef.current?.focus();
       setTimeout(() => {
         setShowRoleLogin(false);
         setMessage("");
@@ -349,43 +357,20 @@ const PinLogin = () => {
     }
   };
 
-  const handleChange = (e, index) => {
-    const value = e.target.value.slice(0, 1);
+  const normalisePinInput = (value) => (
+    value
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 4)
+  );
 
-    if (index > 0 && value) {
-      const previousInputs = pin.slice(0, index);
-      if (previousInputs.some(p => p === '')) {
-        setPin(["", "", "", ""]);
-        inputsRef.current[0]?.focus();
-        return;
-      }
-    }
-
-    const newPin = [...pin];
-    newPin[index] = value;
+  const handlePinInputChange = (e) => {
+    const value = normalisePinInput(e.target.value);
+    const newPin = Array.from({ length: 4 }, (_, index) => value[index] || '');
     setPin(newPin);
 
-    if (value && index < 3) {
-      inputsRef.current[index + 1]?.focus();
-    }
-
-    if (newPin.every((num) => num !== "")) {
-      onPinEntered(newPin.join(""));
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace') {
-      e.preventDefault();
-      const newPin = [...pin];
-      if (newPin[index] !== '') {
-        newPin[index] = '';
-        setPin(newPin);
-      } else if (index > 0) {
-        newPin[index - 1] = '';
-        setPin(newPin);
-        inputsRef.current[index - 1].focus();
-      }
+    if (value.length === 4 && !isThinking) {
+      onPinEntered(value);
     }
   };
 
@@ -463,17 +448,35 @@ const PinLogin = () => {
                   <>
                     <h2>Enter PIN</h2>
                     <div className="pin-entry-row">
-                      <div className="pinContainer">
+                      <div
+                        className="pinContainer"
+                        onClick={() => pinInputRef.current?.focus()}
+                      >
+                        <input
+                          ref={pinInputRef}
+                          className="pin-hidden-input"
+                          value={pin.join('')}
+                          onChange={handlePinInputChange}
+                          maxLength="4"
+                          inputMode="text"
+                          autoCapitalize="characters"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          spellCheck="false"
+                          aria-label="Enter PIN"
+                        />
                         {pin.map((num, index) => (
-                          <input
-                            className={isThinking ? "thinking" : ""}
+                          <div
+                            className={[
+                              'pinDigitBox',
+                              pin.join('').length === index ? 'active' : '',
+                              isThinking ? 'thinking' : '',
+                            ].filter(Boolean).join(' ')}
                             key={index}
-                            ref={(el) => (inputsRef.current[index] = el)}
-                            value={num}
-                            onChange={(e) => handleChange(e, index)}
-                            onKeyDown={(e) => handleKeyDown(e, index)}
-                            maxLength="1"
-                          />
+                            aria-hidden="true"
+                          >
+                            {num}
+                          </div>
                         ))}
                       </div>
                       <button type="button" className="pin-visibility-button" aria-label="PIN visibility">

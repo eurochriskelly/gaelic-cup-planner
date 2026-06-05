@@ -26,21 +26,38 @@
     display: flex;
     justify-content: center;
     gap: 10px;
+    position: relative;
 }
 
-.pinContainer input {
+.pin-hidden-input {
+    border: 0;
+    height: 1px;
+    left: 50%;
+    opacity: 0;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    width: 1px;
+}
+
+.pinDigitBox {
+    align-items: center;
+    background: #fff;
     width: 8rem;
     height: 8rem;
     font-size: 5rem;
     text-transform: uppercase;
-    text-align: center;
     border: 1px solid #ccc;
     border-radius: 1rem;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-    outline: none;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    line-height: 1;
 }
 
-.pinContainer input:focus {
+.pinDigitBox.active {
     border-color: #007bff;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
@@ -176,6 +193,7 @@
   align-items: center;
   background: #53672f;
   border-bottom: 0.35rem solid #1db5e8;
+  box-sizing: border-box;
   color: #fff;
   display: flex;
   font-size: 2.15rem;
@@ -189,6 +207,9 @@
   margin-bottom: 1.3rem;
   margin-top: 0;
   flex-shrink: 0;
+  position: relative;
+  width: 100%;
+  z-index: 31;
   text-align: center;
   text-decoration: underline;
   text-decoration-thickness: 0.12rem;
@@ -458,12 +479,14 @@
 }
 
 body.install-prompt-visible {
-  .version-info {
-    bottom: 8rem;
-  }
-
   .hat-icon-button {
     bottom: 7.2rem;
+  }
+}
+
+body.pin-login-screen.install-prompt-visible {
+  .install-prompt {
+    bottom: 4.2rem;
   }
 }
 
@@ -694,7 +717,7 @@ body.install-prompt-visible {
     padding: 1rem 1.2rem;
   }
 
-  .pinContainer input {
+  .pinDigitBox {
     height: 7rem;
     width: 7rem;
     font-size: 4.2rem;
