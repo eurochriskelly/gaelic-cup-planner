@@ -17,8 +17,10 @@ export default defineConfig({
     svgr(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: false,
       includeAssets: ['favicon.ico', 'pp-whistle.png'],
       workbox: {
+        cleanupOutdatedCaches: true,
         navigateFallbackDenylist: [/^\/events\//],
       },
       manifest: {
@@ -67,6 +69,7 @@ export default defineConfig({
   },
   build: {
     outDir: resolve(__dirname, process.env.BUILD_ENV ? `dist/${process.env.BUILD_ENV}/mobile` : 'dist/mobile'),
+    emptyOutDir: true,
   },
   esbuild: {
     jsxInject: `import React from 'react'`,
