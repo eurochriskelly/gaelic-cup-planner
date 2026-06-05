@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
@@ -62,16 +62,13 @@ const PinLogin = () => {
     };
   }, []);
 
-  const focusPinInput = useCallback(({ allowCoarsePointer = true } = {}) => {
-    const hasCoarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
-    if (hasCoarsePointer && !allowCoarsePointer) return;
-
+  const focusPinInput = () => {
     try {
       pinInputRef.current?.focus({ preventScroll: true });
     } catch {
       pinInputRef.current?.focus();
     }
-  }, []);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -228,12 +225,6 @@ const PinLogin = () => {
     };
   }, [selectedTournament?.Id]);
 
-  useEffect(() => {
-    if (showRoleLogin && roleLoginStep === 'pin') {
-      focusPinInput({ allowCoarsePointer: false });
-    }
-  }, [showRoleLogin, roleLoginStep, pinEntryRole, focusPinInput]);
-
   const resetPinEntry = () => {
     setPin(["", "", "", ""]);
     setMessage("");
@@ -282,7 +273,6 @@ const PinLogin = () => {
     setPinEntryRole(role);
     setRoleLoginStep('pin');
     resetPinEntry();
-    setTimeout(() => focusPinInput({ allowCoarsePointer: false }), 0);
   };
 
   const directNavigateToTournament = (tournamentId) => {
@@ -351,7 +341,6 @@ const PinLogin = () => {
           setMessage("Invalid pin for selected role!");
           setTimeout(() => {
             setPin(["", "", "", ""]);
-            focusPinInput({ allowCoarsePointer: false });
             setMessage("");
           }, 2000);
         }
@@ -360,7 +349,6 @@ const PinLogin = () => {
       console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
-      focusPinInput({ allowCoarsePointer: false });
       setTimeout(() => {
         setShowRoleLogin(false);
         setMessage("");

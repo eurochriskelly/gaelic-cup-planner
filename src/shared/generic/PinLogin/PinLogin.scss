@@ -31,18 +31,21 @@
 
 .pin-hidden-input {
     appearance: none;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.01);
     border: 0;
+    caret-color: transparent;
     color: transparent;
-    font-size: 16px;
+    font-size: 5rem;
     height: 100%;
     inset: 0;
     letter-spacing: 0;
-    opacity: 0;
+    line-height: 1;
+    opacity: 1;
     outline: none;
     padding: 0;
     pointer-events: auto;
     position: absolute;
+    text-transform: uppercase;
     width: 100%;
     z-index: 2;
 }
