@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
@@ -60,6 +60,17 @@ const PinLogin = () => {
     return () => {
       document.body.classList.remove('pin-login-screen');
     };
+  }, []);
+
+  const focusPinInput = useCallback(({ allowCoarsePointer = true } = {}) => {
+    const hasCoarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
+    if (hasCoarsePointer && !allowCoarsePointer) return;
+
+    try {
+      pinInputRef.current?.focus({ preventScroll: true });
+    } catch {
+      pinInputRef.current?.focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -219,9 +230,9 @@ const PinLogin = () => {
 
   useEffect(() => {
     if (showRoleLogin && roleLoginStep === 'pin') {
-      pinInputRef.current?.focus();
+      focusPinInput({ allowCoarsePointer: false });
     }
-  }, [showRoleLogin, roleLoginStep, pinEntryRole]);
+  }, [showRoleLogin, roleLoginStep, pinEntryRole, focusPinInput]);
 
   const resetPinEntry = () => {
     setPin(["", "", "", ""]);
@@ -271,7 +282,7 @@ const PinLogin = () => {
     setPinEntryRole(role);
     setRoleLoginStep('pin');
     resetPinEntry();
-    setTimeout(() => pinInputRef.current?.focus(), 0);
+    setTimeout(() => focusPinInput({ allowCoarsePointer: false }), 0);
   };
 
   const directNavigateToTournament = (tournamentId) => {
@@ -340,7 +351,7 @@ const PinLogin = () => {
           setMessage("Invalid pin for selected role!");
           setTimeout(() => {
             setPin(["", "", "", ""]);
-            pinInputRef.current?.focus();
+            focusPinInput({ allowCoarsePointer: false });
             setMessage("");
           }, 2000);
         }
@@ -349,7 +360,7 @@ const PinLogin = () => {
       console.error("Error: No selected tournament found for PIN validation.");
       setMessage("An error occurred. Please select a tournament again.");
       setPin(["", "", "", ""]);
-      pinInputRef.current?.focus();
+      focusPinInput({ allowCoarsePointer: false });
       setTimeout(() => {
         setShowRoleLogin(false);
         setMessage("");
@@ -450,7 +461,7 @@ const PinLogin = () => {
                     <div className="pin-entry-row">
                       <div
                         className="pinContainer"
-                        onClick={() => pinInputRef.current?.focus()}
+                        onClick={focusPinInput}
                       >
                         <input
                           ref={pinInputRef}

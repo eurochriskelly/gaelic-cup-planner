@@ -30,15 +30,21 @@
 }
 
 .pin-hidden-input {
+    appearance: none;
+    background: transparent;
     border: 0;
-    height: 1px;
-    left: 50%;
+    color: transparent;
+    font-size: 16px;
+    height: 100%;
+    inset: 0;
+    letter-spacing: 0;
     opacity: 0;
+    outline: none;
     padding: 0;
-    pointer-events: none;
+    pointer-events: auto;
     position: absolute;
-    top: 50%;
-    width: 1px;
+    width: 100%;
+    z-index: 2;
 }
 
 .pinDigitBox {
