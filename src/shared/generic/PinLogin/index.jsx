@@ -2,8 +2,8 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
-import TournamentCard from "./TournamentCard";
 import LoginHeader from "../LoginHeader";
+import OfficialsIcon from "../../icons/icon-umpires-circle.svg?react";
 import Cookies from "js-cookie";
 import "./PinLogin.scss";
 import config from "../../../interfaces/mobile/config";
@@ -39,6 +39,8 @@ const PinLogin = () => {
   const [competitions, setCompetitions] = useState([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [competitionFetchFailed, setCompetitionFetchFailed] = useState(false);
+  const [isOfficialsRevealActive, setIsOfficialsRevealActive] = useState(false);
+  const officialsRevealTimeoutRef = useRef(null);
 
   const currentRole = (userRole || 'spectator').toLowerCase();
 
@@ -54,11 +56,18 @@ const PinLogin = () => {
     return [];
   }, [competitions, isLoadingCompetitions, selectedTournament, competitionFetchFailed]);
 
+  const tournamentAgenda = useMemo(() => (
+    buildTournamentAgenda(availableTournaments)
+  ), [availableTournaments]);
+
   useEffect(() => {
     document.body.classList.add('pin-login-screen');
 
     return () => {
       document.body.classList.remove('pin-login-screen');
+      if (officialsRevealTimeoutRef.current) {
+        clearTimeout(officialsRevealTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -243,7 +252,26 @@ const PinLogin = () => {
     setFailedAttempts(0);
   };
 
+  const hideOfficialsReveal = () => {
+    if (officialsRevealTimeoutRef.current) {
+      clearTimeout(officialsRevealTimeoutRef.current);
+      officialsRevealTimeoutRef.current = null;
+    }
+    setIsOfficialsRevealActive(false);
+  };
+
+  const revealOfficialsAccess = () => {
+    hideOfficialsReveal();
+    setIsOfficialsRevealActive(true);
+    officialsRevealTimeoutRef.current = setTimeout(() => {
+      setIsOfficialsRevealActive(false);
+      officialsRevealTimeoutRef.current = null;
+    }, 30000);
+  };
+
   const handleBackClick = () => {
+    hideOfficialsReveal();
+
     if (showRoleLogin) {
       setShowRoleLogin(false);
       setRoleLoginStep('select');
@@ -261,6 +289,7 @@ const PinLogin = () => {
   };
 
   const handleTournamentCardClick = (tournament) => {
+    hideOfficialsReveal();
     setMessage("");
     setSelectedTournament(tournament);
     setShowRoleLogin(false);
@@ -275,10 +304,27 @@ const PinLogin = () => {
   };
 
   const handleChangeRoleClick = () => {
+    hideOfficialsReveal();
     setPinEntryRole(pinProtectedRoles.includes(currentRole) ? currentRole : 'organizer');
     setRoleLoginStep('select');
     resetPinEntry();
     setShowRoleLogin(true);
+  };
+
+  const handleOfficialsAccessClick = () => {
+    if (isOfficialsRevealActive) {
+      handleChangeRoleClick();
+      return;
+    }
+
+    revealOfficialsAccess();
+  };
+
+  const handleRoleLoginBackToResults = () => {
+    hideOfficialsReveal();
+    setShowRoleLogin(false);
+    setRoleLoginStep('select');
+    resetPinEntry();
   };
 
   const handleRoleSelect = (role) => {
@@ -421,16 +467,58 @@ const PinLogin = () => {
             {!isLoadingTournaments && !fetchError && availableTournaments.length === 0 && !message && (
               <div>No active tournaments found.</div>
             )}
-            <div className="tournamentList">
-              {availableTournaments.map((t) => (
-                <TournamentCard
-                  key={t.Id}
-                  title={t.Title}
-                  location={t.Location}
-                  date={t.Date}
-                  href={`/tournament/${t.Id}`}
-                  onClick={() => handleTournamentCardClick(t)}
-                />
+            <div className="tournamentAgenda" aria-label="Upcoming tournaments">
+              {tournamentAgenda.years.map((yearGroup) => (
+                <div className="agenda-year" key={yearGroup.key}>
+                  {tournamentAgenda.hasMultipleYears && (
+                    <div className="agenda-year-divider">{yearGroup.label}</div>
+                  )}
+                  {yearGroup.months.map((monthGroup) => (
+                    <section className="agenda-month" key={monthGroup.key}>
+                      <div className="agenda-month-heading">
+                        <span>{monthGroup.label}</span>
+                      </div>
+                      <div className="agenda-days">
+                        {monthGroup.days.map((dayGroup) => (
+                          <div className="agenda-day" key={dayGroup.key}>
+                            <div
+                              className="agenda-date-node"
+                              aria-label={dayGroup.accessibleLabel}
+                            >
+                              <span>{dayGroup.dayLabel}</span>
+                            </div>
+                            <div className="agenda-day-events">
+                              {dayGroup.tournaments.map((tournament) => (
+                                <button
+                                  type="button"
+                                  key={tournament.Id}
+                                  className="agenda-event"
+                                  onClick={() => handleTournamentCardClick(tournament)}
+                                  aria-label={`Open ${tournament.Title || 'tournament'}`}
+                                >
+                                  <span className="agenda-event-copy">
+                                    <span className="agenda-event-title">
+                                      {tournament.Title || 'Tournament title'}
+                                    </span>
+                                    {tournament.Location && (
+                                      <span className="agenda-event-location">
+                                        <i className="pi pi-map-marker" aria-hidden="true" />
+                                        {tournament.Location}
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="agenda-event-action" aria-hidden="true">
+                                    <i className="pi pi-bullseye" />
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
@@ -440,6 +528,18 @@ const PinLogin = () => {
               <div className="role-login-content">
                 {roleLoginStep === 'select' ? (
                   <>
+                    <button
+                      type="button"
+                      className="role-flow-back-button"
+                      onClick={handleRoleLoginBackToResults}
+                    >
+                      <span className="role-flow-back-icon" aria-hidden="true">
+                        <i className="pi pi-arrow-left" />
+                      </span>
+                      <span className="role-flow-back-copy">
+                        Administrator &amp; Officials
+                      </span>
+                    </button>
                     <h2>Select role</h2>
                     <div className="role-grid">
                       {pinProtectedRoles.map(role => (
@@ -459,16 +559,16 @@ const PinLogin = () => {
                   <>
                     <button
                       type="button"
-                      className="selected-role-button"
+                      className="role-flow-back-button selected-role-button"
                       onClick={() => {
                         setRoleLoginStep('select');
                         resetPinEntry();
                       }}
                     >
-                      <span className="selected-role-back" aria-hidden="true">
+                      <span className="role-flow-back-icon" aria-hidden="true">
                         <i className="pi pi-arrow-left" />
                       </span>
-                      <span className="selected-role-copy">
+                      <span className="role-flow-back-copy selected-role-copy">
                         Logging in as <strong>{pinEntryRole}</strong>
                       </span>
                     </button>
@@ -509,18 +609,6 @@ const PinLogin = () => {
                     <div className="pin-message">&nbsp;{message}&nbsp;</div>
                   </>
                 )}
-                <button
-                  type="button"
-                  className="back-to-results-button"
-                  onClick={() => {
-                    setShowRoleLogin(false);
-                    setRoleLoginStep('select');
-                    resetPinEntry();
-                  }}
-                >
-                  <i className="pi pi-arrow-left" aria-hidden="true" />
-                  Back to results
-                </button>
               </div>
             </div>
           </div>
@@ -528,7 +616,7 @@ const PinLogin = () => {
           <div className="competition-selection-view gateway-panel">
             <div className="latest-results-card">
               <div className="latest-results-content">
-                <h2>Latest results</h2>
+                <h2>View latest results</h2>
                 <div className="competition-prompt">Select competition</div>
                 {isLoadingCompetitions ? (
                   <div className="thinking">Loading competitions...</div>
@@ -541,22 +629,38 @@ const PinLogin = () => {
                         className="competition-button"
                         onClick={() => handleCompetitionSelect(competition)}
                       >
-                        <span>{competition.label}</span>
-                        <i className="pi pi-arrow-left" aria-hidden="true" />
+                        <i className="pi pi-trophy competition-button-icon" aria-hidden="true" />
+                        <span className="competition-button-label">{competition.label}</span>
+                        <i className="pi pi-bullseye competition-button-action" aria-hidden="true" />
                       </button>
                     ))}
                   </div>
                 )}
               </div>
             </div>
-            <button
-              type="button"
-              className="change-role-button"
-              onClick={handleChangeRoleClick}
+            <div
+              className={[
+                'officials-access',
+                isOfficialsRevealActive ? 'officials-access--active' : '',
+              ].filter(Boolean).join(' ')}
             >
-              <span>... or change role</span>
-              <i className="pi pi-users" aria-hidden="true" />
-            </button>
+              <div className="officials-access-label" aria-live="polite">
+                {isOfficialsRevealActive ? 'Administrator & Officials' : ''}
+              </div>
+              <button
+                type="button"
+                className="change-role-button"
+                onClick={handleOfficialsAccessClick}
+                aria-label={
+                  isOfficialsRevealActive
+                    ? 'Open officials and administrators'
+                    : 'Reveal officials and administrators'
+                }
+                aria-expanded={isOfficialsRevealActive}
+              >
+                <OfficialsIcon aria-hidden="true" />
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -586,5 +690,101 @@ const normaliseCompetitions = (payload) => {
       return true;
     });
 };
+
+const buildTournamentAgenda = (tournaments = []) => {
+  const sortedTournaments = [...tournaments].sort((a, b) => {
+    const aDate = parseTournamentDate(a.Date || a.date);
+    const bDate = parseTournamentDate(b.Date || b.date);
+    const aTime = aDate ? aDate.getTime() : Number.POSITIVE_INFINITY;
+    const bTime = bDate ? bDate.getTime() : Number.POSITIVE_INFINITY;
+
+    if (aTime !== bTime) return aTime - bTime;
+    return `${a.Title || a.title || ''}`.localeCompare(`${b.Title || b.title || ''}`);
+  });
+
+  const years = sortedTournaments.reduce((yearGroups, tournament) => {
+    const tournamentDate = parseTournamentDate(tournament.Date || tournament.date);
+    const yearKey = tournamentDate ? `${tournamentDate.getFullYear()}` : 'date-tba';
+    const monthKey = tournamentDate
+      ? `${tournamentDate.getFullYear()}-${String(tournamentDate.getMonth() + 1).padStart(2, '0')}`
+      : 'date-tba';
+    const dayKey = tournamentDate ? getDateKey(tournamentDate) : `${monthKey}-${tournament.Id}`;
+    const monthLabel = tournamentDate
+      ? tournamentDate.toLocaleString('en-US', { month: 'long' }).toUpperCase()
+      : 'DATE TBA';
+    const dayLabel = tournamentDate
+      ? String(tournamentDate.getDate()).padStart(2, '0')
+      : '--';
+    const accessibleLabel = tournamentDate
+      ? tournamentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : 'Date to be announced';
+
+    let yearGroup = yearGroups.find((group) => group.key === yearKey);
+    if (!yearGroup) {
+      yearGroup = {
+        key: yearKey,
+        label: tournamentDate ? `${tournamentDate.getFullYear()}` : 'DATE TBA',
+        months: [],
+      };
+      yearGroups.push(yearGroup);
+    }
+
+    let monthGroup = yearGroup.months.find((group) => group.key === monthKey);
+    if (!monthGroup) {
+      monthGroup = {
+        key: monthKey,
+        label: monthLabel,
+        days: [],
+      };
+      yearGroup.months.push(monthGroup);
+    }
+
+    let dayGroup = monthGroup.days.find((group) => group.key === dayKey);
+    if (!dayGroup) {
+      dayGroup = {
+        key: dayKey,
+        dayLabel,
+        accessibleLabel,
+        tournaments: [],
+      };
+      monthGroup.days.push(dayGroup);
+    }
+
+    dayGroup.tournaments.push(tournament);
+    return yearGroups;
+  }, []);
+
+  return {
+    hasMultipleYears: years.length > 1,
+    years,
+  };
+};
+
+const parseTournamentDate = (value) => {
+  if (!value) return null;
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  if (typeof value === 'string') {
+    const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (dateMatch) {
+      const [, year, month, day] = dateMatch;
+      return new Date(Number(year), Number(month) - 1, Number(day));
+    }
+  }
+
+  const parsedDate = new Date(value);
+  return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+};
+
+const getDateKey = (date) => (
+  [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('-')
+);
 
 export default PinLogin;
