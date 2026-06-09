@@ -119,7 +119,9 @@
     height: 100%;
     min-height: 14rem;
     border-radius: 1.15rem;
-    background: linear-gradient(135deg, #2e3439 0%, #1d2226 100%);
+    background: linear-gradient(135deg, #eef1ec 0%, #d7dbd3 100%);
+    border: 1px solid rgba(72, 80, 71, 0.32);
+    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.4), 0 0.45rem 1rem rgba(33, 37, 34, 0.18);
   }
 
   .slide-text {
@@ -133,6 +135,8 @@
     letter-spacing: 0.08em;
     margin-left: 0;
     white-space: nowrap;
+    color: #2b332e;
+    text-shadow: none;
   }
 
   .slide-fill {
@@ -141,6 +145,7 @@
     width: 100%;
     height: 50px;
     border-radius: 1.05rem 1.05rem 0 0;
+    background: linear-gradient(180deg, rgba(50, 73, 101, 0.16), rgba(50, 73, 101, 0.04));
     transition: height 0.1s ease-out;
   }
 
@@ -151,9 +156,10 @@
     width: 5.8rem;
     height: 5.8rem;
     border-radius: 1.05rem;
-    background: #0b2f63;
-    border: 2px solid rgba(255, 255, 255, 0.42);
+    background: #f8faf5;
+    border: 2px solid rgba(25, 51, 85, 0.55);
     box-sizing: border-box;
+    box-shadow: 0 0.35rem 0.8rem rgba(31, 38, 34, 0.24);
     transform: translateX(-50%);
   }
 
@@ -164,7 +170,8 @@
 
   .handle-icon {
     font-size: 2.7rem;
-    color: #fff;
+    color: #153862;
+    text-shadow: none;
     transform: scale(1.15);
   }
 }

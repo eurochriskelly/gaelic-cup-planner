@@ -165,6 +165,7 @@ const Kanban = ({
    const [inlineMove, setInlineMove] = useState(null);
    const [isInlineMoveSaving, setIsInlineMoveSaving] = useState(false);
    const [visibleSoonRows, setVisibleSoonRows] = useState(0);
+   const [largePaneHandlesSettling, setLargePaneHandlesSettling] = useState(true);
    const largeLivePaneRef = useRef(null);
 
   const {
@@ -202,6 +203,7 @@ const Kanban = ({
 
   // State for the focused pitch in the top section
   const [focusedPitch, setFocusedPitch] = useState(null);
+  const [userClearedFocusedPitch, setUserClearedFocusedPitch] = useState(false);
 
   const routePitch = normalizePitchId(pitchId);
   const routePitchIsSelectable = routePitch && routePitch !== '*' && availablePitches.includes(routePitch);
@@ -227,6 +229,41 @@ const Kanban = ({
         ...(filterSelections?.pitches || {}),
         active: nextPitch,
       },
+      activePitch: nextPitch,
+    });
+  };
+
+  const pinnedPitches = useMemo(() => {
+    const primary = normalizePitchId(filterSelections?.pitches?.primary);
+    const additional = Array.isArray(filterSelections?.pitches?.additional)
+      ? filterSelections.pitches.additional.map(normalizePitchId)
+      : [];
+    const fallback = (coordinatedPitches || []).map(normalizePitchId);
+
+    return Array.from(new Set([
+      primary,
+      ...additional,
+      ...fallback,
+    ].filter(Boolean)));
+  }, [coordinatedPitches, filterSelections]);
+
+  const persistPinnedPitches = (nextPitches, activePitch) => {
+    const normalized = Array.from(new Set(
+      (nextPitches || []).map(normalizePitchId).filter(Boolean)
+    ));
+    const [primary = null, ...additional] = normalized;
+    const active = normalizePitchId(activePitch) || primary;
+
+    updateFilterSelections({
+      ...filterSelections,
+      pitches: {
+        ...(filterSelections?.pitches || {}),
+        primary,
+        additional,
+        active,
+      },
+      Pitches: normalized,
+      activePitch: active,
     });
   };
 
@@ -234,10 +271,12 @@ const Kanban = ({
   useEffect(() => {
     if (!availablePitches.length || !preferredFocusedPitch) return;
 
+    if (userClearedFocusedPitch && focusedPitch === null) return;
+
     if (!focusedPitch || !availablePitches.includes(focusedPitch)) {
       setFocusedPitch(preferredFocusedPitch);
     }
-  }, [availablePitches, focusedPitch, preferredFocusedPitch]);
+  }, [availablePitches, focusedPitch, preferredFocusedPitch, userClearedFocusedPitch]);
 
   const isInlineMoveActive = Boolean(inlineMove && selectedFixture);
   const activeMovePitch = isInlineMoveActive ? inlineMove.targetPitch : null;
@@ -373,7 +412,10 @@ const Kanban = ({
 
   const boardPitch = focusedPitch;
   const hasManagedPitchSelection = coordinatedPitchSet.size > 0;
-  const isCoordinatingBoardPitch = !hasManagedPitchSelection || coordinatedPitchSet.has(boardPitch);
+  const isCoordinatingBoardPitch = boardPitch
+    ? !hasManagedPitchSelection || coordinatedPitchSet.has(boardPitch)
+    : !hasManagedPitchSelection;
+  const boardSlotPitches = boardPitch ? [boardPitch] : availablePitches;
   const isViewingInlineMoveTarget =
     isInlineMoveActive && boardPitch === activeMovePitch;
   const boardFixtureSource = useMemo(() => {
@@ -482,6 +524,9 @@ const Kanban = ({
     const isReadOnly = !isCoordinatingBoardPitch;
 
     const getGuidanceMessage = () => {
+      if (!boardPitch) {
+        return 'SELECT A PITCH OR TAP ON FIXTURE TO VIEW OPTIONS';
+      }
       if (!selectedFixture) {
         return 'TAP ON FIXTURE TO VIEW OPTIONS';
       }
@@ -509,7 +554,7 @@ const Kanban = ({
           {isReadOnly
             ? (
               <>
-                <strong>Read-only:</strong> You are not coordinating this pitch
+                <strong>Read-only:</strong> {boardPitch ? 'You are not coordinating this pitch' : 'Select a pitch to coordinate fixtures'}
               </>
             )
             : getGuidanceMessage()}
@@ -731,9 +776,37 @@ const Kanban = ({
    };
 
    const handleFocusedPitchSelect = (nextPitch) => {
-     if (!nextPitch) return;
-     setFocusedPitch(nextPitch);
-     persistActivePitch(nextPitch);
+     const safePitch = normalizePitchId(nextPitch);
+     if (!safePitch) return;
+
+     if (!pinnedPitches.includes(safePitch)) {
+       persistPinnedPitches([...pinnedPitches, safePitch], safePitch);
+     } else {
+       persistActivePitch(safePitch);
+     }
+
+     setUserClearedFocusedPitch(false);
+     setFocusedPitch(safePitch);
+     setSelectedFixture(null);
+     setShowingDetails(false);
+     if (inlineMove) {
+       cancelInlineMoveMode();
+     }
+   };
+
+   const handlePitchSelectionCommit = (nextPitches, nextActivePitch) => {
+     const normalized = Array.from(new Set(
+       (nextPitches || []).map(normalizePitchId).filter(Boolean)
+     ));
+     if (!normalized.length) return;
+
+     const active = normalized.includes(normalizePitchId(nextActivePitch))
+       ? normalizePitchId(nextActivePitch)
+       : normalized[0];
+
+     persistPinnedPitches(normalized, active);
+     setUserClearedFocusedPitch(false);
+     setFocusedPitch(active);
      setSelectedFixture(null);
      setShowingDetails(false);
      if (inlineMove) {
@@ -818,6 +891,17 @@ const Kanban = ({
     live: { label: 'next', previous: 'planning', next: 'finished' },
     finished: { label: 'finished', previous: 'live' },
   };
+
+  useEffect(() => {
+    if (!largeMode || isInlineMoveActive) return undefined;
+
+    setLargePaneHandlesSettling(true);
+    const timerId = window.setTimeout(() => {
+      setLargePaneHandlesSettling(false);
+    }, 1000);
+
+    return () => window.clearTimeout(timerId);
+  }, [isInlineMoveActive, largeMode, largePane]);
 
   const navigateLargePane = (nextPane) => {
     if (!nextPane || nextPane === largePane) return;
@@ -1178,20 +1262,23 @@ const Kanban = ({
     </div>
   );
 
-  const renderLargePaneNavLabel = (paneKey) => {
-    const count = paneKey === 'planning'
-      ? plannedFixturesForView.length
-      : paneKey === 'finished'
-        ? finishedFixturesForView.length
-        : null;
-
-    return (
-      <strong>
-        {largePaneMeta[paneKey].label}
-        {count !== null && ` (${count})`}
-      </strong>
-    );
-  };
+  const largePaneTabs = [
+    {
+      key: 'planning',
+      label: 'Planned',
+      count: plannedFixturesForView.length,
+    },
+    {
+      key: 'live',
+      label: 'Next',
+      count: startedFixturesForView.length + queuedFixturesForView.length,
+    },
+    {
+      key: 'finished',
+      label: 'Finished',
+      count: finishedFixturesForView.length,
+    },
+  ];
 
   if (largeMode && !isInlineMoveActive) {
     const activePane = largePaneMeta[largePane];
@@ -1205,94 +1292,122 @@ const Kanban = ({
               pitches={availablePitches}
               selectedPitch={boardPitch}
               onSelectPitch={handleFocusedPitchSelect}
+              onSelectionCommit={handlePitchSelectionCommit}
               pitchStatuses={pitchStatuses}
-              coordinatedPitches={coordinatedPitches}
+              coordinatedPitches={pinnedPitches}
             />
           </div>
           {renderBoardInfoBar()}
           <div
-            className={`kanban-large-panes active-${largePane} ${
-              largePaneDragOffset ? 'is-dragging' : ''
-            }`}
-            style={{ '--large-pane-drag-offset': `${largePaneDragOffset}px` }}
+            className="kanban-large-shell"
             onTouchStart={handleLargePaneTouchStart}
             onTouchMove={handleLargePaneTouchMove}
             onTouchEnd={handleLargePaneTouchEnd}
             onTouchCancel={handleLargePaneTouchEnd}
           >
-            <section className="kanban-large-pane kanban-large-pane-planning">
-              {renderColumn('planned', plannedFixturesForView, {
-                title: 'Planned',
-                columnIndex: 1,
-              })}
-            </section>
-            <section
-              ref={largeLivePaneRef}
-              className="kanban-large-pane kanban-large-pane-live"
-            >
-              {showPitchCompleteBanner && (
-                <div className="pitch-complete-banner">
-                  <div className="pitch-complete-banner__eyebrow">{boardPitch} complete</div>
-                  <div className="pitch-complete-banner__headline">
-                    This pitch has played its final match.
-                  </div>
-                  <div className="pitch-complete-banner__subtext">
-                    Nothing left to queue or start.
-                  </div>
-                </div>
-              )}
-              {renderColumn('started', startedFixturesForView, {
-                title: 'Ongoing',
-                columnIndex: 2,
-                allTournamentPitches: boardPitch ? [boardPitch] : [],
-                allPlannedFixtures: globalPlannedFixtures,
-                emptyMessage: activeMatchEmptyMessage,
-              })}
-              {renderColumn('queued', queuedFixturesForView, {
-                title: 'Up next',
-                columnIndex: 0,
-                allTournamentPitches: boardPitch ? [boardPitch] : [],
-              })}
-              {visibleSoonFixtures.length > 0 && renderSoonFixtures()}
-            </section>
-            <section className="kanban-large-pane kanban-large-pane-finished">
-              {renderColumn('finished', finishedFixturesForView, {
-                title: 'Finished',
-                columnIndex: 3,
-              })}
-            </section>
-          </div>
-          <div
-            className="kanban-large-nav"
-            aria-label="Large schedule navigation"
-            onTouchStart={handleLargePaneTouchStart}
-            onTouchMove={handleLargePaneTouchMove}
-            onTouchEnd={handleLargePaneTouchEnd}
-            onTouchCancel={handleLargePaneTouchEnd}
-          >
-            <div className="kanban-large-nav__slot kanban-large-nav__slot--previous">
-              {activePane?.previous && (
-              <button
-                type="button"
-                className="kanban-large-nav__button kanban-large-nav__button--previous"
-                onClick={() => navigateLargePane(activePane.previous)}
-              >
-                <span aria-hidden="true">{'<'}</span>
-                {renderLargePaneNavLabel(activePane.previous)}
-              </button>
-              )}
+            <div className="kanban-large-tabs" role="tablist" aria-label="Schedule lanes">
+              {largePaneTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  className={`kanban-large-tabs__tab ${largePane === tab.key ? 'is-active' : ''}`}
+                  onClick={() => navigateLargePane(tab.key)}
+                  role="tab"
+                  aria-selected={largePane === tab.key}
+                >
+                  <strong>{tab.label}</strong>
+                  <small>{tab.count} matches</small>
+                </button>
+              ))}
             </div>
-            <div className="kanban-large-nav__slot kanban-large-nav__slot--next">
-              {activePane?.next && (
-              <button
-                type="button"
-                className="kanban-large-nav__button kanban-large-nav__button--next"
-                onClick={() => navigateLargePane(activePane.next)}
+            <div className="kanban-large-pane-viewport">
+              <div
+                className={`kanban-large-panes active-${largePane} ${
+                  largePaneDragOffset ? 'is-dragging' : ''
+                }`}
+                style={{ '--large-pane-drag-offset': `${largePaneDragOffset}px` }}
               >
-                <span aria-hidden="true">{'>'}</span>
-                {renderLargePaneNavLabel(activePane.next)}
-              </button>
-              )}
+                <section className="kanban-large-pane kanban-large-pane-planning">
+                  {renderColumn('planned', plannedFixturesForView, {
+                    title: 'Planned',
+                    columnIndex: 1,
+                  })}
+                </section>
+                <section
+                  ref={largeLivePaneRef}
+                  className="kanban-large-pane kanban-large-pane-live"
+                >
+                  {showPitchCompleteBanner && (
+                    <div className="pitch-complete-banner">
+                      <div className="pitch-complete-banner__eyebrow">{boardPitch} complete</div>
+                      <div className="pitch-complete-banner__headline">
+                        This pitch has played its final match.
+                      </div>
+                      <div className="pitch-complete-banner__subtext">
+                        Nothing left to queue or start.
+                      </div>
+                    </div>
+                  )}
+                  {renderColumn('started', startedFixturesForView, {
+                    title: 'Ongoing',
+                    columnIndex: 2,
+                    allTournamentPitches: boardSlotPitches,
+                    allPlannedFixtures: globalPlannedFixtures,
+                    emptyMessage: activeMatchEmptyMessage,
+                  })}
+                  {renderColumn('queued', queuedFixturesForView, {
+                    title: 'Up next',
+                    columnIndex: 0,
+                    allTournamentPitches: boardSlotPitches,
+                  })}
+                  {visibleSoonFixtures.length > 0 && renderSoonFixtures()}
+                </section>
+                <section className="kanban-large-pane kanban-large-pane-finished">
+                  {renderColumn('finished', finishedFixturesForView, {
+                    title: 'Finished',
+                    columnIndex: 3,
+                  })}
+                </section>
+              </div>
+            </div>
+            <div
+              className="kanban-large-nav"
+              aria-label="Large schedule navigation"
+            >
+              <div className="kanban-large-nav__slot kanban-large-nav__slot--previous">
+                {activePane?.previous && (
+                <button
+                  key={`previous-${largePane}`}
+                  type="button"
+                  className={`kanban-large-nav__button kanban-large-nav__button--previous ${
+                    largePaneHandlesSettling ? 'is-settling' : 'is-subtle'
+                  }`}
+                  onClick={() => navigateLargePane(activePane.previous)}
+                  aria-label={`Show ${largePaneMeta[activePane.previous].label} lane`}
+                >
+                  <span className="kanban-large-nav__handle" aria-hidden="true">
+                    <i className="pi pi-angle-left" />
+                  </span>
+                </button>
+                )}
+              </div>
+              <div className="kanban-large-nav__slot kanban-large-nav__slot--next">
+                {activePane?.next && (
+                <button
+                  key={`next-${largePane}`}
+                  type="button"
+                  className={`kanban-large-nav__button kanban-large-nav__button--next ${
+                    largePaneHandlesSettling ? 'is-settling' : 'is-subtle'
+                  }`}
+                  onClick={() => navigateLargePane(activePane.next)}
+                  aria-label={`Show ${largePaneMeta[activePane.next].label} lane`}
+                >
+                  <span className="kanban-large-nav__handle" aria-hidden="true">
+                    <i className="pi pi-angle-right" />
+                  </span>
+                </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -1349,8 +1464,9 @@ const Kanban = ({
                   pitches={availablePitches}
                   selectedPitch={boardPitch}
                   onSelectPitch={handleFocusedPitchSelect}
+                  onSelectionCommit={handlePitchSelectionCommit}
                   pitchStatuses={pitchStatuses}
-                  coordinatedPitches={coordinatedPitches}
+                  coordinatedPitches={pinnedPitches}
                 />
               </div>
 
@@ -1369,7 +1485,7 @@ const Kanban = ({
                     handleFixtureClick={handleFixtureClick}
                     selectedFixture={selectedFixture}
                     getPitchColor={getPitchColor} // Retained if still used by KanbanCard indirectly
-                    allTournamentPitches={boardPitch ? [boardPitch] : []} // Only render slot for focused pitch
+                    allTournamentPitches={boardSlotPitches}
                     setMoveBarFixtureId={null}
                     recentlyMovedFixtureId={recentlyMovedFixtureId}
                     isInlineMoveMode={isInlineMoveActive}
@@ -1405,7 +1521,7 @@ const Kanban = ({
                     handleFixtureClick={handleFixtureClick}
                     selectedFixture={selectedFixture}
                     getPitchColor={getPitchColor}
-                    allTournamentPitches={boardPitch ? [boardPitch] : []} // Only render slot for focused pitch
+                    allTournamentPitches={boardSlotPitches}
                     setMoveBarFixtureId={null}
                     recentlyMovedFixtureId={recentlyMovedFixtureId}
                     isInlineMoveMode={isInlineMoveActive}
