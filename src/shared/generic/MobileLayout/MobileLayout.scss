@@ -1,7 +1,9 @@
 @import "../../css/_colors.scss";
 
-$grid-bg:    #2a2a2a;
-$grid-lines: #3d3d3d;
+$grid-bg: #bbbeb6;
+$grid-lines-major: rgba(142, 147, 136, 0.11);
+$grid-lines-minor: rgba(142, 147, 136, 0.07);
+$grid-fill: rgba(255, 255, 255, 0.035);
 .mobile {
   * { user-select: none; }
   article: {
@@ -24,6 +26,17 @@ section.MobileLayout {
   }
 }
 
+section.MobileLayout--with-banner {
+  grid-template-rows: auto minmax(0, 1fr);
+
+  > section.MobileLayout__content {
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
+    position: relative;
+  }
+}
+
 .mobile {
   display:grid;
   margin:0;
@@ -36,9 +49,9 @@ section.MobileLayout {
   margin-left: auto;
   margin-right: auto;
   overflow-x: hidden;
-  background-color: #494c44;
+  background-color: $grid-bg;
   opacity: 1.0;
-  background-image:  linear-gradient(#000000 4.2px, transparent 4.2px), linear-gradient(90deg, #000000 4.2px, transparent 4.2px), linear-gradient(#000000 2.1px, transparent 2.1px), linear-gradient(90deg, #000000 2.1px, #111111 2.1px);
+  background-image: linear-gradient($grid-lines-major 4.2px, transparent 4.2px), linear-gradient(90deg, $grid-lines-major 4.2px, transparent 4.2px), linear-gradient($grid-lines-minor 2.1px, transparent 2.1px), linear-gradient(90deg, $grid-lines-minor 2.1px, $grid-fill 2.1px);
   background-size: 105px 105px, 105px 105px, 21px 21px, 21px 21px;
   background-position: -4.2px -4.2px, -4.2px -4.2px, -2.1px -2.1px, -2.1px -2.1px;
 

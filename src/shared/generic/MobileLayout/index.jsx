@@ -1,25 +1,20 @@
 import { useState } from 'react';
-import { useParams } from "react-router-dom";
-import MainMenu from '../MainMenu';
-import NavBar from '../NavBar';
+import AuthenticatedBanner from '../AuthenticatedBanner';
 import NavFooter from '../NavFooter';
 
 import './MobileLayout.scss';
 
 const MobileLayout = ({
   tabNames = [],
+  banner,
   children,
 }) => {
-  const { pitchId } = useParams();
   const [selected, setSelected] = useState(tabNames[0]);
-  const handle = {
-    changetab: (tab) => { setSelected(tab) }
-  };
 
   const childrenArray = React.Children.toArray(children);
-  const [SubHeading] = childrenArray;
   return <>
-    <section className="MobileLayout mobile">
+    <section className={`MobileLayout mobile${banner ? ' MobileLayout--with-banner' : ''}`}>
+      {banner && <AuthenticatedBanner {...banner} />}
       <section className="MobileLayout__content">{
         childrenArray.slice(1)[tabNames.indexOf(selected)]
       }</section>

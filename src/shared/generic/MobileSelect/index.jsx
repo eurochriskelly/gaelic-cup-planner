@@ -1,4 +1,5 @@
 import { Children } from "react";
+import AuthenticatedBanner from "../AuthenticatedBanner";
 import NavFooter from "../NavFooter";
 
 import "../MobileLayout/MobileLayout.scss";
@@ -8,14 +9,17 @@ const MobileSelect = ({
   onSelect = () => {},
   active=0,
   className = '',
+  banner,
   children,
 }) => {
   const childrenArray = Children.toArray(children);
   const [SubHeading, ...cards] = childrenArray;
 
   return (
-    <section className={`MobileSelect mobile ${className}`.trim()}>
-      {SubHeading ? (
+    <section className={`MobileSelect mobile ${banner ? 'MobileSelect--with-banner' : ''} ${className}`.trim()}>
+      {banner ? (
+        <AuthenticatedBanner {...banner} />
+      ) : SubHeading ? (
         <header className="mobile-select-header">
           {SubHeading}
         </header>
