@@ -65,7 +65,7 @@ export const Provider = ({ children }) => {
       {
         title: "live competition status",
         name: "competitions",
-        path: `/tournament/${id}/selectCategory`,
+        path: `/tournament/${id}/category`,
       },
       {
         title: "field coordination",

@@ -370,7 +370,7 @@ const PinLogin = () => {
     navigate(
       encodedCompetition
         ? `/tournament/${tournament.Id}/category/${encodedCompetition}`
-        : `/tournament/${tournament.Id}/selectCategory`,
+        : `/tournament/${tournament.Id}/category`,
       { replace: false },
     );
   };

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Routes, Route, Navigate, useParams, useLocation, useNavigate } from "react-router-dom";
 import { Provider, useAppContext } from "../../shared/js/Provider";
 import { FixtureProvider } from "../../components/pitch/PitchView/FixturesContext";
-import SelectTournamentView from "../../components/groups/SelectTournamentView";
 import TournamentView from "../../components/groups/TournamentView";
 import LandingPage from "./pages/LandingPage";
 import PitchView from "../../components/pitch/PitchView";
@@ -66,8 +65,8 @@ function AppContent() {
              element={<PinLogin />} />
       <Route path="/tournament/:tournamentId/home"
              element={<LandingPage role={userRole} />} />
-      <Route path="/tournament/:tournamentId/selectCategory"
-             element={<SelectTournamentView role={userRole} />} />
+      <Route path="/tournament/:tournamentId/category"
+             element={<TournamentView role={userRole} />} />
       <Route path="/tournament/:tournamentId/category/:category"
              element={<TournamentView role={userRole} />} />
       <Route path="/tournament/:tournamentId/pitch/:pitchId"
