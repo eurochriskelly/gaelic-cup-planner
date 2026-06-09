@@ -58,7 +58,14 @@ const SelectPitchView = () => {
   };
 
   return (
-    <MobileSelect sections={sections} active={1}>
+    <MobileSelect
+      sections={sections}
+      active={1}
+      banner={{
+        kicker: 'Schedule execution',
+        title: 'Select pitch',
+      }}
+    >
       <div>Select pitch</div>
       {pitchData?.map((pitchInfo, id) => {
         const {

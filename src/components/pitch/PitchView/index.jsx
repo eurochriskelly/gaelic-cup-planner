@@ -112,6 +112,11 @@ const PitchView = () => {
       onBack={handle.back}
       active={1}
       tabNames={tabNames}
+      banner={{
+        kicker: 'Schedule execution',
+        title: pitchId && pitchId !== '*' ? pitchId : 'Schedule',
+        hideBody: true,
+      }}
     >
       <span>
         <span className="type-pitch">{
