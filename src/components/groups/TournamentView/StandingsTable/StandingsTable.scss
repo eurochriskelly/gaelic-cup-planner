@@ -2,40 +2,38 @@
 
 .status-table {
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  font-size: 1.8rem; /* +50% from 1.2rem */
+  font-size: 1.42rem;
+  table-layout: fixed;
 
   th,
   td {
-    padding: 1.1rem 0.65rem; /* +~30% padding */
+    border-bottom: 1px solid #d8ded2;
+    padding: 1.1rem 0.5rem;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
   }
 
   th {
-    font-weight: 600;
-    color: #64748b;
-    background: #f1f5f9;
-    text-transform: uppercase;
-    font-size: 1.4rem; /* +~50% from 0.95rem */
+    background: #eef1ec;
+    color: #60718a;
+    font-size: 1.12rem;
+    font-weight: 800;
     letter-spacing: 0.04em;
-    padding-top: 1.1rem;
-    padding-bottom: 1.1rem;
+    padding-bottom: 0.8rem;
+    padding-top: 0.8rem;
+    text-transform: uppercase;
   }
 
   td {
-    background: white;
-    color: #1e293b;
-    font-weight: 500;
+    background: #f7f7f7;
+    color: #273244;
+    font-weight: 700;
   }
 
-  /* Alternate row stripes - subtle */
   tr:nth-child(even) td {
-    background: #f8fafc;
+    background: #f0f2f3;
   }
 
   .is-center {
@@ -43,12 +41,89 @@
   }
 
   .is-pos {
+    color: #36475b;
+    font-size: 1.85rem;
     font-weight: 700;
-    color: #94a3b8;
-    width: 2rem;
+    width: 2.4rem;
+  }
+
+  .is-diff {
+    color: #009b68;
+    font-size: 1.18rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .is-diff.is-negative {
+    color: #e11d48;
+  }
+
+  .is-points {
+    color: #101820;
+    font-weight: 900;
+  }
+
+  .status-table__team {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    min-width: 0;
+
+    span:last-child {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .status-table__badge {
+    align-items: center;
+    border: 2px solid #3d4652;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.25);
+    display: inline-flex;
+    flex: 0 0 3.75rem;
+    font-size: 1.08rem;
+    font-weight: 900;
+    height: 3.75rem;
+    justify-content: center;
+    line-height: 1;
+    width: 3.75rem;
   }
 
   tr:last-child td {
     border-bottom: none;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 2.6rem;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: auto;
+  }
+
+  th:nth-child(n + 3),
+  td:nth-child(n + 3) {
+    width: 2.95rem;
+  }
+
+  @media (max-width: 390px) {
+    font-size: 1.18rem;
+
+    th,
+    td {
+      padding-left: 0.3rem;
+      padding-right: 0.3rem;
+    }
+
+    .status-table__badge {
+      flex-basis: 3.2rem;
+      font-size: 0.92rem;
+      height: 3.2rem;
+      width: 3.2rem;
+    }
   }
 }
