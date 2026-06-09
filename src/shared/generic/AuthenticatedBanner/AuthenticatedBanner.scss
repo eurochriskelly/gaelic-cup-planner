@@ -1,0 +1,229 @@
+.AuthenticatedBanner {
+  --banner-green: #8b9a67;
+  --banner-green-dark: #5a7135;
+  --banner-cream: #f4f4ec;
+
+  border-bottom: 1px solid #c7cbbf;
+  overflow: hidden;
+  width: 100%;
+}
+
+.AuthenticatedBanner__mast {
+  align-items: center;
+  background-color: var(--banner-green);
+  background-image:
+    linear-gradient(30deg, rgba(122, 138, 85, 0.6) 12%, transparent 12.5%, transparent 87%, rgba(122, 138, 85, 0.6) 87.5%, rgba(122, 138, 85, 0.6)),
+    linear-gradient(150deg, rgba(122, 138, 85, 0.6) 12%, transparent 12.5%, transparent 87%, rgba(122, 138, 85, 0.6) 87.5%, rgba(122, 138, 85, 0.6)),
+    linear-gradient(30deg, rgba(122, 138, 85, 0.6) 12%, transparent 12.5%, transparent 87%, rgba(122, 138, 85, 0.6) 87.5%, rgba(122, 138, 85, 0.6)),
+    linear-gradient(150deg, rgba(122, 138, 85, 0.6) 12%, transparent 12.5%, transparent 87%, rgba(122, 138, 85, 0.6) 87.5%, rgba(122, 138, 85, 0.6)),
+    linear-gradient(60deg, rgba(107, 122, 71, 0.42) 25%, transparent 25.5%, transparent 75%, rgba(107, 122, 71, 0.42) 75%, rgba(107, 122, 71, 0.42)),
+    linear-gradient(60deg, rgba(107, 122, 71, 0.42) 25%, transparent 25.5%, transparent 75%, rgba(107, 122, 71, 0.42) 75%, rgba(107, 122, 71, 0.42));
+  background-position: 0 0, 0 0, 1.75rem 3.025rem, 1.75rem 3.025rem, 0 0, 1.75rem 3.025rem;
+  background-size: 3.5rem 6.05rem;
+  border-left: 0.55rem solid #ff1d25;
+  color: var(--banner-cream);
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 7.25rem;
+  padding: 1.25rem 1.3rem 1.25rem 1.75rem;
+}
+
+.AuthenticatedBanner__logo {
+  display: block;
+  height: 3.25rem;
+  object-fit: contain;
+  width: 3.25rem;
+}
+
+.AuthenticatedBanner__kicker {
+  align-self: center;
+  color: #fff;
+  font-size: 1.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.AuthenticatedBanner__actions {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+}
+
+.AuthenticatedBanner__action {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.93);
+  border: 0;
+  border-radius: 0.7rem;
+  color: var(--banner-green-dark);
+  cursor: pointer;
+  display: flex;
+  height: 3.85rem;
+  justify-content: center;
+  padding: 0;
+  width: 3.85rem;
+
+  i {
+    font-size: 2.35rem;
+    line-height: 1;
+  }
+}
+
+.AuthenticatedBanner__body {
+  align-items: center;
+  background: #f4f4f4;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 7.15rem;
+  padding: 1.15rem 1.8rem;
+}
+
+.AuthenticatedBanner__copy {
+  min-width: 0;
+}
+
+.AuthenticatedBanner__title {
+  background: none !important;
+  color: #141414 !important;
+  font-size: 3.12rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.04 !important;
+  margin: 0 !important;
+  overflow: hidden;
+  padding: 0 !important;
+  text-align: left !important;
+  text-overflow: ellipsis;
+  text-transform: uppercase !important;
+  white-space: nowrap;
+}
+
+.AuthenticatedBanner__meta {
+  color: #636363;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0.45rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.AuthenticatedBanner__chevrons {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  display: flex;
+  gap: 0.45rem;
+  padding: 0;
+
+  span {
+    border-bottom: 1.25rem solid transparent;
+    border-left: 1.25rem solid #7d7d7d;
+    border-top: 1.25rem solid transparent;
+    display: block;
+    height: 0;
+    width: 0;
+  }
+}
+
+.AuthenticatedBanner__chevrons--button {
+  cursor: pointer;
+  min-height: 4rem;
+  min-width: 4.8rem;
+  justify-content: center;
+}
+
+.AuthenticatedBanner__user {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d9ddcf;
+  border-radius: 0.75rem;
+  color: #111;
+  cursor: pointer;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 4.45rem;
+  max-width: 30rem;
+  padding: 0 1rem;
+
+  i {
+    color: var(--banner-green-dark);
+    font-size: 1.8rem;
+  }
+
+  span {
+    font-size: 1.45rem;
+    font-weight: 800;
+    min-width: 0;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .AuthenticatedBanner__mast {
+    gap: 0.8rem;
+    min-height: 6.4rem;
+    padding: 1rem 0.9rem 1rem 1.25rem;
+  }
+
+  .AuthenticatedBanner__logo {
+    height: 2.85rem;
+    width: 2.85rem;
+  }
+
+  .AuthenticatedBanner__kicker {
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    white-space: normal;
+  }
+
+  .AuthenticatedBanner__action {
+    height: 3.45rem;
+    width: 3.45rem;
+
+    i {
+      font-size: 2.1rem;
+    }
+  }
+
+  .AuthenticatedBanner__body {
+    min-height: 6.2rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .AuthenticatedBanner__title {
+    font-size: 2.15rem !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .AuthenticatedBanner__meta {
+    font-size: 1.35rem;
+  }
+
+  .AuthenticatedBanner--with-user .AuthenticatedBanner__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .AuthenticatedBanner__user {
+    justify-self: stretch;
+    max-width: none;
+
+    span {
+      max-width: none;
+    }
+  }
+}
