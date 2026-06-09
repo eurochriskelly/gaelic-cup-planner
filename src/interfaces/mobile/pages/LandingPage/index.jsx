@@ -1,20 +1,23 @@
 import Cookies from "js-cookie";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
 import { useFetchTournament, useFetchPitches, useFetchTournamentFixtures } from './LandingPage.hooks';
+import AuthenticatedBanner from '../../../../shared/generic/AuthenticatedBanner';
 import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import API from "../../../../shared/api/endpoints";
 import './LandingPage.scss';
 
+const SCHEDULE_TIP_COOKIE = 'ppHomeScheduleTipDismissed';
+const COOKIE_OPTIONS = { path: "/" };
+
 const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [currentTime, setCurrentTime] = useState(() => new Date());
   const { tournInfo, setTournInfo } = useFetchTournament(tournamentId);
   const { pitches, isLoading: isLoadingPitches, error: pitchesError } = useFetchPitches(tournamentId);
@@ -32,7 +35,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const nameInputRef = useRef(null);
   const coordinatorCodeRefs = useRef([]);
-  const landingPageRef = useRef(null);
 
   const persistedFilters = filterSelections && typeof filterSelections === "object"
     ? filterSelections
@@ -45,6 +47,12 @@ const LandingPage = () => {
   const [isSavingTournament, setIsSavingTournament] = useState(false);
   const [tournamentSaveError, setTournamentSaveError] = useState('');
   const [showTournamentSettings, setShowTournamentSettings] = useState(false);
+  const [showScheduleTip, setShowScheduleTip] = useState(false);
+  const [isScheduleTipFading, setIsScheduleTipFading] = useState(false);
+  const scheduleTipCookie = useMemo(
+    () => buildScheduleTipCookieName(tournamentId, userRole, userName),
+    [tournamentId, userRole, userName],
+  );
 
   useEffect(() => {
     setNameInput(userName || "");
@@ -81,6 +89,31 @@ const LandingPage = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    setIsScheduleTipFading(false);
+    setShowScheduleTip(Cookies.get(scheduleTipCookie) !== 'true');
+  }, [scheduleTipCookie]);
+
+  const canShowScheduleTip = showScheduleTip && !showNamePrompt && !showResetConfirm && !showTournamentSettings;
+
+  useEffect(() => {
+    if (!canShowScheduleTip) return undefined;
+
+    const fadeTimer = setTimeout(() => {
+      setIsScheduleTipFading(true);
+      Cookies.set(scheduleTipCookie, 'true', { expires: 3650, path: "/" });
+    }, 30000);
+
+    const removeTimer = setTimeout(() => {
+      setShowScheduleTip(false);
+    }, 30600);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, [canShowScheduleTip, scheduleTipCookie]);
 
   const normaliseId = (id) => (id === null || id === undefined ? null : `${id}`);
 
@@ -166,18 +199,6 @@ const LandingPage = () => {
     });
   };
 
-  // New: Add scroll listener to toggle shrink class
-  useEffect(() => {
-    const element = landingPageRef.current;
-    if (!element) return;
-
-    const handleScroll = () => {
-      setIsScrolled(element.scrollTop > 50); // Shrink after scrolling 50px
-    };
-    element.addEventListener('scroll', handleScroll);
-    return () => element.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handle = {
     resetTournament: async () => {
       const button = document.querySelector('.sudo');
@@ -198,7 +219,7 @@ const LandingPage = () => {
       console.log('[LandingPage] user reset – cookies cleared');
     },
     disconnect: () => {
-      Cookies.remove("tournamentId");
+      Cookies.remove("tournamentId", COOKIE_OPTIONS);
       navigate("/", { replace: true });
     }
   };
@@ -356,7 +377,7 @@ const LandingPage = () => {
   };
 
   return (
-    <main className={`mobile LandingPage${isScrolled ? ' shrink' : ''}`} ref={landingPageRef}>
+    <main className="mobile LandingPage">
       {showNamePrompt && (
         <div className="name-prompt-overlay" role="dialog" aria-modal="true" aria-labelledby="namePromptTitle">
           <div className="name-prompt-modal">
@@ -502,32 +523,14 @@ const LandingPage = () => {
         </div>
       )}
       <div className="LandingPage__content" aria-hidden={showNamePrompt || showResetConfirm || showTournamentSettings}>
-        {/* New: Add banner container */}
-        <div className="banner-container">
-          <img src="/images/pitch-perfect.png" alt="Tournament Banner" className="banner-image" />
-          <button
-            type="button"
-            className="icon-button logout tournament-logout banner-logout"
-            onClick={handle.disconnect}
-            aria-label="Leave tournament"
-          >
-            <i className="pi pi-sign-out logout-icon" aria-hidden="true" />
-          </button>
-          <div className="banner-footer-bar">
-            <div className="banner-title">{t('landingPage_heading', 'Pitch Perfect')}</div>
-            {versionInfo?.mobile && (
-              <div className="banner-version">{`v${versionInfo.mobile}`}</div>
-            )}
-          </div>
-          <div className="role-mode-banner">
-            <span className="role-mode-label">{roleLabel}</span>
-            <button type="button" className="banner-user-button" onClick={handle.resetUser}>
-              <i className="pi pi-users role-mode-icon" aria-hidden="true" />
-              <span className="banner-user-name">{userName || 'Set name'}</span>
-              <i className="pi pi-pencil banner-user-edit-icon" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+        <AuthenticatedBanner
+          kicker={roleLabel}
+          title={t('landingPage_heading', 'Pitch Perfect')}
+          meta={versionInfo?.mobile ? `v${versionInfo.mobile}` : ''}
+          onExit={handle.disconnect}
+          onUserClick={handle.resetUser}
+          userName={userName}
+        />
         <header className={`tournament-summary${isOrganizer ? ' editable' : ''}`}>
           <table>
             <tbody>
@@ -625,7 +628,12 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
-        <NavFooter /> 
+        {canShowScheduleTip && (
+          <div className={`schedule-tutorial-tip${isScheduleTipFading ? ' is-fading' : ''}`} role="status">
+            Tap on schedule to update fixtures
+          </div>
+        )}
+        <NavFooter />
       </div>
     </main>
   );
@@ -816,4 +824,11 @@ const formatHoursRemaining = (milliseconds) => {
   const safeHours = Math.max(0.1, flooredToTenth);
 
   return Number.isInteger(safeHours) ? `${safeHours}` : safeHours.toFixed(1);
+};
+
+const buildScheduleTipCookieName = (tournamentId, userRole, userName) => {
+  const parts = [tournamentId || 'unknown', userRole || 'spectator', userName || 'anonymous']
+    .map((part) => encodeURIComponent(`${part}`));
+
+  return `${SCHEDULE_TIP_COOKIE}_${parts.join('_')}`;
 };
