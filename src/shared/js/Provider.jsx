@@ -8,6 +8,8 @@ const versionInfo = {
   mobile: packageJson.version,
 };
 
+const cookieOptions = { path: "/" };
+
 export const Provider = ({ children }) => {
   const [mediaType, setMediaType] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
@@ -34,7 +36,7 @@ export const Provider = ({ children }) => {
 
   const clearFilterSelections = () => {
     setFilterSelections({});
-    Cookies.remove("ppFilterSelections");
+    Cookies.remove("ppFilterSelections", cookieOptions);
   };
 
   const setUserNameAndCookie = (name) => {
@@ -43,13 +45,13 @@ export const Provider = ({ children }) => {
     if (safeName) {
       Cookies.set("ppUserName", safeName, { expires: 365, path: "/" });
     } else {
-      Cookies.remove("ppUserName");
+      Cookies.remove("ppUserName", cookieOptions);
     }
   };
 
   const resetUserContext = () => {
     setUserRole('spectator');
-    Cookies.remove("ppUserRole");
+    Cookies.remove("ppUserRole", cookieOptions);
     clearFilterSelections();
     setUserNameAndCookie("");
   };
