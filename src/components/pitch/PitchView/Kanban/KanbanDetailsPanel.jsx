@@ -9,6 +9,13 @@ import {
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
 import API from "../../../../shared/api/endpoints"; // Import API
+import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
+import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
+import CardIcon from "../../../../shared/icons/icon-card.svg?react";
+import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
+import StartIcon from "../../../../shared/icons/icon-start.svg?react";
+import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
+import EditIcon from "../../../../shared/icons/icon-edit.svg?react";
 import "../../../../components/web/gaelic-score";
 import "../../../../components/web/logo-box";
 import "../../../../components/web/team-name";
@@ -25,6 +32,22 @@ const KanbanDetailsPanel = ({
 }) => {
   if (!fixture) return null;
   const [isAnyScorePickerOpen, setIsAnyScorePickerOpen] = useState(false);
+  const [activeMode, setActiveMode] = useState(mode);
+  const { startMatch, fetchFixtures } = useFixtureContext();
+
+  useEffect(() => {
+    setActiveMode(mode);
+  }, [mode]);
+
+  const handleStartMatch = async () => {
+    try {
+      await startMatch(fixture.id);
+      await fetchFixtures(true);
+      setActiveMode("score");
+    } catch (error) {
+      console.error("Error starting match:", error);
+    }
+  };
 
   const displayCategory = fixture.category
     ? fixture.category.substring(0, 9).toUpperCase()
@@ -113,16 +136,22 @@ const KanbanDetailsPanel = ({
                 </div>
                 <div></div>
               </div>
+              <FixtureActionTabs
+                fixture={fixture}
+                activeMode={activeMode}
+                onSetMode={setActiveMode}
+                onStartMatch={handleStartMatch}
+              />
             </div>
             <div className="scrollable-content">
-              {mode === "info" && <ShowFixtureDetails fixture={fixture} />}
-              {mode === "forfeit" && (
+              {activeMode === "info" && <ShowFixtureDetails fixture={fixture} />}
+              {activeMode === "forfeit" && (
                 <ShowForfeitOptions fixture={fixture} closePanel={closePanel} />
               )}
-              {mode === "cards" && (
+              {activeMode === "cards" && (
                 <CardEntryWrapper fixture={fixture} closePanel={closePanel} />
               )}
-              {mode === "score" && (
+              {activeMode === "score" && (
                 <ScoreEntryWrapper
                   fixture={fixture}
                   closePanel={closePanel}
@@ -130,10 +159,10 @@ const KanbanDetailsPanel = ({
                   onScorePickerVisibilityChange={setIsAnyScorePickerOpen}
                 />
               )}
-              {mode === "move" && (
+              {activeMode === "move" && (
                 <MoveFixtureWrapper fixture={fixture} closePanel={closePanel} />
               )}
-              {mode === "edit" && (
+              {activeMode === "edit" && (
                 <EditFixtureWrapper fixture={fixture} closePanel={closePanel} />
               )}
             </div>
@@ -145,6 +174,58 @@ const KanbanDetailsPanel = ({
 };
 
 export default KanbanDetailsPanel;
+
+function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
+  const lane = fixture?.lane?.current;
+  const orderByLane = {
+    planned: ["info", "cancel", "reschedule", "edit"],
+    queued: ["info", "start", "cancel", "reschedule"],
+    started: ["info", "finish", "cards", "cancel"],
+    finished: ["info", "cards", "cancel"],
+  };
+  const order = orderByLane[lane] || orderByLane.started;
+
+  const tabMeta = {
+    info: { label: "View", Icon: ViewIcon, mode: "info" },
+    finish: { label: "Score", Icon: ScoreIcon, mode: "score" },
+    cards: { label: "Card", Icon: CardIcon, mode: "cards" },
+    cancel: { label: "Not Played", Icon: CancelIcon, mode: "forfeit" },
+    start: { label: "Start", Icon: StartIcon, mode: null },
+    reschedule: { label: "Move", Icon: MoveIcon, mode: "move" },
+    edit: { label: "Edit", Icon: EditIcon, mode: "edit" },
+  };
+
+  const tabs = order
+    .map((id) => ({ id, ...tabMeta[id] }))
+    .filter((tab) => tab.Icon);
+
+  return (
+    <div className="fixture-action-tabs" role="tablist" aria-label="Fixture actions">
+      {tabs.map(({ id, label, Icon, mode }) => {
+        const isActive = activeMode === mode;
+        return (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            className={`fixture-action-tab ${isActive ? "active" : ""}`}
+            onClick={() => {
+              if (id === "start") {
+                onStartMatch();
+                return;
+              }
+              if (mode) onSetMode(mode);
+            }}
+          >
+            <Icon className="fixture-action-tab__icon" />
+            <span className="fixture-action-tab__label">{label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function ShowFixtureDetails({ fixture }) {
   const hasScores = fixture.score1 || fixture.score2;
