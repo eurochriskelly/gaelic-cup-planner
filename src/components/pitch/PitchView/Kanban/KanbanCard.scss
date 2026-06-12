@@ -331,7 +331,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   &.inline-move-context .kanban-card-content-wrapper {
     padding: 0.4rem 0.65rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   &.inline-move-list {
@@ -373,7 +373,7 @@ $bcol: saturate(lighten($sc, 5%), 30%);
       min-width: 0;
       height: 100%;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       padding: 0.05rem 0.45rem;
     }
 
@@ -386,6 +386,9 @@ $bcol: saturate(lighten($sc, 5%), 30%);
   }
 
   &.inline-move-list:not(.inline-move-active) {
+    height: auto;
+    min-height: 10rem;
+
     .kanban-card-frame {
       width: 100%;
     }
@@ -399,13 +402,13 @@ $bcol: saturate(lighten($sc, 5%), 30%);
     }
 
     .teams-container-move-mode {
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .teams-stack-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      align-items: center;
+      align-items: start;
       gap: 1.2rem;
       min-height: auto;
     }
@@ -475,17 +478,17 @@ $bcol: saturate(lighten($sc, 5%), 30%);
         padding-bottom: 0;
         margin-bottom: 0;
         align-self: stretch;
-        justify-content: center;
+        justify-content: flex-start;
       }
 
       .teams-stack-row {
         position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 0.22rem;
         width: 100%;
-        min-height: 100%;
+        min-height: auto;
 
         .team-row-inline-move {
           margin-bottom: 0;
