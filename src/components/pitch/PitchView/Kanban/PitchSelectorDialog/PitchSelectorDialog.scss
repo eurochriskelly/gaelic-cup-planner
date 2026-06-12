@@ -1,0 +1,318 @@
+@import "src/shared/css/_colors.scss";
+
+.pitch-selector-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 100;
+}
+
+.pitch-selector-dialog {
+  --pitch-selected-bg: #c9eff6;
+  --pitch-unselected-bg: #d9d9d9;
+  --pitch-active: #f4c400;
+  --pitch-add: #5eab33;
+  --pitch-remove: #c94f55;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 3rem);
+  max-width: 640px;
+  height: calc(100% - 6rem);
+  max-height: 900px;
+  background: rgba(82, 93, 77, 0.98);
+  border-radius: 1.2rem;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+
+  .pitch-selector-dialog-header {
+    flex-shrink: 0;
+    padding: 1.8rem 1.5rem 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .pitch-selector-dialog-title {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .pitch-selector-dialog-subtitle {
+      color: #fff;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  }
+
+  .pitch-selector-dialog-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+
+    .pitch-group {
+      margin-bottom: 2rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .pitch-group-label {
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+
+      .pitch-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.9rem;
+      }
+    }
+  }
+
+  .pitch-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.3rem;
+    padding: 0.9rem 0.6rem 3.6rem;
+    border: 0.2rem solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.4rem;
+    background: var(--pitch-unselected-bg);
+    min-height: 7.5rem;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: border-color 0.14s ease, transform 0.1s ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &.watched {
+      background: var(--pitch-selected-bg);
+      border-color: var(--pitch-active);
+      border-width: 0.35rem;
+    }
+
+    .pitch-card-name {
+      font-size: 1.55rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #202b31;
+      text-align: center;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    .pitch-card-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: rgba(124, 124, 124, 0.98);
+      margin-top: 0.2rem;
+
+      .status-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &.live {
+          color: #8a0f16;
+        }
+
+        &.complete {
+          color: #446b17;
+        }
+      }
+
+      .minutes-text {
+        flex: 0 0 auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.15rem;
+        color: #29333a;
+
+        &.complete {
+          color: #446b17;
+        }
+      }
+    }
+
+    .pitch-card-action {
+      position: absolute;
+      bottom: 0.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.8rem;
+      height: 2.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      pointer-events: none;
+
+      &.add {
+        background: var(--pitch-add);
+      }
+
+      &.remove {
+        background: var(--pitch-remove);
+      }
+    }
+  }
+
+  .pitch-selector-dialog-actions {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    padding: 1.2rem 1.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .dialog-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      padding: 0.5rem;
+      touch-action: manipulation;
+      transition: opacity 0.15s ease;
+
+      svg {
+        width: 5.5rem;
+        height: 5.5rem;
+      }
+
+      span {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pitch-selector-dialog {
+    width: calc(100% - 2rem);
+    height: calc(100% - 4rem);
+
+    .pitch-selector-dialog-header {
+      padding: 1.4rem 1.2rem 1rem;
+
+      .pitch-selector-dialog-title {
+        font-size: 1rem;
+      }
+
+      .pitch-selector-dialog-subtitle {
+        font-size: 1.55rem;
+      }
+    }
+
+    .pitch-selector-dialog-content {
+      padding: 1.2rem;
+
+      .pitch-group {
+        margin-bottom: 1.5rem;
+
+        .pitch-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.7rem;
+        }
+      }
+    }
+
+    .pitch-card {
+      padding: 0.7rem 0.4rem 3.2rem;
+      min-height: 6.5rem;
+
+      .pitch-card-name {
+        font-size: 1.35rem;
+      }
+
+      .pitch-card-status {
+        font-size: 0.95rem;
+        gap: 0.25rem;
+
+        .minutes-text {
+          font-size: 1rem;
+        }
+      }
+
+      .pitch-card-action {
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: 1.45rem;
+      }
+    }
+
+    .pitch-selector-dialog-actions {
+      gap: 3rem;
+      padding: 1rem 1.2rem 1.5rem;
+
+      .dialog-action {
+        svg {
+          width: 4.5rem;
+          height: 4.5rem;
+        }
+
+        span {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .pitch-selector-dialog {
+    .pitch-selector-dialog-content {
+      .pitch-group {
+        .pitch-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState, useMemo } from 'react'
 import './PitchSelector.scss'
 import OnAirLight from './OnAirLight'
+import PitchSelectorDialog from './PitchSelectorDialog'
 
 const normalizePitch = (value) => {
   if (value === null || value === undefined) return null
@@ -19,10 +20,7 @@ const PitchSelector = ({
   pitchStatuses = {},
   coordinatedPitches = [],
 }) => {
-  const [nowMs, setNowMs] = useState(Date.now())
-  const [isEditing, setIsEditing] = useState(false)
-  const [draftPitches, setDraftPitches] = useState([])
-  const [draftActivePitch, setDraftActivePitch] = useState(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const availablePitches = useMemo(() => uniquePitches(pitches), [pitches])
   const persistedPitches = useMemo(() => (
@@ -34,89 +32,35 @@ const PitchSelector = ({
       ? persistedPitches
       : uniquePitches([selectedPitchId]).filter((pitch) => availablePitches.includes(pitch))
   ), [availablePitches, persistedPitches, selectedPitchId])
-  const activePitch = isEditing
-    ? (draftActivePitch || draftPitches[0] || null)
-    : (selectedPitchId || visibleSelectedPitches[0] || null)
-  const selectedSet = new Set(isEditing ? draftPitches : visibleSelectedPitches)
+  const activePitch = selectedPitchId || visibleSelectedPitches[0] || null
+  const selectedSet = new Set(visibleSelectedPitches)
   const selectedCount = selectedSet.size
   const totalCount = availablePitches.length
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setNowMs(Date.now())
-    }, 30000)
-
-    return () => clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    if (isEditing) return
-    setDraftPitches(visibleSelectedPitches)
-    setDraftActivePitch(activePitch)
-  }, [activePitch, isEditing, visibleSelectedPitches])
-
   const getLiveMinutes = (status) => {
     if (!status?.liveStartedAtMs) return null
-    return Math.max(0, Math.floor((nowMs - status.liveStartedAtMs) / 60000))
+    return Math.max(0, Math.floor((Date.now() - status.liveStartedAtMs) / 60000))
   }
 
-  const startEditing = () => {
-    setDraftPitches(visibleSelectedPitches)
-    setDraftActivePitch(activePitch)
-    setIsEditing(true)
-  }
-
-  const cancelEditing = () => {
-    setDraftPitches(visibleSelectedPitches)
-    setDraftActivePitch(activePitch)
-    setIsEditing(false)
-  }
-
-  const saveEditing = () => {
-    if (!draftPitches.length) return
-    const nextActivePitch = draftPitches.includes(draftActivePitch)
-      ? draftActivePitch
-      : draftPitches[0]
-
-    onSelectionCommit?.(draftPitches, nextActivePitch)
-    setIsEditing(false)
-  }
-
-  const addDraftPitch = (pitch) => {
-    setDraftPitches((current) => (
-      current.includes(pitch) ? current : [...current, pitch]
-    ))
-    setDraftActivePitch(pitch)
-  }
-
-  const removeDraftPitch = (pitch) => {
-    setDraftPitches((current) => {
-      if (current.length <= 1) return current
-
-      const nextPitches = current.filter((item) => item !== pitch)
-      if (draftActivePitch === pitch) {
-        setDraftActivePitch(nextPitches[0] || null)
-      }
-      return nextPitches
-    })
-  }
-
-  const handlePitchClick = (pitch, isSelected) => {
-    if (isEditing) {
-      if (isSelected) {
-        setDraftActivePitch(pitch)
-      } else {
-        addDraftPitch(pitch)
-      }
-      return
-    }
-
+  const handlePitchClick = (pitch) => {
     onSelectPitch?.(pitch)
+  }
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false)
+  }
+
+  const handleCommit = (draftPitches, nextActivePitch) => {
+    onSelectionCommit?.(draftPitches, nextActivePitch)
+    setIsDialogOpen(false)
   }
 
   const renderPitchTab = (pitch) => {
     const status = pitchStatuses[pitch] || {}
-    const isSelected = selectedSet.has(pitch)
     const isActive = activePitch === pitch
     const isLive = !!status.hasLiveMatch
     const isComplete = !!status.isComplete
@@ -124,111 +68,71 @@ const PitchSelector = ({
     const lightStatus = isLive ? 'in-progress' : isComplete ? 'ready' : 'offline'
     const statusText = isLive ? 'In play' : isComplete ? 'All done' : 'No match'
     const minutesText = isLive && typeof liveMinutes === 'number' ? `${liveMinutes}m` : isComplete ? 'FT' : ''
-    const canRemove = isEditing && isSelected && draftPitches.length > 1
 
     return (
       <div
         key={pitch}
-        className={`pitch-tab ${isSelected ? 'managed' : 'unmanaged'} ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
+        className={`pitch-tab managed ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
       >
         <button
           type="button"
           className="pitch-tab-main"
-          onClick={() => handlePitchClick(pitch, isSelected)}
+          onClick={() => handlePitchClick(pitch)}
           aria-pressed={isActive}
-          aria-label={`${pitch}${isSelected ? ', coordinated by you' : ', add pitch to your coordination list'}`}
+          aria-label={`${pitch}, coordinated by you`}
         >
           <span className="pitch-name">{pitch}</span>
-
-          {isSelected ? (
-            <span className="pitch-status-line">
-              <span className="on-air-group">
-                <OnAirLight status={lightStatus} />
-                <span className={`on-air-text ${isLive ? 'live' : isComplete ? 'complete' : 'idle'}`}>
-                  {statusText}
-                </span>
+          <span className="pitch-status-line">
+            <span className="on-air-group">
+              <OnAirLight status={lightStatus} />
+              <span className={`on-air-text ${isLive ? 'live' : isComplete ? 'complete' : 'idle'}`}>
+                {statusText}
               </span>
-              {minutesText && (
-                <span className={`live-minutes ${isComplete ? 'complete' : ''}`}>
-                  {minutesText}
-                </span>
-              )}
             </span>
-          ) : (
-            <span className="pitch-add-indicator" aria-hidden="true">
-              <i className="pi pi-plus" />
-            </span>
-          )}
+            {minutesText && (
+              <span className={`live-minutes ${isComplete ? 'complete' : ''}`}>
+                {minutesText}
+              </span>
+            )}
+          </span>
         </button>
-
-        {isEditing && isSelected && (
-          <button
-            type="button"
-            className="pitch-remove-button"
-            onClick={(event) => {
-              event.stopPropagation()
-              removeDraftPitch(pitch)
-            }}
-            disabled={!canRemove}
-            aria-label={canRemove ? `Remove ${pitch}` : `Keep at least one pitch selected`}
-          >
-            <i className="pi pi-trash" aria-hidden="true" />
-          </button>
-        )}
       </div>
     )
   }
 
-  const displayPitches = isEditing
-    ? [
-      ...draftPitches,
-      ...availablePitches.filter((pitch) => !draftPitches.includes(pitch)),
-    ]
-    : visibleSelectedPitches
-
   return (
-    <div className={`pitch-selector ${isEditing ? 'is-editing' : 'is-collapsed'}`}>
-      <div className="pitch-selector-summary" aria-label={`Coordinating ${selectedCount} of ${totalCount} pitches`}>
-        <span>Coordinating</span>
-        <strong>{selectedCount} / {totalCount || '-'}</strong>
-        <span>Pitches</span>
-      </div>
-
-      <div className="pitch-selector-tabs">
-        {displayPitches.map(renderPitchTab)}
-      </div>
-
-      {isEditing ? (
-        <div className="pitch-selector-actions" role="group" aria-label="Pitch selection actions">
-          <button
-            type="button"
-            className="pitch-selector-action confirm"
-            onClick={saveEditing}
-            disabled={!draftPitches.length}
-            aria-label="Save pitch selection"
-          >
-            <i className="pi pi-check" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="pitch-selector-action cancel"
-            onClick={cancelEditing}
-            aria-label="Cancel pitch selection changes"
-          >
-            <i className="pi pi-times" aria-hidden="true" />
-          </button>
+    <>
+      <div className="pitch-selector is-collapsed">
+        <div className="pitch-selector-summary" aria-label={`Coordinating ${selectedCount} of ${totalCount} pitches`}>
+          <span>Coordinating</span>
+          <strong>{selectedCount} / {totalCount || '-'}</strong>
+          <span>Pitches</span>
         </div>
-      ) : (
+
+        <div className="pitch-selector-tabs">
+          {visibleSelectedPitches.map(renderPitchTab)}
+        </div>
+
         <button
           type="button"
           className="pitch-selector-edit"
-          onClick={startEditing}
+          onClick={handleOpenDialog}
           aria-label="Edit coordinated pitches"
         >
           <i className="pi pi-pencil" aria-hidden="true" />
         </button>
-      )}
-    </div>
+      </div>
+
+      <PitchSelectorDialog
+        isOpen={isDialogOpen}
+        onClose={handleCloseDialog}
+        pitches={availablePitches}
+        coordinatedPitches={visibleSelectedPitches}
+        activePitch={activePitch}
+        pitchStatuses={pitchStatuses}
+        onCommit={handleCommit}
+      />
+    </>
   )
 }
 
