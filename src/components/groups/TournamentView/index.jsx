@@ -244,7 +244,7 @@ const GroupViewSwitcher = ({
     activeGroupIndex >= 0 && activeGroupIndex < safeGroupStandings.length
       ? activeGroupIndex
       : 0;
-  const activeTabIndex = showOverall ? 0 : normalizedActiveGroupIndex + 1;
+  const activeTabIndex = showOverall ? safeGroupStandings.length : normalizedActiveGroupIndex;
   const lastTabIndex = safeGroupStandings.length;
   const swipeStartRef = useRef(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -253,13 +253,13 @@ const GroupViewSwitcher = ({
   const selectGroupTab = useCallback((tabIndex) => {
     if (tabIndex === activeTabIndex) return;
 
-    if (tabIndex <= 0) {
+    if (tabIndex >= safeGroupStandings.length) {
       onToggleOverall(true);
       return;
     }
 
     onToggleOverall(false);
-    onChangeGroup(Math.min(tabIndex - 1, safeGroupStandings.length - 1));
+    onChangeGroup(Math.min(tabIndex, safeGroupStandings.length - 1));
   }, [activeTabIndex, safeGroupStandings.length, onChangeGroup, onToggleOverall]);
   useEffect(() => {
     if (!hasMultipleGroups) return undefined;
@@ -333,6 +333,18 @@ const GroupViewSwitcher = ({
   }
 
   const groupSlides = [
+    ...safeGroupStandings.map((group, index) => ({
+      key: group.key || group.label || `group-${index}`,
+      label: formatGroupTabLabel(group, index),
+      count: group?.rows?.length || group?.teams?.length || 0,
+      content: (
+        <SingleGroupContent
+          group={group}
+          fixtures={fixtures}
+          showHeader={!hasMultipleGroups}
+        />
+      ),
+    })),
     {
       key: 'combined',
       label: 'Combined',
@@ -347,18 +359,6 @@ const GroupViewSwitcher = ({
         </div>
       ),
     },
-    ...safeGroupStandings.map((group, index) => ({
-      key: group.key || group.label || `group-${index}`,
-      label: formatGroupTabLabel(group, index),
-      count: group?.rows?.length || group?.teams?.length || 0,
-      content: (
-        <SingleGroupContent
-          group={group}
-          fixtures={fixtures}
-          showHeader={!hasMultipleGroups}
-        />
-      ),
-    })),
   ];
   const previousSlide = activeTabIndex > 0 ? groupSlides[activeTabIndex - 1] : null;
   const nextSlide = activeTabIndex < lastTabIndex ? groupSlides[activeTabIndex + 1] : null;
@@ -467,37 +467,39 @@ const GroupStageSideNav = ({
   </div>
 );
 
-const GroupTabs = ({ groups, overallTeamCount, activeIndex, onSelect }) => (
-  <div className="group-tabs" role="tablist" aria-label="Groups">
-    <button
-      type="button"
-      className={`group-tabs__tab ${activeIndex === 0 ? "is-active" : ""}`}
-      onClick={() => onSelect(0, 0 - activeIndex)}
-      role="tab"
-      aria-selected={activeIndex === 0}
-    >
-      <strong>Combined</strong>
-      <small>{overallTeamCount} teams</small>
-    </button>
-    {groups.map((group, index) => {
-      const numTeams = group?.rows?.length || group?.teams?.length || 0;
-      const tabIndex = index + 1;
-      return (
-        <button
-          key={group.key || group.label || index}
-          type="button"
-          className={`group-tabs__tab ${tabIndex === activeIndex ? "is-active" : ""}`}
-          onClick={() => onSelect(tabIndex, tabIndex - activeIndex)}
-          role="tab"
-          aria-selected={tabIndex === activeIndex}
-        >
-          <strong>{formatGroupTabLabel(group, index)}</strong>
-          <small>{numTeams} teams</small>
-        </button>
-      );
-    })}
-  </div>
-);
+const GroupTabs = ({ groups, overallTeamCount, activeIndex, onSelect }) => {
+  const combinedIndex = groups.length;
+  return (
+    <div className="group-tabs" role="tablist" aria-label="Groups">
+      {groups.map((group, index) => {
+        const numTeams = group?.rows?.length || group?.teams?.length || 0;
+        return (
+          <button
+            key={group.key || group.label || index}
+            type="button"
+            className={`group-tabs__tab ${index === activeIndex ? "is-active" : ""}`}
+            onClick={() => onSelect(index, index - activeIndex)}
+            role="tab"
+            aria-selected={index === activeIndex}
+          >
+            <strong>{formatGroupTabLabel(group, index)}</strong>
+            <small>{numTeams} teams</small>
+          </button>
+        );
+      })}
+      <button
+        type="button"
+        className={`group-tabs__tab ${activeIndex === combinedIndex ? "is-active" : ""}`}
+        onClick={() => onSelect(combinedIndex, combinedIndex - activeIndex)}
+        role="tab"
+        aria-selected={activeIndex === combinedIndex}
+      >
+        <strong>Combined</strong>
+        <small>{overallTeamCount} teams</small>
+      </button>
+    </div>
+  );
+};
 
 const formatGroupTabLabel = (group, index) => {
   const raw = String(group?.label || group?.key || index + 1).trim();
