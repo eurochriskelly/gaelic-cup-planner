@@ -200,7 +200,7 @@
 
 .tournament-selection-view h2 {
   align-items: center;
-  background: linear-gradient(to bottom, #53672f 0%, transparent 100%);
+  background: #3b3b3b3b;
   box-sizing: border-box;
   color: #fff;
   display: flex;
@@ -280,6 +280,7 @@
 }
 
 .tournamentAgenda {
+  background: #bbc2a3;
   box-sizing: border-box;
   flex: 1;
   min-height: 0;
@@ -945,6 +946,11 @@ body.pin-login-screen.install-prompt-visible {
   font-weight: 800;
   margin: 0 0 3rem;
   text-transform: uppercase;
+  transition: opacity 0.3s ease;
+
+  &.dimmed {
+    opacity: 0.35;
+  }
 }
 
 .competition-prompt {
@@ -1067,7 +1073,7 @@ body.pin-login-screen.install-prompt-visible {
   background: #748050;
   border: 0;
   border-radius: 50%;
-  bottom: 2.2rem;
+  bottom: 3.2rem;
   box-shadow: 0 0.5rem 1.3rem rgba(47, 59, 25, 0.16);
   color: #fff;
   cursor: pointer;
@@ -1079,7 +1085,7 @@ body.pin-login-screen.install-prompt-visible {
   padding: 0;
   pointer-events: auto;
   position: absolute;
-  right: 5rem;
+  right: -4rem;
   transition:
     background-color 0.24s ease,
     bottom 0.32s ease,
@@ -1181,7 +1187,7 @@ body.pin-login-screen.install-prompt-visible {
     min-height: 47rem;
     padding: 5.2rem 0 10rem;
     position: relative;
-    width: 90%;
+    width: 100%;
   }
 
   .role-grid {
@@ -1209,15 +1215,37 @@ body.pin-login-screen.install-prompt-visible {
   }
 }
 
-.role-select-card {
-  padding-top: 0;
-}
+.pin-section {
+  align-items: center;
+  display: flex;
+  gap: 1.8rem;
+  justify-content: center;
+  margin-top: 3rem;
+  width: 100%;
 
-.role-pin-card {
-  padding-top: 0;
+  .pin-label {
+    color: #445513;
+    font-size: 3.3rem;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
 
-  .role-login-content {
-    padding-top: 3.8rem;
+  .pinContainer {
+    flex-shrink: 0;
+  }
+
+  &.pin-disabled {
+    .pin-label {
+      color: rgba(68, 85, 19, 0.35);
+    }
+
+    .pinDigitBox {
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(204, 204, 204, 0.35);
+      box-shadow: none;
+      color: transparent;
+    }
   }
 }
 
@@ -1236,11 +1264,11 @@ body.pin-login-screen.install-prompt-visible {
   color: #fff;
   cursor: pointer;
   display: flex;
-  font-size: 2.45rem;
+  font-size: 3.2rem;
   font-weight: 400;
   gap: 2.4rem;
   justify-content: flex-start;
-  margin-bottom: 3.1rem;
+  margin-bottom: 1.5rem;
   min-height: 8.4rem;
   padding: 1.2rem 4.4rem;
   text-transform: uppercase;
@@ -1252,6 +1280,7 @@ body.pin-login-screen.install-prompt-visible {
 }
 
 .role-flow-back-copy {
+  flex: 1;
   letter-spacing: 0.36em;
   line-height: 1.08;
   min-width: 0;
@@ -1263,10 +1292,6 @@ body.pin-login-screen.install-prompt-visible {
     font-weight: 900;
     letter-spacing: 0.28em;
   }
-}
-
-.selected-role-copy {
-  letter-spacing: 0.3em;
 }
 
 .role-flow-back-icon {
@@ -1300,10 +1325,6 @@ body.pin-login-screen.install-prompt-visible {
     strong {
       letter-spacing: 0.18em;
     }
-  }
-
-  .selected-role-copy {
-    letter-spacing: 0.2em;
   }
 
   .role-flow-back-icon {

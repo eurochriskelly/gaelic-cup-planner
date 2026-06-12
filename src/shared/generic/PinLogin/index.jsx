@@ -32,10 +32,9 @@ const PinLogin = () => {
   const [pinEntryRole, setPinEntryRole] = useState(() => (
     pinProtectedRoles.includes((userRole || '').toLowerCase())
       ? userRole.toLowerCase()
-      : 'organizer'
+      : null
   ));
   const [showRoleLogin, setShowRoleLogin] = useState(false);
-  const [roleLoginStep, setRoleLoginStep] = useState('select');
   const [competitions, setCompetitions] = useState([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [competitionFetchFailed, setCompetitionFetchFailed] = useState(false);
@@ -72,6 +71,7 @@ const PinLogin = () => {
   }, []);
 
   const focusPinInput = () => {
+    if (!pinEntryRole) return;
     try {
       pinInputRef.current?.focus({ preventScroll: true });
     } catch {
@@ -80,7 +80,7 @@ const PinLogin = () => {
   };
 
   useEffect(() => {
-    if (!showRoleLogin || roleLoginStep !== 'pin') return undefined;
+    if (!showRoleLogin) return undefined;
 
     const animationFrame = requestAnimationFrame(() => {
       focusPinInput();
@@ -89,7 +89,7 @@ const PinLogin = () => {
     return () => {
       cancelAnimationFrame(animationFrame);
     };
-  }, [showRoleLogin, roleLoginStep, pinEntryRole]);
+  }, [showRoleLogin, pinEntryRole]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -102,7 +102,6 @@ const PinLogin = () => {
     if (requestedRole && validRoles.includes(requestedRole)) {
       if (pinProtectedRoles.includes(requestedRole)) {
         setPinEntryRole(requestedRole);
-        setRoleLoginStep('pin');
         setShowRoleLogin(Boolean(selectedTournament || routeTournamentId));
       }
 
@@ -274,14 +273,12 @@ const PinLogin = () => {
 
     if (showRoleLogin) {
       setShowRoleLogin(false);
-      setRoleLoginStep('select');
       resetPinEntry();
       return;
     }
 
     setSelectedTournament(null);
     setShowRoleLogin(false);
-    setRoleLoginStep('select');
     resetPinEntry();
     if (routeTournamentId) {
       navigate("/", { replace: true });
@@ -293,7 +290,6 @@ const PinLogin = () => {
     setMessage("");
     setSelectedTournament(tournament);
     setShowRoleLogin(false);
-    setRoleLoginStep('select');
     setupTournament(tournament.Id);
     Cookies.set("tournamentId", tournament.Id, { expires: 1 / 24, path: "/" });
     navigate(`/tournament/${tournament.Id}`, { replace: false });
@@ -305,8 +301,7 @@ const PinLogin = () => {
 
   const handleChangeRoleClick = () => {
     hideOfficialsReveal();
-    setPinEntryRole(pinProtectedRoles.includes(currentRole) ? currentRole : 'organizer');
-    setRoleLoginStep('select');
+    setPinEntryRole(null);
     resetPinEntry();
     setShowRoleLogin(true);
   };
@@ -323,14 +318,15 @@ const PinLogin = () => {
   const handleRoleLoginBackToResults = () => {
     hideOfficialsReveal();
     setShowRoleLogin(false);
-    setRoleLoginStep('select');
     resetPinEntry();
   };
 
   const handleRoleSelect = (role) => {
     setPinEntryRole(role);
-    setRoleLoginStep('pin');
     resetPinEntry();
+    requestAnimationFrame(() => {
+      focusPinInput();
+    });
   };
 
   const directNavigateToTournament = (tournamentId) => {
@@ -422,6 +418,8 @@ const PinLogin = () => {
   );
 
   const handlePinInputChange = (e) => {
+    if (!pinEntryRole) return;
+
     const value = normalisePinInput(e.target.value);
     const newPin = Array.from({ length: 4 }, (_, index) => value[index] || '');
     setPin(newPin);
@@ -524,91 +522,69 @@ const PinLogin = () => {
           </div>
         ) : showRoleLogin ? (
           <div className="pin-entry-view gateway-panel">
-            <div className={`role-login-card ${roleLoginStep === 'pin' ? 'role-pin-card' : 'role-select-card'}`}>
+            <div className="role-login-card">
+              <button
+                type="button"
+                className="role-flow-back-button"
+                onClick={handleRoleLoginBackToResults}
+              >
+                <span className="role-flow-back-icon" aria-hidden="true">
+                  <i className="pi pi-arrow-left" />
+                </span>
+                <span className="role-flow-back-copy">
+                  Officials login
+                </span>
+              </button>
               <div className="role-login-content">
-                {roleLoginStep === 'select' ? (
-                  <>
+                <h2 className={pinEntryRole ? 'dimmed' : ''}>Select role</h2>
+                <div className="role-grid">
+                  {pinProtectedRoles.map(role => (
                     <button
                       type="button"
-                      className="role-flow-back-button"
-                      onClick={handleRoleLoginBackToResults}
+                      key={role}
+                      onClick={() => handleRoleSelect(role)}
+                      className={`role-button ${pinEntryRole === role ? 'active-role' : ''}`}
                     >
-                      <span className="role-flow-back-icon" aria-hidden="true">
-                        <i className="pi pi-arrow-left" />
-                      </span>
-                      <span className="role-flow-back-copy">
-                        Administrator &amp; Officials
-                      </span>
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                      {pinEntryRole === role ? ' *' : ''}
                     </button>
-                    <h2>Select role</h2>
-                    <div className="role-grid">
-                      {pinProtectedRoles.map(role => (
-                        <button
-                          type="button"
-                          key={role}
-                          onClick={() => handleRoleSelect(role)}
-                          className={`role-button ${pinEntryRole === role ? 'active-role' : ''}`}
-                        >
-                          {role.charAt(0).toUpperCase() + role.slice(1)}
-                          {pinEntryRole === role ? ' *' : ''}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className="role-flow-back-button selected-role-button"
-                      onClick={() => {
-                        setRoleLoginStep('select');
-                        resetPinEntry();
-                      }}
-                    >
-                      <span className="role-flow-back-icon" aria-hidden="true">
-                        <i className="pi pi-arrow-left" />
-                      </span>
-                      <span className="role-flow-back-copy selected-role-copy">
-                        Logging in as <strong>{pinEntryRole}</strong>
-                      </span>
-                    </button>
-                    <h2>Enter PIN</h2>
-                    <div className="pin-entry-row">
+                  ))}
+                </div>
+                <div className={`pin-section ${!pinEntryRole ? 'pin-disabled' : ''}`}>
+                  <span className="pin-label">PIN</span>
+                  <div
+                    className="pinContainer"
+                    onClick={focusPinInput}
+                  >
+                    <input
+                      ref={pinInputRef}
+                      className="pin-hidden-input"
+                      value={pin.join('')}
+                      onChange={handlePinInputChange}
+                      maxLength="4"
+                      inputMode="text"
+                      autoCapitalize="characters"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck="false"
+                      aria-label="Enter PIN"
+                    />
+                    {pin.map((num, index) => (
                       <div
-                        className="pinContainer"
-                        onClick={focusPinInput}
+                        className={[
+                          'pinDigitBox',
+                          pinEntryRole && pin.join('').length === index ? 'active' : '',
+                          isThinking ? 'thinking' : '',
+                        ].filter(Boolean).join(' ')}
+                        key={index}
+                        aria-hidden="true"
                       >
-                        <input
-                          ref={pinInputRef}
-                          className="pin-hidden-input"
-                          value={pin.join('')}
-                          onChange={handlePinInputChange}
-                          maxLength="4"
-                          inputMode="text"
-                          autoCapitalize="characters"
-                          autoComplete="off"
-                          autoCorrect="off"
-                          spellCheck="false"
-                          aria-label="Enter PIN"
-                        />
-                        {pin.map((num, index) => (
-                          <div
-                            className={[
-                              'pinDigitBox',
-                              pin.join('').length === index ? 'active' : '',
-                              isThinking ? 'thinking' : '',
-                            ].filter(Boolean).join(' ')}
-                            key={index}
-                            aria-hidden="true"
-                          >
-                            {num}
-                          </div>
-                        ))}
+                        {num}
                       </div>
-                    </div>
-                    <div className="pin-message">&nbsp;{message}&nbsp;</div>
-                  </>
-                )}
+                    ))}
+                  </div>
+                </div>
+                <div className="pin-message">&nbsp;{message}&nbsp;</div>
               </div>
             </div>
           </div>
