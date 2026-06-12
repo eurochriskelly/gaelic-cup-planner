@@ -642,7 +642,7 @@
       border-bottom: 1px solid rgba(80, 94, 67, 0.32);
       border-top: 1px solid rgba(80, 94, 67, 0.32);
       display: flex;
-      grid-column: 2 / 3;
+      grid-column: 1 / 4;
       grid-row: 1;
       min-width: 0;
       overflow: hidden;
@@ -658,12 +658,12 @@
       cursor: pointer;
       flex: 1 1 0;
       min-width: 0;
-      padding: 0.95rem 0.65rem 0.85rem;
-      text-align: left;
+      padding: 1.19rem 0 1.06rem;
+      text-align: center;
 
       strong {
         display: block;
-        font-size: 1.65rem;
+        font-size: 2.06rem;
         font-weight: 800;
         line-height: 1;
         text-transform: uppercase;
@@ -673,7 +673,7 @@
       small {
         color: #697266;
         display: block;
-        font-size: 1.12rem;
+        font-size: 1.4rem;
         font-weight: 700;
         line-height: 1.1;
         margin-top: 0.35rem;
@@ -1300,11 +1300,11 @@
     }
 
     .kanban-large-nav__button--previous.is-subtle .kanban-large-nav__handle {
-      transform: translate(0, -50%);
+      transform: translate(-25%, -50%);
     }
 
     .kanban-large-nav__button--next.is-subtle .kanban-large-nav__handle {
-      transform: translate(0, -50%);
+      transform: translate(25%, -50%);
     }
 
     @keyframes large-nav-button-settle {
@@ -1323,7 +1323,7 @@
       }
 
       to {
-        transform: translate(0, -50%);
+        transform: translate(-25%, -50%);
       }
     }
 
@@ -1333,7 +1333,7 @@
       }
 
       to {
-        transform: translate(0, -50%);
+        transform: translate(25%, -50%);
       }
     }
 

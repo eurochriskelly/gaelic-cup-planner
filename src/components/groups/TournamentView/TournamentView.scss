@@ -419,7 +419,7 @@
   border-bottom: 1px solid var(--status-border);
   border-top: 1px solid var(--status-border);
   display: flex;
-  grid-column: 2 / 3;
+  grid-column: 1 / 4;
   grid-row: 1;
   min-width: 0;
   overflow-x: auto;
@@ -440,12 +440,12 @@
   cursor: pointer;
   flex: 1 1 0;
   min-width: 0;
-  padding: 0.95rem 0.65rem 0.85rem;
-  text-align: left;
+  padding: 1.19rem 0 1.06rem;
+  text-align: center;
 
   strong {
     display: block;
-    font-size: 1.65rem;
+    font-size: 2.06rem;
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
@@ -455,7 +455,7 @@
   small {
     color: #697266;
     display: block;
-    font-size: 1.12rem;
+    font-size: 1.4rem;
     font-weight: 700;
     line-height: 1.1;
     margin-top: 0.35rem;
@@ -638,11 +638,11 @@
 }
 
 .group-stage-side-nav__button--previous.is-subtle .group-stage-side-nav__handle {
-  transform: translate(0, -50%);
+  transform: translate(-25%, -50%);
 }
 
 .group-stage-side-nav__button--next.is-subtle .group-stage-side-nav__handle {
-  transform: translate(0, -50%);
+  transform: translate(25%, -50%);
 }
 
 @keyframes group-stage-nav-label-settle {
@@ -661,7 +661,7 @@
   }
 
   to {
-    transform: translate(0, -50%);
+    transform: translate(-25%, -50%);
   }
 }
 
@@ -671,7 +671,7 @@
   }
 
   to {
-    transform: translate(0, -50%);
+    transform: translate(25%, -50%);
   }
 }
 
@@ -982,15 +982,15 @@
   }
 
   .group-tabs__tab {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0;
+    padding-right: 0;
 
     strong {
-      font-size: 1.55rem;
+      font-size: 1.94rem;
     }
 
     small {
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
   }
 
