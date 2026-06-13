@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom'
 import './KanbanCard.scss'
 import FixtureBar from './FixtureBar'
 import TimeDisplay from './TimeDisplay'
-import PitchIcon from '../../../../shared/icons/icon-pitch-2.svg?react'
 import UmpireIcon from '../../../../shared/icons/icon-umpires-circle.svg?react'
 import CancelIcon from '../../../../shared/icons/icon-cancel.svg?react'
 import StartIcon from '../../../../shared/icons/icon-start.svg?react'
@@ -35,7 +34,6 @@ const KanbanCard = ({
   inlineMoveSlackMinutes = 0,
   onAdjustInlineSlack,
   canAdjustInlineSlack = true,
-  largeMode = false,
   actionRail = null,
   hideInactiveActionRail = false,
   hideActionRail = false,
@@ -52,9 +50,9 @@ const KanbanCard = ({
     : ''
   const displayNumber = fixture?.groupNumber || '0'
   const teamStyle = {
-    fontSize: largeMode ? '2.4em' : '1.6em',
+    fontSize: '2.4em',
     fontWeight: 'bold',
-    marginLeft: largeMode ? '0' : '-0.3rem',
+    marginLeft: '0',
   }
 
   const getNumber = (val) => {
@@ -126,7 +124,7 @@ const KanbanCard = ({
   const isMoveCandidateLane =
     fixture?.lane?.current === 'planned' || fixture?.lane?.current === 'queued'
   const isInlineMoveListCard = isInlineMoveMode && isMoveCandidateLane
-  const useLargeCardSizing = largeMode && !isInlineMoveListCard
+  const useLargeCardSizing = !isInlineMoveListCard
   const showInlineSwapAction = false
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
   const hasInlineActionRail = Boolean(actionRail)
@@ -466,13 +464,6 @@ const KanbanCard = ({
                 </>
               )}
             </div>
-
-            {fixture?.lane?.current === 'planned' && !largeMode && !isInlineMoveListCard && (
-              <div className="card-detail pitch-info">
-                <PitchIcon width={48} height={48} />
-                <b>{fixture.pitch}</b>
-              </div>
-            )}
 
             {!isInlineMoveListCard && (
               fixture?.lane?.current === 'planned' ||

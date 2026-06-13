@@ -145,7 +145,6 @@ const getKanbanColumnLogic = (fixture) => {
 
 const Kanban = ({
   moveToNextFixture,
-  largeMode = false,
 }) => {
   const {
     fixtures: initialFixtures,
@@ -893,7 +892,7 @@ const Kanban = ({
   };
 
   useEffect(() => {
-    if (!largeMode || isInlineMoveActive) return undefined;
+    if (isInlineMoveActive) return undefined;
 
     setLargePaneHandlesSettling(true);
     const timerId = window.setTimeout(() => {
@@ -901,7 +900,7 @@ const Kanban = ({
     }, 1000);
 
     return () => window.clearTimeout(timerId);
-  }, [isInlineMoveActive, largeMode, largePane]);
+  }, [isInlineMoveActive, largePane]);
 
   const navigateLargePane = (nextPane) => {
     if (!nextPane || nextPane === largePane) return;
@@ -1074,7 +1073,7 @@ const Kanban = ({
   const visibleSoonFixtures = soonFixturesForView.slice(0, visibleSoonRows);
 
   useEffect(() => {
-    if (!largeMode || isInlineMoveActive) {
+    if (isInlineMoveActive) {
       setVisibleSoonRows(0);
       return undefined;
     }
@@ -1125,7 +1124,6 @@ const Kanban = ({
     };
   }, [
     isInlineMoveActive,
-    largeMode,
     plannedFixturesForView.length,
   ]);
 
@@ -1161,7 +1159,6 @@ const Kanban = ({
       inlineMoveSlackMinutes={inlineMoveSlackMinutes}
       onAdjustInlineSlack={adjustInlineMoveSlack}
       canAdjustInlineSlack={canAdjustInlineSlack}
-      largeMode={largeMode}
       emptyMessage={overrides.emptyMessage}
       renderFixtureActionRail={renderFixtureActionRail}
       hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
@@ -1280,7 +1277,7 @@ const Kanban = ({
     },
   ];
 
-  if (largeMode && !isInlineMoveActive) {
+  if (!isInlineMoveActive) {
     const activePane = largePaneMeta[largePane];
 
     return (

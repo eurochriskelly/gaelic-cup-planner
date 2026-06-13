@@ -29,7 +29,6 @@ const KanbanColumn = ({
    inlineMoveSlackMinutes,
    onAdjustInlineSlack,
    canAdjustInlineSlack,
-   largeMode = false,
    emptyMessage,
    renderFixtureActionRail,
    hideActionRail = false,
@@ -98,7 +97,6 @@ const KanbanColumn = ({
                inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                onAdjustInlineSlack={onAdjustInlineSlack}
                canAdjustInlineSlack={canAdjustInlineSlack}
-               largeMode={largeMode}
                actionRail={renderFixtureActionRail?.(fixtureForPitchSlot)}
                hideInactiveActionRail={
                  selectedFixture && selectedFixture.id !== fixtureForPitchSlot.id
@@ -168,7 +166,6 @@ const KanbanColumn = ({
                inlineMoveSlackMinutes={inlineMoveSlackMinutes}
                onAdjustInlineSlack={onAdjustInlineSlack}
                canAdjustInlineSlack={canAdjustInlineSlack}
-               largeMode={largeMode}
                actionRail={renderFixtureActionRail?.(fixtureForSlot)}
                hideInactiveActionRail={
                  selectedFixture && selectedFixture.id !== fixtureForSlot.id

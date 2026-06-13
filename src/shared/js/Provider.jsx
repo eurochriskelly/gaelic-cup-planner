@@ -20,7 +20,11 @@ export const Provider = ({ children }) => {
   // Add state for filter selections
   const [filterSelections, setFilterSelections] = useState(() => {
     const savedFilters = Cookies.get("ppFilterSelections");
-    return savedFilters ? JSON.parse(savedFilters) : {};
+    if (!savedFilters) return {};
+    const parsed = JSON.parse(savedFilters);
+    // scheduleViewMode is no longer supported; drop any stale value
+    const { scheduleViewMode, ...rest } = parsed;
+    return rest;
   });
 
   const setUserRoleAndCookie = (role) => {

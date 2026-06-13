@@ -9,13 +9,12 @@ import './PitchView.scss';
 
 const PitchView = () => {
   const { fixtures, fetchFixtures, nextFixture, pitchId, tournamentId } = useFixtureContext(); // Ensure pitchId, tournamentId from context if needed by KanbanView directly, or it uses useParams
-  const { sections, filterSelections } = useAppContext();
+  const { sections } = useAppContext();
   let tabNames = ["Kanban", "Next", "Finished" ] // , "Unplayed"]; // Added Kanban
 
   const navigate = useNavigate();
   // State to track the fixture currently being interacted with
   const [currentFocusFixtureId, setCurrentFocusFixtureId] = useState(null);
-  const scheduleViewMode = filterSelections?.scheduleViewMode === 'normal' ? 'normal' : 'large';
 
   // Set the initial focus when the component loads and finds the first nextFixture
   useEffect(() => {
@@ -124,7 +123,7 @@ const PitchView = () => {
         }</span>
         <KanbanFiters />
       </span>
-      <Kanban moveToNextFixture={moveToNextFixture} largeMode={scheduleViewMode === 'large'} />
+      <Kanban moveToNextFixture={moveToNextFixture} />
     </MobileLayout>
   );
 };

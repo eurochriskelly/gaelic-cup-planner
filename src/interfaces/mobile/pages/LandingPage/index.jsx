@@ -258,15 +258,6 @@ const LandingPage = () => {
     setShowNamePrompt(false);
   };
 
-  const scheduleViewMode = persistedFilters.scheduleViewMode === 'normal' ? 'normal' : 'large';
-
-  const handleScheduleViewModeChange = (nextMode) => {
-    updateFilterSelections({
-      ...persistedFilters,
-      scheduleViewMode: nextMode === 'normal' ? 'normal' : 'large',
-    });
-  };
-
   const tournamentBase = buildTournamentDraft(tournInfo);
   const tournamentChanges = getTournamentChanges(tournamentBase, tournamentDraft);
   const hasTournamentChanges = Object.keys(tournamentChanges).length > 0;
@@ -607,25 +598,6 @@ const LandingPage = () => {
               initialSelection={existingPitchSelection}
               onSelectionChange={handlePitchSelectionChange}
             />
-            <div className="schedule-view-mode" aria-label="Schedule size">
-              <span>Schedule size</span>
-              <div className="schedule-view-mode__buttons" role="group">
-                <button
-                  type="button"
-                  className={scheduleViewMode === 'large' ? 'active' : ''}
-                  onClick={() => handleScheduleViewModeChange('large')}
-                >
-                  Large
-                </button>
-                <button
-                  type="button"
-                  className={scheduleViewMode === 'normal' ? 'active' : ''}
-                  onClick={() => handleScheduleViewModeChange('normal')}
-                >
-                  Normal
-                </button>
-              </div>
-            </div>
           </div>
         </section>
         {canShowScheduleTip && (
