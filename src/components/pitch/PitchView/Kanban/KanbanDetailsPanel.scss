@@ -1674,47 +1674,58 @@
 
 .fixture-action-tabs {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1.5rem 1rem 0.5rem;
-  flex-wrap: wrap;
+  grid-column: 1 / 4;
+  background: #f1f5ea;
+  border-bottom: 1px solid rgba(80, 94, 67, 0.32);
+  border-top: 1px solid rgba(80, 94, 67, 0.32);
+  margin: 1.5rem 0 0.5rem;
+  overflow: hidden;
 }
 
 .fixture-action-tab {
+  background: #eef3e6;
+  border: 0;
+  border-right: 1px solid #c9d0bf;
+  color: #485047;
+  cursor: pointer;
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 7rem;
-  padding: 0.8rem 1rem;
-  background: #f3f4f6;
-  border: 2px solid transparent;
-  border-radius: 1rem;
-  color: #374151;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  min-width: 0;
+  padding: 1rem 0;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:last-child {
+    border-right: 0;
+  }
 
   &:hover {
-    background: #e5e7eb;
+    background: #e3ead7;
   }
 
   &.active {
-    background: #ffffff;
-    border-color: $pc;
-    color: $pc;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #7e9a56;
+    color: #ffffff;
+
+    .fixture-action-tab__icon {
+      color: #ffffff;
+    }
   }
 
   &__icon {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 8.64rem;
+    height: 8.64rem;
     margin-bottom: 0.4rem;
   }
 
   &__label {
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 800;
+    line-height: 1;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    white-space: nowrap;
   }
 }

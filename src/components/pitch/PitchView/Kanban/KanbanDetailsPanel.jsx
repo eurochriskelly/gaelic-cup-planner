@@ -9,10 +9,10 @@ import {
 import ClockIcon from "../../../../shared/generic/ClockIcon";
 import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
 import API from "../../../../shared/api/endpoints"; // Import API
-import ViewIcon from "../../../../shared/icons/icon-details.svg?react";
-import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
-import CardIcon from "../../../../shared/icons/icon-card.svg?react";
-import CancelIcon from "../../../../shared/icons/icon-notplayed.svg?react";
+import ViewIcon from "../../../../shared/icons/icon-details-textless.svg?react";
+import ScoreIcon from "../../../../shared/icons/icon-score-textless.svg?react";
+import CardIcon from "../../../../shared/icons/icon-card-textless.svg?react";
+import CancelIcon from "../../../../shared/icons/icon-notplayed-textless.svg?react";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
 import MoveIcon from "../../../../shared/icons/icon-move.svg?react";
 import EditIcon from "../../../../shared/icons/icon-edit.svg?react";
@@ -136,13 +136,13 @@ const KanbanDetailsPanel = ({
                 </div>
                 <div></div>
               </div>
-              <FixtureActionTabs
-                fixture={fixture}
-                activeMode={activeMode}
-                onSetMode={setActiveMode}
-                onStartMatch={handleStartMatch}
-              />
             </div>
+            <FixtureActionTabs
+              fixture={fixture}
+              activeMode={activeMode}
+              onSetMode={setActiveMode}
+              onStartMatch={handleStartMatch}
+            />
             <div className="scrollable-content">
               {activeMode === "info" && <ShowFixtureDetails fixture={fixture} />}
               {activeMode === "forfeit" && (
