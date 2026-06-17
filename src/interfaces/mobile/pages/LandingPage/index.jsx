@@ -711,6 +711,11 @@ const LandingPage = () => {
               </div>
             </section>
           </div>
+          <HomeSectionSideNav
+            activeIndex={activeHomeSection}
+            sections={HOME_SECTIONS}
+            onSelect={selectHomeSection}
+          />
         </div>
         {canShowScheduleTip && (
           <div className={`schedule-tutorial-tip${isScheduleTipFading ? ' is-fading' : ''}`} role="status">
@@ -738,6 +743,46 @@ function HomeSectionTabs({ sections, activeIndex, onSelect }) {
           <strong>{section}</strong>
         </button>
       ))}
+    </div>
+  );
+}
+
+function HomeSectionSideNav({ sections, activeIndex, onSelect }) {
+  const previousSection = activeIndex > 0 ? sections[activeIndex - 1] : null;
+  const nextSection = activeIndex < sections.length - 1 ? sections[activeIndex + 1] : null;
+
+  if (!previousSection && !nextSection) return null;
+
+  return (
+    <div className="home-section-side-nav" aria-label="Home section navigation">
+      <div className="home-section-side-nav__slot home-section-side-nav__slot--previous">
+        {previousSection ? (
+          <button
+            type="button"
+            className="home-section-side-nav__button home-section-side-nav__button--previous"
+            onClick={() => onSelect(activeIndex - 1)}
+            aria-label={`Show ${previousSection}`}
+          >
+            <span className="home-section-side-nav__handle" aria-hidden="true">
+              <i className="pi pi-angle-left" />
+            </span>
+          </button>
+        ) : null}
+      </div>
+      <div className="home-section-side-nav__slot home-section-side-nav__slot--next">
+        {nextSection ? (
+          <button
+            type="button"
+            className="home-section-side-nav__button home-section-side-nav__button--next"
+            onClick={() => onSelect(activeIndex + 1)}
+            aria-label={`Show ${nextSection}`}
+          >
+            <span className="home-section-side-nav__handle" aria-hidden="true">
+              <i className="pi pi-angle-right" />
+            </span>
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }

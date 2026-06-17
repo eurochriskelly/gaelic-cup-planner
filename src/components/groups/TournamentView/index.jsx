@@ -371,10 +371,6 @@ const GroupStageSideNav = ({
           <span className="group-stage-side-nav__handle" aria-hidden="true">
             <i className="pi pi-angle-left" />
           </span>
-          <strong>
-            {previousSlide.label}
-            {previousSlide.count ? ` (${previousSlide.count})` : ''}
-          </strong>
         </button>
       ) : null}
     </div>
@@ -391,10 +387,6 @@ const GroupStageSideNav = ({
           <span className="group-stage-side-nav__handle" aria-hidden="true">
             <i className="pi pi-angle-right" />
           </span>
-          <strong>
-            {nextSlide.label}
-            {nextSlide.count ? ` (${nextSlide.count})` : ''}
-          </strong>
         </button>
       ) : null}
     </div>

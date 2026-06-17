@@ -128,7 +128,7 @@ const KanbanCard = ({
   const showInlineSwapAction = false
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
   const hasInlineActionRail = Boolean(actionRail)
-  const reserveActionRail = !hideActionRail && (!isInlineMoveListCard || isInlineMoveCard)
+  const reserveActionRail = !hideActionRail && (hasInlineActionRail || isInlineMoveCard)
   const laneClass = fixture?.lane?.current || 'unknown'
   const showInactiveLockedRail = laneClass === 'planned' || laneClass === 'finished'
   const inactiveRailIconsByLane = {

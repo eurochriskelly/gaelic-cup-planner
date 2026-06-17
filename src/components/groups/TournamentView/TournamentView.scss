@@ -283,24 +283,26 @@
 }
 
 .group-stage-side-nav {
-  align-self: stretch;
   display: grid;
-  justify-self: stretch;
   grid-column: 1 / 4;
   grid-row: 2;
   grid-template-columns: var(--group-side-gutter) minmax(0, 1fr) var(--group-side-gutter);
-  min-height: 0;
+  height: var(--group-nav-handle-size);
   overflow: visible;
   pointer-events: none;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   touch-action: pan-y;
+  width: 100%;
   z-index: 50;
 }
 
 .group-stage-side-nav__slot {
   align-items: center;
   display: flex;
-  height: 100%;
+  height: var(--group-nav-handle-size);
   min-height: 0;
   overflow: visible;
   pointer-events: auto;
@@ -329,18 +331,14 @@
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  font-size: 1.95rem;
-  font-weight: 700;
-  height: 100%;
+  height: var(--group-nav-handle-size);
   justify-content: center;
-  letter-spacing: 0.1em;
-  line-height: 1.05;
+  line-height: 1;
   opacity: 1;
   padding: 0;
   pointer-events: auto;
   position: relative;
-  text-transform: uppercase;
-  width: 8rem;
+  width: var(--group-nav-handle-size);
 
   &.is-settling {
     opacity: 1;
@@ -349,27 +347,10 @@
   &.is-subtle {
     opacity: 1;
   }
-
-  strong {
-    display: inline-block;
-    font: inherit;
-    letter-spacing: inherit;
-    margin: 1.35rem 0;
-    opacity: 0.38;
-    writing-mode: vertical-rl;
-  }
-}
-
-.group-stage-side-nav__button.is-settling strong {
-  animation: group-stage-nav-label-settle 1s ease-out forwards;
 }
 
 .group-stage-side-nav__button--previous {
   justify-self: start;
-
-  strong {
-    transform: rotate(180deg);
-  }
 }
 
 .group-stage-side-nav__button--next {
@@ -444,26 +425,12 @@
     0 0.25rem 0.9rem rgba(0, 0, 0, 0.2);
 }
 
-.group-stage-side-nav__button.is-subtle .group-stage-side-nav__handle i {
-  opacity: 0;
-}
-
 .group-stage-side-nav__button--previous.is-subtle .group-stage-side-nav__handle {
   transform: translate(-25%, -50%);
 }
 
 .group-stage-side-nav__button--next.is-subtle .group-stage-side-nav__handle {
   transform: translate(25%, -50%);
-}
-
-@keyframes group-stage-nav-label-settle {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0.38;
-  }
 }
 
 @keyframes group-stage-nav-handle-settle-left {

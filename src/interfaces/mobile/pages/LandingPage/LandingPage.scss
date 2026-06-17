@@ -78,8 +78,10 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
   }
 
   .home-section-shell {
+    --home-nav-handle-size: 10.6rem;
     min-width: 0;
     overflow: hidden;
+    position: relative;
     touch-action: pan-y;
   }
 
@@ -105,6 +107,96 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
+  }
+
+  .home-section-side-nav {
+    display: grid;
+    grid-template-columns: 0 minmax(0, 1fr) 0;
+    height: var(--home-nav-handle-size);
+    left: 0;
+    overflow: visible;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    z-index: 50;
+  }
+
+  .home-section-side-nav__slot {
+    align-items: center;
+    display: flex;
+    height: var(--home-nav-handle-size);
+    min-height: 0;
+    overflow: visible;
+    pointer-events: auto;
+
+    &:empty {
+      pointer-events: none;
+    }
+
+    &--previous {
+      grid-column: 1;
+      justify-content: flex-start;
+    }
+
+    &--next {
+      grid-column: 3;
+      justify-content: flex-end;
+    }
+  }
+
+  .home-section-side-nav__button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: #ffffff;
+    display: flex;
+    height: var(--home-nav-handle-size);
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    pointer-events: auto;
+    position: relative;
+    width: var(--home-nav-handle-size);
+  }
+
+  .home-section-side-nav__handle {
+    align-items: center;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.18), transparent 58%),
+      rgba(170, 170, 170, 0.48);
+    border: 0.16rem solid rgba(255, 255, 255, 0.54);
+    border-radius: 999rem;
+    box-shadow:
+      inset 0 0 0 0.1rem rgba(255, 255, 255, 0.14),
+      0 0.25rem 0.9rem rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    display: flex;
+    font-size: 6.8rem;
+    height: var(--home-nav-handle-size);
+    justify-content: center;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--home-nav-handle-size);
+
+    i {
+      font-size: inherit;
+      line-height: 1;
+    }
+  }
+
+  .home-section-side-nav__button--previous .home-section-side-nav__handle {
+    left: calc(var(--home-nav-handle-size) / -2);
+    transform: translate(-25%, -50%);
+  }
+
+  .home-section-side-nav__button--next .home-section-side-nav__handle {
+    right: calc(var(--home-nav-handle-size) / -2);
+    transform: translate(25%, -50%);
   }
 
   .home-panel-stack > .home-info-card,
