@@ -7,10 +7,8 @@ import {
   militaryTimeDiffMins,
 } from "../../../../shared/generic/TeamNameDisplay";
 import ClockIcon from "../../../../shared/generic/ClockIcon";
-import UmpiresIcon from "../../../../shared/icons/icon-umpires-circle.svg?react";
 import API from "../../../../shared/api/endpoints"; // Import API
-import ViewIcon from "../../../../shared/icons/icon-details-textless.svg?react";
-import ScoreIcon from "../../../../shared/icons/icon-score-textless.svg?react";
+import ScoreIcon from "../../../../shared/icons/icon-score.svg?react";
 import CardIcon from "../../../../shared/icons/icon-card-textless.svg?react";
 import CancelIcon from "../../../../shared/icons/icon-notplayed-textless.svg?react";
 import StartIcon from "../../../../shared/icons/icon-start.svg?react";
@@ -90,51 +88,38 @@ const KanbanDetailsPanel = ({
 
         <div className="details-content-wrapper">
           <section className="mt-7 mr-0 pr-0">
-            <ClockIcon
-              scheduled={fixture.scheduledTime || fixture.plannedStart}
-              started={fixture.startedTime || fixture.actualStartedTime}
-              delay={militaryTimeDiffMins(
-                fixture.scheduledTime || fixture.plannedStart,
-                fixture.startedTime || fixture.actualStartedTime
-              )}
-              played={!!fixture.startedTime || !!fixture.actualStartedTime}
-              size={100}
-            />
+            <div className="fixture-time-row">
+              <ClockIcon
+                scheduled={fixture.scheduledTime || fixture.plannedStart}
+                started={fixture.startedTime || fixture.actualStartedTime}
+                delay={militaryTimeDiffMins(
+                  fixture.scheduledTime || fixture.plannedStart,
+                  fixture.startedTime || fixture.actualStartedTime
+                )}
+                played={!!fixture.startedTime || !!fixture.actualStartedTime}
+                size={78}
+              />
+            </div>
 
-            <div
-              className="p-6 pt-12 ml-12 mr-12 rounded-3xl border-solid border-4"
-              style={{ borderColor: "#FFFFFF00" }}
-            >
+            <div className="fixture-match-header">
               <div className="match-up">
-                <div></div>
-                <div className="team team-1">
+                <div className="match-team match-team-1">
                   <logo-box
                     title={fixture.team1 || "TBD"}
-                    size="140px"
+                    size="88px"
                     border-color="#e11d48"
                   ></logo-box>
+                  <span>{formatTeamName(fixture.team1 || "TBD")}</span>
                 </div>
-                <div className="text-6xl">vs.</div>
-                <div className="team team-2">
+                <div className="match-versus">vs.</div>
+                <div className="match-team match-team-2">
+                  <span>{formatTeamName(fixture.team2 || "TBD")}</span>
                   <logo-box
                     title={fixture.team2 || "TBD"}
-                    size="140px"
+                    size="88px"
                     border-color="#38bdf8"
                   ></logo-box>
                 </div>
-                <div></div>
-              </div>
-
-              <div className="match-teams">
-                <div></div>
-                <div className="text-3xl" style={{ textAlign: "center" }}>
-                  {formatTeamName(fixture.team1 || "TBD")}
-                </div>
-                <div></div>
-                <div className="text-3xl" style={{ textAlign: "center" }}>
-                  {formatTeamName(fixture.team2 || "TBD")}
-                </div>
-                <div></div>
               </div>
             </div>
             <FixtureActionTabs
@@ -144,7 +129,9 @@ const KanbanDetailsPanel = ({
               onStartMatch={handleStartMatch}
             />
             <div className="scrollable-content">
-              {activeMode === "info" && <ShowFixtureDetails fixture={fixture} />}
+              {activeMode === "info" && (
+                <ShowFixtureDetails fixture={fixture} />
+              )}
               {activeMode === "forfeit" && (
                 <ShowForfeitOptions fixture={fixture} closePanel={closePanel} />
               )}
@@ -186,7 +173,7 @@ function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
   const order = orderByLane[lane] || orderByLane.started;
 
   const tabMeta = {
-    info: { label: "View", Icon: ViewIcon, mode: "info" },
+    info: { label: "Info", Icon: InfoIcon, mode: "info" },
     finish: { label: "Score", Icon: ScoreIcon, mode: "score" },
     cards: { label: "Card", Icon: CardIcon, mode: "cards" },
     cancel: { label: "Not Played", Icon: CancelIcon, mode: "forfeit" },
@@ -200,7 +187,11 @@ function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
     .filter((tab) => tab.Icon);
 
   return (
-    <div className="fixture-action-tabs" role="tablist" aria-label="Fixture actions">
+    <div
+      className="fixture-action-tabs"
+      role="tablist"
+      aria-label="Fixture actions"
+    >
       {tabs.map(({ id, label, Icon, mode }) => {
         const isActive = activeMode === mode;
         return (
@@ -227,6 +218,24 @@ function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
   );
 }
 
+function InfoIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 10 10"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        className="fg"
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M5 1.9a2.85 2.85 0 1 0 0 5.7 2.85 2.85 0 0 0 0-5.7Zm0 .58a2.27 2.27 0 1 1 0 4.54 2.27 2.27 0 0 1 0-4.54Zm-.3 2h.6v1.85h-.6V4.48Zm0-1.05h.6v.62h-.6v-.62Z"
+      />
+    </svg>
+  );
+}
+
 function ShowFixtureDetails({ fixture }) {
   const hasScores = fixture.score1 || fixture.score2;
   const hasGoalsPoints =
@@ -235,12 +244,10 @@ function ShowFixtureDetails({ fixture }) {
     typeof fixture.points1 === "number" &&
     typeof fixture.points2 === "number";
 
-  // Calculate match statistics
   const getMatchDuration = () => {
-    if (!fixture.startedTime || !fixture.actualEndedTime) return null;
-    const start = new Date(
-      `1970-01-01T${fixture.actualStartedTime || fixture.startedTime}`
-    );
+    const startedTime = fixture.actualStartedTime || fixture.startedTime;
+    if (!startedTime || !fixture.actualEndedTime) return null;
+    const start = new Date(`1970-01-01T${startedTime}`);
     const end = new Date(`1970-01-01T${fixture.actualEndedTime}`);
     const diffMs = end - start;
     const diffMins = Math.floor(diffMs / 60000);
@@ -250,41 +257,13 @@ function ShowFixtureDetails({ fixture }) {
   };
 
   const getDelayMinutes = () => {
-    if (!fixture.scheduledTime || !fixture.startedTime) return null;
-    const scheduled = new Date(`1970-01-01T${fixture.scheduledTime}`);
-    const actual = new Date(`1970-01-01T${fixture.startedTime}`);
+    const scheduledTime = fixture.scheduledTime || fixture.plannedStart;
+    const startedTime = fixture.startedTime || fixture.actualStartedTime;
+    if (!scheduledTime || !startedTime) return null;
+    const scheduled = new Date(`1970-01-01T${scheduledTime}`);
+    const actual = new Date(`1970-01-01T${startedTime}`);
     const diffMs = actual - scheduled;
     return Math.floor(diffMs / 60000);
-  };
-
-  const getMatchIntensity = () => {
-    if (!hasGoalsPoints) return null;
-    const total1 = fixture.goals1 * 3 + fixture.points1;
-    const total2 = fixture.goals2 * 3 + fixture.points2;
-    const diff = Math.abs(total1 - total2);
-    const totalScore = total1 + total2;
-
-    if (diff === 0)
-      return { label: "Nail-biter! 🤏", color: "#ef4444", icon: "⚡" };
-    if (diff <= 3)
-      return { label: "Close call! 😅", color: "#f97316", icon: "🔥" };
-    if (totalScore >= 40)
-      return { label: "Goal fest! 🎉", color: "#22c55e", icon: "🚀" };
-    if (totalScore >= 25)
-      return { label: "Action packed! 💪", color: "#3b82f6", icon: "💥" };
-    return { label: "Tactical battle 🧠", color: "#6b7280", icon: "⚔️" };
-  };
-
-  const getStageEmoji = () => {
-    const stage = fixture.stage?.toLowerCase() || "";
-    if (stage.includes("final")) return "🏆";
-    if (stage.includes("semi")) return "⚔️";
-    if (stage.includes("quarter")) return "🎯";
-    if (stage.includes("group")) return "📊";
-    if (stage.includes("plate")) return "🥉";
-    if (stage.includes("shield")) return "🛡️";
-    if (stage.includes("cup")) return "🏅";
-    return "🏐";
   };
 
   const getCardCounts = () => {
@@ -328,17 +307,91 @@ function ShowFixtureDetails({ fixture }) {
       halfText = `${halfMins}m`;
     }
 
-    return `Duration ${durationText} (2x ${halfText} halves)`;
+    return `${durationText} (2 x ${halfText} halves)`;
+  };
+
+  const getStageText = () => {
+    if (!fixture.stage && !fixture.groupNumber) return null;
+
+    const stage = `${fixture.stage || ""}`
+      .replace("_", " ")
+      .trim()
+      .toLowerCase();
+    const stageText = stage
+      ? stage.charAt(0).toUpperCase() + stage.slice(1)
+      : "Group";
+
+    if (stage.includes("group") && fixture.groupNumber) {
+      return `${stageText} ${fixture.groupNumber}`;
+    }
+
+    return stageText;
+  };
+
+  const getCardsText = () => {
+    const cardCounts = getCardCounts();
+    if (
+      !cardCounts ||
+      (!cardCounts.yellowCards &&
+        !cardCounts.redCards &&
+        !cardCounts.blackCards)
+    ) {
+      return null;
+    }
+
+    return [
+      cardCounts.yellowCards ? `${cardCounts.yellowCards} yellow` : null,
+      cardCounts.redCards ? `${cardCounts.redCards} red` : null,
+      cardCounts.blackCards ? `${cardCounts.blackCards} black` : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
   };
 
   const matchDuration = getMatchDuration();
   const delayMinutes = getDelayMinutes();
-  const intensity = getMatchIntensity();
-  const stageEmoji = getStageEmoji();
-  const cardCounts = getCardCounts();
   const isFinished =
     fixture.outcome === "played" || fixture.lane?.current === "finished";
   const isStarted = fixture.startedTime && !isFinished;
+  const normalizedOutcome = `${fixture.outcome || ""}`
+    .toLowerCase()
+    .replace(/[-_\s]/g, "");
+  const total1 = hasGoalsPoints ? fixture.goals1 * 3 + fixture.points1 : null;
+  const total2 = hasGoalsPoints ? fixture.goals2 * 3 + fixture.points2 : null;
+  const statusText = isFinished
+    ? "Completed"
+    : isStarted
+    ? "In progress"
+    : normalizedOutcome === "notplayed"
+    ? "Not played"
+    : "Scheduled";
+  const primaryInfoRows = [
+    { label: "Stage", value: getStageText() },
+    { label: "Pitch", value: fixture.pitch },
+    { label: "Umpires", value: fixture.umpireTeam },
+  ].filter(({ value }) => value);
+
+  const secondaryInfoRows = [
+    { label: "Status", value: statusText },
+    { label: "Scheduled", value: fixture.scheduledTime },
+    {
+      label: "Started",
+      value: fixture.startedTime || fixture.actualStartedTime,
+    },
+    { label: "Ended", value: fixture.actualEndedTime },
+    { label: "Duration", value: getPlannedDurationText() },
+    { label: "Actual", value: matchDuration },
+    {
+      label: "Delay",
+      value:
+        delayMinutes !== null
+          ? delayMinutes > 0
+            ? `+${delayMinutes} min`
+            : "On time"
+          : null,
+    },
+    { label: "Cards", value: getCardsText() },
+  ].filter(({ value }) => value);
 
   return (
     <>
@@ -376,197 +429,43 @@ function ShowFixtureDetails({ fixture }) {
         </div>
       ) : null}
 
-      {/* Enhanced Details Section */}
-      <div className="fixture-details-enhanced">
-        {/* Match Status Banner */}
-        <div className="match-status-banner">
-          <span className="stage-badge">
-            {stageEmoji} {fixture.stage || "Match"}
-          </span>
-          {intensity && isFinished && (
-            <span
-              className="intensity-badge"
-              style={{
-                backgroundColor: intensity.color + "20",
-                color: intensity.color,
-                borderColor: intensity.color,
-              }}
-            >
-              {intensity.icon} {intensity.label}
-            </span>
-          )}
-        </div>
+      <div className="fixture-details-summary">
+        <FixtureInfoList rows={primaryInfoRows} />
 
-        {/* Time & Duration Grid */}
-        <div className="details-grid-enhanced">
-          {fixture.pitch && (
-            <div className="detail-card">
-              <div className="detail-icon">🏟️</div>
-              <div className="detail-content">
-                <div className="detail-label">Pitch</div>
-                <div className="detail-value">{fixture.pitch}</div>
-              </div>
-            </div>
-          )}
+        {secondaryInfoRows.length > 0 && (
+          <FixtureInfoList rows={secondaryInfoRows} isSecondary />
+        )}
 
-          {getPlannedDurationText() && (
-            <div className="detail-card duration-planned">
-              <div className="detail-icon">⏱️</div>
-              <div className="detail-content">
-                <div className="detail-value" style={{ fontSize: "1.3rem" }}>
-                  {getPlannedDurationText()}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {delayMinutes !== null && delayMinutes > 0 && (
-            <div className="detail-card delay-warning">
-              <div className="detail-icon">⏰</div>
-              <div className="detail-content">
-                <div className="detail-label">Started Late</div>
-                <div className="detail-value">+{delayMinutes} min</div>
-              </div>
-            </div>
-          )}
-
-          {delayMinutes !== null && delayMinutes <= 0 && (
-            <div className="detail-card on-time">
-              <div className="detail-icon">✅</div>
-              <div className="detail-content">
-                <div className="detail-label">Started</div>
-                <div className="detail-value">On time!</div>
-              </div>
-            </div>
-          )}
-
-          {matchDuration && (
-            <div className="detail-card">
-              <div className="detail-icon">⏱️</div>
-              <div className="detail-content">
-                <div className="detail-label">Duration</div>
-                <div className="detail-value">{matchDuration}</div>
-              </div>
-            </div>
-          )}
-
-          {isStarted && !matchDuration && (
-            <div className="detail-card live">
-              <div className="detail-icon">🔴</div>
-              <div className="detail-content">
-                <div className="detail-label">Status</div>
-                <div className="detail-value">In Progress</div>
-              </div>
-            </div>
-          )}
-
-          {cardCounts &&
-            (cardCounts.yellowCards > 0 ||
-              cardCounts.redCards > 0 ||
-              cardCounts.blackCards > 0) && (
-              <div className="detail-card cards">
-                <div className="detail-icon">🃏</div>
-                <div className="detail-content">
-                  <div className="detail-label">Discipline</div>
-                  <div className="detail-value cards-row">
-                    {cardCounts.yellowCards > 0 && (
-                      <span className="card-count yellow">
-                        🟨 {cardCounts.yellowCards}
-                      </span>
-                    )}
-                    {cardCounts.redCards > 0 && (
-                      <span className="card-count red">
-                        🟥 {cardCounts.redCards}
-                      </span>
-                    )}
-                    {cardCounts.blackCards > 0 && (
-                      <span className="card-count black">
-                        ⬛ {cardCounts.blackCards}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-        </div>
-
-        {/* Fun Match Facts */}
         {isFinished && hasGoalsPoints && (
-          <div className="match-facts">
-            <div className="fact-title">📊 Match Insights</div>
-            <div className="fact-grid">
-              <div className="fact-item">
-                <span className="fact-label">Total Score</span>
-                <span className="fact-value">
-                  {fixture.goals1 * 3 +
-                    fixture.points1 +
-                    (fixture.goals2 * 3 + fixture.points2)}{" "}
-                  pts
-                </span>
-              </div>
-              <div className="fact-item">
-                <span className="fact-label">Goals Scored</span>
-                <span className="fact-value">
-                  {fixture.goals1 + fixture.goals2} 🥅
-                </span>
-              </div>
-              <div className="fact-item">
-                <span className="fact-label">Points Scored</span>
-                <span className="fact-value">
-                  {fixture.points1 + fixture.points2} 🎯
-                </span>
-              </div>
-              <div className="fact-item">
-                <span className="fact-label">Margin</span>
-                <span className="fact-value">
-                  {Math.abs(
-                    fixture.goals1 * 3 +
-                      fixture.points1 -
-                      (fixture.goals2 * 3 + fixture.points2)
-                  )}{" "}
-                  pts
-                </span>
-              </div>
-            </div>
+          <div className="fixture-match-summary" aria-label="Match summary">
+            <span>Total {total1 + total2} pts</span>
+            <span>Goals {fixture.goals1 + fixture.goals2}</span>
+            <span>Points {fixture.points1 + fixture.points2}</span>
+            <span>Margin {Math.abs(total1 - total2)} pts</span>
           </div>
         )}
 
-        {/* Historical Context */}
-        <div className="historical-context">
-          <div className="context-title">🏆 Tournament Context</div>
-          <div className="context-content">
-            <p>
-              <strong>{fixture.category}</strong> • Group{" "}
-              {fixture.groupNumber || "TBD"}
-            </p>
-            {fixture.scheduledTime && (
-              <p className="scheduled-time">
-                Originally scheduled for{" "}
-                <strong>{fixture.scheduledTime}</strong>
-              </p>
-            )}
-            {isFinished && (
-              <p className="completion-message">
-                ✅ Match completed{" "}
-                {fixture.actualEndedTime ? `at ${fixture.actualEndedTime}` : ""}
-              </p>
-            )}
+        {fixture.category && (
+          <div className="fixture-context-note">
+            {fixture.category}
+            {fixture.groupNumber ? ` - Group ${fixture.groupNumber}` : ""}
           </div>
-        </div>
+        )}
       </div>
-
-      {fixture.umpireTeam && (
-        <div className="umpires">
-          <UmpiresIcon width="82" height="82" />
-          <team-name
-            name={fixture.umpireTeam}
-            show-logo="true"
-            height="35px"
-            width="100%"
-          ></team-name>
-        </div>
-      )}
     </>
+  );
+}
+
+function FixtureInfoList({ rows }) {
+  return (
+    <dl className="fixture-details-list">
+      {rows.map(({ label, value }) => (
+        <div className="fixture-details-row" key={label}>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

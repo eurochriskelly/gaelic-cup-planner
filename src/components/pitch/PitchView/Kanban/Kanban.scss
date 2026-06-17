@@ -31,6 +31,84 @@
     }
   }
 
+  .kanban-board-tip-banner {
+    position: fixed;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 12.5rem;
+    z-index: 9999;
+    width: auto;
+    min-height: 5.46rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.04rem;
+    padding: 0.93rem 1.56rem;
+    box-sizing: border-box;
+    border-top: 0.35rem solid #1db5e8;
+    border-bottom: 0.35rem solid #1db5e8;
+    background: rgba(72, 80, 66, 0.75);
+    color: #ffffff;
+    font-size: 1.885rem;
+    font-weight: 800;
+    line-height: 1.15;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: 0 -0.6rem 1.2rem rgba(0, 0, 0, 0.18);
+    opacity: 1;
+    transition: opacity 1.2s ease;
+
+    &.is-read-only {
+      background: rgba(200, 68, 68, 0.75);
+    }
+
+    &.is-dismiss-message {
+      background: rgba(43, 58, 38, 0.75);
+      border-color: rgba(212, 231, 155, 0.92);
+      text-transform: none;
+    }
+
+    &.is-fading-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &__icon {
+      font-size: 2.62rem;
+      line-height: 1;
+    }
+
+    &__message {
+      min-width: 0;
+    }
+
+    &__dismiss,
+    &__dismiss-spacer {
+      width: 4.73rem;
+      height: 4.73rem;
+    }
+
+    &__dismiss {
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    &__dismiss-spacer {
+      display: block;
+    }
+
+    strong {
+      font-weight: 900;
+    }
+  }
+
   .kanban-board-area {
     flex-grow: 1;
     display: grid; // Changed to grid
@@ -548,7 +626,7 @@
 
     .kanban-board-area {
       grid-template-columns: var(--large-side-gutter) minmax(0, 1fr) var(--large-side-gutter);
-      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
       overflow: hidden;
       padding-bottom: 11rem;
       width: 100%;
@@ -598,10 +676,8 @@
     }
 
     .kanban-large-shell {
-      --large-gutter-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='38,-1 -2,18 38,37' fill='%23ffffff' opacity='.18'/%3E%3C/svg%3E");
-      --large-gutter-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='-2,-1 38,18 -2,37' fill='%23ffffff' opacity='.18'/%3E%3C/svg%3E");
       display: grid;
-      grid-area: 3 / 1 / 4 / 4;
+      grid-area: 2 / 1 / 3 / 4;
       grid-template-columns: var(--large-side-gutter) minmax(0, 1fr) var(--large-side-gutter);
       grid-template-rows: auto minmax(0, 1fr);
       min-height: 0;
@@ -611,29 +687,7 @@
 
       &::before,
       &::after {
-        background-color: rgba(255, 255, 255, 0.1);
-        background-repeat: repeat-y;
-        background-size: 100% 4.4rem;
-        bottom: 0;
-        box-shadow: inset 0.35rem 0 0 rgba(255, 255, 255, 0.08);
-        content: '';
-        pointer-events: none;
-        position: absolute;
-        top: 0;
-        width: var(--large-side-gutter);
-        z-index: 0;
-      }
-
-      &::before {
-        background-image: var(--large-gutter-arrow-left);
-        background-position: right top;
-        left: 0;
-      }
-
-      &::after {
-        background-image: var(--large-gutter-arrow-right);
-        background-position: left top;
-        right: 0;
+        content: none;
       }
     }
 
@@ -921,8 +975,8 @@
         border-radius: 0.8rem;
         padding-left: 0;
         padding-right: 0;
-        margin-left: var(--large-card-inset);
-        margin-right: var(--large-card-inset);
+        margin-left: 0;
+        margin-right: 0;
       }
     }
 

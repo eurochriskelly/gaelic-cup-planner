@@ -4,6 +4,10 @@ import { useAppContext } from '../../../../shared/js/Provider';
 import { choosePreferredPitch, normalizePitchId } from '../../../../shared/js/pitchSelection';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
+import {
+  areFixtureTipsEnabled,
+  setFixtureTipsEnabled,
+} from '../../../../shared/js/tipPreferences';
 import KanbanColumn from './KanbanColumn';
 import KanbanFilters from './KanbanFilters';
 import KanbanDetailsPanel from './KanbanDetailsPanel';
@@ -33,6 +37,8 @@ const LARGE_LIVE_CARD_MIN_HEIGHT_REM = 37;
 const LARGE_LIVE_ROW_CHROME_REM = 9.2;
 const LARGE_SOON_HEADER_HEIGHT_REM = 4.6;
 const LARGE_SOON_ROW_HEIGHT_REM = 5.4;
+const TIP_DISMISS_VISIBLE_MS = 4000;
+const TIP_DISMISS_FADE_MS = 1200;
 
 const parseFixtureTime = (value) => {
   if (!value) return null;
@@ -165,6 +171,10 @@ const Kanban = ({
    const [isInlineMoveSaving, setIsInlineMoveSaving] = useState(false);
    const [visibleSoonRows, setVisibleSoonRows] = useState(0);
    const [largePaneHandlesSettling, setLargePaneHandlesSettling] = useState(true);
+   const [fixtureTipsEnabled, setFixtureTipsEnabledState] = useState(() => areFixtureTipsEnabled());
+   const [showTipsDismissMessage, setShowTipsDismissMessage] = useState(false);
+   const [isTipsDismissMessageFading, setIsTipsDismissMessageFading] = useState(false);
+   const [isTipBannerReady, setIsTipBannerReady] = useState(false);
    const largeLivePaneRef = useRef(null);
 
   const {
@@ -519,7 +529,48 @@ const Kanban = ({
   const showPitchCompleteBanner = !!focusedPitchStatus?.isComplete;
   const activeMatchEmptyMessage = getActiveMatchEmptyMessage(isCoordinatingBoardPitch);
 
-  const renderBoardInfoBar = () => {
+  useEffect(() => {
+    const timerId = window.setTimeout(() => {
+      setIsTipBannerReady(true);
+    }, 300);
+
+    return () => window.clearTimeout(timerId);
+  }, []);
+
+  useEffect(() => {
+    if (!showTipsDismissMessage) {
+      setIsTipsDismissMessageFading(false);
+      return undefined;
+    }
+
+    setIsTipsDismissMessageFading(false);
+
+    const fadeTimerId = window.setTimeout(() => {
+      setIsTipsDismissMessageFading(true);
+    }, TIP_DISMISS_VISIBLE_MS);
+
+    const clearTimerId = window.setTimeout(() => {
+      setShowTipsDismissMessage(false);
+      setIsTipsDismissMessageFading(false);
+    }, TIP_DISMISS_VISIBLE_MS + TIP_DISMISS_FADE_MS);
+
+    return () => {
+      window.clearTimeout(fadeTimerId);
+      window.clearTimeout(clearTimerId);
+    };
+  }, [showTipsDismissMessage]);
+
+  const handleDismissFixtureTips = () => {
+    setFixtureTipsEnabled(false);
+    setFixtureTipsEnabledState(false);
+    setShowTipsDismissMessage(true);
+  };
+
+  const renderBoardTipBanner = () => {
+    if (!isTipBannerReady) {
+      return null;
+    }
+
     const isReadOnly = !isCoordinatingBoardPitch;
 
     const getGuidanceMessage = () => {
@@ -541,23 +592,59 @@ const Kanban = ({
       return '';
     };
 
+    const guidanceMessage = getGuidanceMessage();
+    const shouldShowGuidance = fixtureTipsEnabled && guidanceMessage;
+
+    if (!isReadOnly && !shouldShowGuidance && !showTipsDismissMessage) {
+      return null;
+    }
+
     return (
-      <div className={`kanban-board-info-bar ${isReadOnly ? 'is-read-only' : 'is-guidance'}`}>
+      <div
+        className={`kanban-board-tip-banner ${
+          isReadOnly ? 'is-read-only' : ''
+        } ${showTipsDismissMessage && !isReadOnly ? 'is-dismiss-message' : ''} ${
+          isTipsDismissMessageFading && !isReadOnly ? 'is-fading-out' : ''
+        }`}
+        role={isReadOnly ? 'alert' : 'status'}
+      >
         <i
-          className={`kanban-board-info-bar__icon pi ${
-            isReadOnly ? 'pi-exclamation-triangle' : 'pi-info-circle'
+          className={`kanban-board-tip-banner__icon pi ${
+            isReadOnly
+              ? 'pi-exclamation-triangle'
+              : showTipsDismissMessage
+              ? 'pi-check-circle'
+              : 'pi-info-circle'
           }`}
           aria-hidden="true"
         />
-        <span className="kanban-board-info-bar__message">
+        <span className="kanban-board-tip-banner__message">
           {isReadOnly
             ? (
               <>
                 <strong>Read-only:</strong> {boardPitch ? 'You are not coordinating this pitch' : 'Select a pitch to coordinate fixtures'}
               </>
             )
-            : getGuidanceMessage()}
+            : showTipsDismissMessage
+            ? 'To show tips, enable on the home screen'
+            : guidanceMessage}
         </span>
+        {!isReadOnly && shouldShowGuidance && (
+          <button
+            type="button"
+            className="kanban-board-tip-banner__dismiss"
+            onClick={handleDismissFixtureTips}
+            aria-label="Dismiss fixture tips"
+          >
+            <i className="pi pi-times" aria-hidden="true" />
+          </button>
+        )}
+        {!isReadOnly && showTipsDismissMessage && (
+          <span
+            className="kanban-board-tip-banner__dismiss-spacer"
+            aria-hidden="true"
+          />
+        )}
       </div>
     );
   };
@@ -594,6 +681,13 @@ const Kanban = ({
     setInlineMove(null);
     setIsInlineMoveSaving(false);
   }, [selectedFixture?.id]);
+
+  useEffect(() => {
+    if (selectedFixture || !showingDetails) return;
+
+    setShowingDetails(false);
+    setDetailsMode('info');
+  }, [selectedFixture, showingDetails]);
 
 
    // Function to show full details panel
@@ -1294,7 +1388,6 @@ const Kanban = ({
               coordinatedPitches={pinnedPitches}
             />
           </div>
-          {renderBoardInfoBar()}
           <div
             className="kanban-large-shell"
             onTouchStart={handleLargePaneTouchStart}
@@ -1408,6 +1501,7 @@ const Kanban = ({
             </div>
           </div>
         </div>
+        {renderBoardTipBanner()}
 
         {selectedFixture && showingDetails && (
           <KanbanDetailsPanel
@@ -1626,6 +1720,7 @@ const Kanban = ({
           );
         })()}
       </div>
+      {renderBoardTipBanner()}
 
       {/* Show details panel when showingDetails is true */}
       {selectedFixture && showingDetails && (
