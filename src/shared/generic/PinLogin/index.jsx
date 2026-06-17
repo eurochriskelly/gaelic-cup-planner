@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
 import API from "../../api/endpoints.js";
@@ -43,6 +43,9 @@ const PinLogin = () => {
   const [isOfficialsLoginTransitioning, setIsOfficialsLoginTransitioning] = useState(false);
   const officialsRevealTimeoutRef = useRef(null);
   const officialsLoginTransitionTimeoutRef = useRef(null);
+  const selectedGatewayRef = useRef(null);
+  const officialsButtonRef = useRef(null);
+  const roleBrandIconRef = useRef(null);
 
   const currentRole = (userRole || 'spectator').toLowerCase();
 
@@ -96,6 +99,40 @@ const PinLogin = () => {
       cancelAnimationFrame(animationFrame);
     };
   }, [showRoleLogin, pinEntryRole]);
+
+  useLayoutEffect(() => {
+    const gateway = selectedGatewayRef.current;
+    if (!gateway) return undefined;
+
+    if (!isOfficialsLoginTransitioning) {
+      gateway.style.removeProperty('--officials-icon-dx');
+      gateway.style.removeProperty('--officials-icon-dy');
+      gateway.style.removeProperty('--officials-icon-scale');
+      return undefined;
+    }
+
+    const animationFrame = requestAnimationFrame(() => {
+      const source = officialsButtonRef.current;
+      const target = roleBrandIconRef.current;
+      if (!source || !target) return;
+
+      const sourceRect = source.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const sourceCenterX = sourceRect.left + sourceRect.width / 2;
+      const sourceCenterY = sourceRect.top + sourceRect.height / 2;
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const scale = targetRect.width / sourceRect.width;
+
+      gateway.style.setProperty('--officials-icon-dx', `${targetCenterX - sourceCenterX}px`);
+      gateway.style.setProperty('--officials-icon-dy', `${targetCenterY - sourceCenterY}px`);
+      gateway.style.setProperty('--officials-icon-scale', `${scale}`);
+    });
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [isOfficialsLoginTransitioning]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -461,6 +498,17 @@ const PinLogin = () => {
     }
   };
 
+  const isRoleLoginVisible = showRoleLogin || isOfficialsLoginTransitioning;
+  const pinLoginClasses = [
+    'pinLogin',
+    isRoleLoginVisible ? 'role-selector-active-parent' : '',
+  ].filter(Boolean).join(' ');
+  const selectedGatewayClasses = [
+    'selected-tournament-gateway',
+    isRoleLoginVisible ? 'selected-tournament-gateway--role-visible' : '',
+    isOfficialsLoginTransitioning ? 'selected-tournament-gateway--transitioning' : '',
+  ].filter(Boolean).join(' ');
+
   if (!selectedTournament) {
     if (isLoadingTournaments) {
       return <div className="pinLogin thinking">Loading tournaments...</div>;
@@ -487,7 +535,7 @@ const PinLogin = () => {
         onBackClick={handleBackClick}
         tournament={selectedTournament}
       />
-      <div className={`pinLogin ${showRoleLogin ? 'role-selector-active-parent' : ''}`}>
+      <div className={pinLoginClasses}>
         {!selectedTournament ? (
           <div className="tournament-selection-view">
             <h2>{tournamentHeading}</h2>
@@ -552,133 +600,137 @@ const PinLogin = () => {
               ))}
             </div>
           </div>
-        ) : showRoleLogin ? (
-          <div className="pin-entry-view gateway-panel">
-            <div className="role-login-card">
-              <button
-                type="button"
-                className="role-flow-back-button"
-                aria-label="Back to latest results"
-                onClick={handleRoleLoginBackToResults}
-              >
-                <span className="role-flow-back-icon" aria-hidden="true">
-                  <i className="pi pi-arrow-left" />
-                </span>
-                <span className="role-flow-back-copy">
-                  <span className="role-flow-back-brand">
-                    <span className="role-flow-brand-icon" aria-hidden="true">
-                      <OfficialsIcon />
-                    </span>
-                    <span className="role-flow-brand-title">
-                      <span>Administrators</span>
-                      <span>&amp; Officials</span>
-                    </span>
-                  </span>
-                </span>
-              </button>
-              <div className="role-login-content">
-                <h2 className={pinEntryRole ? 'dimmed' : ''}>Select role</h2>
-                <div className="role-grid">
-                  {pinProtectedRoles.map(role => (
-                    <button
-                      type="button"
-                      key={role}
-                      onClick={() => handleRoleSelect(role)}
-                      className={`role-button ${pinEntryRole === role ? 'active-role' : ''}`}
-                    >
-                      {role.charAt(0).toUpperCase() + role.slice(1)}
-                      {pinEntryRole === role ? ' *' : ''}
-                    </button>
-                  ))}
-                </div>
-                <div className={`pin-section ${!pinEntryRole ? 'pin-disabled' : ''}`}>
-                  <span className="pin-label">PIN</span>
-                  <div
-                    className="pinContainer"
-                    onClick={focusPinInput}
-                  >
-                    <input
-                      ref={pinInputRef}
-                      className="pin-hidden-input"
-                      value={pin.join('')}
-                      onChange={handlePinInputChange}
-                      maxLength="4"
-                      inputMode="text"
-                      autoCapitalize="characters"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck="false"
-                      aria-label="Enter PIN"
-                    />
-                    {pin.map((num, index) => (
-                      <div
-                        className={[
-                          'pinDigitBox',
-                          pinEntryRole && pin.join('').length === index ? 'active' : '',
-                          isThinking ? 'thinking' : '',
-                        ].filter(Boolean).join(' ')}
-                        key={index}
-                        aria-hidden="true"
-                      >
-                        {num}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="pin-message">&nbsp;{message}&nbsp;</div>
-              </div>
-            </div>
-          </div>
         ) : (
-          <div className="competition-selection-view gateway-panel">
-            <div className="latest-results-card">
-              <div className="latest-results-content">
-                <h2>View latest results</h2>
-                <div className="competition-prompt">Select competition</div>
-                {isLoadingCompetitions ? (
-                  <div className="thinking">Loading competitions...</div>
-                ) : (
-                  <div className="competition-list">
-                    {competitionOptions.map((competition) => (
-                      <button
-                        type="button"
-                        key={competition.value}
-                        className="competition-button"
-                        onClick={() => handleCompetitionSelect(competition)}
-                      >
-                        <i className="pi pi-trophy competition-button-icon" aria-hidden="true" />
-                        <span className="competition-button-label">{competition.label}</span>
-                        <i className="pi pi-bullseye competition-button-action" aria-hidden="true" />
-                      </button>
-                    ))}
-                  </div>
-                )}
+          <div className={selectedGatewayClasses} ref={selectedGatewayRef}>
+            <div className="competition-selection-view gateway-panel" aria-hidden={isRoleLoginVisible}>
+              <div className="latest-results-card">
+                <div className="latest-results-content">
+                  <h2>View latest results</h2>
+                  <div className="competition-prompt">Select competition</div>
+                  {isLoadingCompetitions ? (
+                    <div className="thinking">Loading competitions...</div>
+                  ) : (
+                    <div className="competition-list">
+                      {competitionOptions.map((competition) => (
+                        <button
+                          type="button"
+                          key={competition.value}
+                          className="competition-button"
+                          onClick={() => handleCompetitionSelect(competition)}
+                        >
+                          <i className="pi pi-trophy competition-button-icon" aria-hidden="true" />
+                          <span className="competition-button-label">{competition.label}</span>
+                          <i className="pi pi-bullseye competition-button-action" aria-hidden="true" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div
-              className={[
-                'officials-access',
-                isOfficialsRevealActive ? 'officials-access--active' : '',
-                isOfficialsLoginTransitioning ? 'officials-access--to-login' : '',
-              ].filter(Boolean).join(' ')}
-            >
-              <div className="officials-access-label" aria-live="polite">
-                {isOfficialsRevealActive ? 'Administrators & Officials' : ''}
-              </div>
-              <button
-                type="button"
-                className="change-role-button"
-                onClick={handleOfficialsAccessClick}
-                aria-label={
-                  isOfficialsRevealActive
-                    ? 'Open officials and administrators'
-                    : 'Reveal officials and administrators'
-                }
-                aria-expanded={isOfficialsRevealActive}
+              <div
+                className={[
+                  'officials-access',
+                  isOfficialsRevealActive ? 'officials-access--active' : '',
+                  isOfficialsLoginTransitioning ? 'officials-access--to-login' : '',
+                ].filter(Boolean).join(' ')}
               >
-                <OfficialsIcon aria-hidden="true" />
-              </button>
+                <div className="officials-access-label" aria-live="polite">
+                  {isOfficialsRevealActive ? 'Administrators & Officials' : ''}
+                </div>
+                <button
+                  ref={officialsButtonRef}
+                  type="button"
+                  className="change-role-button"
+                  onClick={handleOfficialsAccessClick}
+                  aria-label={
+                    isOfficialsRevealActive
+                      ? 'Open officials and administrators'
+                      : 'Reveal officials and administrators'
+                  }
+                  aria-expanded={isOfficialsRevealActive}
+                >
+                  <OfficialsIcon aria-hidden="true" />
+                </button>
+              </div>
             </div>
+            {isRoleLoginVisible && (
+              <div className="pin-entry-view gateway-panel" aria-hidden={!showRoleLogin}>
+                <div className="role-login-card">
+                  <button
+                    type="button"
+                    className="role-flow-back-button"
+                    aria-label="Back to latest results"
+                    onClick={handleRoleLoginBackToResults}
+                  >
+                    <span className="role-flow-back-icon" aria-hidden="true">
+                      <i className="pi pi-arrow-left" />
+                    </span>
+                    <span className="role-flow-back-copy">
+                      <span className="role-flow-back-brand">
+                        <span className="role-flow-brand-icon" aria-hidden="true" ref={roleBrandIconRef}>
+                          <OfficialsIcon />
+                        </span>
+                        <span className="role-flow-brand-title">
+                          <span>Administrators</span>
+                          <span>&amp; Officials</span>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                  <div className="role-login-content">
+                    <h2 className={pinEntryRole ? 'dimmed' : ''}>Select role</h2>
+                    <div className="role-grid">
+                      {pinProtectedRoles.map(role => (
+                        <button
+                          type="button"
+                          key={role}
+                          onClick={() => handleRoleSelect(role)}
+                          className={`role-button ${pinEntryRole === role ? 'active-role' : ''}`}
+                        >
+                          {role.charAt(0).toUpperCase() + role.slice(1)}
+                          {pinEntryRole === role ? ' *' : ''}
+                        </button>
+                      ))}
+                    </div>
+                    <div className={`pin-section ${!pinEntryRole ? 'pin-disabled' : ''}`}>
+                      <span className="pin-label">PIN</span>
+                      <div
+                        className="pinContainer"
+                        onClick={focusPinInput}
+                      >
+                        <input
+                          ref={pinInputRef}
+                          className="pin-hidden-input"
+                          value={pin.join('')}
+                          onChange={handlePinInputChange}
+                          maxLength="4"
+                          inputMode="text"
+                          autoCapitalize="characters"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          spellCheck="false"
+                          aria-label="Enter PIN"
+                        />
+                        {pin.map((num, index) => (
+                          <div
+                            className={[
+                              'pinDigitBox',
+                              pinEntryRole && pin.join('').length === index ? 'active' : '',
+                              isThinking ? 'thinking' : '',
+                            ].filter(Boolean).join(' ')}
+                            key={index}
+                            aria-hidden="true"
+                          >
+                            {num}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="pin-message">&nbsp;{message}&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

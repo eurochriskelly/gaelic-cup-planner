@@ -831,12 +831,6 @@
   }
 }
 
-body.install-prompt-visible {
-  .hat-icon-button {
-    bottom: 7.2rem;
-  }
-}
-
 body.pin-login-screen.install-prompt-visible {
   .install-prompt {
     bottom: 4.2rem;
@@ -856,6 +850,83 @@ body.pin-login-screen.install-prompt-visible {
 // Adjustments for when role selector is active, if needed
 .pinLogin.role-selector-active-parent {
   overflow-y: auto;
+}
+
+.selected-tournament-gateway {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  > .gateway-panel {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition:
+      opacity 0.44s ease,
+      transform 0.74s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pin-entry-view {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(3.4rem);
+  }
+
+  .role-flow-back-button,
+  .role-login-content {
+    opacity: 0;
+    transform: translateY(1.2rem);
+    transition:
+      opacity 0.34s ease,
+      transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+.selected-tournament-gateway--role-visible {
+  .pin-entry-view {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .role-flow-back-button,
+  .role-login-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selected-tournament-gateway--transitioning {
+  .latest-results-card {
+    opacity: 0.12;
+    transform: translateY(-1.6rem);
+    transition:
+      opacity 0.5s ease,
+      transform 0.74s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pin-entry-view {
+    pointer-events: none;
+  }
+
+  .role-flow-back-icon,
+  .role-flow-brand-icon,
+  .role-flow-brand-title,
+  .role-login-content {
+    opacity: 0;
+  }
+}
+
+.selected-tournament-gateway--role-visible:not(.selected-tournament-gateway--transitioning) {
+  .competition-selection-view {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-2rem);
+  }
 }
 
 // Ensure tournament selection and pin entry views take up space correctly
@@ -1036,8 +1107,9 @@ body.pin-login-screen.install-prompt-visible {
 .officials-access {
   --officials-access-duration: 0.44s;
   --officials-access-ease: ease;
+  --officials-access-button-size: 7.6rem;
 
-  bottom: 0;
+  bottom: var(--officials-access-button-size);
   box-sizing: border-box;
   height: 17rem;
   left: 50%;
@@ -1085,11 +1157,11 @@ body.pin-login-screen.install-prompt-visible {
   color: #fff;
   cursor: pointer;
   display: flex;
-  height: 7.6rem;
+  height: var(--officials-access-button-size);
   justify-content: center;
   left: 50%;
   margin: 0;
-  opacity: 0.5;
+  opacity: 0.35;
   padding: 0;
   pointer-events: auto;
   position: absolute;
@@ -1103,7 +1175,7 @@ body.pin-login-screen.install-prompt-visible {
     opacity 0.28s ease,
     transform var(--officials-access-duration) var(--officials-access-ease),
     width var(--officials-access-duration) var(--officials-access-ease);
-  width: 7.6rem;
+  width: var(--officials-access-button-size);
 
   &:hover {
     background: #647244;
@@ -1130,7 +1202,7 @@ body.pin-login-screen.install-prompt-visible {
     bottom: clamp(6.4rem, 32vh, 10rem);
     box-shadow: 0 0.9rem 2.2rem rgba(47, 59, 25, 0.22);
     height: clamp(8rem, 24vh, 12.4rem);
-    opacity: 1;
+    opacity: 0.7;
     width: clamp(8rem, 24vh, 12.4rem);
 
     svg {
@@ -1145,20 +1217,16 @@ body.pin-login-screen.install-prompt-visible {
   --officials-access-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   .officials-access-label {
-    opacity: 1;
-    transform: translateY(-11rem);
+    opacity: 0;
+    transform: translateY(-1.4rem);
   }
 
   .change-role-button {
-    height: 8.6rem;
     opacity: 1;
-    transform: translate(-50%, -9rem);
-    width: 8.6rem;
-
-    svg {
-      height: 5.8rem;
-      width: 5.8rem;
-    }
+    transform:
+      translateX(-50%)
+      translate3d(var(--officials-icon-dx, 0), var(--officials-icon-dy, 0), 0)
+      scale(var(--officials-icon-scale, 1));
   }
 }
 
@@ -1170,14 +1238,18 @@ body.pin-login-screen.install-prompt-visible {
 }
 
 @media (max-width: 520px) {
+  .officials-access {
+    --officials-access-button-size: 6.4rem;
+  }
+
   .officials-access-label {
     font-size: 1.8rem;
     letter-spacing: 0.02em;
   }
 
   .change-role-button {
-    height: 6.4rem;
-    width: 6.4rem;
+    height: var(--officials-access-button-size);
+    width: var(--officials-access-button-size);
 
     svg {
       height: 4.3rem;
