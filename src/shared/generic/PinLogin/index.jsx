@@ -9,6 +9,7 @@ import "./PinLogin.scss";
 import config from "../../../interfaces/mobile/config";
 
 const pinProtectedRoles = ['organizer', 'coordinator', 'coach', 'referee'];
+const officialsLoginTransitionDurationMs = 1300;
 const allCompetitionsOption = {
   value: '*',
   label: 'All competitions',
@@ -39,7 +40,9 @@ const PinLogin = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [competitionFetchFailed, setCompetitionFetchFailed] = useState(false);
   const [isOfficialsRevealActive, setIsOfficialsRevealActive] = useState(false);
+  const [isOfficialsLoginTransitioning, setIsOfficialsLoginTransitioning] = useState(false);
   const officialsRevealTimeoutRef = useRef(null);
+  const officialsLoginTransitionTimeoutRef = useRef(null);
 
   const currentRole = (userRole || 'spectator').toLowerCase();
 
@@ -66,6 +69,9 @@ const PinLogin = () => {
       document.body.classList.remove('pin-login-screen');
       if (officialsRevealTimeoutRef.current) {
         clearTimeout(officialsRevealTimeoutRef.current);
+      }
+      if (officialsLoginTransitionTimeoutRef.current) {
+        clearTimeout(officialsLoginTransitionTimeoutRef.current);
       }
     };
   }, []);
@@ -256,7 +262,12 @@ const PinLogin = () => {
       clearTimeout(officialsRevealTimeoutRef.current);
       officialsRevealTimeoutRef.current = null;
     }
+    if (officialsLoginTransitionTimeoutRef.current) {
+      clearTimeout(officialsLoginTransitionTimeoutRef.current);
+      officialsLoginTransitionTimeoutRef.current = null;
+    }
     setIsOfficialsRevealActive(false);
+    setIsOfficialsLoginTransitioning(false);
   };
 
   const revealOfficialsAccess = () => {
@@ -265,7 +276,7 @@ const PinLogin = () => {
     officialsRevealTimeoutRef.current = setTimeout(() => {
       setIsOfficialsRevealActive(false);
       officialsRevealTimeoutRef.current = null;
-    }, 30000);
+    }, 5000);
   };
 
   const handleBackClick = () => {
@@ -306,9 +317,30 @@ const PinLogin = () => {
     setShowRoleLogin(true);
   };
 
+  const startOfficialsLoginTransition = () => {
+    if (officialsRevealTimeoutRef.current) {
+      clearTimeout(officialsRevealTimeoutRef.current);
+      officialsRevealTimeoutRef.current = null;
+    }
+
+    setIsOfficialsLoginTransitioning(true);
+    setPinEntryRole(null);
+    resetPinEntry();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    officialsLoginTransitionTimeoutRef.current = setTimeout(() => {
+      officialsLoginTransitionTimeoutRef.current = null;
+      setIsOfficialsRevealActive(false);
+      setIsOfficialsLoginTransitioning(false);
+      setShowRoleLogin(true);
+    }, officialsLoginTransitionDurationMs);
+  };
+
   const handleOfficialsAccessClick = () => {
+    if (isOfficialsLoginTransitioning) return;
+
     if (isOfficialsRevealActive) {
-      handleChangeRoleClick();
+      startOfficialsLoginTransition();
       return;
     }
 
@@ -526,13 +558,22 @@ const PinLogin = () => {
               <button
                 type="button"
                 className="role-flow-back-button"
+                aria-label="Back to latest results"
                 onClick={handleRoleLoginBackToResults}
               >
                 <span className="role-flow-back-icon" aria-hidden="true">
                   <i className="pi pi-arrow-left" />
                 </span>
                 <span className="role-flow-back-copy">
-                  Officials login
+                  <span className="role-flow-back-brand">
+                    <span className="role-flow-brand-icon" aria-hidden="true">
+                      <OfficialsIcon />
+                    </span>
+                    <span className="role-flow-brand-title">
+                      <span>Administrators</span>
+                      <span>&amp; Officials</span>
+                    </span>
+                  </span>
                 </span>
               </button>
               <div className="role-login-content">
@@ -618,10 +659,11 @@ const PinLogin = () => {
               className={[
                 'officials-access',
                 isOfficialsRevealActive ? 'officials-access--active' : '',
+                isOfficialsLoginTransitioning ? 'officials-access--to-login' : '',
               ].filter(Boolean).join(' ')}
             >
               <div className="officials-access-label" aria-live="polite">
-                {isOfficialsRevealActive ? 'Administrator & Officials' : ''}
+                {isOfficialsRevealActive ? 'Administrators & Officials' : ''}
               </div>
               <button
                 type="button"
