@@ -1,6 +1,6 @@
 {
   "name": "gaelic-cup-planner",
-  "version": "0.46.130",
+  "version": "0.47.131",
   "description": "Simplify planning of gaelic games tournaments",
   "directories": {
     "doc": "docs"
