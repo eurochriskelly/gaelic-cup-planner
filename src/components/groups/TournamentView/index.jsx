@@ -249,7 +249,7 @@ const GroupViewSwitcher = ({
   const swipeStartRef = useRef(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDraggingGroup, setIsDraggingGroup] = useState(false);
-  const [groupHandlesSettling, setGroupHandlesSettling] = useState(false);
+  const [groupHandlesSettling, setGroupHandlesSettling] = useState(true);
   const selectGroupTab = useCallback((tabIndex) => {
     if (tabIndex === activeTabIndex) return;
 

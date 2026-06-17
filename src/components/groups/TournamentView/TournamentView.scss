@@ -348,8 +348,6 @@
   --group-card-spacing: 0.84rem;
   --group-side-gutter: 1.42rem;
   --group-nav-handle-size: 10.6rem;
-  --group-gutter-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='38,-1 -2,18 38,37' fill='%23ffffff' opacity='.16'/%3E%3C/svg%3E");
-  --group-gutter-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' preserveAspectRatio='none'%3E%3Cpolygon points='-2,-1 38,18 -2,37' fill='%23ffffff' opacity='.16'/%3E%3C/svg%3E");
   display: grid;
   flex: 1 1 auto;
   grid-template-columns: var(--group-side-gutter) minmax(0, 1fr) var(--group-side-gutter);
@@ -360,29 +358,7 @@
 
   &::before,
   &::after {
-    background-color: rgba(255, 255, 255, 0.1);
-    background-repeat: repeat-y;
-    background-size: 100% 4.4rem;
-    bottom: 0;
-    box-shadow: inset 0.35rem 0 0 rgba(255, 255, 255, 0.08);
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: var(--group-side-gutter);
-    z-index: 0;
-  }
-
-  &::before {
-    background-image: var(--group-gutter-arrow-left);
-    background-position: right top;
-    left: 0;
-  }
-
-  &::after {
-    background-image: var(--group-gutter-arrow-right);
-    background-position: left top;
-    right: 0;
+    content: none;
   }
 }
 
@@ -411,7 +387,7 @@
   box-sizing: border-box;
   flex: 0 0 100%;
   min-width: 0;
-  padding: var(--group-card-spacing);
+  padding: var(--group-card-spacing) 0;
 }
 
 .group-tabs {
@@ -473,25 +449,26 @@
 }
 
 .group-stage-side-nav {
-  bottom: 0;
+  align-self: stretch;
   display: grid;
+  justify-self: stretch;
   grid-column: 1 / 4;
-  grid-row: 1 / 3;
+  grid-row: 2;
   grid-template-columns: var(--group-side-gutter) minmax(0, 1fr) var(--group-side-gutter);
-  left: 0;
+  min-height: 0;
   overflow: visible;
   pointer-events: none;
-  position: absolute;
-  right: 0;
-  top: 0;
+  position: relative;
   touch-action: pan-y;
-  z-index: 2;
+  z-index: 50;
 }
 
 .group-stage-side-nav__slot {
   align-items: center;
   display: flex;
+  height: 100%;
   min-height: 0;
+  overflow: visible;
   pointer-events: auto;
 
   &:empty {
@@ -529,7 +506,7 @@
   pointer-events: auto;
   position: relative;
   text-transform: uppercase;
-  width: 7.4rem;
+  width: 8rem;
 
   &.is-settling {
     opacity: 1;
