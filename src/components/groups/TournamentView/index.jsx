@@ -16,10 +16,7 @@ const TournamentView = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Default to "groups" view
-  const [statusView, setStatusView] = useState("groups");
-  const [showOverall, setShowOverall] = useState(false);
-  const [activeGroupIndex, setActiveGroupIndex] = useState(0);
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
 
   const loadReport = useCallback(async () => {
     try {
@@ -67,8 +64,7 @@ const TournamentView = () => {
     if (!nextKey) return;
 
     navigate(`/tournament/${tournamentId}/category/${encodeURIComponent(nextKey)}`);
-    setShowOverall(false);
-    setActiveGroupIndex(0);
+    setActiveSectionIndex(0);
   }, [activeCategoryIndex, categories, navigate, tournamentId]);
 
   const handle = {
@@ -99,12 +95,8 @@ const TournamentView = () => {
         categoryReport={categoryReport}
         requestedCategory={category}
         isFallbackCategory={isFallbackCategory}
-        statusView={statusView}
-        onChangeStatusView={setStatusView}
-        showOverall={showOverall}
-        onToggleOverall={setShowOverall}
-        activeGroupIndex={activeGroupIndex}
-        onGroupChange={setActiveGroupIndex}
+        activeSectionIndex={activeSectionIndex}
+        onSectionChange={setActiveSectionIndex}
       />
     </MobileLayout>
   );
@@ -118,12 +110,8 @@ const StatusContent = ({
   categoryReport,
   requestedCategory,
   isFallbackCategory,
-  statusView,
-  onChangeStatusView,
-  showOverall,
-  onToggleOverall,
-  activeGroupIndex,
-  onGroupChange,
+  activeSectionIndex,
+  onSectionChange,
 }) => {
   if (loading && !categoryReport) {
     return (
@@ -158,7 +146,6 @@ const StatusContent = ({
   const {
     label,
     fixtures = [],
-    standings = [],
     groupStandings = [],
     knockoutFixtures = [],
     lastUpdated,
@@ -178,99 +165,57 @@ const StatusContent = ({
         </div>
       ) : null}
 
-      <div className="status-toggle status-toggle--main" role="tablist" aria-label="Competition phase">
-        <button
-          type="button"
-          className={`status-toggle__button ${statusView === "groups" ? "is-active" : ""}`}
-          onClick={() => onChangeStatusView("groups")}
-          role="tab"
-          aria-selected={statusView === "groups"}
-        >
-          <span className="status-toggle__icon status-toggle__icon--groups" aria-hidden="true">
-            <span />
-          </span>
-          <span>
-            <strong>Groups</strong>
-            <small>{fixtures.length} games</small>
-          </span>
-        </button>
-        <button
-          type="button"
-          className={`status-toggle__button ${statusView === "knockouts" ? "is-active" : ""}`}
-          onClick={() => onChangeStatusView("knockouts")}
-          role="tab"
-          aria-selected={statusView === "knockouts"}
-        >
-          <span className="status-toggle__icon status-toggle__icon--knockouts" aria-hidden="true" />
-          <span>
-            <strong>Knockouts</strong>
-            <small>{knockoutFixtures.length || fixtures.filter((fixture) => isKnockoutStage(fixture.stage)).length} games</small>
-          </span>
-        </button>
-      </div>
-
-      {statusView === "groups" && (
-        <GroupViewSwitcher 
-           groupStandings={groupStandings}
-           fixtures={fixtures}
-           overallStandings={standings}
-           activeGroupIndex={activeGroupIndex}
-           onChangeGroup={onGroupChange}
-           showOverall={showOverall}
-           onToggleOverall={onToggleOverall}
-        />
-      )}
-
-      {statusView === "knockouts" && (
-        <KnockoutList fixtures={knockoutFixtures.length ? knockoutFixtures : fixtures} />
-      )}
+      <CompetitionSectionSwitcher
+        groupStandings={groupStandings}
+        fixtures={fixtures}
+        knockoutFixtures={knockoutFixtures}
+        activeSectionIndex={activeSectionIndex}
+        onSectionChange={onSectionChange}
+      />
     </section>
   );
 };
 
-const GroupViewSwitcher = ({ 
+const CompetitionSectionSwitcher = ({ 
   groupStandings,
   fixtures,
-  overallStandings,
-  activeGroupIndex,
-  onChangeGroup,
-  showOverall,
-  onToggleOverall
+  knockoutFixtures,
+  activeSectionIndex,
+  onSectionChange,
 }) => {
   const safeGroupStandings = groupStandings || [];
-  const groupFixtureCount = fixtures.filter((fixture) => !isKnockoutStage(fixture.stage)).length || fixtures.length;
-  const hasMultipleGroups = safeGroupStandings.length > 1;
-  const normalizedActiveGroupIndex =
-    activeGroupIndex >= 0 && activeGroupIndex < safeGroupStandings.length
-      ? activeGroupIndex
+  const safeKnockoutFixtures = knockoutFixtures?.length
+    ? knockoutFixtures
+    : fixtures.filter((fixture) => isKnockoutStage(fixture.stage));
+  const sectionSlides = useMemo(() => buildCompetitionSectionSlides({
+    groupStandings: safeGroupStandings,
+    fixtures,
+    knockoutFixtures: safeKnockoutFixtures,
+  }), [fixtures, safeGroupStandings, safeKnockoutFixtures]);
+  const hasMultipleSections = sectionSlides.length > 1;
+  const activeTabIndex =
+    activeSectionIndex >= 0 && activeSectionIndex < sectionSlides.length
+      ? activeSectionIndex
       : 0;
-  const activeTabIndex = showOverall ? safeGroupStandings.length : normalizedActiveGroupIndex;
-  const lastTabIndex = safeGroupStandings.length;
+  const lastTabIndex = Math.max(sectionSlides.length - 1, 0);
   const swipeStartRef = useRef(null);
   const [dragOffset, setDragOffset] = useState(0);
-  const [isDraggingGroup, setIsDraggingGroup] = useState(false);
-  const [groupHandlesSettling, setGroupHandlesSettling] = useState(true);
-  const selectGroupTab = useCallback((tabIndex) => {
+  const [isDraggingSection, setIsDraggingSection] = useState(false);
+  const [sectionHandlesSettling, setSectionHandlesSettling] = useState(true);
+  const selectSectionTab = useCallback((tabIndex) => {
     if (tabIndex === activeTabIndex) return;
-
-    if (tabIndex >= safeGroupStandings.length) {
-      onToggleOverall(true);
-      return;
-    }
-
-    onToggleOverall(false);
-    onChangeGroup(Math.min(tabIndex, safeGroupStandings.length - 1));
-  }, [activeTabIndex, safeGroupStandings.length, onChangeGroup, onToggleOverall]);
+    onSectionChange(Math.max(0, Math.min(sectionSlides.length - 1, tabIndex)));
+  }, [activeTabIndex, onSectionChange, sectionSlides.length]);
   useEffect(() => {
-    if (!hasMultipleGroups) return undefined;
+    if (!hasMultipleSections) return undefined;
 
-    setGroupHandlesSettling(true);
+    setSectionHandlesSettling(true);
     const timerId = window.setTimeout(() => {
-      setGroupHandlesSettling(false);
+      setSectionHandlesSettling(false);
     }, 1000);
 
     return () => window.clearTimeout(timerId);
-  }, [activeTabIndex, hasMultipleGroups]);
+  }, [activeTabIndex, hasMultipleSections]);
   const handleSwipeStart = useCallback((event) => {
     const touch = event.touches?.[0];
     if (!touch) return;
@@ -278,7 +223,7 @@ const GroupViewSwitcher = ({
       x: touch.clientX,
       y: touch.clientY,
     };
-    setIsDraggingGroup(true);
+    setIsDraggingSection(true);
     setDragOffset(0);
   }, []);
   const handleSwipeMove = useCallback((event) => {
@@ -307,7 +252,7 @@ const GroupViewSwitcher = ({
     const start = swipeStartRef.current;
     const touch = event.changedTouches?.[0];
     swipeStartRef.current = null;
-    setIsDraggingGroup(false);
+    setIsDraggingSection(false);
     setDragOffset(0);
 
     if (!start || !touch) return;
@@ -319,101 +264,90 @@ const GroupViewSwitcher = ({
     const direction = deltaX < 0 ? 1 : -1;
     const nextTabIndex = Math.max(0, Math.min(lastTabIndex, activeTabIndex + direction));
     if (nextTabIndex !== activeTabIndex) {
-      selectGroupTab(nextTabIndex, direction);
+      selectSectionTab(nextTabIndex, direction);
     }
-  }, [activeTabIndex, lastTabIndex, selectGroupTab]);
+  }, [activeTabIndex, lastTabIndex, selectSectionTab]);
 
-  if (safeGroupStandings.length === 0) {
+  if (sectionSlides.length === 0) {
     return (
       <div className="status-card status-card--message">
-        <h2>No Groups</h2>
-        <p>There are no group stages for this competition.</p>
+        <h2>No Sections</h2>
+        <p>There are no standings or fixtures for this competition.</p>
       </div>
     );
   }
 
-  const groupSlides = [
-    ...safeGroupStandings.map((group, index) => ({
-      key: group.key || group.label || `group-${index}`,
-      label: formatGroupTabLabel(group, index),
-      count: group?.rows?.length || group?.teams?.length || 0,
-      content: (
-        <SingleGroupContent
-          group={group}
-          fixtures={fixtures}
-          showHeader={!hasMultipleGroups}
-        />
-      ),
-    })),
-    {
-      key: 'combined',
-      label: 'Combined',
-      count: overallStandings.length,
-      content: (
-        <div className="group-panel">
-          <StandingsTable
-            rows={overallStandings}
-            emptyMessage="Standings will appear once matches begin."
-          />
-          <GroupFixturesList fixtures={fixtures} />
-        </div>
-      ),
-    },
-  ];
-  const previousSlide = activeTabIndex > 0 ? groupSlides[activeTabIndex - 1] : null;
-  const nextSlide = activeTabIndex < lastTabIndex ? groupSlides[activeTabIndex + 1] : null;
+  const previousSlide = activeTabIndex > 0 ? sectionSlides[activeTabIndex - 1] : null;
+  const nextSlide = activeTabIndex < lastTabIndex ? sectionSlides[activeTabIndex + 1] : null;
 
   return (
-    <>
-      <div className="stage-summary">
-        <div className="stage-summary__icon" aria-hidden="true" />
-        <div>
-          <h2>Group Stage</h2>
-          <p>{groupFixtureCount} games &bull; {safeGroupStandings.length} groups</p>
+    <div
+      className={`group-stage-shell ${hasMultipleSections ? 'is-swipeable' : ''}`}
+      onTouchStart={hasMultipleSections ? handleSwipeStart : undefined}
+      onTouchMove={hasMultipleSections ? handleSwipeMove : undefined}
+      onTouchEnd={hasMultipleSections ? handleSwipeEnd : undefined}
+      onTouchCancel={hasMultipleSections ? handleSwipeEnd : undefined}
+    >
+      <SectionTabs
+        sections={sectionSlides}
+        activeIndex={activeTabIndex}
+        onSelect={selectSectionTab}
+      />
+      <div className="group-swipe-region">
+        <div
+          className={`group-swipe-region__track ${isDraggingSection ? 'is-dragging' : ''}`}
+          style={{ '--group-track-offset': `calc(${-activeTabIndex * 100}% + ${dragOffset}px)` }}
+        >
+          {sectionSlides.map((slide) => (
+            <div className="group-swipe-region__slide" key={slide.key}>
+              {slide.content}
+            </div>
+          ))}
         </div>
       </div>
-
-      <div
-        className={`group-stage-shell ${hasMultipleGroups ? 'is-swipeable' : ''}`}
-        onTouchStart={hasMultipleGroups ? handleSwipeStart : undefined}
-        onTouchMove={hasMultipleGroups ? handleSwipeMove : undefined}
-        onTouchEnd={hasMultipleGroups ? handleSwipeEnd : undefined}
-        onTouchCancel={hasMultipleGroups ? handleSwipeEnd : undefined}
-      >
-        {hasMultipleGroups ? (
-          <GroupTabs
-            groups={safeGroupStandings}
-            overallTeamCount={overallStandings.length}
-            activeIndex={activeTabIndex}
-            onSelect={selectGroupTab}
-          />
-        ) : null}
-
-        <div className="group-swipe-region">
-          <div
-            className={`group-swipe-region__track ${isDraggingGroup ? 'is-dragging' : ''}`}
-            style={{ '--group-track-offset': `calc(${-activeTabIndex * 100}% + ${dragOffset}px)` }}
-          >
-            {groupSlides.map((slide) => (
-              <div className="group-swipe-region__slide" key={slide.key}>
-                {slide.content}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {hasMultipleGroups ? (
-          <GroupStageSideNav
-            previousSlide={previousSlide}
-            nextSlide={nextSlide}
-            isSettling={groupHandlesSettling}
-            onPrevious={() => previousSlide && selectGroupTab(activeTabIndex - 1)}
-            onNext={() => nextSlide && selectGroupTab(activeTabIndex + 1)}
-          />
-        ) : null}
-      </div>
-    </>
+      {hasMultipleSections ? (
+        <GroupStageSideNav
+          previousSlide={previousSlide}
+          nextSlide={nextSlide}
+          isSettling={sectionHandlesSettling}
+          onPrevious={() => previousSlide && selectSectionTab(activeTabIndex - 1)}
+          onNext={() => nextSlide && selectSectionTab(activeTabIndex + 1)}
+        />
+      ) : null}
+    </div>
   );
+};
+
+const buildCompetitionSectionSlides = ({ groupStandings, fixtures, knockoutFixtures }) => {
+  const groupSlides = groupStandings.map((group, index) => ({
+    key: `group-${group.key || group.label || index}`,
+    label: formatGroupTabLabel(group, index),
+    count: group?.rows?.length || group?.teams?.length || 0,
+    subtitle: 'teams',
+    content: (
+      <SingleGroupContent
+        group={group}
+        fixtures={fixtures}
+        showHeader={false}
+      />
+    ),
+  }));
+
+  const knockoutSlides = groupKnockoutFixtures(knockoutFixtures).map(({ key, label, fixtures: sectionFixtures }) => ({
+    key: `knockout-${key}`,
+    label,
+    count: sectionFixtures.length,
+    subtitle: 'games',
+    content: (
+      <div
+        className="group-panel group-panel--knockout"
+      >
+        <GroupFixturesList fixtures={sectionFixtures} />
+      </div>
+    ),
+  }));
+
+  return [...groupSlides, ...knockoutSlides];
 };
 
 const GroupStageSideNav = ({
@@ -467,36 +401,24 @@ const GroupStageSideNav = ({
   </div>
 );
 
-const GroupTabs = ({ groups, overallTeamCount, activeIndex, onSelect }) => {
-  const combinedIndex = groups.length;
+const SectionTabs = ({ sections, activeIndex, onSelect }) => {
   return (
-    <div className="group-tabs" role="tablist" aria-label="Groups">
-      {groups.map((group, index) => {
-        const numTeams = group?.rows?.length || group?.teams?.length || 0;
+    <div className="group-tabs" role="tablist" aria-label="Competition sections">
+      {sections.map((section, index) => {
         return (
           <button
-            key={group.key || group.label || index}
+            key={section.key || index}
             type="button"
             className={`group-tabs__tab ${index === activeIndex ? "is-active" : ""}`}
             onClick={() => onSelect(index, index - activeIndex)}
             role="tab"
             aria-selected={index === activeIndex}
           >
-            <strong>{formatGroupTabLabel(group, index)}</strong>
-            <small>{numTeams} teams</small>
+            <strong>{section.label}</strong>
+            {section.count ? <small>{section.count} {section.subtitle}</small> : null}
           </button>
         );
       })}
-      <button
-        type="button"
-        className={`group-tabs__tab ${activeIndex === combinedIndex ? "is-active" : ""}`}
-        onClick={() => onSelect(combinedIndex, combinedIndex - activeIndex)}
-        role="tab"
-        aria-selected={activeIndex === combinedIndex}
-      >
-        <strong>Combined</strong>
-        <small>{overallTeamCount} teams</small>
-      </button>
     </div>
   );
 };
@@ -535,8 +457,6 @@ const SingleGroupContent = ({ group, fixtures, showHeader = true }) => {
     isComplete = true;
   }
 
-  const matchesToPlay = numTeams > 1 ? numTeams - 1 : 0;
-
   return (
     <div className="group-panel">
       {showHeader ? (
@@ -549,7 +469,6 @@ const SingleGroupContent = ({ group, fixtures, showHeader = true }) => {
       ) : null}
       <StandingsTable
         rows={rows}
-        matchesToPlay={matchesToPlay}
         emptyMessage="No results for this group yet."
       />
       <div className="group-panel__status-row">
@@ -663,94 +582,6 @@ const TeamBadge = ({ team }) => {
 
 
 
-const FixtureSummary = ({ fixture }) => {
-  const stageLabel = formatStageLabel(fixture.stage);
-  return (
-    <article className="fixture">
-      <header>
-        <span className="fixture-label">{fixture.label}</span>
-      </header>
-      <div className="fixture-teams">
-        <span>{fixture.team1}</span>
-        <span>vs</span>
-        <span>{fixture.team2}</span>
-      </div>
-      <div className="fixture-support">
-        <div className="fixture-support__row">
-          <span className="fixture-support__item">{stageLabel || "Knockout"}</span>
-          <span className="fixture-support__item">Pitch {fixture.pitch || "TBD"}</span>
-        </div>
-        {fixture.umpire && (
-          <div className="fixture-support__row fixture-support__row--umpire">
-            <span className="fixture-support__item fixture-support__item--umpire">
-              Umpire {fixture.umpire}
-            </span>
-          </div>
-        )}
-      </div>
-    </article>
-  );
-};
-
-
-const KnockoutList = ({ fixtures = [] }) => {
-  const knockoutFixtures = fixtures.length ? fixtures : [];
-  if (!knockoutFixtures.length) {
-    return (
-      <div className="status-card status-card--message">
-        <h2>Knockouts</h2>
-        <p>No knockout fixtures scheduled yet.</p>
-      </div>
-    );
-  }
-
-  const orderedFixtures = knockoutFixtures.slice().sort((a, b) => {
-    const aTime = a.scheduled ? new Date(a.scheduled).getTime() : Number.POSITIVE_INFINITY;
-    const bTime = b.scheduled ? new Date(b.scheduled).getTime() : Number.POSITIVE_INFINITY;
-    return aTime - bTime;
-  });
-
-  return (
-    <>
-      {orderedFixtures.map((fixture) => (
-        <div className="status-card" key={fixture.matchId}>
-          {fixture.outcome === "played" && fixture.result
-            ? <FixtureResult fixture={fixture} />
-            : <FixtureSummary fixture={fixture} />}
-        </div>
-      ))}
-    </>
-  );
-};
-
-const FixtureResult = ({ fixture }) => {
-  const result = fixture.result || {};
-  const team1 = result.team1 || {};
-  const team2 = result.team2 || {};
-  const stageLabel = formatStageLabel(fixture.stage);
-  return (
-    <article className="fixture fixture--result">
-      <header>
-        <span className="fixture-label">{fixture.label}</span>
-      </header>
-      <div className="fixture-teams">
-        <span>{fixture.team1}</span>
-        <span>{formatScore(team1)}</span>
-      </div>
-      <div className="fixture-teams">
-        <span>{fixture.team2}</span>
-        <span>{formatScore(team2)}</span>
-      </div>
-      <div className="fixture-support">
-        <div className="fixture-support__row">
-          <span className="fixture-support__item">{stageLabel || "Knockout"}</span>
-          <span className="fixture-support__item">Pitch {fixture.pitch || "TBD"}</span>
-        </div>
-      </div>
-    </article>
-  );
-};
-
 const fixtureBelongsToGroup = (fixture, group) => {
   const { key, rows = [] } = group;
   const fixtureGroup = String(fixture.group || "").trim().toLowerCase();
@@ -857,16 +688,6 @@ const formatFixtureId = (matchId) => {
 };
 
 
-const formatScore = ({ goals, points, total }) => {
-  if (typeof total === "number") {
-    return `${goals ?? 0}-${points ?? 0} (${total})`;
-  }
-  if (typeof goals === "number" || typeof points === "number") {
-    return `${goals ?? 0}-${points ?? 0}`;
-  }
-  return "-";
-};
-
 const formatTime = (isoString) => {
   if (!isoString) return "TBD";
   const date = new Date(isoString);
@@ -888,11 +709,105 @@ const formatStageLabel = (stage) => {
   return stage;
 };
 
+const groupKnockoutFixtures = (fixtures = []) => {
+  const grouped = fixtures.reduce((acc, fixture) => {
+    const section = getKnockoutSectionMeta(fixture);
+    if (!acc[section.key]) {
+      acc[section.key] = {
+        ...section,
+        fixtures: [],
+      };
+    }
+    acc[section.key].fixtures.push(fixture);
+    return acc;
+  }, {});
+
+  return Object.values(grouped).sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    return a.label.localeCompare(b.label);
+  });
+};
+
+const getKnockoutSectionMeta = (fixture) => {
+  const bracket = getFixtureBracket(fixture);
+  if (bracket) return bracket;
+
+  return {
+    key: "knockout",
+    label: "Knockout",
+    order: 10,
+  };
+};
+
+const getFixtureBracket = (fixture) => {
+  const rawBracket = String(fixture?.bracket || "").trim();
+  const bracketFromField = getBracketFromText(rawBracket);
+  if (bracketFromField) return bracketFromField;
+
+  return getBracketFromStage(fixture?.stage);
+};
+
+const getBracketFromStage = (stage) => {
+  const rawStage = String(stage || "").trim();
+  const normalized = rawStage.toLowerCase();
+  const firstStagePart = normalized.split(/[_/\-\s]+/)[0];
+  return getBracketFromText(firstStagePart);
+};
+
+const getBracketFromText = (value) => {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (!normalized) return null;
+  const knownSections = [
+    { key: "cup", label: "Cup", order: 0 },
+    { key: "shield", label: "Shield", order: 1 },
+    { key: "sheild", label: "Shield", order: 1, normalizedKey: "shield" },
+    { key: "shd", label: "Shield", order: 1, normalizedKey: "shield" },
+    { key: "sld", label: "Shield", order: 1, normalizedKey: "shield" },
+    { key: "plate", label: "Plate", order: 2 },
+    { key: "plt", label: "Plate", order: 2, normalizedKey: "plate" },
+  ];
+
+  const knownSection = knownSections.find((section) => (
+    normalized === section.key ||
+    normalized.startsWith(`${section.key}_`) ||
+    normalized.startsWith(`${section.key}-`) ||
+    normalized.startsWith(`${section.key}/`) ||
+    normalized.startsWith(`${section.key} `)
+  ));
+  if (knownSection) {
+    return {
+      key: knownSection.normalizedKey || knownSection.key,
+      label: knownSection.label,
+      order: knownSection.order,
+    };
+  }
+
+  if (/^(sf|qf|fin|final|finals|semi|semis|playoff|p\/o|\d+\/\d+)/i.test(normalized)) {
+    return null;
+  }
+
+  const fallbackLabel = String(value || "").trim();
+  if (!fallbackLabel) return null;
+
+  return {
+    key: fallbackLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "knockout",
+    label: toTitleLabel(fallbackLabel),
+    order: 10,
+  };
+};
+
 const isKnockoutStage = (stage) => {
   if (!stage) return false;
   const normalized = String(stage).toLowerCase();
-  return /knock|semi|quarter|final|cup|playoff|shield|plate/.test(normalized) ||
+  return /knock|semi|quarter|final|cup|playoff|p\/o|shield|plate/.test(normalized) ||
     /^(sf|qf|fin|3\/4|5\/6|7\/8|9\/10)/i.test(String(stage).trim());
+};
+
+const toTitleLabel = (value) => {
+  return String(value || "")
+    .trim()
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
 const normalizeCategories = (rawCategories) => {
@@ -1059,6 +974,13 @@ const normalizeFixturesCollection = (fixtures) => {
           normalized.group = context.replace(/^Group\s?/i, '');
        }
     }
+
+    if (!normalized.bracket && context) {
+      const contextBracket = getBracketFromText(context);
+      if (contextBracket) {
+        normalized.bracket = contextBracket.key;
+      }
+    }
     
     list.push(normalized);
     const contextIsKnockout = typeof context === "string" && /knock|semi|quarter|final|cup|plate|shield/i.test(context);
@@ -1111,7 +1033,8 @@ const normalizeFixture = (fixture) => {
   const team2Data = fixture.team2 || {};
 
   const label = fixture.label || fixture.matchLabel || String(fixture.matchId || "");
-  const stage = fixture.stage || planned.stage || fixture.bracket || actual.stage || "";
+  const rawBracket = fixture.bracket || planned.bracket || actual.bracket || "";
+  const stage = fixture.stage || planned.stage || actual.stage || rawBracket || "";
   
   const group = fixture.groupNumber ?? fixture.group ?? fixture.pool ?? planned.pool ?? null;
 
@@ -1130,6 +1053,7 @@ const normalizeFixture = (fixture) => {
     matchId: fixture.matchId || fixture.id || label,
     label,
     stage,
+    bracket: rawBracket || getBracketFromText(stage)?.key || "",
     group,
     team1: team1Data.name || planned.team1 || fixture.team1 || "",
     team2: team2Data.name || planned.team2 || fixture.team2 || "",

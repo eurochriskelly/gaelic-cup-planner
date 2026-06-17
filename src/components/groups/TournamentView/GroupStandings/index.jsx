@@ -70,7 +70,7 @@ const GroupStandings = ({ group, standings }) => {
                               <th>D</th>
                               <th>L</th>
                               <th>PF</th>
-                              <th>PD</th>
+                              <th>+/-</th>
                               <th>Pts</th>
                             </tr>
                           </>
@@ -85,12 +85,7 @@ const GroupStandings = ({ group, standings }) => {
                           >
                             {team.team}
                           </td>
-                          <td>
-                            <span>{MatchesPlayed}</span>
-                            <span className="lessRelevant">
-                              /{MatchesPlanned}
-                            </span>
-                          </td>
+                          <td>{MatchesPlayed}</td>
                           <td>{mp ? Wins : <NoData />}</td>
                           <td>{mp ? Draws : <NoData />}</td>
                           <td>{mp ? Losses : <NoData />}</td>

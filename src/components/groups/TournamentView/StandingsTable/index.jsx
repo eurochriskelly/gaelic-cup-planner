@@ -30,7 +30,6 @@ const TeamBadge = ({ team }) => {
 
 const StandingsTable = ({
   rows = [],
-  matchesToPlay,
   emptyMessage = "No results yet.",
 }) => {
   if (!rows?.length) {
@@ -47,7 +46,7 @@ const StandingsTable = ({
           <th className="is-center">W</th>
           <th className="is-center">D</th>
           <th className="is-center">L</th>
-          <th className="is-center">Diff</th>
+          <th className="is-center">+/-</th>
           <th className="is-center">Pts</th>
         </tr>
       </thead>
@@ -68,11 +67,7 @@ const StandingsTable = ({
                 <TeamBadge team={team} />
                 <span>{team}</span>
               </td>
-              <td className="is-center">
-                {typeof matchesToPlay === "number"
-                  ? `${valueOrDash(played)}/${matchesToPlay}`
-                  : valueOrDash(played)}
-              </td>
+              <td className="is-center">{valueOrDash(played)}</td>
               <td className="is-center">{valueOrDash(won)}</td>
               <td className="is-center">{valueOrDash(drawn)}</td>
               <td className="is-center">{valueOrDash(lost)}</td>
