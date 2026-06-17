@@ -17,6 +17,7 @@ import './LandingPage.scss';
 
 const SCHEDULE_TIP_COOKIE = 'ppHomeScheduleTipDismissed';
 const COOKIE_OPTIONS = { path: "/" };
+const HOME_SECTIONS = ['Preferences', 'Tournament'];
 
 const LandingPage = () => {
   const { tournamentId } = useParams();
@@ -39,11 +40,15 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const nameInputRef = useRef(null);
   const coordinatorCodeRefs = useRef([]);
+  const homeSwipeStartRef = useRef(null);
 
   const persistedFilters = filterSelections && typeof filterSelections === "object"
     ? filterSelections
     : {};
 
+  const [activeHomeSection, setActiveHomeSection] = useState(0);
+  const [homeDragOffset, setHomeDragOffset] = useState(0);
+  const [isDraggingHomeSection, setIsDraggingHomeSection] = useState(false);
   const [nameInput, setNameInput] = useState(() => userName || "");
   const [showNamePrompt, setShowNamePrompt] = useState(() => !userName);
   const [tournamentDraft, setTournamentDraft] = useState(() => buildTournamentDraft(tournInfo));
@@ -378,6 +383,58 @@ const LandingPage = () => {
     }
   };
 
+  const selectHomeSection = (index) => {
+    setActiveHomeSection(Math.max(0, Math.min(HOME_SECTIONS.length - 1, index)));
+  };
+
+  const handleHomeSwipeStart = (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) return;
+    homeSwipeStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+    setIsDraggingHomeSection(true);
+    setHomeDragOffset(0);
+  };
+
+  const handleHomeSwipeMove = (event) => {
+    const start = homeSwipeStartRef.current;
+    const touch = event.touches?.[0];
+    if (!start || !touch) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const isHorizontalDrag = Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25;
+    if (!isHorizontalDrag) return;
+
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
+    const atFirstSection = activeHomeSection === 0 && deltaX > 0;
+    const atLastSection = activeHomeSection === HOME_SECTIONS.length - 1 && deltaX < 0;
+    const resistance = atFirstSection || atLastSection ? 0.28 : 1;
+    const constrainedOffset = Math.max(-150, Math.min(150, deltaX * resistance));
+    setHomeDragOffset(constrainedOffset);
+  };
+
+  const handleHomeSwipeEnd = (event) => {
+    const start = homeSwipeStartRef.current;
+    const touch = event.changedTouches?.[0];
+    homeSwipeStartRef.current = null;
+    setIsDraggingHomeSection(false);
+    setHomeDragOffset(0);
+
+    if (!start || !touch) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.4) return;
+
+    selectHomeSection(activeHomeSection + (deltaX < 0 ? 1 : -1));
+  };
+
   return (
     <main className="mobile LandingPage">
       {showNamePrompt && (
@@ -530,102 +587,131 @@ const LandingPage = () => {
           title={t('landingPage_heading', 'Pitch Perfect')}
           meta={versionInfo?.mobile ? `v${versionInfo.mobile}` : ''}
           onExit={handle.disconnect}
-          onUserClick={handle.resetUser}
-          userName={userName}
+          hideBodyAction
         />
-        <header className={`tournament-summary${isOrganizer ? ' editable' : ''}`}>
-          <table>
-            <tbody>
-              <Row label="date">{tournamentBase.date}</Row>
-              <Row label="title">{tournamentBase.title}</Row>
-              <Row label="location">{tournamentBase.location}</Row>
-            </tbody>
-          </table>
-          {isOrganizer && (
-            <button
-              type="button"
-              className="tournament-edit"
-              onClick={handleOpenTournamentSettings}
-              aria-label="Edit tournament settings"
+        <HomeSectionTabs
+          sections={HOME_SECTIONS}
+          activeIndex={activeHomeSection}
+          onSelect={selectHomeSection}
+        />
+        <div
+          className="home-section-shell"
+          onTouchStart={handleHomeSwipeStart}
+          onTouchMove={handleHomeSwipeMove}
+          onTouchEnd={handleHomeSwipeEnd}
+          onTouchCancel={handleHomeSwipeEnd}
+        >
+          <div
+            className={`home-section-track${isDraggingHomeSection ? ' is-dragging' : ''}`}
+            style={{ '--home-track-offset': `calc(${-activeHomeSection * 100}% + ${homeDragOffset}px)` }}
+          >
+            <section
+              className="home-section-panel home-section-panel--preferences"
+              aria-label="Preferences"
+              aria-hidden={activeHomeSection !== 0}
             >
-              <i className="pi pi-pencil" aria-hidden="true" />
-            </button>
-          )}
-        </header>
-        {isOrganizer && (
-          <section className="home-info-card coordinator-code-summary">
-            <h2>Coordinator code</h2>
-            <div className="code-display" aria-label="Coordinator code">
-              {toCodeChars(tournamentBase.codeCoordinator).map((char, index) => (
-                <span key={index}>{char || '-'}</span>
-              ))}
-            </div>
-          </section>
-        )}
-        <section className="home-info-card point-allocation-summary">
-          <h2>Point allocations</h2>
-          <div className="point-summary-grid">
-            <div>
-              <strong>{tournamentBase.winPoints}</strong>
-              <span>Win</span>
-            </div>
-            <div>
-              <strong>{tournamentBase.drawPoints}</strong>
-              <span>Draw</span>
-            </div>
-            <div>
-              <strong>{tournamentBase.lossPoints}</strong>
-              <span>Loss</span>
-            </div>
-          </div>
-        </section>
-        <section className="icon-grid">
-          { false && // This is a placeholder for the actual condition
-            <div>
-              <h2 className="role-selection-heading">Choose your role:</h2>
-              <div className="role-selection">
-                {['CCO', 'Coordinator', 'Referee', 'Coach'].map((role) => (
-                <div key={role} className="role-card" onClick={() => console.log(`Selected role: ${role}`)}>
-                  <span className="role-name">{role}</span>
+              <div className="home-panel-stack">
+                <section className="home-info-card username-preference">
+                  <div>
+                    <h2>Username</h2>
+                    <p>{userName || 'Set name'}</p>
+                  </div>
+                  <button type="button" onClick={handle.resetUser} aria-label="Change username">
+                    <i className="pi pi-pencil" aria-hidden="true" />
+                  </button>
+                </section>
+
+                {canResetTournament && (
+                  <div className="main-actions">
+                    <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
+                      <ResetIcon className="icon" />
+                      <span className="label">Reset Tournament</span>
+                    </button>
+                  </div>
+                )}
+
+                <section className="home-info-card tips-preferences">
+                  <div>
+                    <h2>Tips</h2>
+                    <p>Show schedule guidance banners</p>
+                  </div>
+                  <label className="tips-toggle">
+                    <input
+                      type="checkbox"
+                      checked={fixtureTipsEnabled}
+                      onChange={handleFixtureTipsToggle}
+                    />
+                    <span aria-hidden="true" />
+                  </label>
+                </section>
+
+                <div className="filter-schedule">
+                  <FilterWidget
+                    pitches={pitches}
+                    isLoading={isLoadingPitches}
+                    error={pitchesError}
+                    initialSelection={existingPitchSelection}
+                    onSelectionChange={handlePitchSelectionChange}
+                  />
                 </div>
-              ))}
-            </div>
+              </div>
+            </section>
+            <section
+              className="home-section-panel home-section-panel--tournament"
+              aria-label="Tournament"
+              aria-hidden={activeHomeSection !== 1}
+            >
+              <div className="home-panel-stack">
+                <header className={`tournament-summary${isOrganizer ? ' editable' : ''}`}>
+                  <table>
+                    <tbody>
+                      <Row label="date">{tournamentBase.date}</Row>
+                      <Row label="title">{tournamentBase.title}</Row>
+                      <Row label="location">{tournamentBase.location}</Row>
+                    </tbody>
+                  </table>
+                  {isOrganizer && (
+                    <button
+                      type="button"
+                      className="tournament-edit"
+                      onClick={handleOpenTournamentSettings}
+                      aria-label="Edit tournament settings"
+                    >
+                      <i className="pi pi-pencil" aria-hidden="true" />
+                    </button>
+                  )}
+                </header>
+                {isOrganizer && (
+                  <section className="home-info-card coordinator-code-summary">
+                    <h2>Coordinator code</h2>
+                    <div className="code-display" aria-label="Coordinator code">
+                      {toCodeChars(tournamentBase.codeCoordinator).map((char, index) => (
+                        <span key={index}>{char || '-'}</span>
+                      ))}
+                    </div>
+                  </section>
+                )}
+                <section className="home-info-card point-allocation-summary">
+                  <h2>Point allocations</h2>
+                  <div className="point-summary-grid">
+                    <div>
+                      <strong>{tournamentBase.winPoints}</strong>
+                      <span>Win</span>
+                    </div>
+                    <div>
+                      <strong>{tournamentBase.drawPoints}</strong>
+                      <span>Draw</span>
+                    </div>
+                    <div>
+                      <strong>{tournamentBase.lossPoints}</strong>
+                      <span>Loss</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
           </div>
-        }
-        {canResetTournament && (
-          <div className="main-actions">
-            <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
-              <ResetIcon className="icon" />
-              <span className="label">Reset Tournament</span>
-            </button>
-          </div>
-        )}
-
-        <section className="home-info-card tips-preferences">
-          <div>
-            <h2>Tips</h2>
-            <p>Show schedule guidance banners</p>
-          </div>
-          <label className="tips-toggle">
-            <input
-              type="checkbox"
-              checked={fixtureTipsEnabled}
-              onChange={handleFixtureTipsToggle}
-            />
-            <span aria-hidden="true" />
-          </label>
-        </section>
-
-          <div className="filter-schedule">
-            <FilterWidget
-              pitches={pitches}
-              isLoading={isLoadingPitches}
-              error={pitchesError}
-              initialSelection={existingPitchSelection}
-              onSelectionChange={handlePitchSelectionChange}
-            />
-          </div>
-        </section>
+        </div>
         {canShowScheduleTip && (
           <div className={`schedule-tutorial-tip${isScheduleTipFading ? ' is-fading' : ''}`} role="status">
             Tap on schedule to update fixtures
@@ -636,6 +722,25 @@ const LandingPage = () => {
     </main>
   );
 };
+
+function HomeSectionTabs({ sections, activeIndex, onSelect }) {
+  return (
+    <div className="home-section-tabs" role="tablist" aria-label="Home sections">
+      {sections.map((section, index) => (
+        <button
+          key={section}
+          type="button"
+          className={`home-section-tabs__tab ${index === activeIndex ? 'is-active' : ''}`}
+          onClick={() => onSelect(index)}
+          role="tab"
+          aria-selected={index === activeIndex}
+        >
+          <strong>{section}</strong>
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function Row({ label, children }) {
   return (

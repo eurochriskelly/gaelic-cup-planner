@@ -11,6 +11,7 @@ const AuthenticatedBanner = ({
   userName,
   className = '',
   hideBody = false,
+  hideBodyAction = false,
 }) => {
   const classes = [
     'AuthenticatedBanner',
@@ -56,7 +57,7 @@ const AuthenticatedBanner = ({
             <h1 className="AuthenticatedBanner__title">{title}</h1>
             {meta && <p className="AuthenticatedBanner__meta">{meta}</p>}
           </div>
-          {onUserClick ? (
+          {!hideBodyAction && onUserClick ? (
             <button
               type="button"
               className="AuthenticatedBanner__user"
@@ -67,7 +68,7 @@ const AuthenticatedBanner = ({
               <span>{userName || 'Set name'}</span>
               <i className="pi pi-pencil" aria-hidden="true" />
             </button>
-          ) : onNext ? (
+          ) : !hideBodyAction && onNext ? (
             <button
               type="button"
               className="AuthenticatedBanner__chevrons AuthenticatedBanner__chevrons--button"
@@ -77,12 +78,12 @@ const AuthenticatedBanner = ({
               <span />
               <span />
             </button>
-          ) : (
+          ) : !hideBodyAction ? (
             <div className="AuthenticatedBanner__chevrons" aria-hidden="true">
               <span />
               <span />
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </header>

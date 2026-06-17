@@ -36,6 +36,77 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     width: 100%;
   }
 
+  .home-section-tabs {
+    background: #f1f5ea;
+    border-bottom: 1px solid rgba(121, 128, 111, 0.28);
+    border-top: 1px solid rgba(121, 128, 111, 0.28);
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .home-section-tabs__tab {
+    background: #eef3e6;
+    border: 0;
+    border-right: 1px solid #c9d0bf;
+    color: #485047;
+    cursor: pointer;
+    flex: 1 0 50%;
+    min-height: 5.55rem;
+    min-width: 15rem;
+    padding: 1.15rem 0.8rem 1rem;
+    text-align: center;
+
+    strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    &.is-active {
+      background: #7f9d55;
+      color: white;
+    }
+  }
+
+  .home-section-shell {
+    min-width: 0;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .home-section-track {
+    display: flex;
+    transform: translate3d(var(--home-track-offset, 0), 0, 0);
+    transition: transform 0.24s ease-out;
+    will-change: transform;
+
+    &.is-dragging {
+      transition: none;
+    }
+  }
+
+  .home-section-panel {
+    box-sizing: border-box;
+    flex: 0 0 100%;
+    min-width: 0;
+    padding: 2.4rem 2.4rem 3rem;
+  }
+
+  .home-panel-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+  }
+
   .schedule-tutorial-tip {
     position: fixed;
     left: 50%;
@@ -79,7 +150,6 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
   .tournament-summary {
     position: relative;
     display: block;
-    margin-bottom: 0;
     font-size:1.6rem;
     text-transform: uppercase;
     background: rgba(255,255,255,0.4);
@@ -246,6 +316,34 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
       line-height: 1.2;
       text-align: left;
       text-transform: uppercase;
+    }
+  }
+
+  .username-preference {
+    p {
+      margin: 0.35rem 0 0;
+      color: #111;
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    button {
+      display: grid;
+      place-items: center;
+      width: 4.6rem;
+      height: 4.6rem;
+      border: 0;
+      border-radius: 0.8rem;
+      background: rgba(255, 255, 255, 0.86);
+      color: #111;
+      cursor: pointer;
+      box-shadow: 0 0.25rem 0.65rem rgba(0, 0, 0, 0.16);
+
+      i {
+        font-size: 2.2rem;
+      }
     }
   }
 
@@ -556,95 +654,63 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     padding: 1rem 0 3rem;
     flex-grow: 1;
 
-    .main-actions {
-      display: flex;
-      margin: 0 1rem;
-      background: transparent;
-      border-radius: 2rem;
-      padding: 1.2rem;
-
-      .icon-button {
-        min-height: 11rem;
-        min-width: 14rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.2rem;
-        border: none;
-        border-radius: 2rem;
-        padding: 1.8rem 1.4rem;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        color: $pc-dark-30;
-        background: rgba(255, 255, 255, 0.85);
-        box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.12);
-
-        .icon {
-          width: 5.4rem;
-          height: 5.4rem;
-          flex-shrink: 0;
-        }
-
-        svg path {
-          fill: currentColor;
-        }
-
-        .label {
-          @include label-style;
-          color: inherit;
-          font-size: 1.8rem;
-        }
-
-        &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 2rem 3.2rem rgba(0, 0, 0, 0.25);
-        }
-
-        .edit-icon {
-          font-size: 4.2rem;
-          flex: 0 0 auto;
-        }
-
-        .user-info {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 2rem;
-          min-width: 0;
-          width: 100%;
-        }
-
-        .user-name-label {
-          font-weight: 700;
-          font-size: 2rem;
-          text-transform: capitalize;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .user-role-label {
-          font-size: 2.6rem;
-          font-weight: 500;
-          text-transform: uppercase;
-          color: rgba(0, 0, 0, 0.78);
-          letter-spacing: 0.02em;
-          white-space: nowrap;
-        }
-      }
-
-      .icon-button.reset-tournament {
-        width: 100%;
-        min-height: 8.4rem;
-        background: rgba(255, 255, 255, 0.9);
-      }
-    }
-
     .filter-schedule {
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
     }
+  }
+
+  .main-actions {
+    display: flex;
+    background: transparent;
+    border-radius: 2rem;
+    padding: 0;
+
+    .icon-button {
+      min-height: 8.4rem;
+      min-width: 14rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      width: 100%;
+      border: none;
+      border-radius: 2rem;
+      padding: 1.8rem 1.4rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      color: $pc-dark-30;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.12);
+
+      .icon {
+        width: 5.4rem;
+        height: 5.4rem;
+        flex-shrink: 0;
+      }
+
+      svg path {
+        fill: currentColor;
+      }
+
+      .label {
+        @include label-style;
+        color: inherit;
+        font-size: 1.8rem;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 2rem 3.2rem rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+
+  .filter-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
   }
 
   .tips-preferences {
