@@ -3,6 +3,10 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../../shared/js/Provider";
+import {
+  areFixtureTipsEnabled,
+  setFixtureTipsEnabled,
+} from "../../../../shared/js/tipPreferences";
 import { useFetchTournament, useFetchPitches, useFetchTournamentFixtures } from './LandingPage.hooks';
 import AuthenticatedBanner from '../../../../shared/generic/AuthenticatedBanner';
 import NavFooter from '../../../../shared/generic/NavFooter';
@@ -49,6 +53,7 @@ const LandingPage = () => {
   const [showTournamentSettings, setShowTournamentSettings] = useState(false);
   const [showScheduleTip, setShowScheduleTip] = useState(false);
   const [isScheduleTipFading, setIsScheduleTipFading] = useState(false);
+  const [fixtureTipsEnabled, setFixtureTipsEnabledState] = useState(() => areFixtureTipsEnabled());
   const scheduleTipCookie = useMemo(
     () => buildScheduleTipCookieName(tournamentId, userRole, userName),
     [tournamentId, userRole, userName],
@@ -197,6 +202,12 @@ const LandingPage = () => {
     console.log('[LandingPage] cookie after update (async)', {
       after: Cookies.get('ppFilterSelections'),
     });
+  };
+
+  const handleFixtureTipsToggle = (event) => {
+    const enabled = event.target.checked;
+    setFixtureTipsEnabled(enabled);
+    setFixtureTipsEnabledState(enabled);
   };
 
   const handle = {
@@ -589,6 +600,21 @@ const LandingPage = () => {
             </button>
           </div>
         )}
+
+        <section className="home-info-card tips-preferences">
+          <div>
+            <h2>Tips</h2>
+            <p>Show schedule guidance banners</p>
+          </div>
+          <label className="tips-toggle">
+            <input
+              type="checkbox"
+              checked={fixtureTipsEnabled}
+              onChange={handleFixtureTipsToggle}
+            />
+            <span aria-hidden="true" />
+          </label>
+        </section>
 
           <div className="filter-schedule">
             <FilterWidget
