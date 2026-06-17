@@ -4,13 +4,13 @@
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  font-size: 2rem;
+  font-size: 2.4rem;
   table-layout: fixed;
 
   th,
   td {
     border-bottom: 1px solid #d8ded2;
-    padding: 1.4rem 0.7rem;
+    padding: 1.68rem 0.84rem;
     text-align: left;
     vertical-align: middle;
   }
@@ -18,11 +18,11 @@
   th {
     background: #eef1ec;
     color: #60718a;
-    font-size: 1.6rem;
+    font-size: 1.92rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding-bottom: 1.2rem;
+    padding-top: 1.2rem;
     text-transform: uppercase;
   }
 
@@ -42,15 +42,13 @@
 
   .is-pos {
     color: #36475b;
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    width: 3rem;
+    width: 3.6rem;
   }
 
   .is-diff {
     color: #009b68;
-    font-size: 1.7rem;
-    font-weight: 900;
     white-space: nowrap;
   }
 
@@ -82,13 +80,13 @@
     border: 2px solid #3d4652;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.25);
     display: inline-flex;
-    flex: 0 0 5rem;
-    font-size: 1.5rem;
+    flex: 0 0 6rem;
+    font-size: 1.8rem;
     font-weight: 900;
-    height: 5rem;
+    height: 6rem;
     justify-content: center;
     line-height: 1;
-    width: 5rem;
+    width: 6rem;
   }
 
   tr:last-child td {
@@ -108,6 +106,6 @@
 
   th:nth-child(n + 3),
   td:nth-child(n + 3) {
-    width: 4.5rem;
+    width: 5.4rem;
   }
 }

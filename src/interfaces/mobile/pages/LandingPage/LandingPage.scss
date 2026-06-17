@@ -107,6 +107,24 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     gap: 2.4rem;
   }
 
+  .home-panel-stack > .home-info-card,
+  .home-panel-stack > .main-actions,
+  .home-panel-stack > .filter-schedule,
+  .home-panel-stack > .tournament-summary {
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
+  }
+
+  .home-panel-stack > .filter-schedule {
+    padding: 0;
+
+    .FilterWidget {
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+
   .schedule-tutorial-tip {
     position: fixed;
     left: 50%;
@@ -299,7 +317,6 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 1.2rem;
-    margin: 0 2.4rem;
     padding: 1rem 1.4rem;
     border-radius: 1rem;
     background: rgba(255, 255, 255, 0.4);
@@ -718,7 +735,6 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
     align-items: center;
     justify-content: space-between;
     gap: 1.6rem;
-    margin: 0 1rem;
 
     h2 {
       margin: 0 0 0.3rem;
