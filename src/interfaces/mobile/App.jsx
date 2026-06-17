@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import PitchView from "../../components/pitch/PitchView";
 import PinLogin from "../../shared/generic/PinLogin";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { UpdatePrompt } from "./components/UpdatePrompt";
 import { useInactivityTimeout } from "../../shared/hooks/useInactivityTimeout";
 import { choosePreferredPitch } from "../../shared/js/pitchSelection";
 
@@ -82,6 +83,7 @@ function App() {
     <Provider>
       <AppContent />
       <InstallPrompt />
+      <UpdatePrompt />
     </Provider>
   );
 }

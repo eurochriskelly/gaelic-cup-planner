@@ -1,0 +1,55 @@
+.update-prompt {
+  position: fixed;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: calc(100vw - 1.7rem);
+  padding: 0.55rem 0.6rem 0.55rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(68, 83, 50, 0.96);
+  color: #fff;
+  box-shadow: 0 0.65rem 1.5rem rgba(0, 0, 0, 0.24);
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.update-prompt__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.update-prompt__button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #445332;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.45rem 0.75rem;
+}
+
+.update-prompt__button:active {
+  transform: translateY(1px);
+}
+
+body.install-prompt-visible .update-prompt {
+  bottom: 6rem;
+}
+
+@supports (bottom: env(safe-area-inset-bottom)) {
+  .update-prompt {
+    bottom: calc(0.85rem + env(safe-area-inset-bottom));
+  }
+
+  body.install-prompt-visible .update-prompt {
+    bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+}

@@ -16,7 +16,7 @@ export default defineConfig({
     react(),
     svgr(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['favicon.ico', 'pp-whistle.png'],
       workbox: {
