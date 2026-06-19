@@ -13,6 +13,7 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
   background-image: linear-gradient($landing-grid-lines-major 4.2px, transparent 4.2px), linear-gradient(90deg, $landing-grid-lines-major 4.2px, transparent 4.2px), linear-gradient($landing-grid-lines-minor 2.1px, transparent 2.1px), linear-gradient(90deg, $landing-grid-lines-minor 2.1px, $landing-grid-fill 2.1px);
   background-size: 105px 105px, 105px 105px, 21px 21px, 21px 21px;
   background-position: -4.2px -4.2px, -4.2px -4.2px, -2.1px -2.1px, -2.1px -2.1px;
+  display: grid;
   height: calc(var(--vh, 1vh) * 100);
   overflow: hidden;
   scrollbar-width: none; /* Firefox: hide scrollbar */
@@ -30,9 +31,11 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
   }
 
   .LandingPage__content {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    height: 100%;
     min-height: 0;
-    overflow-y: auto;
-    padding-bottom: 11.5rem;
+    overflow: hidden;
     width: 100%;
   }
 
@@ -79,6 +82,7 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
 
   .home-section-shell {
     --home-nav-handle-size: 10.6rem;
+    min-height: 0;
     min-width: 0;
     overflow: hidden;
     position: relative;
@@ -87,6 +91,7 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
 
   .home-section-track {
     display: flex;
+    height: 100%;
     transform: translate3d(var(--home-track-offset, 0), 0, 0);
     transition: transform 0.24s ease-out;
     will-change: transform;
@@ -99,8 +104,17 @@ $landing-grid-fill: rgba(255, 255, 255, 0.035);
   .home-section-panel {
     box-sizing: border-box;
     flex: 0 0 100%;
+    height: 100%;
     min-width: 0;
-    padding: 2.4rem 2.4rem 3rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2.4rem 2.4rem 14.5rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .home-panel-stack {

@@ -37,6 +37,7 @@ const KanbanCard = ({
   actionRail = null,
   hideInactiveActionRail = false,
   hideActionRail = false,
+  forceRevealActions = false,
 }) => {
   const [teamReadinessDialog, setTeamReadinessDialog] = useState(null)
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
@@ -129,6 +130,7 @@ const KanbanCard = ({
   const isInlineSwapTarget = inlineMoveSwapFixtureId === fixture.id
   const hasInlineActionRail = Boolean(actionRail)
   const reserveActionRail = !hideActionRail && (hasInlineActionRail || isInlineMoveCard)
+  const areFixtureActionsVisible = isSelected || forceRevealActions
   const laneClass = fixture?.lane?.current || 'unknown'
   const showInactiveLockedRail = laneClass === 'planned' || laneClass === 'finished'
   const inactiveRailIconsByLane = {
@@ -214,7 +216,7 @@ const KanbanCard = ({
 
   const renderTeamReadinessButton = (teamKey, teamName) => {
     if (hideActionRail) return null
-    if (!isSelected) return null
+    if (!areFixtureActionsVisible) return null
 
     const ready = getTeamReadiness(teamKey, teamName)
 
@@ -262,7 +264,7 @@ const KanbanCard = ({
 
   const getTeamRowClassName = (baseClassName, teamKey, teamName) => {
     const ready = getTeamReadiness(teamKey, teamName)
-    return `${baseClassName}${!hideActionRail && isSelected && ready !== undefined ? ' has-readiness' : ''}`
+    return `${baseClassName}${!hideActionRail && areFixtureActionsVisible && ready !== undefined ? ' has-readiness' : ''}`
   }
 
   const closeTeamReadinessDialog = () => {
