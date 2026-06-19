@@ -1,5 +1,14 @@
 @import "src/shared/css/_colors.scss";
 
+.tournament-status-screen {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
 .status-content {
   --status-green: #7e9a56;
   --status-green-dark: #556c32;
@@ -11,8 +20,8 @@
   color: var(--status-text);
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  padding-bottom: 7.2rem;
+  min-height: 0;
+  overflow: hidden;
   width: 100%;
 
   h1,
@@ -40,6 +49,7 @@
 .status-card {
   background: #f2f2f2;
   border: 1px solid var(--status-border);
+  flex: 0 0 auto;
   padding: 1rem;
 
   &--message,
@@ -74,6 +84,8 @@
   grid-template-columns: minmax(0, 1fr);
   min-height: 7.8rem;
   padding: 0.8rem 0.8rem 0.75rem;
+  position: relative;
+  z-index: 5;
 
   &.is-carousel {
     grid-template-columns: 4.15rem minmax(0, 1fr) 4.15rem;
@@ -367,7 +379,7 @@
   flex: 1 1 auto;
   grid-template-columns: var(--group-side-gutter) minmax(0, 1fr) var(--group-side-gutter);
   grid-template-rows: auto minmax(0, 1fr);
-  min-height: calc((var(--vh, 1vh) * 100) - 23rem);
+  min-height: 0;
   overflow: hidden;
   position: relative;
 
@@ -380,6 +392,7 @@
 .group-swipe-region {
   grid-column: 2 / 3;
   grid-row: 2;
+  min-height: 0;
   min-width: 0;
   overflow: hidden;
   position: relative;
@@ -389,6 +402,7 @@
 
 .group-swipe-region__track {
   display: flex;
+  height: 100%;
   transform: translate3d(var(--group-track-offset, 0), 0, 0);
   transition: transform 0.24s ease-out;
   will-change: transform;
@@ -401,8 +415,12 @@
 .group-swipe-region__slide {
   box-sizing: border-box;
   flex: 0 0 100%;
+  height: 100%;
   min-width: 0;
-  padding: var(--group-card-spacing) 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--group-card-spacing) 0 calc(var(--group-card-spacing) + 11rem);
+  -webkit-overflow-scrolling: touch;
 }
 
 .group-tabs {

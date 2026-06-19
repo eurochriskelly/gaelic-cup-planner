@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useFixtureContext } from '../FixturesContext';
 import { useAppContext } from '../../../../shared/js/Provider';
 import { choosePreferredPitch, normalizePitchId } from '../../../../shared/js/pitchSelection';
+import { getFixtureStatusCategory } from '../../../../shared/js/statusSelection';
 import { useStartMatch } from '../PitchView.hooks';
 import { useKanbanBoard } from './useKanbanBoard';
 import {
@@ -1109,6 +1110,27 @@ const Kanban = ({
   );
   const soonFixturesForView = plannedFixturesForView.slice(0, 2);
   const visibleSoonFixtures = soonFixturesForView.slice(0, visibleSoonRows);
+  const currentScheduleFixture =
+    selectedFixture ||
+    (largePane === 'planning'
+      ? plannedFixturesForView[0]
+      : largePane === 'finished'
+        ? finishedFixturesForView[0]
+        : startedFixturesForView[0] || queuedFixturesForView[0] || visibleSoonFixtures[0]);
+  const currentScheduleCategory = getFixtureStatusCategory(currentScheduleFixture);
+
+  useEffect(() => {
+    if (!currentScheduleCategory) return;
+    if (filterSelections?.status?.scheduleCategory === currentScheduleCategory) return;
+
+    updateFilterSelections({
+      ...filterSelections,
+      status: {
+        ...(filterSelections?.status || {}),
+        scheduleCategory: currentScheduleCategory,
+      },
+    });
+  }, [currentScheduleCategory, filterSelections, updateFilterSelections]);
 
   useEffect(() => {
     if (isInlineMoveActive) {

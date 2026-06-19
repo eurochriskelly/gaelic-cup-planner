@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../shared/js/Provider";
+import { getLastStatusCategory } from "../../../shared/js/statusSelection";
 import MobileLayout from "../../../shared/generic/MobileLayout";
 import StandingsTable from "./StandingsTable";
 import { getTeamAbbr, getTeamColors } from "./teamVisuals";
@@ -11,7 +12,7 @@ const POLL_INTERVAL_MS = 20000;
 const TournamentView = () => {
   const navigate = useNavigate();
   const { tournamentId, category } = useParams();
-  const { sections } = useAppContext();
+  const { sections, filterSelections, updateFilterSelections } = useAppContext();
 
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,33 @@ const TournamentView = () => {
     if (!categories.length || !categoryReport) return -1;
     return categories.findIndex((item) => item === categoryReport);
   }, [categories, categoryReport]);
+  const lastStatusCategory = getLastStatusCategory(filterSelections);
+
+  useEffect(() => {
+    if (category || !categories.length || !lastStatusCategory) return;
+
+    const remembered = selectCategoryReport(categories, lastStatusCategory);
+    const rememberedKey = remembered.categoryReport?.key || remembered.categoryReport?.label;
+    if (!rememberedKey) return;
+
+    navigate(`/tournament/${tournamentId}/category/${encodeURIComponent(rememberedKey)}`, { replace: true });
+  }, [categories, category, lastStatusCategory, navigate, tournamentId]);
+
+  useEffect(() => {
+    const activeKey = categoryReport?.key || categoryReport?.label;
+    if (!activeKey || isFallbackCategory) return;
+    if (!category && lastStatusCategory) return;
+
+    if (filterSelections?.status?.lastCategory === activeKey) return;
+
+    updateFilterSelections({
+      ...filterSelections,
+      status: {
+        ...(filterSelections?.status || {}),
+        lastCategory: activeKey,
+      },
+    });
+  }, [category, categoryReport, filterSelections, isFallbackCategory, lastStatusCategory, updateFilterSelections]);
 
   const selectCompetition = useCallback((nextIndex) => {
     if (!categories.length) return;
@@ -120,7 +148,7 @@ const TournamentStatusScreen = ({
   onSectionChange,
 }) => {
   return (
-    <>
+    <section className="tournament-status-screen">
       <CompetitionCarousel
         categories={categories}
         activeIndex={activeCategoryIndex}
@@ -137,7 +165,7 @@ const TournamentStatusScreen = ({
         activeSectionIndex={activeSectionIndex}
         onSectionChange={onSectionChange}
       />
-    </>
+    </section>
   );
 };
 

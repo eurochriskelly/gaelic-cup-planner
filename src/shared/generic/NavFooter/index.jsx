@@ -4,6 +4,7 @@ import ScheduleIcon from './../../icons/icon-schedule.svg?react';
 import StatusIcon from './../../icons/icon-status.svg?react';
 import { useFixtureContext } from "./../../../components/pitch/PitchView/FixturesContext";
 import { choosePreferredPitch } from "../../js/pitchSelection";
+import { choosePreferredStatusCategory } from "../../js/statusSelection";
 import { useAppContext } from "../../js/Provider";
 import './NavFooter.scss';
 
@@ -20,8 +21,20 @@ function NavFooter({ currentPath }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = currentPath || window.location.pathname;
+  const isOnPitchView = path.includes('/pitch/');
 
   const getIconClass = (route, match) => `nav-icon icon ${path.includes(route) ? 'active' : ''} ${match.includes(location.pathname) ? ' active': ' inactive'}`;
+  const navigateToStatus = () => {
+    const preferredCategory = choosePreferredStatusCategory({
+      filterSelections,
+      fromSchedule: isOnPitchView,
+    });
+    const categoryPath = preferredCategory
+      ? `/${encodeURIComponent(preferredCategory)}`
+      : '';
+
+    navigate(`/tournament/${tournamentId}/category${categoryPath}`);
+  };
 
   return (
     <footer className="NavFooter h-36">
@@ -47,7 +60,7 @@ function NavFooter({ currentPath }) {
           `/tournament/${tournamentId}/category`,
           `/tournament/${tournamentId}/category/${category?.replace(/ /g, '%20')}`,
         ])}
-        onClick={() => navigate(`/tournament/${tournamentId}/category`)}
+        onClick={navigateToStatus}
       />
     </footer>
   )
