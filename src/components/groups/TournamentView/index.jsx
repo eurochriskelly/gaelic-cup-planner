@@ -55,17 +55,17 @@ const TournamentView = () => {
     return categories.findIndex((item) => item === categoryReport);
   }, [categories, categoryReport]);
 
-  const cycleCompetition = useCallback(() => {
+  const selectCompetition = useCallback((nextIndex) => {
     if (!categories.length) return;
 
-    const currentIndex = activeCategoryIndex >= 0 ? activeCategoryIndex : 0;
-    const nextCategory = categories[(currentIndex + 1) % categories.length];
+    const safeIndex = ((nextIndex % categories.length) + categories.length) % categories.length;
+    const nextCategory = categories[safeIndex];
     const nextKey = nextCategory?.key || nextCategory?.label;
     if (!nextKey) return;
 
     navigate(`/tournament/${tournamentId}/category/${encodeURIComponent(nextKey)}`);
     setActiveSectionIndex(0);
-  }, [activeCategoryIndex, categories, navigate, tournamentId]);
+  }, [categories, navigate, tournamentId]);
 
   const handle = {
     back: () => navigate(`/tournament/${tournamentId}/home`),
@@ -85,17 +85,20 @@ const TournamentView = () => {
           ? `Updated ${formatTime(categoryReport.lastUpdated)}`
           : 'Waiting for first update',
         onBack: handle.back,
-        onNext: categories.length > 1 ? cycleCompetition : undefined,
+        hideBody: true,
       }}
     >
       <span aria-hidden="true" />
-      <StatusContent
+      <TournamentStatusScreen
         loading={loading}
         error={error}
+        categories={categories}
+        activeCategoryIndex={activeCategoryIndex}
         categoryReport={categoryReport}
         requestedCategory={category}
         isFallbackCategory={isFallbackCategory}
         activeSectionIndex={activeSectionIndex}
+        onCategorySelect={selectCompetition}
         onSectionChange={setActiveSectionIndex}
       />
     </MobileLayout>
@@ -103,6 +106,161 @@ const TournamentView = () => {
 };
 
 export default TournamentView;
+
+const TournamentStatusScreen = ({
+  loading,
+  error,
+  categories,
+  activeCategoryIndex,
+  categoryReport,
+  requestedCategory,
+  isFallbackCategory,
+  activeSectionIndex,
+  onCategorySelect,
+  onSectionChange,
+}) => {
+  return (
+    <>
+      <CompetitionCarousel
+        categories={categories}
+        activeIndex={activeCategoryIndex}
+        activeCategory={categoryReport}
+        loading={loading}
+        onSelect={onCategorySelect}
+      />
+      <StatusContent
+        loading={loading}
+        error={error}
+        categoryReport={categoryReport}
+        requestedCategory={requestedCategory}
+        isFallbackCategory={isFallbackCategory}
+        activeSectionIndex={activeSectionIndex}
+        onSectionChange={onSectionChange}
+      />
+    </>
+  );
+};
+
+const CompetitionCarousel = ({
+  categories = [],
+  activeIndex,
+  activeCategory,
+  loading,
+  onSelect,
+}) => {
+  const hasCategories = categories.length > 0;
+  const safeActiveIndex = activeIndex >= 0 ? activeIndex : 0;
+  const activeLabel = activeCategory?.label || categories[safeActiveIndex]?.label || 'Status';
+  const categoryCount = categories.length;
+  const hasCarouselNavigation = categoryCount > 2;
+  const layoutClass =
+    categoryCount <= 1
+      ? 'is-single'
+      : categoryCount === 2
+        ? 'is-pair'
+        : 'is-carousel';
+  const previousIndex = hasCategories
+    ? (safeActiveIndex - 1 + categories.length) % categories.length
+    : -1;
+  const nextIndex = hasCategories
+    ? (safeActiveIndex + 1) % categories.length
+    : -1;
+  const previousCategory = previousIndex >= 0 ? categories[previousIndex] : null;
+  const nextCategory = nextIndex >= 0 ? categories[nextIndex] : null;
+
+  const handleSelect = (index) => {
+    if (!hasCategories || index === safeActiveIndex) return;
+    onSelect(index);
+  };
+
+  return (
+    <nav
+      className={`competition-carousel ${layoutClass} ${loading && !hasCategories ? 'is-loading' : ''}`}
+      aria-label="Competition selector"
+    >
+      {hasCarouselNavigation ? (
+        <button
+          type="button"
+          className="competition-carousel__arrow competition-carousel__arrow--previous"
+          onClick={() => handleSelect(previousIndex)}
+          aria-label={previousCategory ? `Show ${previousCategory.label}` : 'Previous competition'}
+        >
+          <i className="pi pi-angle-left" aria-hidden="true" />
+          <i className="pi pi-angle-left" aria-hidden="true" />
+        </button>
+      ) : null}
+
+      <div className="competition-carousel__rail">
+        {categoryCount <= 1 ? (
+          <div className="competition-carousel__active" aria-current="true">
+            <span className="competition-carousel__label">{activeLabel}</span>
+          </div>
+        ) : categoryCount === 2 ? (
+          categories.map((category, index) => (
+            <button
+              key={category.key || category.label || index}
+              type="button"
+              className={`competition-carousel__choice ${index === safeActiveIndex ? 'is-active' : ''}`}
+              onClick={() => handleSelect(index)}
+              aria-label={`Show ${category.label}`}
+              aria-current={index === safeActiveIndex ? 'true' : undefined}
+            >
+              <span className="competition-carousel__label">{category.label}</span>
+            </button>
+          ))
+        ) : (
+          <>
+            <button
+              type="button"
+              className="competition-carousel__preview competition-carousel__preview--previous"
+              onClick={() => handleSelect(previousIndex)}
+              aria-label={previousCategory ? `Show ${previousCategory.label}` : 'Previous competition'}
+            >
+              {previousCategory ? <span>{previousCategory.label}</span> : null}
+            </button>
+
+            <div className="competition-carousel__active" aria-current="true">
+              <span className="competition-carousel__label">{activeLabel}</span>
+              <div className="competition-carousel__dots" aria-label="Competition pages">
+                {categories.map((category, index) => (
+                  <button
+                    key={category.key || category.label || index}
+                    type="button"
+                    className={`competition-carousel__dot ${index === safeActiveIndex ? 'is-active' : ''}`}
+                    onClick={() => handleSelect(index)}
+                    aria-label={`Show ${category.label}`}
+                    aria-current={index === safeActiveIndex ? 'true' : undefined}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="competition-carousel__preview competition-carousel__preview--next"
+              onClick={() => handleSelect(nextIndex)}
+              aria-label={nextCategory ? `Show ${nextCategory.label}` : 'Next competition'}
+            >
+              {nextCategory ? <span>{nextCategory.label}</span> : null}
+            </button>
+          </>
+        )}
+      </div>
+
+      {hasCarouselNavigation ? (
+        <button
+          type="button"
+          className="competition-carousel__arrow competition-carousel__arrow--next"
+          onClick={() => handleSelect(nextIndex)}
+          aria-label={nextCategory ? `Show ${nextCategory.label}` : 'Next competition'}
+        >
+          <i className="pi pi-angle-right" aria-hidden="true" />
+          <i className="pi pi-angle-right" aria-hidden="true" />
+        </button>
+      ) : null}
+    </nav>
+  );
+};
 
 const StatusContent = ({
   loading,
