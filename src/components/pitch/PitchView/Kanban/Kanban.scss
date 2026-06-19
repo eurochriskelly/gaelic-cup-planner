@@ -1,11 +1,41 @@
 @import "src/shared/css/_colors.scss";
 
 .kanban-view {
+  --kanban-nav-footer-height: 11rem;
+  --kanban-footer-tip-height: 0rem;
+  --kanban-footer-reserved-height: var(--kanban-nav-footer-height);
+
   display: flex;
   flex-direction: column;
   height: 100%; // Ensure it takes up tab content height
   padding: 0;
   box-sizing: border-box;
+
+  &:has(.kanban-footer-tip-slot:not(:empty)) {
+    --kanban-footer-tip-height: 8.8rem;
+    --kanban-footer-reserved-height: calc(var(--kanban-nav-footer-height) + var(--kanban-footer-tip-height));
+  }
+
+  .kanban-footer-tip-slot {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    width: 100%;
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.35rem 1.5rem calc(var(--kanban-nav-footer-height) + 1rem);
+    box-sizing: border-box;
+    background: $pc;
+    box-shadow: 0 -0.45rem 1rem rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+
+    &:empty {
+      display: none;
+    }
+  }
 
   .kanban-filters {
     margin-bottom: 1rem;
@@ -32,39 +62,34 @@
   }
 
   .kanban-board-tip-banner {
-    position: fixed;
-    left: 1.5rem;
-    right: 1.5rem;
-    bottom: 12.5rem;
-    z-index: 9999;
-    width: auto;
-    min-height: 5.46rem;
+    width: 100%;
+    min-height: 5.8rem;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 1.04rem;
-    padding: 0.93rem 1.56rem;
+    padding: 0.9rem 1.45rem;
     box-sizing: border-box;
-    border-top: 0.35rem solid #1db5e8;
-    border-bottom: 0.35rem solid #1db5e8;
-    background: rgba(72, 80, 66, 0.75);
+    border: 0;
+    border-radius: 0.55rem;
+    background: #d97878;
     color: #ffffff;
-    font-size: 1.885rem;
+    font-size: 1.78rem;
     font-weight: 800;
     line-height: 1.15;
     text-align: center;
     text-transform: uppercase;
-    box-shadow: 0 -0.6rem 1.2rem rgba(0, 0, 0, 0.18);
+    box-shadow: none;
     opacity: 1;
+    pointer-events: auto;
     transition: opacity 1.2s ease;
 
     &.is-read-only {
-      background: rgba(200, 68, 68, 0.75);
+      background: #d97878;
     }
 
     &.is-dismiss-message {
-      background: rgba(43, 58, 38, 0.75);
-      border-color: rgba(212, 231, 155, 0.92);
+      background: #6f8845;
       text-transform: none;
     }
 
@@ -84,8 +109,8 @@
 
     &__dismiss,
     &__dismiss-spacer {
-      width: 4.73rem;
-      height: 4.73rem;
+      width: 4rem;
+      height: 4rem;
     }
 
     &__dismiss {
@@ -121,7 +146,7 @@
     height: 100%;
     width: 100%;
     left: 0;
-    padding: 0;
+    padding: 0 0 var(--kanban-footer-reserved-height);
     box-sizing: border-box;
 
     // Pitch selector at the top (row 1)
@@ -625,7 +650,7 @@
       grid-template-columns: var(--large-side-gutter) minmax(0, 1fr) var(--large-side-gutter);
       grid-template-rows: auto minmax(0, 1fr);
       overflow: hidden;
-      padding-bottom: 11rem;
+      padding-bottom: var(--kanban-footer-reserved-height);
       width: 100%;
       max-width: 100%;
       min-width: 0;

@@ -1,7 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import './PitchSelector.scss'
-import OnAirLight from './OnAirLight'
-import PitchSelectorDialog from './PitchSelectorDialog'
 
 const normalizePitch = (value) => {
   if (value === null || value === undefined) return null
@@ -16,123 +14,159 @@ const PitchSelector = ({
   pitches,
   selectedPitch,
   onSelectPitch,
-  onSelectionCommit,
-  pitchStatuses = {},
   coordinatedPitches = [],
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const availablePitches = useMemo(() => uniquePitches(pitches), [pitches])
-  const persistedPitches = useMemo(() => (
-    uniquePitches(coordinatedPitches).filter((pitch) => availablePitches.includes(pitch))
-  ), [availablePitches, coordinatedPitches])
+  const coordinatedPitchIds = useMemo(() => uniquePitches(coordinatedPitches), [coordinatedPitches])
+  const coordinatedPitchSet = useMemo(() => new Set(coordinatedPitchIds), [coordinatedPitchIds])
+  const hasManagedPitchSelection = coordinatedPitchIds.length > 0
   const selectedPitchId = normalizePitch(selectedPitch)
-  const visibleSelectedPitches = useMemo(() => (
-    persistedPitches.length
-      ? persistedPitches
-      : uniquePitches([selectedPitchId]).filter((pitch) => availablePitches.includes(pitch))
-  ), [availablePitches, persistedPitches, selectedPitchId])
-  const activePitch = selectedPitchId || visibleSelectedPitches[0] || null
-  const selectedSet = new Set(visibleSelectedPitches)
-  const selectedCount = selectedSet.size
-  const totalCount = availablePitches.length
+  const activePitch = selectedPitchId && availablePitches.includes(selectedPitchId)
+    ? selectedPitchId
+    : availablePitches[0] || null
+  const activeIndex = activePitch ? availablePitches.indexOf(activePitch) : -1
+  const pitchCount = availablePitches.length
+  const hasCarouselNavigation = pitchCount > 2
+  const previousIndex = activeIndex > 0 ? activeIndex - 1 : -1
+  const nextIndex = activeIndex >= 0 && activeIndex < pitchCount - 1 ? activeIndex + 1 : -1
+  const previousPitch = previousIndex >= 0 ? availablePitches[previousIndex] : null
+  const nextPitch = nextIndex >= 0 ? availablePitches[nextIndex] : null
+  const layoutClass =
+    pitchCount <= 1
+      ? 'is-single'
+      : pitchCount === 2
+        ? 'is-pair'
+        : 'is-carousel'
+  const isPitchReadOnly = (pitch) => (
+    Boolean(pitch) && hasManagedPitchSelection && !coordinatedPitchSet.has(pitch)
+  )
+  const activeIsReadOnly = isPitchReadOnly(activePitch)
 
-  const getLiveMinutes = (status) => {
-    if (!status?.liveStartedAtMs) return null
-    return Math.max(0, Math.floor((Date.now() - status.liveStartedAtMs) / 60000))
+  const getPitchClassName = (baseClass, pitch, isActive = false) => (
+    [
+      baseClass,
+      isActive ? 'is-active' : '',
+      isPitchReadOnly(pitch) ? 'is-read-only' : 'is-coordinated',
+    ].filter(Boolean).join(' ')
+  )
+
+  const getPitchAriaLabel = (pitch) => {
+    const mode = isPitchReadOnly(pitch) ? 'read only' : 'coordinated'
+    return `Show pitch ${pitch}, ${mode}`
   }
 
-  const handlePitchClick = (pitch) => {
+  const handleSelectPitch = (pitch) => {
+    if (!pitch || pitch === activePitch) return
     onSelectPitch?.(pitch)
   }
 
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true)
-  }
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false)
-  }
-
-  const handleCommit = (draftPitches, nextActivePitch) => {
-    onSelectionCommit?.(draftPitches, nextActivePitch)
-    setIsDialogOpen(false)
-  }
-
-  const renderPitchTab = (pitch) => {
-    const status = pitchStatuses[pitch] || {}
-    const isActive = activePitch === pitch
-    const isLive = !!status.hasLiveMatch
-    const isComplete = !!status.isComplete
-    const liveMinutes = getLiveMinutes(status)
-    const lightStatus = isLive ? 'in-progress' : isComplete ? 'ready' : 'offline'
-    const statusText = isLive ? 'In play' : isComplete ? 'All done' : 'No match'
-    const minutesText = isLive && typeof liveMinutes === 'number' ? `${liveMinutes}m` : isComplete ? 'FT' : ''
-
-    return (
-      <div
-        key={pitch}
-        className={`pitch-tab managed ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
-      >
-        <button
-          type="button"
-          className="pitch-tab-main"
-          onClick={() => handlePitchClick(pitch)}
-          aria-pressed={isActive}
-          aria-label={`${pitch}, coordinated by you`}
-        >
-          <span className="pitch-name">{pitch}</span>
-          <span className="pitch-status-line">
-            <span className="on-air-group">
-              <OnAirLight status={lightStatus} />
-              <span className={`on-air-text ${isLive ? 'live' : isComplete ? 'complete' : 'idle'}`}>
-                {statusText}
-              </span>
-            </span>
-            {minutesText && (
-              <span className={`live-minutes ${isComplete ? 'complete' : ''}`}>
-                {minutesText}
-              </span>
-            )}
-          </span>
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <>
-      <div className="pitch-selector is-collapsed">
-        <div className="pitch-selector-summary" aria-label={`Coordinating ${selectedCount} of ${totalCount} pitches`}>
-          <span>Coordinating</span>
-          <strong>{selectedCount} / {totalCount || '-'}</strong>
-          <span>Pitches</span>
-        </div>
-
-        <div className="pitch-selector-tabs">
-          {visibleSelectedPitches.map(renderPitchTab)}
-        </div>
-
+    <nav
+      className={`pitch-selector ${layoutClass} ${activeIsReadOnly ? 'is-read-only' : 'is-coordinated'}`}
+      aria-label="Pitch selector"
+    >
+      {hasCarouselNavigation ? (
         <button
           type="button"
-          className="pitch-selector-edit"
-          onClick={handleOpenDialog}
-          aria-label="Edit coordinated pitches"
+          className="pitch-selector__arrow pitch-selector__arrow--previous"
+          onClick={() => handleSelectPitch(previousPitch)}
+          disabled={!previousPitch}
+          aria-label={previousPitch ? `Show pitch ${previousPitch}` : 'Previous pitch'}
         >
-          <i className="pi pi-pencil" aria-hidden="true" />
+          <i className="pi pi-angle-left" aria-hidden="true" />
+          <i className="pi pi-angle-left" aria-hidden="true" />
         </button>
+      ) : null}
+
+      <div className="pitch-selector__rail">
+        {pitchCount <= 1 ? (
+          <div
+            className={getPitchClassName('pitch-selector__active', activePitch, true)}
+            aria-current="true"
+            aria-label={activePitch ? `${activePitch}, ${activeIsReadOnly ? 'read only' : 'coordinated'}` : 'Pitch'}
+          >
+            <span className="pitch-selector__label">{activePitch || 'Pitch'}</span>
+            {activeIsReadOnly && (
+              <span className="pitch-selector__mode">Read only</span>
+            )}
+          </div>
+        ) : pitchCount === 2 ? (
+          availablePitches.map((pitch) => (
+            <button
+              key={pitch}
+              type="button"
+              className={getPitchClassName('pitch-selector__choice', pitch, pitch === activePitch)}
+              onClick={() => handleSelectPitch(pitch)}
+              aria-label={getPitchAriaLabel(pitch)}
+              aria-current={pitch === activePitch ? 'true' : undefined}
+            >
+              <span className="pitch-selector__label">{pitch}</span>
+              {pitch === activePitch && isPitchReadOnly(pitch) && (
+                <span className="pitch-selector__mode">Read only</span>
+              )}
+            </button>
+          ))
+        ) : (
+          <>
+            <button
+              type="button"
+              className={getPitchClassName('pitch-selector__preview pitch-selector__preview--previous', previousPitch)}
+              onClick={() => handleSelectPitch(previousPitch)}
+              disabled={!previousPitch}
+              aria-label={previousPitch ? getPitchAriaLabel(previousPitch) : 'Previous pitch'}
+            >
+              {previousPitch ? <span className="pitch-selector__label">{previousPitch}</span> : null}
+            </button>
+
+            <div
+              className={getPitchClassName('pitch-selector__active', activePitch, true)}
+              aria-current="true"
+              aria-label={activePitch ? `${activePitch}, ${activeIsReadOnly ? 'read only' : 'coordinated'}` : 'Pitch'}
+            >
+              <span className="pitch-selector__label">{activePitch || 'Pitch'}</span>
+              {activeIsReadOnly && (
+                <span className="pitch-selector__mode">Read only</span>
+              )}
+              <div className="pitch-selector__dots" aria-label="Pitch pages">
+                {availablePitches.map((pitch) => (
+                  <button
+                    key={pitch}
+                    type="button"
+                    className={getPitchClassName('pitch-selector__dot', pitch, pitch === activePitch)}
+                    onClick={() => handleSelectPitch(pitch)}
+                    aria-label={getPitchAriaLabel(pitch)}
+                    aria-current={pitch === activePitch ? 'true' : undefined}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className={getPitchClassName('pitch-selector__preview pitch-selector__preview--next', nextPitch)}
+              onClick={() => handleSelectPitch(nextPitch)}
+              disabled={!nextPitch}
+              aria-label={nextPitch ? getPitchAriaLabel(nextPitch) : 'Next pitch'}
+            >
+              {nextPitch ? <span className="pitch-selector__label">{nextPitch}</span> : null}
+            </button>
+          </>
+        )}
       </div>
 
-      <PitchSelectorDialog
-        isOpen={isDialogOpen}
-        onClose={handleCloseDialog}
-        pitches={availablePitches}
-        coordinatedPitches={visibleSelectedPitches}
-        activePitch={activePitch}
-        pitchStatuses={pitchStatuses}
-        onCommit={handleCommit}
-      />
-    </>
+      {hasCarouselNavigation ? (
+        <button
+          type="button"
+          className="pitch-selector__arrow pitch-selector__arrow--next"
+          onClick={() => handleSelectPitch(nextPitch)}
+          disabled={!nextPitch}
+          aria-label={nextPitch ? `Show pitch ${nextPitch}` : 'Next pitch'}
+        >
+          <i className="pi pi-angle-right" aria-hidden="true" />
+          <i className="pi pi-angle-right" aria-hidden="true" />
+        </button>
+      ) : null}
+    </nav>
   )
 }
 

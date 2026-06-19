@@ -206,7 +206,9 @@ const Kanban = ({
     return Array.from(new Set(pitchOptions.filter(Boolean))).sort();
   }, [allPitches, pitches]);
   const coordinatedPitchSet = useMemo(
-    () => new Set(coordinatedPitches || []),
+    () => new Set(
+      (coordinatedPitches || []).map(normalizePitchId).filter(Boolean)
+    ),
     [coordinatedPitches]
   );
 
@@ -239,40 +241,6 @@ const Kanban = ({
         active: nextPitch,
       },
       activePitch: nextPitch,
-    });
-  };
-
-  const pinnedPitches = useMemo(() => {
-    const primary = normalizePitchId(filterSelections?.pitches?.primary);
-    const additional = Array.isArray(filterSelections?.pitches?.additional)
-      ? filterSelections.pitches.additional.map(normalizePitchId)
-      : [];
-    const fallback = (coordinatedPitches || []).map(normalizePitchId);
-
-    return Array.from(new Set([
-      primary,
-      ...additional,
-      ...fallback,
-    ].filter(Boolean)));
-  }, [coordinatedPitches, filterSelections]);
-
-  const persistPinnedPitches = (nextPitches, activePitch) => {
-    const normalized = Array.from(new Set(
-      (nextPitches || []).map(normalizePitchId).filter(Boolean)
-    ));
-    const [primary = null, ...additional] = normalized;
-    const active = normalizePitchId(activePitch) || primary;
-
-    updateFilterSelections({
-      ...filterSelections,
-      pitches: {
-        ...(filterSelections?.pitches || {}),
-        primary,
-        additional,
-        active,
-      },
-      Pitches: normalized,
-      activePitch: active,
     });
   };
 
@@ -872,34 +840,10 @@ const Kanban = ({
      const safePitch = normalizePitchId(nextPitch);
      if (!safePitch) return;
 
-     if (!pinnedPitches.includes(safePitch)) {
-       persistPinnedPitches([...pinnedPitches, safePitch], safePitch);
-     } else {
-       persistActivePitch(safePitch);
-     }
+     persistActivePitch(safePitch);
 
      setUserClearedFocusedPitch(false);
      setFocusedPitch(safePitch);
-     setSelectedFixture(null);
-     setShowingDetails(false);
-     if (inlineMove) {
-       cancelInlineMoveMode();
-     }
-   };
-
-   const handlePitchSelectionCommit = (nextPitches, nextActivePitch) => {
-     const normalized = Array.from(new Set(
-       (nextPitches || []).map(normalizePitchId).filter(Boolean)
-     ));
-     if (!normalized.length) return;
-
-     const active = normalized.includes(normalizePitchId(nextActivePitch))
-       ? normalizePitchId(nextActivePitch)
-       : normalized[0];
-
-     persistPinnedPitches(normalized, active);
-     setUserClearedFocusedPitch(false);
-     setFocusedPitch(active);
      setSelectedFixture(null);
      setShowingDetails(false);
      if (inlineMove) {
@@ -1383,9 +1327,7 @@ const Kanban = ({
               pitches={availablePitches}
               selectedPitch={boardPitch}
               onSelectPitch={handleFocusedPitchSelect}
-              onSelectionCommit={handlePitchSelectionCommit}
-              pitchStatuses={pitchStatuses}
-              coordinatedPitches={pinnedPitches}
+              coordinatedPitches={coordinatedPitches}
             />
           </div>
           <div
@@ -1501,9 +1443,11 @@ const Kanban = ({
             </div>
           </div>
         </div>
-        {renderBoardTipBanner()}
+        <div className="kanban-footer-tip-slot">
+          {renderBoardTipBanner()}
+        </div>
 
-        {selectedFixture && showingDetails && (
+        {isCoordinatingBoardPitch && selectedFixture && showingDetails && (
           <KanbanDetailsPanel
             fixture={selectedFixture}
             mode={detailsMode}
@@ -1555,9 +1499,7 @@ const Kanban = ({
                   pitches={availablePitches}
                   selectedPitch={boardPitch}
                   onSelectPitch={handleFocusedPitchSelect}
-                  onSelectionCommit={handlePitchSelectionCommit}
-                  pitchStatuses={pitchStatuses}
-                  coordinatedPitches={pinnedPitches}
+                  coordinatedPitches={coordinatedPitches}
                 />
               </div>
 
@@ -1720,10 +1662,12 @@ const Kanban = ({
           );
         })()}
       </div>
-      {renderBoardTipBanner()}
+      <div className="kanban-footer-tip-slot">
+        {renderBoardTipBanner()}
+      </div>
 
       {/* Show details panel when showingDetails is true */}
-      {selectedFixture && showingDetails && (
+      {isCoordinatingBoardPitch && selectedFixture && showingDetails && (
         <KanbanDetailsPanel
           fixture={selectedFixture}
           mode={detailsMode}
