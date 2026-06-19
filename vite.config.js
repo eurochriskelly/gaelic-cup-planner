@@ -3,8 +3,25 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import { VitePWA } from 'vite-plugin-pwa';
 import { resolve } from 'path';
+import packageJson from './package.json';
 
 const port = process.env.GG_PORT_OVERRIDE || '4001'
+const appVersionFileName = 'app-version.json'
+
+const appVersionFile = () => ({
+  name: 'app-version-file',
+  generateBundle() {
+    this.emitFile({
+      type: 'asset',
+      fileName: appVersionFileName,
+      source: `${JSON.stringify({
+        mobile: packageJson.version,
+        builtAt: new Date().toISOString(),
+      })}\n`,
+    });
+  },
+});
+
 export default defineConfig({
   root: resolve(__dirname, 'src/interfaces/mobile'),
   resolve: {
@@ -15,12 +32,14 @@ export default defineConfig({
   plugins: [
     react(),
     svgr(),
+    appVersionFile(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['favicon.ico', 'pp-whistle.png'],
       workbox: {
         cleanupOutdatedCaches: true,
+        globIgnores: [appVersionFileName],
         navigateFallbackDenylist: [/^\/events\//],
       },
       manifest: {
