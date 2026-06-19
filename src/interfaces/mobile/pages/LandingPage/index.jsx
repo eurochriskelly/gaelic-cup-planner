@@ -107,6 +107,11 @@ const LandingPage = () => {
 
   const canShowScheduleTip = showScheduleTip && !showNamePrompt && !showResetConfirm && !showTournamentSettings;
 
+  const dismissScheduleTip = () => {
+    Cookies.set(scheduleTipCookie, 'true', { expires: 3650, path: "/" });
+    setShowScheduleTip(false);
+  };
+
   useEffect(() => {
     if (!canShowScheduleTip) return undefined;
 
@@ -621,15 +626,6 @@ const LandingPage = () => {
                   </button>
                 </section>
 
-                {canResetTournament && (
-                  <div className="main-actions">
-                    <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
-                      <ResetIcon className="icon" />
-                      <span className="label">Reset Tournament</span>
-                    </button>
-                  </div>
-                )}
-
                 <section className="home-info-card tips-preferences">
                   <div>
                     <h2>Tips</h2>
@@ -662,6 +658,15 @@ const LandingPage = () => {
               aria-hidden={activeHomeSection !== 1}
             >
               <div className="home-panel-stack">
+                {canResetTournament && (
+                  <div className="main-actions">
+                    <button type="button" className='icon-button reset-tournament sudo' onClick={handleResetClick}>
+                      <ResetIcon className="icon" />
+                      <span className="label">Reset Tournament</span>
+                    </button>
+                  </div>
+                )}
+
                 <header className={`tournament-summary${isOrganizer ? ' editable' : ''}`}>
                   <table>
                     <tbody>
@@ -719,6 +724,14 @@ const LandingPage = () => {
         </div>
         {canShowScheduleTip && (
           <div className={`schedule-tutorial-tip${isScheduleTipFading ? ' is-fading' : ''}`} role="status">
+            <button
+              type="button"
+              className="schedule-tutorial-tip__close"
+              onClick={dismissScheduleTip}
+              aria-label="Close"
+            >
+              <i className="pi pi-times" aria-hidden="true" />
+            </button>
             Tap on schedule to update fixtures
           </div>
         )}
