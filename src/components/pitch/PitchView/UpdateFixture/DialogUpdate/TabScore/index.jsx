@@ -5,6 +5,7 @@ import './TabScore.scss';
 const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false, onEditStart, onScorePickerVisibilityChange }) => {
   const [scorePicker, setScorePicker] = useState({ visible: false });
   const [currentTeam, setCurrentTeam] = useState("");
+  const [previousScores] = useState(() => scores);
   const [isExtraTime, setIsExtraTime] = useState(false);
   const [isPenalties, setIsPenalties] = useState(false);
 
@@ -19,6 +20,18 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
   const actions = {
     updateScore: (team) => {
       if (onEditStart && !onEditStart()) return;
+
+      // Editing a score starts a fresh two-part entry. Keep the original
+      // values available to ScoreSelect so they can be shown as a reference,
+      // but do not let the old goal/point value complete the new entry.
+      setScores((previous) => ({
+        ...previous,
+        [team]: {
+          ...previous[team],
+          [goalField]: null,
+          ...(isPenalties ? {} : { [pointField]: null }),
+        },
+      }));
       setCurrentTeam(team);
       setScorePicker({ visible: true });
     },
@@ -259,6 +272,7 @@ const TabScore = ({ scores, setScores, fixture, onProceed, isSubmitting = false,
                 goalField={goalField}
                 pointField={pointField}
                 isPenalties={isPenalties}
+                previousScores={previousScores}
                 onScoreCompleteForTeam={handleScoreSelectedForTeam}
               />
             </div>

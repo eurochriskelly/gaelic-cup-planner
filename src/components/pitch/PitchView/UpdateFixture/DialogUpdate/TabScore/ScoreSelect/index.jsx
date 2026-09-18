@@ -56,7 +56,7 @@ const Footer = ({ name, fieldName, team, pages, setPages, scores, setScores }) =
   );
 };
 
-const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', pointField = 'points', isPenalties = false, onScoreCompleteForTeam }) => {
+const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', pointField = 'points', isPenalties = false, previousScores, onScoreCompleteForTeam }) => {
   const [pages, setPages] = useState({
     goals: 0,
     points: 0,
@@ -96,10 +96,17 @@ const ScoreSelect = ({ scores, setScores, currentTeam, goalField = 'goals', poin
     const to = from + totalNumbersPerPage;
     // Ensure scores[team] exists before trying to access scores[team][fieldName]
     const currentScoreValue = scores && scores[team] ? scores[team][fieldName] : null;
+    const previousScoreValue = previousScores && previousScores[team]
+      ? previousScores[team][fieldName]
+      : null;
     for (let i = from; i <= to; i++) {
       const cname =
         'square ' +
-        (currentScoreValue === i ? 'active' : "");
+        (currentScoreValue === i
+          ? 'active'
+          : previousScoreValue === i
+            ? 'previous'
+            : "");
       squares.push(
         <div
           key={i}
