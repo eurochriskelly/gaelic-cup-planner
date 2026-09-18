@@ -13,6 +13,7 @@ import NavFooter from '../../../../shared/generic/NavFooter';
 import FilterWidget from './FilterWidget';
 import ResetIcon from '../../../../shared/icons/icon-reset.svg?react';
 import API from "../../../../shared/api/endpoints";
+import config from '../../config';
 import './LandingPage.scss';
 
 const SCHEDULE_TIP_COOKIE = 'ppHomeScheduleTipDismissed';
@@ -23,6 +24,9 @@ const LandingPage = () => {
   const { tournamentId } = useParams();
   const [isResetClicked, setIsResetClicked] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetChallengeCode, setResetChallengeCode] = useState('');
+  const [resetChallengeInput, setResetChallengeInput] = useState('');
+  const [resetChallengeError, setResetChallengeError] = useState('');
   const [currentTime, setCurrentTime] = useState(() => new Date());
   const { tournInfo, setTournInfo } = useFetchTournament(tournamentId);
   const { pitches, isLoading: isLoadingPitches, error: pitchesError } = useFetchPitches(tournamentId);
@@ -56,6 +60,7 @@ const LandingPage = () => {
   const [isSavingTournament, setIsSavingTournament] = useState(false);
   const [tournamentSaveError, setTournamentSaveError] = useState('');
   const [showTournamentSettings, setShowTournamentSettings] = useState(false);
+  const [copiedShareMessage, setCopiedShareMessage] = useState('');
   const [showScheduleTip, setShowScheduleTip] = useState(false);
   const [isScheduleTipFading, setIsScheduleTipFading] = useState(false);
   const [fixtureTipsEnabled, setFixtureTipsEnabledState] = useState(() => areFixtureTipsEnabled());
@@ -247,23 +252,34 @@ const LandingPage = () => {
 
   const handleResetClick = () => {
     console.log('Reset Tournament clicked');
+    setResetChallengeCode(resetRequiresChallenge ? generateNumericCode() : '');
+    setResetChallengeInput('');
+    setResetChallengeError('');
     setShowResetConfirm(true);
   };
 
   const handleResetCancel = () => {
     setShowResetConfirm(false);
+    setResetChallengeCode('');
+    setResetChallengeInput('');
+    setResetChallengeError('');
   };
 
   const handleResetConfirm = async () => {
-    const todayStr = new Date().toISOString().slice(0, 10);
-    if (tournamentDate <= todayStr) {
-      setShowResetConfirm(false);
+    if (!canResetTournament) {
+      handleResetCancel();
       return;
     }
+
+    if (resetRequiresChallenge && resetChallengeInput !== resetChallengeCode) {
+      setResetChallengeError('The challenge code does not match.');
+      return;
+    }
+
     setIsResetClicked(true);
     try {
       await handle.resetTournament();
-      setShowResetConfirm(false);
+      handleResetCancel();
     } finally {
       setTimeout(() => {
         setIsResetClicked(false);
@@ -284,16 +300,48 @@ const LandingPage = () => {
   const hasTournamentChanges = Object.keys(tournamentChanges).length > 0;
   const tournamentDate = typeof tournInfo?.Date === 'string' ? tournInfo.Date.slice(0, 10) : '';
   const firstMatchStart = getFirstMatchStart(tournamentFixtures, tournamentDate);
-  const resetMillisecondsRemaining = firstMatchStart ? firstMatchStart.getTime() - currentTime.getTime() : 0;
-  const resetHoursRemaining = formatHoursRemaining(resetMillisecondsRemaining);
+  const resetDeadline = firstMatchStart
+    ? new Date(firstMatchStart.getTime() + (60 * 60 * 1000))
+    : null;
   const userRoleKey = (userRole || '').trim().toLowerCase();
   const isOrganizer = userRoleKey.includes('organizer');
   const todayStr = new Date().toISOString().slice(0, 10);
-  const canResetTournament = isOrganizer && tournamentDate > todayStr;
+  const hasResetWindow = resetDeadline
+    ? currentTime.getTime() <= resetDeadline.getTime()
+    : tournamentDate > todayStr;
+  const canResetTournament = isOrganizer && hasResetWindow;
+  const resetRequiresChallenge = Boolean(firstMatchStart && currentTime >= firstMatchStart);
   const roleLabel = (userRole || 'spectator').toUpperCase();
   const resetTimeLimitText = firstMatchStart
-    ? `Progress can be cleared for ${resetHoursRemaining} more ${resetHoursRemaining === '1' ? 'hour' : 'hours'} but not after tournament starts!`
-    : 'Progress can be cleared until tournament starts!';
+    ? resetRequiresChallenge
+      ? `The tournament has started. Progress can be cleared for approximately ${formatHoursRemaining(resetDeadline.getTime() - currentTime.getTime())} more hours.`
+      : 'Progress can be cleared until one hour after the first match starts.'
+    : 'Progress can be cleared until the first match starts.';
+  const tournamentUuid = getTournamentUuid(tournInfo);
+  const coordinatorUrl = tournamentUuid
+    ? new URL(`/tournament/${encodeURIComponent(tournamentUuid)}/officials/coordinator`, config.liveAppUrl).toString()
+    : '';
+  const spectatorUrl = tournamentUuid
+    ? new URL(`/events/${encodeURIComponent(tournamentUuid)}`, config.resultsAppUrl).toString()
+    : '';
+  const coordinatorShareMessage = coordinatorUrl
+    ? `Hi, Coordinators, use the following link and code ${tournamentBase.codeCoordinator || '—'} to log in and manage your pitches for the event:\n${coordinatorUrl}`
+    : '';
+  const spectatorShareMessage = spectatorUrl
+    ? `To follow progress of the tournament use the live results link below:\n${spectatorUrl}`
+    : '';
+
+  const handleCopyShareMessage = async (key, message) => {
+    if (!message) return;
+
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopiedShareMessage(key);
+      setTimeout(() => setCopiedShareMessage(''), 2000);
+    } catch {
+      setCopiedShareMessage('failed');
+    }
+  };
 
   const updateTournamentDraft = (field, value) => {
     setTournamentDraft((current) => ({
@@ -470,11 +518,45 @@ const LandingPage = () => {
             <p>
               This will clear all progress. {resetTimeLimitText}
             </p>
+            {resetRequiresChallenge && (
+              <div className="reset-challenge">
+                <p>
+                  Because the tournament has started, enter this code to confirm:
+                </p>
+                <div className="reset-challenge-code" aria-label="Reset challenge code">
+                  {resetChallengeCode}
+                </div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={4}
+                  value={resetChallengeInput}
+                  onChange={(event) => {
+                    setResetChallengeInput(event.target.value.replace(/\D/g, '').slice(0, 4));
+                    setResetChallengeError('');
+                  }}
+                  placeholder="Enter code"
+                  aria-label="Enter reset challenge code"
+                  autoFocus
+                />
+                {resetChallengeError && (
+                  <div className="reset-challenge-error" role="alert">
+                    {resetChallengeError}
+                  </div>
+                )}
+              </div>
+            )}
             <div className="reset-confirm-actions">
               <button type="button" className="cancel" onClick={handleResetCancel}>
                 Cancel
               </button>
-              <button type="button" className="confirm" onClick={handleResetConfirm} disabled={isResetClicked}>
+              <button
+                type="button"
+                className="confirm"
+                onClick={handleResetConfirm}
+                disabled={isResetClicked || (resetRequiresChallenge && resetChallengeInput.length !== 4)}
+              >
                 Confirm Reset
               </button>
             </div>
@@ -696,6 +778,33 @@ const LandingPage = () => {
                     </div>
                   </section>
                 )}
+                {isOrganizer && (
+                  <section className="home-info-card share-links-summary">
+                    <h2>Share links</h2>
+                    {tournamentUuid ? (
+                      <>
+                        <ShareMessage
+                          label="Officials / coordinator"
+                          url={coordinatorUrl}
+                          message={coordinatorShareMessage}
+                          copied={copiedShareMessage === 'coordinator'}
+                          onCopy={() => handleCopyShareMessage('coordinator', coordinatorShareMessage)}
+                        />
+                        <ShareMessage
+                          label="Live results / spectators"
+                          url={spectatorUrl}
+                          message={spectatorShareMessage}
+                          copied={copiedShareMessage === 'spectator'}
+                          onCopy={() => handleCopyShareMessage('spectator', spectatorShareMessage)}
+                        />
+                      </>
+                    ) : (
+                      <p className="share-links-unavailable">
+                        Share links are unavailable until this tournament has a UUID.
+                      </p>
+                    )}
+                  </section>
+                )}
                 <section className="home-info-card point-allocation-summary">
                   <h2>Point allocations</h2>
                   <div className="point-summary-grid">
@@ -846,6 +955,23 @@ function PointAllocationField({ label, value, editable, onChange }) {
   );
 }
 
+function ShareMessage({ label, url, message, copied, onCopy }) {
+  return (
+    <div className="share-message">
+      <div className="share-message-heading">
+        <strong>{label}</strong>
+        <button type="button" onClick={onCopy}>
+          {copied ? 'Copied' : 'Copy message'}
+        </button>
+      </div>
+      <a href={url} target="_blank" rel="noreferrer">
+        {url}
+      </a>
+      <textarea value={message} readOnly aria-label={`${label} share message`} />
+    </div>
+  );
+}
+
 export default LandingPage;
 
 const buildTournamentDraft = (tournInfo = {}) => ({
@@ -862,6 +988,21 @@ const buildTournamentDraft = (tournInfo = {}) => ({
   drawPoints: normalisePointValue(tournInfo.drawPoints ?? tournInfo.DrawPoints, 1),
   lossPoints: normalisePointValue(tournInfo.lossPoints ?? tournInfo.LossPoints, 0),
 });
+
+const getTournamentUuid = (tournament = {}) => (
+  tournament.eventUuid
+  || tournament.EventUuid
+  || tournament.uuid
+  || tournament.UUID
+  || tournament.eventUUID
+  || tournament.EventUUID
+  || tournament.event_uuid
+  || tournament.tournamentUuid
+  || tournament.tournament_uuid
+  || tournament.TournamentUuid
+  || tournament.TournamentUUID
+  || ''
+);
 
 const getTournamentChanges = (base, draft) => {
   const changes = {};

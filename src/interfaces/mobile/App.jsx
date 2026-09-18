@@ -64,6 +64,10 @@ function AppContent() {
              element={<PinLogin />} />
       <Route path="/tournament/:tournamentId"
              element={<PinLogin />} />
+      <Route path="/tournament/:tournamentId/officials"
+             element={<PinLogin />} />
+      <Route path="/tournament/:tournamentId/officials/:officialRole"
+             element={<PinLogin />} />
       <Route path="/tournament/:tournamentId/home"
              element={<LandingPage role={userRole} />} />
       <Route path="/tournament/:tournamentId/category"

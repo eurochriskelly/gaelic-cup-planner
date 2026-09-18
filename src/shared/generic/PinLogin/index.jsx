@@ -16,11 +16,33 @@ const allCompetitionsOption = {
   isAllCompetitions: true,
 };
 
+const getTournamentId = (tournament) => tournament?.Id ?? tournament?.id;
+
+const getTournamentUuid = (tournament) => (
+  tournament?.eventUuid
+  ?? tournament?.EventUuid
+  ?? tournament?.uuid
+  ?? tournament?.UUID
+  ?? tournament?.eventUUID
+  ?? tournament?.event_uuid
+  ?? tournament?.tournamentUuid
+  ?? tournament?.tournament_uuid
+  ?? tournament?.TournamentUuid
+  ?? tournament?.TournamentUUID
+);
+
+const normaliseOfficialRole = (role) => {
+  const normalisedRole = role?.toLowerCase();
+  return normalisedRole === 'organiser' ? 'organizer' : normalisedRole;
+};
+
 const PinLogin = () => {
-  const { tournamentId: routeTournamentId } = useParams();
+  const { tournamentId: routeTournamentId, officialRole } = useParams();
   const { setupTournament, versionInfo, userRole, setUserRoleAndCookie } = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
+  const isOfficialsRoute = location.pathname.includes('/officials');
+  const requestedPathRole = normaliseOfficialRole(officialRole);
   const [pin, setPin] = useState(["", "", "", ""]);
   const [isThinking, setIsThinking] = useState(false);
   const [message, setMessage] = useState("");
@@ -31,11 +53,13 @@ const PinLogin = () => {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [pinEntryRole, setPinEntryRole] = useState(() => (
-    pinProtectedRoles.includes((userRole || '').toLowerCase())
-      ? userRole.toLowerCase()
+    pinProtectedRoles.includes(requestedPathRole)
+      ? requestedPathRole
+      : pinProtectedRoles.includes((userRole || '').toLowerCase())
+        ? userRole.toLowerCase()
       : null
   ));
-  const [showRoleLogin, setShowRoleLogin] = useState(false);
+  const [showRoleLogin, setShowRoleLogin] = useState(isOfficialsRoute);
   const [competitions, setCompetitions] = useState([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [competitionFetchFailed, setCompetitionFetchFailed] = useState(false);
@@ -136,10 +160,8 @@ const PinLogin = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const requestedRoleParam = params.get('role')?.toLowerCase();
-    const requestedRole = requestedRoleParam === 'organiser'
-      ? 'organizer'
-      : requestedRoleParam;
+    const requestedRoleParam = params.get('role');
+    const requestedRole = normaliseOfficialRole(requestedPathRole || requestedRoleParam);
     const validRoles = ['spectator', ...pinProtectedRoles];
 
     if (requestedRole && validRoles.includes(requestedRole)) {
@@ -152,21 +174,24 @@ const PinLogin = () => {
         setUserRoleAndCookie(requestedRole);
       }
 
-      params.delete('role');
-      const nextSearch = params.toString();
-      navigate(
-        {
-          pathname: location.pathname,
-          search: nextSearch ? `?${nextSearch}` : '',
-        },
-        { replace: true },
-      );
+      if (requestedRoleParam) {
+        params.delete('role');
+        const nextSearch = params.toString();
+        navigate(
+          {
+            pathname: location.pathname,
+            search: nextSearch ? `?${nextSearch}` : '',
+          },
+          { replace: true },
+        );
+      }
     }
   }, [
     location.pathname,
     location.search,
     currentRole,
     navigate,
+    requestedPathRole,
     routeTournamentId,
     selectedTournament,
     setUserRoleAndCookie,
@@ -203,28 +228,30 @@ const PinLogin = () => {
     if (!routeTournamentId) return;
 
     const listedTournament = availableTournaments.find((tournament) => (
-      `${tournament.Id}` === `${routeTournamentId}`
+      `${getTournamentId(tournament)}` === `${routeTournamentId}`
+      || `${getTournamentUuid(tournament)}` === `${routeTournamentId}`
     ));
 
     if (listedTournament) {
-      setupTournament(listedTournament.Id);
-      Cookies.set("tournamentId", listedTournament.Id, { expires: 1 / 24, path: "/" });
+      const tournamentId = getTournamentId(listedTournament);
+      setupTournament(tournamentId);
+      Cookies.set("tournamentId", tournamentId, { expires: 1 / 24, path: "/" });
       setSelectedTournament(listedTournament);
       return;
     }
 
     let isMounted = true;
-    fetch(`/api/tournaments/${routeTournamentId}`)
+    fetch(`/api/tournaments/${encodeURIComponent(routeTournamentId)}`)
       .then((response) => response.json())
       .then((data) => {
         if (!isMounted) return;
         const tournament = data?.data || data;
         const nextTournament = {
-          Id: tournament?.Id || tournament?.id || routeTournamentId,
+          Id: getTournamentId(tournament) || routeTournamentId,
           Title: tournament?.Title || tournament?.title || 'Selected tournament',
           Location: tournament?.Location || tournament?.location || '',
           Date: tournament?.Date || tournament?.date || '',
-          eventUuid: tournament?.eventUuid,
+          eventUuid: getTournamentUuid(tournament),
           code: tournament?.code,
         };
         setupTournament(nextTournament.Id);
@@ -386,6 +413,12 @@ const PinLogin = () => {
 
   const handleRoleLoginBackToResults = () => {
     hideOfficialsReveal();
+
+    if (isOfficialsRoute) {
+      navigate(`/tournament/${routeTournamentId}`, { replace: true });
+      return;
+    }
+
     setShowRoleLogin(false);
     resetPinEntry();
   };
@@ -532,7 +565,7 @@ const PinLogin = () => {
       <LoginHeader
         version={versionInfo?.mobile}
         showBackButton={Boolean(selectedTournament)}
-        onBackClick={handleBackClick}
+        onBackClick={isOfficialsRoute ? handleRoleLoginBackToResults : handleBackClick}
         tournament={selectedTournament}
       />
       <div className={pinLoginClasses}>
@@ -656,27 +689,29 @@ const PinLogin = () => {
             {isRoleLoginVisible && (
               <div className="pin-entry-view gateway-panel" aria-hidden={!showRoleLogin}>
                 <div className="role-login-card">
-                  <button
-                    type="button"
-                    className="role-flow-back-button"
-                    aria-label="Back to latest results"
-                    onClick={handleRoleLoginBackToResults}
-                  >
-                    <span className="role-flow-back-icon" aria-hidden="true">
-                      <i className="pi pi-arrow-left" />
-                    </span>
-                    <span className="role-flow-back-copy">
-                      <span className="role-flow-back-brand">
-                        <span className="role-flow-brand-icon" aria-hidden="true" ref={roleBrandIconRef}>
-                          <OfficialsIcon />
-                        </span>
-                        <span className="role-flow-brand-title">
-                          <span>Administrators</span>
-                          <span>&amp; Officials</span>
+                  {!isOfficialsRoute && (
+                    <button
+                      type="button"
+                      className="role-flow-back-button"
+                      aria-label="Back to latest results"
+                      onClick={handleRoleLoginBackToResults}
+                    >
+                      <span className="role-flow-back-icon" aria-hidden="true">
+                        <i className="pi pi-arrow-left" />
+                      </span>
+                      <span className="role-flow-back-copy">
+                        <span className="role-flow-back-brand">
+                          <span className="role-flow-brand-icon" aria-hidden="true" ref={roleBrandIconRef}>
+                            <OfficialsIcon />
+                          </span>
+                          <span className="role-flow-brand-title">
+                            <span>Administrators</span>
+                            <span>&amp; Officials</span>
+                          </span>
                         </span>
                       </span>
-                    </span>
-                  </button>
+                    </button>
+                  )}
                   <div className="role-login-content">
                     <h2 className={pinEntryRole ? 'dimmed' : ''}>Select role</h2>
                     <div className="role-grid">
