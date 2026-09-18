@@ -73,6 +73,14 @@ const PinLogin = () => {
 
   const currentRole = (userRole || 'spectator').toLowerCase();
 
+  const getOfficialsPath = (role) => {
+    const tournamentKey = routeTournamentId || selectedTournament?.Id;
+    if (!tournamentKey) return null;
+
+    const rolePath = role ? `/${role}` : '';
+    return `/tournament/${encodeURIComponent(tournamentKey)}/officials${rolePath}`;
+  };
+
   const tournamentHeading = routeTournamentId
     ? 'Latest results'
     : 'Upcoming tournaments';
@@ -378,6 +386,10 @@ const PinLogin = () => {
     hideOfficialsReveal();
     setPinEntryRole(null);
     resetPinEntry();
+    const officialsPath = getOfficialsPath();
+    if (officialsPath && !isOfficialsRoute) {
+      navigate(officialsPath, { replace: true });
+    }
     setShowRoleLogin(true);
   };
 
@@ -390,6 +402,10 @@ const PinLogin = () => {
     setIsOfficialsLoginTransitioning(true);
     setPinEntryRole(null);
     resetPinEntry();
+    const officialsPath = getOfficialsPath();
+    if (officialsPath && !isOfficialsRoute) {
+      navigate(officialsPath, { replace: true });
+    }
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
     officialsLoginTransitionTimeoutRef.current = setTimeout(() => {
@@ -426,6 +442,10 @@ const PinLogin = () => {
   const handleRoleSelect = (role) => {
     setPinEntryRole(role);
     resetPinEntry();
+    const rolePath = getOfficialsPath(role);
+    if (rolePath) {
+      navigate(rolePath, { replace: true });
+    }
     requestAnimationFrame(() => {
       focusPinInput();
     });

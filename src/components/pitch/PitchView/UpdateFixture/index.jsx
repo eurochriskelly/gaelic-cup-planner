@@ -40,6 +40,7 @@ const UpdateFixture = ({
    canMoveInlineEarlier = false,
    canMoveInlineLater = false,
    canStartInlineMove = false,
+   canMoveFixtures = false,
    isInlineMoveUnchanged = false,
    isInlineMoveSaving = false,
    variant = 'panel',
@@ -173,10 +174,12 @@ const UpdateFixture = ({
       Icon: MoveIcon,
       showOnlyWhenPlanned: true,
       getState: (hasStarted, hasResult) =>
+        canMoveFixtures &&
         !hasStarted && !hasResult && (!onStartInlineMove || canStartInlineMove)
           ? "enabled"
           : "disabled",
       action: (setDrawer) => {
+        if (!canMoveFixtures) return;
         if (onStartInlineMove) {
           onStartInlineMove();
           return;
@@ -257,6 +260,7 @@ const UpdateFixture = ({
 
   const getVisibleButtons = () => {
     return buttons.filter(button => {
+      if (button.id === 'reschedule' && !canMoveFixtures) return false;
       if (button.isInfoButton) return true;
       if (button.hideWhenPlanned && isPlanned) return false;
       if (button.showOnlyWhenPlanned && !isPlanned) return false;
@@ -388,6 +392,8 @@ const UpdateFixture = ({
   ]);
 
   const renderMoveModeButtons = () => {
+    if (!canMoveFixtures) return null;
+
     if (isMoveConfirming) {
       return (
         <>

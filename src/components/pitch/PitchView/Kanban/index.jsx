@@ -161,7 +161,8 @@ const Kanban = ({
     allPitches,
     coordinatedPitches,
   } = useFixtureContext();
-  const { filterSelections, updateFilterSelections } = useAppContext();
+  const { filterSelections, updateFilterSelections, userRole } = useAppContext();
+  const isOrganizer = `${userRole || ''}`.trim().toLowerCase().includes('organizer');
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
    // New state to track if details panel should be shown
@@ -674,7 +675,7 @@ const Kanban = ({
    };
 
    const startInlineMoveMode = (fixture = selectedFixture) => {
-     if (!fixture) return;
+     if (!isOrganizer || !fixture) return;
 
      const targetPitch = fixture.pitch;
 
@@ -699,7 +700,7 @@ const Kanban = ({
    };
 
    const setInlineMovePitch = (nextPitch) => {
-     if (!selectedFixture || !nextPitch || hasInlineMoveSlack) return;
+     if (!isOrganizer || !selectedFixture || !nextPitch || hasInlineMoveSlack) return;
 
      setInlineMove({
        targetPitch: nextPitch,
@@ -741,7 +742,7 @@ const Kanban = ({
    };
 
    const moveInlineFixture = (offset) => {
-     if (!selectedFixture || hasInlineMoveSlack) return;
+     if (!isOrganizer || !selectedFixture || hasInlineMoveSlack) return;
 
      setInlineMove((previousMove) => {
        if (!previousMove) return previousMove;
@@ -773,7 +774,7 @@ const Kanban = ({
    };
 
    const swapInlineFixture = (fixtureId) => {
-     if (!selectedFixture || !fixtureId || hasInlineMoveSlack) return;
+     if (!isOrganizer || !selectedFixture || !fixtureId || hasInlineMoveSlack) return;
 
      setInlineMove((previousMove) => {
        if (!previousMove || fixtureId === selectedFixture.id) return previousMove;
@@ -802,7 +803,7 @@ const Kanban = ({
    };
 
    const confirmInlineMove = async () => {
-     if (!selectedFixture || !canConfirmInlineMove) return;
+     if (!isOrganizer || !selectedFixture || !canConfirmInlineMove) return;
 
      if (inlineMoveIsUnchanged) {
        cancelInlineMoveMode();
@@ -1071,6 +1072,7 @@ const Kanban = ({
         onMoveInlineEarlier={() => moveInlineFixture(-1)}
         onMoveInlineLater={() => moveInlineFixture(1)}
         onConfirmInlineMove={confirmInlineMove}
+        canMoveFixtures={isOrganizer}
         canConfirmInlineMove={canConfirmInlineMove}
         canSetInlineMovePitch={
           !hasInlineMoveSlack &&
@@ -1090,6 +1092,7 @@ const Kanban = ({
         }
         isInlineMoveUnchanged={inlineMoveIsUnchanged}
         canStartInlineMove={Boolean(
+          isOrganizer &&
           actionFixture &&
             !showingDetails &&
             (actionFixture?.lane?.current === 'planned' ||
@@ -1245,6 +1248,7 @@ const Kanban = ({
           (!selectedFixture && columnKey !== 'queued')
       }
       forceRevealActions={shouldAutoRevealFixtureActions}
+      canMoveFixtures={isOrganizer}
     />
   );
 
@@ -1584,6 +1588,7 @@ const Kanban = ({
                     renderFixtureActionRail={renderFixtureActionRail}
                     hideActionRail={!isCoordinatingBoardPitch}
                     forceRevealActions={shouldAutoRevealFixtureActions}
+                    canMoveFixtures={isOrganizer}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -1621,6 +1626,7 @@ const Kanban = ({
                     renderFixtureActionRail={renderFixtureActionRail}
                     hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                     forceRevealActions={shouldAutoRevealFixtureActions}
+                    canMoveFixtures={isOrganizer}
                   />
 
                   {showPitchCompleteBanner && (
@@ -1670,6 +1676,7 @@ const Kanban = ({
                 renderFixtureActionRail={renderFixtureActionRail}
                 hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                 forceRevealActions={shouldAutoRevealFixtureActions}
+                canMoveFixtures={isOrganizer}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -1705,6 +1712,7 @@ const Kanban = ({
                   hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                   renderFixtureActionRail={renderFixtureActionRail}
                   forceRevealActions={shouldAutoRevealFixtureActions}
+                  canMoveFixtures={isOrganizer}
                 />
               )}
             </>
