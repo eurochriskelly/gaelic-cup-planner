@@ -1541,6 +1541,13 @@
     background: #e3ead7;
   }
 
+  &:disabled {
+    background: #d9ded2;
+    color: #9aa395;
+    cursor: not-allowed;
+    opacity: 0.62;
+  }
+
   &.active {
     background: #7e9a56;
     color: #ffffff;

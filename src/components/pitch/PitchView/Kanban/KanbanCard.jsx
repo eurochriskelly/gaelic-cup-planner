@@ -137,7 +137,7 @@ const KanbanCard = ({
     planned: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
     queued: [ViewIcon, NotPlayedIcon, MoveIcon, StartIcon],
     started: [ViewIcon, ScoreIcon, CardIcon, NotPlayedIcon],
-    finished: [ViewIcon, NotPlayedIcon, CardIcon],
+    finished: [NotPlayedIcon, CardIcon],
   }
   const inactiveRailIcons = inactiveRailIconsByLane[laneClass] || [ViewIcon, NotPlayedIcon]
   const team1Name = fixture.team1 || 'TBD'

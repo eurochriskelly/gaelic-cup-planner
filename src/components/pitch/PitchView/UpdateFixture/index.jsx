@@ -292,7 +292,9 @@ const UpdateFixture = ({
 
   const prioritizedMainButtons = prioritizeButtons(visibleButtons.filter(b => !b.isInfoButton));
   const mainButtons = prioritizedMainButtons.slice(0, 3);
-  const infoButton = visibleButtons.find(b => b.isInfoButton);
+  const infoButton = isFinished
+    ? null
+    : visibleButtons.find(b => b.isInfoButton);
   const isLocked = !isInlineMoveMode && needsSlideToUnlock && !isUnlocked;
   const isRail = variant === 'rail';
   const railButtonWindowSize = isPlannedLane || isFinished ? 3 : 4;

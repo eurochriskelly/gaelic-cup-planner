@@ -164,6 +164,7 @@ export default KanbanDetailsPanel;
 
 function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
   const lane = fixture?.lane?.current;
+  const hasPublishedScore = hasFixtureScore(fixture);
   const orderByLane = {
     planned: ["info", "cancel", "reschedule", "edit"],
     queued: ["info", "start", "cancel", "reschedule"],
@@ -200,6 +201,8 @@ function FixtureActionTabs({ fixture, activeMode, onSetMode, onStartMatch }) {
             type="button"
             role="tab"
             aria-selected={isActive}
+            aria-disabled={id === "cancel" && hasPublishedScore}
+            disabled={id === "cancel" && hasPublishedScore}
             className={`fixture-action-tab ${isActive ? "active" : ""}`}
             onClick={() => {
               if (id === "start") {
@@ -235,6 +238,17 @@ function InfoIcon({ className = "" }) {
     </svg>
   );
 }
+
+const hasFixtureScore = (fixture = {}) => {
+  const scoreValues = [
+    fixture.goals1,
+    fixture.points1,
+    fixture.goals2,
+    fixture.points2,
+  ];
+
+  return scoreValues.some((value) => value !== null && value !== undefined && value !== '');
+};
 
 function ShowFixtureDetails({ fixture }) {
   const hasScores = fixture.score1 || fixture.score2;
@@ -595,7 +609,6 @@ function ScoreEntryWrapper({
       setIsSubmitting(true);
 
       const result = {
-        outcome: "played",
         scores: {
           team1: buildTeamScores(scores.team1, fixture.team1),
           team2: buildTeamScores(scores.team2, fixture.team2),
@@ -603,7 +616,6 @@ function ScoreEntryWrapper({
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);
       await fetchFixtures(true); // Refresh fixtures
-      closePanel(); // Close the panel
     } catch (error) {
       console.error("Error updating score:", error);
     } finally {
@@ -617,17 +629,13 @@ function ScoreEntryWrapper({
     try {
       setIsSubmitting(true);
       const result = {
-        outcome: "played",
         scores: {
           team1: buildTeamScores(scores.team1, fixture.team1),
           team2: buildTeamScores(scores.team2, fixture.team2),
         },
       };
       await API.updateScore(fixture.tournamentId, fixture.id, result);
-      await API.endMatch(fixture.tournamentId, fixture.id); // End the match
-      await fetchFixtures(true); // Refresh fixtures, progressing nextFixture
-      moveToNextFixture && moveToNextFixture(); // Move to next fixture in UI if applicable
-      closePanel(); // Close the panel
+      await fetchFixtures(true); // Keep the match in progress until explicitly finished
     } catch (error) {
       console.error("Error finalizing score:", error);
     } finally {
@@ -700,7 +708,7 @@ function ScoreEntryWrapper({
                   className="pi pi-stop-circle button-icon"
                   aria-hidden="true"
                 />
-                End Match
+                Mark Match Finished
               </button>
             </>
           )}
@@ -724,8 +732,9 @@ function ScoreEntryWrapper({
           <div className="reschedule-message">
             <div className="warning-icon">⚠️</div>
             <div className="warning-message">
-              This will end the match without a score, freeing up the pitch for
-              other teams. Are you sure?
+              {hasBothScores
+                ? "This will mark the match as finished and move it to Done. Are you sure?"
+                : "This will mark the match as finished without a score, freeing up the pitch for other teams. Are you sure?"}
             </div>
             <div className="warning-actions">
               <button onClick={cancelEndMatch}>No</button>

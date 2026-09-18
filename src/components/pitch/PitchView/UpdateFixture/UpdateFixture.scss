@@ -189,6 +189,15 @@
     width: 100%;
     height: 100%;
     overflow: visible;
+
+    &.has-scroll-up {
+      box-sizing: border-box;
+      padding-top: 8.15rem;
+
+      .rail-button-list {
+        height: 100%;
+      }
+    }
   }
 
   .rail-button-list {
@@ -235,7 +244,7 @@
     }
 
     &--up {
-      top: -9.05rem;
+      top: 0;
 
       .rail-scroll-control__triangle {
         border-bottom: 1.75rem solid #666;
