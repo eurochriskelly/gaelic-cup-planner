@@ -39,6 +39,7 @@ const KanbanCard = ({
   hideActionRail = false,
   forceRevealActions = false,
   canMoveFixtures = false,
+  canViewFixture = true,
 }) => {
   const [teamReadinessDialog, setTeamReadinessDialog] = useState(null)
   const displayCategory = fixture.category ? fixture.category.substring(0, 9).toUpperCase() : ''
@@ -135,12 +136,25 @@ const KanbanCard = ({
   const laneClass = fixture?.lane?.current || 'unknown'
   const showInactiveLockedRail = laneClass === 'planned' || laneClass === 'finished'
   const inactiveRailIconsByLane = {
-    planned: [ViewIcon, NotPlayedIcon, ...(canMoveFixtures ? [MoveIcon] : []), StartIcon],
-    queued: [ViewIcon, NotPlayedIcon, ...(canMoveFixtures ? [MoveIcon] : []), StartIcon],
+    planned: [
+      ...(canViewFixture ? [ViewIcon] : []),
+      NotPlayedIcon,
+      ...(canMoveFixtures ? [MoveIcon] : []),
+      StartIcon,
+    ],
+    queued: [
+      ...(canViewFixture ? [ViewIcon] : []),
+      NotPlayedIcon,
+      ...(canMoveFixtures ? [MoveIcon] : []),
+      StartIcon,
+    ],
     started: [ViewIcon, ScoreIcon, CardIcon, NotPlayedIcon],
     finished: [NotPlayedIcon, CardIcon],
   }
-  const inactiveRailIcons = inactiveRailIconsByLane[laneClass] || [ViewIcon, NotPlayedIcon]
+  const inactiveRailIcons = inactiveRailIconsByLane[laneClass] || [
+    ...(canViewFixture ? [ViewIcon] : []),
+    NotPlayedIcon,
+  ]
   const team1Name = fixture.team1 || 'TBD'
   const team2Name = fixture.team2 || 'TBD'
   const moveModeTeamStyle = isInlineMoveListCard

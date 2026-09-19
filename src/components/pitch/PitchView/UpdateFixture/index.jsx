@@ -41,6 +41,7 @@ const UpdateFixture = ({
    canMoveInlineLater = false,
    canStartInlineMove = false,
    canMoveFixtures = false,
+   canViewFixture = true,
    isInlineMoveUnchanged = false,
    isInlineMoveSaving = false,
    variant = 'panel',
@@ -242,7 +243,7 @@ const UpdateFixture = ({
         action: () => closeDetails && closeDetails(),
         isInfoButton: true
       }
-    ] : [
+    ] : canViewFixture ? [
       {
         id: 'info',
         Icon: ViewIcon,
@@ -250,7 +251,7 @@ const UpdateFixture = ({
         action: () => showDetails && showDetails('info'),
         isInfoButton: true
       }
-    ])
+    ] : [])
   ];
 
   const handleButtonClick = (button) => {

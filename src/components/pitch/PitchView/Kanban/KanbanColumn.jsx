@@ -34,6 +34,7 @@ const KanbanColumn = ({
    hideActionRail = false,
    forceRevealActions,
    canMoveFixtures = false,
+   canViewFixture = true,
  }) => {
   let columnSlots;
   const isDynamicColumn = columnKey === 'started' || columnKey === 'queued';
@@ -106,6 +107,7 @@ const KanbanColumn = ({
                hideActionRail={hideActionRail}
                forceRevealActions={forceRevealActions?.(fixtureForPitchSlot)}
                canMoveFixtures={canMoveFixtures}
+               canViewFixture={canViewFixture}
              />
            )}
            {!fixtureForPitchSlot && showEmptyState && (
@@ -177,6 +179,7 @@ const KanbanColumn = ({
                hideActionRail={hideActionRail}
                forceRevealActions={forceRevealActions?.(fixtureForSlot)}
                canMoveFixtures={canMoveFixtures}
+               canViewFixture={canViewFixture}
              />
            )}
         </KanbanSlot>

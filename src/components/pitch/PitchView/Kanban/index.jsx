@@ -163,6 +163,7 @@ const Kanban = ({
   } = useFixtureContext();
   const { filterSelections, updateFilterSelections, userRole } = useAppContext();
   const isOrganizer = `${userRole || ''}`.trim().toLowerCase().includes('organizer');
+  const isCoordinator = `${userRole || ''}`.trim().toLowerCase().includes('coordinator');
   const startMatchOriginal = useStartMatch(tournamentId, pitchId, fetchFixtures);
 
    // New state to track if details panel should be shown
@@ -1073,6 +1074,7 @@ const Kanban = ({
         onMoveInlineLater={() => moveInlineFixture(1)}
         onConfirmInlineMove={confirmInlineMove}
         canMoveFixtures={isOrganizer}
+        canViewFixture={!isCoordinator}
         canConfirmInlineMove={canConfirmInlineMove}
         canSetInlineMovePitch={
           !hasInlineMoveSlack &&
@@ -1249,6 +1251,7 @@ const Kanban = ({
       }
       forceRevealActions={shouldAutoRevealFixtureActions}
       canMoveFixtures={isOrganizer}
+      canViewFixture={!isCoordinator}
     />
   );
 
@@ -1589,6 +1592,7 @@ const Kanban = ({
                     hideActionRail={!isCoordinatingBoardPitch}
                     forceRevealActions={shouldAutoRevealFixtureActions}
                     canMoveFixtures={isOrganizer}
+                    canViewFixture={!isCoordinator}
                     // allPlannedFixtures might be needed if warning logic applies to "Next" column
                   />
                   <KanbanColumn
@@ -1627,6 +1631,7 @@ const Kanban = ({
                     hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                     forceRevealActions={shouldAutoRevealFixtureActions}
                     canMoveFixtures={isOrganizer}
+                    canViewFixture={!isCoordinator}
                   />
 
                   {showPitchCompleteBanner && (
@@ -1677,6 +1682,7 @@ const Kanban = ({
                 hideActionRail={!isCoordinatingBoardPitch || !selectedFixture}
                 forceRevealActions={shouldAutoRevealFixtureActions}
                 canMoveFixtures={isOrganizer}
+                canViewFixture={!isCoordinator}
               />
               {!isInlineMoveActive && (
                 <KanbanColumn
@@ -1713,6 +1719,7 @@ const Kanban = ({
                   renderFixtureActionRail={renderFixtureActionRail}
                   forceRevealActions={shouldAutoRevealFixtureActions}
                   canMoveFixtures={isOrganizer}
+                  canViewFixture={!isCoordinator}
                 />
               )}
             </>
